@@ -1,4 +1,3 @@
-
 export interface Scammer {
   id: string;
   name: string;
@@ -22,6 +21,8 @@ export interface ScammerInput {
   aliases: string[];
   accomplices: string[];
   officialResponse: string;
+  controlledByDev?: boolean;
+  devWalletAddress?: string;
 }
 
 export const MOCK_SCAMMERS: Scammer[] = [
