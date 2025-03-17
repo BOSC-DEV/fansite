@@ -85,7 +85,7 @@ export const BookView = ({
   }, [currentPage, isFlipping, totalPages]);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center py-4">
       <BookContainer
         scammers={scammers}
         currentPage={currentPage}

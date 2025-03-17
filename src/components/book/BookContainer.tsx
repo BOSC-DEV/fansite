@@ -43,7 +43,7 @@ export const BookContainer = ({
   }, [currentPage, scammers]);
 
   return (
-    <div className="relative w-full max-w-4xl h-[700px] perspective-1000">
+    <div className="relative w-full max-w-4xl mx-auto h-[650px] sm:h-[700px] perspective-1000">
       <AnimatePresence mode="wait">
         <motion.div
           key={animationKey}
@@ -86,18 +86,18 @@ export const BookContainer = ({
             </div>
             
             {/* Page content */}
-            <div className="absolute inset-0 p-8 flex flex-col">
-              <div className="flex justify-between items-center mb-6">
-                <div className="font-impact text-2xl text-accent bg-gradient-to-r from-meme-red to-meme-purple bg-clip-text text-transparent uppercase tracking-wide">
+            <div className="absolute inset-0 p-6 sm:p-8 flex flex-col">
+              <div className="flex justify-between items-center mb-4 sm:mb-6">
+                <div className="font-impact text-xl sm:text-2xl text-accent bg-gradient-to-r from-meme-red to-meme-purple bg-clip-text text-transparent uppercase tracking-wide">
                   Most Wanted Scammers
                 </div>
                 <div className="flex items-center text-muted-foreground">
-                  <BookOpen className="w-5 h-5 mr-2" />
-                  <span className="font-mono text-sm">Volume 1</span>
+                  <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                  <span className="font-mono text-xs sm:text-sm">Volume 1</span>
                 </div>
               </div>
               
-              <div className="flex-1 flex items-center justify-center">
+              <div className="flex-1 flex items-center justify-center px-2 sm:px-4">
                 <BookPage 
                   scammer={currentScammer}
                   pageNumber={visiblePage}
