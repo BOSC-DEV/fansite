@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@/context/WalletContext";
@@ -11,12 +10,11 @@ import {
   CardTitle 
 } from "@/components/ui/card";
 import { toast } from "sonner";
-import { ScammerInput } from "@/lib/types";
 import { TextField, TextAreaField, TagInput } from "@/components/scammer/FormFields";
 import { ListingDisclaimer } from "@/components/scammer/ListingDisclaimer";
 import { ListingFormActions } from "@/components/scammer/ListingFormActions";
-
-const DEVELOPER_WALLET_ADDRESS = "0x80ec8C9A7ac3b601a9628a840306e85a01809074";
+import web3Provider from "@/services/web3Provider";
+import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
 
 export function CreateListingForm() {
   const navigate = useNavigate();
@@ -102,21 +100,13 @@ export function CreateListingForm() {
     setIsSubmitting(true);
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const scammerId = await web3Provider.addScammer(name, accusedOf, photoUrl);
       
-      const scammerData: ScammerInput = {
-        name,
-        photoUrl,
-        accusedOf,
-        links,
-        aliases,
-        accomplices,
-        officialResponse,
-        controlledByDev: true,
-        devWalletAddress: DEVELOPER_WALLET_ADDRESS
-      };
+      if (!scammerId) {
+        throw new Error("Failed to create scammer listing");
+      }
       
-      console.log("Creating scammer listing:", scammerData);
+      console.log("Creating scammer listing with ID:", scammerId);
       console.log("Wallet for bounties controlled by developer:", DEVELOPER_WALLET_ADDRESS);
       console.log("Listing created by user wallet:", address);
       
@@ -124,9 +114,9 @@ export function CreateListingForm() {
       toast.info("Bounty wallet is now controlled by the developer");
       
       setTimeout(() => navigate("/most-wanted"), 1000);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating listing:", error);
-      toast.error("Failed to create listing. Please try again.");
+      toast.error(`Failed to create listing: ${error.message || "Please try again"}`);
     } finally {
       setIsSubmitting(false);
     }

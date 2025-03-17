@@ -1,9 +1,8 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { toast } from 'sonner';
-
-// Developer controlled wallet address
-const DEVELOPER_WALLET_ADDRESS = "0x80ec8C9A7ac3b601a9628a840306e85a01809074";
+import web3Provider from '../services/web3Provider';
+import { DEVELOPER_WALLET_ADDRESS } from '../contracts/contract-abis';
 
 interface WalletContextType {
   connected: boolean;
@@ -26,14 +25,17 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   // Check for existing connection
   useEffect(() => {
     const checkConnection = async () => {
-      // This is a placeholder for actual wallet connection check
-      // In a real implementation, you would check if the user has a wallet connected
-      const savedAddress = localStorage.getItem('walletAddress');
-      if (savedAddress) {
-        setAddress(savedAddress);
+      if (window.ethereum && window.ethereum.selectedAddress) {
+        const connectedAddress = window.ethereum.selectedAddress;
+        setAddress(connectedAddress);
         setConnected(true);
-        // Simulate balance - in real app would query blockchain
-        setBalance(125);
+        
+        // Initialize contracts and get balance
+        await web3Provider.connectWallet();
+        if (connectedAddress) {
+          const tokenBalance = await web3Provider.getBalance(connectedAddress);
+          setBalance(tokenBalance);
+        }
       }
     };
 
@@ -43,23 +45,23 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const connectWallet = async () => {
     setConnecting(true);
     try {
-      // Placeholder for actual wallet connection logic
-      // In a real implementation, you would use Coinbase Wallet SDK or Web3Modal
+      const connectedAddress = await web3Provider.connectWallet();
       
-      // Simulate successful connection
-      setTimeout(() => {
-        const mockAddress = '0x' + Array(40).fill(0).map(() => 
-          Math.floor(Math.random() * 16).toString(16)).join('');
-        setAddress(mockAddress);
+      if (connectedAddress) {
+        setAddress(connectedAddress);
         setConnected(true);
-        setBalance(125); // Mock $BOSC balance
-        localStorage.setItem('walletAddress', mockAddress);
+        
+        const tokenBalance = await web3Provider.getBalance(connectedAddress);
+        setBalance(tokenBalance);
+        
         toast.success('Wallet connected successfully!');
         console.log(`Funds will flow to developer wallet: ${DEVELOPER_WALLET_ADDRESS}`);
-      }, 1500);
-    } catch (error) {
+      } else {
+        throw new Error('Failed to connect wallet');
+      }
+    } catch (error: any) {
       console.error('Failed to connect wallet:', error);
-      toast.error('Failed to connect wallet. Please try again.');
+      toast.error(`Failed to connect wallet: ${error.message || 'Unknown error'}`);
     } finally {
       setConnecting(false);
     }
@@ -69,7 +71,6 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     setAddress(null);
     setConnected(false);
     setBalance(null);
-    localStorage.removeItem('walletAddress');
     toast.success('Wallet disconnected');
   };
 

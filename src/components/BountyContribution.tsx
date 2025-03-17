@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { toast } from "sonner";
 import { useWallet } from "@/context/WalletContext";
 import { ArrowRightIcon, WalletIcon, BadgeInfo } from "lucide-react";
+import web3Provider from "@/services/web3Provider";
+import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
 
 interface BountyContributionProps {
   scammerId: string;
@@ -14,9 +16,6 @@ interface BountyContributionProps {
   walletAddress: string;
   onContribute?: (amount: number) => void;
 }
-
-// Developer controlled wallet address - this would typically be stored more securely
-const DEVELOPER_WALLET_ADDRESS = "0x80ec8C9A7ac3b601a9628a840306e85a01809074";
 
 export function BountyContribution({
   scammerId,
@@ -48,21 +47,19 @@ export function BountyContribution({
 
     setIsSubmitting(true);
     try {
-      // Simulate transaction delay
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const success = await web3Provider.contributeToBounty(scammerId, numAmount);
       
-      // Log to console - in a real app this would be an API call
-      console.log(`Contributing ${numAmount} $BOSC tokens to bounty for ${scammerName}`);
-      console.log(`Funds are sent to developer-controlled wallet: ${DEVELOPER_WALLET_ADDRESS}`);
-      console.log(`Original scammer wallet address for reference: ${walletAddress}`);
-      
-      toast.success(`Successfully contributed ${numAmount} $BOSC tokens to the bounty`);
-      if (onContribute) {
-        onContribute(numAmount);
+      if (success) {
+        toast.success(`Successfully contributed ${numAmount} $BOSC tokens to the bounty`);
+        if (onContribute) {
+          onContribute(numAmount);
+        }
+        setAmount("");
+      } else {
+        throw new Error("Transaction failed");
       }
-      setAmount("");
-    } catch (error) {
-      toast.error("Failed to contribute to bounty. Please try again.");
+    } catch (error: any) {
+      toast.error(`Failed to contribute to bounty: ${error.message || "Please try again"}`);
       console.error(error);
     } finally {
       setIsSubmitting(false);
