@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Wallet, List, FileText, Home, Menu, X } from "lucide-react";
+import { Wallet, List, FileText, Home, Menu, X, Flame, Skull, Ghost, PartyPopper } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Header = () => {
@@ -35,8 +35,8 @@ export const Header = () => {
 
   const menuItems = [
     { path: "/", label: "Home", icon: <Home className="h-4 w-4 mr-2" /> },
-    { path: "/most-wanted", label: "Most Wanted", icon: <List className="h-4 w-4 mr-2" /> },
-    { path: "/create-listing", label: "Report Scammer", icon: <FileText className="h-4 w-4 mr-2" /> },
+    { path: "/most-wanted", label: "Most Wanted", icon: <Skull className="h-4 w-4 mr-2" /> },
+    { path: "/create-listing", label: "Report Scammer", icon: <Ghost className="h-4 w-4 mr-2" /> },
   ];
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
@@ -51,9 +51,10 @@ export const Header = () => {
       )}
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-        <Link to="/" className="flex items-center space-x-2 text-xl font-bold">
-          <span className="text-bosc">Book of Scams</span>
-          <span className="px-2 py-1 bg-bosc/10 text-bosc text-xs font-medium rounded-full">
+        <Link to="/" className="flex items-center space-x-2 text-xl">
+          <Flame className="h-6 w-6 text-bosc animate-bounce-slight" />
+          <span className="font-impact text-transparent bg-clip-text bg-gradient-to-r from-bosc to-meme-red">Book of Scams</span>
+          <span className="px-2 py-1 bg-bosc/10 text-bosc text-xs font-bold rounded-full border-2 border-dashed border-bosc/50 animate-pulse-subtle">
             $BOSC
           </span>
         </Link>
@@ -65,7 +66,7 @@ export const Header = () => {
               key={item.path}
               to={item.path}
               className={cn(
-                "flex items-center text-sm font-medium transition-colors",
+                "flex items-center text-sm font-bold transition-colors hover:scale-110 transform duration-200",
                 location.pathname === item.path
                   ? "text-bosc"
                   : "text-muted-foreground hover:text-foreground"
@@ -84,7 +85,7 @@ export const Header = () => {
                 <span className="text-xs text-muted-foreground">
                   {formatAddress(address || "")}
                 </span>
-                <span className="text-xs font-medium text-bosc">
+                <span className="text-xs font-bold text-bosc">
                   {balance} $BOSC
                 </span>
               </div>
@@ -92,7 +93,7 @@ export const Header = () => {
                 variant="outline"
                 size="sm"
                 onClick={handleConnectClick}
-                className="h-9"
+                className="h-9 border-2 border-dashed border-bosc/50 hover:animate-wiggle"
               >
                 <Wallet className="h-4 w-4 mr-2" />
                 Disconnect
@@ -104,7 +105,7 @@ export const Header = () => {
               size="sm"
               onClick={handleConnectClick}
               disabled={connecting}
-              className="hidden md:flex h-9"
+              className="hidden md:flex h-9 animate-pulse-subtle"
             >
               <Wallet className="h-4 w-4 mr-2" />
               {connecting ? "Connecting..." : "Connect Wallet"}
@@ -132,7 +133,7 @@ export const Header = () => {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex items-center text-lg font-medium transition-colors py-2",
+                  "flex items-center text-lg font-bold transition-colors py-2",
                   location.pathname === item.path
                     ? "text-bosc"
                     : "text-muted-foreground hover:text-foreground"
@@ -155,7 +156,7 @@ export const Header = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">Balance</span>
-                    <span className="text-sm text-bosc font-medium">{balance} $BOSC</span>
+                    <span className="text-sm text-bosc font-bold">{balance} $BOSC</span>
                   </div>
                   <Button variant="outline" size="sm" onClick={handleConnectClick} className="w-full mt-2">
                     <Wallet className="h-4 w-4 mr-2" />

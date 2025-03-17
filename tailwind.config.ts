@@ -20,8 +20,9 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				sans: ['SF Pro Display', 'system-ui', 'sans-serif'],
+				sans: ['Comic Sans MS', 'Comic Sans', 'system-ui', 'sans-serif'],
 				mono: ['SF Mono', 'monospace'],
+				impact: ['Impact', 'Haettenschweiler', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -63,7 +64,14 @@ export default {
 					dark: '#071128',
 				},
 				alert: '#E63946',
-				bosc: '#3A86FF',
+				bosc: '#FF6B00',  // Changed to a more vibrant orange
+				meme: {
+					red: '#FF3C69',
+					blue: '#00DBDE',
+					green: '#4ADE80',
+					yellow: '#FEF08A',
+					purple: '#C084FC',
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
@@ -112,6 +120,18 @@ export default {
 				'shimmer': {
 					'0%': { backgroundPosition: '-200% 0' },
 					'100%': { backgroundPosition: '200% 0' }
+				},
+				'wiggle': {
+					'0%, 100%': { transform: 'rotate(-3deg)' },
+					'50%': { transform: 'rotate(3deg)' }
+				},
+				'spin-slow': {
+					'0%': { transform: 'rotate(0deg)' },
+					'100%': { transform: 'rotate(360deg)' }
+				},
+				'bounce-slight': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' }
 				}
 			},
 			animation: {
@@ -120,7 +140,10 @@ export default {
 				'fade-in': 'fade-in 0.5s ease-out',
 				'slide-up': 'slide-up 0.5s ease-out',
 				'pulse-subtle': 'pulse-subtle 2s infinite',
-				'shimmer': 'shimmer 2s infinite linear'
+				'shimmer': 'shimmer 2s infinite linear',
+				'wiggle': 'wiggle 1s ease-in-out infinite',
+				'spin-slow': 'spin-slow 3s linear infinite',
+				'bounce-slight': 'bounce-slight 2s infinite'
 			},
 			backdropFilter: {
 				'none': 'none',
