@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@/context/WalletContext";
@@ -9,20 +10,17 @@ import {
   CardHeader, 
   CardTitle 
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { X, Plus, AlertTriangle, DollarSign } from "lucide-react";
 import { toast } from "sonner";
 import { ScammerInput } from "@/lib/types";
+import { TextField, TextAreaField, TagInput } from "@/components/scammer/FormFields";
+import { ListingDisclaimer } from "@/components/scammer/ListingDisclaimer";
+import { ListingFormActions } from "@/components/scammer/ListingFormActions";
 
 const DEVELOPER_WALLET_ADDRESS = "0x80ec8C9A7ac3b601a9628a840306e85a01809074";
 
 export function CreateListingForm() {
   const navigate = useNavigate();
-  const { isConnected, balance, connectWallet, address } = useWallet();
+  const { isConnected, balance, address } = useWallet();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [name, setName] = useState("");
@@ -143,180 +141,81 @@ export function CreateListingForm() {
             Add a scammer to the Book of Scams. This will cost 1 $BOSC token.
           </CardDescription>
         </CardHeader>
+        
         <CardContent className="space-y-6">
           <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name *</Label>
-              <Input
-                id="name"
-                placeholder="John Doe"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="photoUrl">Photo URL *</Label>
-              <Input
-                id="photoUrl"
-                placeholder="https://example.com/photo.jpg"
-                value={photoUrl}
-                onChange={(e) => setPhotoUrl(e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="accusedOf">Accused Of *</Label>
-            <Textarea
-              id="accusedOf"
-              placeholder="Describe the scam or fraudulent activity"
-              value={accusedOf}
-              onChange={(e) => setAccusedOf(e.target.value)}
-              className="min-h-[80px]"
+            <TextField
+              id="name"
+              label="Name"
+              placeholder="John Doe"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+            
+            <TextField
+              id="photoUrl"
+              label="Photo URL"
+              placeholder="https://example.com/photo.jpg"
+              value={photoUrl}
+              onChange={(e) => setPhotoUrl(e.target.value)}
               required
             />
           </div>
 
-          <div className="space-y-3">
-            <Label>Links to Evidence</Label>
-            <div className="flex space-x-2">
-              <Input
-                placeholder="https://example.com/evidence"
-                value={currentLink}
-                onChange={(e) => setCurrentLink(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddLink())}
-              />
-              <Button type="button" variant="outline" onClick={handleAddLink}>
-                <Plus className="h-4 w-4" />
-              </Button>
-            </div>
-            {links.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-2">
-                {links.map((link, i) => (
-                  <Badge key={i} variant="secondary" className="pl-2 pr-1 py-1 flex items-center">
-                    <span className="truncate max-w-[150px]">{link}</span>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="h-5 w-5 ml-1"
-                      onClick={() => removeLink(link)}
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  </Badge>
-                ))}
-              </div>
-            )}
-          </div>
+          <TextAreaField
+            id="accusedOf"
+            label="Accused Of"
+            placeholder="Describe the scam or fraudulent activity"
+            value={accusedOf}
+            onChange={(e) => setAccusedOf(e.target.value)}
+            required
+          />
 
-          <div className="space-y-3">
-            <Label>Known Aliases</Label>
-            <div className="flex space-x-2">
-              <Input
-                placeholder="Add alias or nickname"
-                value={currentAlias}
-                onChange={(e) => setCurrentAlias(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddAlias())}
-              />
-              <Button type="button" variant="outline" onClick={handleAddAlias}>
-                <Plus className="h-4 w-4" />
-              </Button>
-            </div>
-            {aliases.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-2">
-                {aliases.map((alias, i) => (
-                  <Badge key={i} variant="secondary" className="pl-2 pr-1 py-1 flex items-center">
-                    {alias}
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="h-5 w-5 ml-1"
-                      onClick={() => removeAlias(alias)}
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  </Badge>
-                ))}
-              </div>
-            )}
-          </div>
+          <TagInput
+            label="Links to Evidence"
+            placeholder="https://example.com/evidence"
+            currentValue={currentLink}
+            values={links}
+            setCurrentValue={setCurrentLink}
+            addValue={handleAddLink}
+            removeValue={removeLink}
+          />
 
-          <div className="space-y-3">
-            <Label>Known Accomplices</Label>
-            <div className="flex space-x-2">
-              <Input
-                placeholder="Add accomplice name"
-                value={currentAccomplice}
-                onChange={(e) => setCurrentAccomplice(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddAccomplice())}
-              />
-              <Button type="button" variant="outline" onClick={handleAddAccomplice}>
-                <Plus className="h-4 w-4" />
-              </Button>
-            </div>
-            {accomplices.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-2">
-                {accomplices.map((accomplice, i) => (
-                  <Badge key={i} variant="secondary" className="pl-2 pr-1 py-1 flex items-center">
-                    {accomplice}
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="h-5 w-5 ml-1"
-                      onClick={() => removeAccomplice(accomplice)}
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  </Badge>
-                ))}
-              </div>
-            )}
-          </div>
+          <TagInput
+            label="Known Aliases"
+            placeholder="Add alias or nickname"
+            currentValue={currentAlias}
+            values={aliases}
+            setCurrentValue={setCurrentAlias}
+            addValue={handleAddAlias}
+            removeValue={removeAlias}
+          />
 
-          <div className="space-y-2">
-            <Label htmlFor="officialResponse">Official Response (if any)</Label>
-            <Textarea
-              id="officialResponse"
-              placeholder="Any official statements or responses from authorities"
-              value={officialResponse}
-              onChange={(e) => setOfficialResponse(e.target.value)}
-              className="min-h-[80px]"
-            />
-          </div>
+          <TagInput
+            label="Known Accomplices"
+            placeholder="Add accomplice name"
+            currentValue={currentAccomplice}
+            values={accomplices}
+            setCurrentValue={setCurrentAccomplice}
+            addValue={handleAddAccomplice}
+            removeValue={removeAccomplice}
+          />
 
-          <div className="flex items-center p-4 bg-muted/30 rounded-lg border border-border/50">
-            <AlertTriangle className="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0" />
-            <p className="text-sm text-muted-foreground">
-              Creating a listing costs <span className="font-medium text-foreground">1 $BOSC token</span>. 
-              The total bounty shown will be in $BOSC tokens, not USD. 
-              All bounty wallets are controlled by the developer for security purposes.
-            </p>
-          </div>
+          <TextAreaField
+            id="officialResponse"
+            label="Official Response (if any)"
+            placeholder="Any official statements or responses from authorities"
+            value={officialResponse}
+            onChange={(e) => setOfficialResponse(e.target.value)}
+            required={false}
+          />
+
+          <ListingDisclaimer />
         </CardContent>
-        <CardFooter className="flex flex-col space-y-4 sm:flex-row sm:justify-between sm:space-y-0">
-          <Button type="button" variant="outline" onClick={() => navigate("/most-wanted")}>
-            Cancel
-          </Button>
-          
-          {isConnected ? (
-            <Button 
-              type="submit" 
-              disabled={isSubmitting}
-              className="space-x-2"
-            >
-              <DollarSign className="h-4 w-4 mr-1" />
-              {isSubmitting ? "Creating Listing..." : "Create Listing (1 $BOSC)"}
-            </Button>
-          ) : (
-            <Button type="button" onClick={connectWallet}>
-              Connect Wallet to Continue
-            </Button>
-          )}
+        
+        <CardFooter>
+          <ListingFormActions isSubmitting={isSubmitting} />
         </CardFooter>
       </Card>
     </form>
