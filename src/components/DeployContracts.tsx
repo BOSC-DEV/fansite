@@ -33,19 +33,36 @@ const NETWORKS: Record<number, NetworkMapItem> = {
 };
 
 export const DeployContracts = () => {
-  const { provider, account } = useWallet();
+  const { isConnected, address } = useWallet();
   const [networkId, setNetworkId] = useState<number | null>(null);
   
   useEffect(() => {
     const fetchNetworkId = async () => {
-      if (provider) {
-        const network = await provider.getNetwork();
-        setNetworkId(Number(network.chainId));
+      if (window.ethereum) {
+        try {
+          const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+          setNetworkId(parseInt(chainId, 16));
+        } catch (error) {
+          console.error("Failed to get chain ID:", error);
+        }
       }
     };
     
     fetchNetworkId();
-  }, [provider]);
+    
+    // Listen for chain changes
+    if (window.ethereum) {
+      window.ethereum.on('chainChanged', (chainId: string) => {
+        setNetworkId(parseInt(chainId, 16));
+      });
+    }
+    
+    return () => {
+      if (window.ethereum) {
+        window.ethereum.removeListener('chainChanged', () => {});
+      }
+    };
+  }, []);
 
   const getNetworkInfo = () => {
     if (!networkId) return { name: "Unknown Network", contractAddresses: { boscToken: "", bookOfScams: "" } };
@@ -96,7 +113,7 @@ export const DeployContracts = () => {
           <Button
             variant="outline"
             className="w-full western-btn"
-            disabled={!account}
+            disabled={!isConnected}
           >
             View on Block Explorer
           </Button>
@@ -105,4 +122,3 @@ export const DeployContracts = () => {
     </div>
   );
 };
-
