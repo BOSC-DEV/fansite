@@ -3,7 +3,6 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { toast } from 'sonner';
 import web3Provider from '../services/web3Provider';
 import { DEVELOPER_WALLET_ADDRESS } from '../contracts/contract-abis';
-import { SmartWallet } from '@coinbase/onchainkit';
 import { ethers } from 'ethers';
 
 interface WalletContextType {
@@ -58,23 +57,18 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       
-      // Using SmartWallet from onchainkit
-      const smartAccount = await SmartWallet.create({
-        signer,
-        transport: {
-          type: 'fallback',
-          transports: [{
-            type: 'eip1193',
-            provider: window.ethereum as any
-          }]
-        }
-      });
-      
-      const smartAccountAddress = await smartAccount.getAddress();
-      setSmartWalletAddress(smartAccountAddress);
-      console.log("Smart wallet address:", smartAccountAddress);
-      
-      toast.success("Smart wallet initialized");
+      // Instead of using SmartWallet or createSmartAccountClient, use direct EIP1193 provider
+      // This is a simpler approach that still allows us to get the account address
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      if (accounts && accounts.length > 0) {
+        // We'll use the connected EOA address as the "smart wallet" for now
+        setSmartWalletAddress(accounts[0]);
+        console.log("Smart wallet address:", accounts[0]);
+        
+        toast.success("Wallet connected successfully");
+      } else {
+        throw new Error("No accounts found");
+      }
     } catch (error: any) {
       console.error("Failed to initialize smart wallet:", error);
       toast.error(`Smart wallet initialization failed: ${error.message || 'Unknown error'}`);
