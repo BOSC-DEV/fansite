@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { toast } from 'sonner';
 import web3Provider from '../services/web3Provider';
 import { DEVELOPER_WALLET_ADDRESS } from '../contracts/contract-abis';
-import { createSmartAccountClient, type SmartAccountSigner } from '@coinbase/onchainkit';
+import { createSmartAccount, type SmartAccount } from '@coinbase/onchainkit';
 import { ethers } from 'ethers';
 
 interface WalletContextType {
@@ -57,19 +57,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       
-      const smartAccountSigner: SmartAccountSigner = {
-        getAddress: async () => ownerAddress,
-        signMessage: async (message: Uint8Array) => {
-          return await signer.signMessage(message);
-        },
-        signTypedData: async (domain, types, message) => {
-          // @ts-ignore - ethers v6 typing issue with signTypedData
-          return await signer.signTypedData(domain, types, message);
-        }
-      };
-      
-      const smartAccount = await createSmartAccountClient({
-        signer: smartAccountSigner,
+      const smartAccount = await createSmartAccount({
+        signer,
         transport: {
           type: 'fallback',
           transports: [{
