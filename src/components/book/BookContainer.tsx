@@ -87,11 +87,11 @@ export const BookContainer = ({
             
             {/* Page content */}
             <div className="absolute inset-0 p-6 sm:p-8 flex flex-col">
-              <div className="flex justify-between items-center mb-4 sm:mb-6">
+              <div className="flex justify-center items-center mb-4 sm:mb-6">
                 <div className="font-impact text-xl sm:text-2xl text-accent bg-gradient-to-r from-meme-red to-meme-purple bg-clip-text text-transparent uppercase tracking-wide">
                   Most Wanted Scammers
                 </div>
-                <div className="flex items-center text-muted-foreground">
+                <div className="absolute right-6 sm:right-8 flex items-center text-muted-foreground">
                   <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                   <span className="font-mono text-xs sm:text-sm">Volume 1</span>
                 </div>

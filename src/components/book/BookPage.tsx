@@ -72,7 +72,7 @@ export const BookPage = ({
         </div>
         
         {/* Right column - Details */}
-        <div className="md:col-span-2">
+        <div className="md:col-span-2 pl-2">
           <div className="mb-4 p-4 bg-meme-red/5 rounded-lg border border-meme-red/20">
             <h3 className="text-lg font-bold mb-2 text-meme-red">Accused Of:</h3>
             <p className="italic">{scammer.accusedOf}</p>

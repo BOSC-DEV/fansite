@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Scammer } from "@/lib/types";
 import { BookContainer } from "./book/BookContainer";
@@ -36,15 +35,12 @@ export const BookView = ({
   const [isAddingBounty, setIsAddingBounty] = useState(false);
   const { isConnected } = useWallet();
   
-  // Update the scammer array with the new bounty amount
   const [localScammers, setLocalScammers] = useState<Scammer[]>(scammers);
   
-  // Update localScammers when props change
   useEffect(() => {
     setLocalScammers(scammers);
   }, [scammers]);
   
-  // Update the visible page when currentPage changes from parent
   useEffect(() => {
     setVisiblePage(currentPage);
   }, [currentPage]);
@@ -56,7 +52,6 @@ export const BookView = ({
     setDirection("right");
     setAnimationKey(prev => prev + 1);
     
-    // Trigger the animation first, then update the page
     setTimeout(() => {
       onNextPage();
     }, 400);
@@ -69,13 +64,11 @@ export const BookView = ({
     setDirection("left");
     setAnimationKey(prev => prev + 1);
     
-    // Trigger the animation first, then update the page
     setTimeout(() => {
       onPrevPage();
     }, 400);
   };
 
-  // Reset flipping state after animation completes
   useEffect(() => {
     if (isFlipping) {
       const timer = setTimeout(() => setIsFlipping(false), 800);
@@ -83,7 +76,6 @@ export const BookView = ({
     }
   }, [isFlipping]);
 
-  // Add keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight") {
@@ -100,7 +92,6 @@ export const BookView = ({
     };
   }, [currentPage, isFlipping, totalPages]);
 
-  // Handle adding bounty
   const handleAddBounty = () => {
     if (!isConnected) {
       toast.error("Please connect your wallet to add a bounty");
@@ -115,12 +106,9 @@ export const BookView = ({
     
     setIsAddingBounty(true);
     
-    // Simulate transaction processing
     setTimeout(() => {
-      // Get the current scammer
       const currentScammer = localScammers[currentPage - 1];
       
-      // Create a new array with updated bounty
       const updatedScammers = localScammers.map((scammer, index) => {
         if (index === currentPage - 1) {
           return {
@@ -140,20 +128,21 @@ export const BookView = ({
   };
 
   return (
-    <div className="flex flex-col items-center py-4">
-      <BookContainer
-        scammers={localScammers}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        direction={direction}
-        animationKey={animationKey}
-        visiblePage={visiblePage}
-        formatCurrency={formatCurrency}
-        formatDate={formatDate}
-      />
+    <div className="flex flex-col items-center py-8">
+      <div className="w-full max-w-4xl mx-auto relative">
+        <BookContainer
+          scammers={localScammers}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          direction={direction}
+          animationKey={animationKey}
+          visiblePage={visiblePage}
+          formatCurrency={formatCurrency}
+          formatDate={formatDate}
+        />
+      </div>
 
-      {/* Bounty Form */}
-      <div className="mt-4 mb-8 flex items-center justify-center gap-3 w-full max-w-xs">
+      <div className="mt-8 mb-8 flex items-center justify-center gap-3 w-full max-w-xs">
         <Input
           type="number"
           min="1"
