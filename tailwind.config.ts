@@ -20,9 +20,12 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				sans: ['Comic Sans MS', 'Comic Sans', 'system-ui', 'sans-serif'],
+				sans: ['Inter', 'system-ui', 'sans-serif'],
+				serif: ['Georgia', 'Times New Roman', 'serif'],
 				mono: ['SF Mono', 'monospace'],
 				impact: ['Impact', 'Haettenschweiler', 'sans-serif'],
+				western: ['"Playfair Display"', 'serif'],
+				wanted: ['"Rye"', 'cursive'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -81,6 +84,14 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				western: {
+					leather: '#8B4513',
+					sand: '#FEC6A1',
+					parchment: '#FEF7CD',
+					wood: '#6B4226',
+					dust: '#E8D4B7',
+					accent: '#862E1B',
 				}
 			},
 			borderRadius: {
@@ -132,6 +143,10 @@ export default {
 				'bounce-slight': {
 					'0%, 100%': { transform: 'translateY(0)' },
 					'50%': { transform: 'translateY(-10px)' }
+				},
+				'tumbleweed': {
+					'0%': { transform: 'translateX(0) rotate(0deg)' },
+					'100%': { transform: 'translateX(100vw) rotate(360deg)' }
 				}
 			},
 			animation: {
@@ -143,7 +158,8 @@ export default {
 				'shimmer': 'shimmer 2s infinite linear',
 				'wiggle': 'wiggle 1s ease-in-out infinite',
 				'spin-slow': 'spin-slow 3s linear infinite',
-				'bounce-slight': 'bounce-slight 2s infinite'
+				'bounce-slight': 'bounce-slight 2s infinite',
+				'tumbleweed': 'tumbleweed 15s linear infinite'
 			},
 			backdropFilter: {
 				'none': 'none',
