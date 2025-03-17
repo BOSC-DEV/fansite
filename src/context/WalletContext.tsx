@@ -3,6 +3,8 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { toast } from 'sonner';
 import web3Provider from '../services/web3Provider';
 import { DEVELOPER_WALLET_ADDRESS } from '../contracts/contract-abis';
+import { createSmartAccount, SmartAccountSigner } from '@coinbase/onchainkit';
+import { ethers } from 'ethers';
 
 interface WalletContextType {
   connected: boolean;
@@ -12,6 +14,8 @@ interface WalletContextType {
   connectWallet: () => Promise<void>;
   disconnectWallet: () => void;
   isConnected: boolean;
+  smartWalletAddress: string | null;
+  smartWalletLoading: boolean;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -21,6 +25,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [connecting, setConnecting] = useState(false);
   const [address, setAddress] = useState<string | null>(null);
   const [balance, setBalance] = useState<number | null>(null);
+  const [smartWalletAddress, setSmartWalletAddress] = useState<string | null>(null);
+  const [smartWalletLoading, setSmartWalletLoading] = useState(false);
 
   // Check for existing connection
   useEffect(() => {
@@ -35,12 +41,61 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         if (connectedAddress) {
           const tokenBalance = await web3Provider.getBalance(connectedAddress);
           setBalance(tokenBalance);
+          
+          // Initialize smart wallet
+          initializeSmartWallet(connectedAddress);
         }
       }
     };
 
     checkConnection();
   }, []);
+
+  const initializeSmartWallet = async (ownerAddress: string) => {
+    if (!ownerAddress) return;
+    
+    setSmartWalletLoading(true);
+    try {
+      if (!window.ethereum) throw new Error("No Ethereum provider found");
+      
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      
+      // Create a smart account
+      const smartAccountSigner: SmartAccountSigner = {
+        getAddress: async () => ownerAddress,
+        signMessage: async (message: Uint8Array) => {
+          return await signer.signMessage(message);
+        },
+        signTypedData: async (domain, types, message) => {
+          // @ts-ignore - ethers v6 typing issue with signTypedData
+          return await signer.signTypedData(domain, types, message);
+        }
+      };
+      
+      const smartAccount = await createSmartAccount({
+        signer: smartAccountSigner,
+        transport: {
+          type: 'fallback',
+          transports: [{
+            type: 'eip1193',
+            provider: window.ethereum as any
+          }]
+        }
+      });
+      
+      const smartAccountAddress = await smartAccount.getAddress();
+      setSmartWalletAddress(smartAccountAddress);
+      console.log("Smart wallet address:", smartAccountAddress);
+      
+      toast.success("Smart wallet initialized");
+    } catch (error: any) {
+      console.error("Failed to initialize smart wallet:", error);
+      toast.error(`Smart wallet initialization failed: ${error.message || 'Unknown error'}`);
+    } finally {
+      setSmartWalletLoading(false);
+    }
+  };
 
   const connectWallet = async () => {
     setConnecting(true);
@@ -53,6 +108,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         
         const tokenBalance = await web3Provider.getBalance(connectedAddress);
         setBalance(tokenBalance);
+        
+        // Initialize smart wallet after connecting
+        await initializeSmartWallet(connectedAddress);
         
         toast.success('Wallet connected successfully!');
         console.log(`Funds will flow to developer wallet: ${DEVELOPER_WALLET_ADDRESS}`);
@@ -71,6 +129,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     setAddress(null);
     setConnected(false);
     setBalance(null);
+    setSmartWalletAddress(null);
     toast.success('Wallet disconnected');
   };
 
@@ -82,6 +141,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     connectWallet,
     disconnectWallet,
     isConnected: connected && !!address,
+    smartWalletAddress,
+    smartWalletLoading
   };
 
   return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>;
