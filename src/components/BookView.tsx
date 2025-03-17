@@ -30,33 +30,42 @@ export const BookView = ({
   const [isFlipping, setIsFlipping] = useState(false);
   const [direction, setDirection] = useState<"left" | "right">("right");
   const [displayedScammerIndex, setDisplayedScammerIndex] = useState(0);
-  const [animationKey, setAnimationKey] = useState(currentPage);
+  const [animationKey, setAnimationKey] = useState(0);
+  const [visiblePage, setVisiblePage] = useState(currentPage);
   
   // Get the current scammer to display (one per page)
   const currentScammer = scammers.length > 0 ? scammers[displayedScammerIndex] : null;
 
+  // Update the visible page when currentPage changes from parent
+  useEffect(() => {
+    setVisiblePage(currentPage);
+  }, [currentPage]);
+
   const handleNextPage = () => {
     if (isFlipping || currentPage === totalPages) return;
+    
     setIsFlipping(true);
     setDirection("right");
     setAnimationKey(prev => prev + 1);
     
-    // Delay the actual page change until animation is in progress
+    // Trigger the animation first, then update the page
+    // This ensures the animation completes before data changes
     setTimeout(() => {
       onNextPage();
-    }, 300); // Half the animation duration for a more natural feel
+    }, 400);
   };
 
   const handlePrevPage = () => {
     if (isFlipping || currentPage === 1) return;
+    
     setIsFlipping(true);
     setDirection("left");
-    setAnimationKey(prev => prev - 1);
+    setAnimationKey(prev => prev + 1);
     
-    // Delay the actual page change until animation is in progress
+    // Trigger the animation first, then update the page
     setTimeout(() => {
       onPrevPage();
-    }, 300); // Half the animation duration for a more natural feel
+    }, 400);
   };
 
   // Reset flipping state after animation completes
@@ -67,10 +76,12 @@ export const BookView = ({
     }
   }, [isFlipping]);
 
+  console.log("Animation key:", animationKey, "Direction:", direction, "Current page:", currentPage);
+
   return (
     <div className="flex flex-col items-center">
       <div className="relative w-full max-w-4xl h-[600px] perspective-1000">
-        <AnimatePresence initial={false} mode="wait">
+        <AnimatePresence mode="wait">
           <motion.div
             key={animationKey}
             className="w-full h-full"
@@ -89,10 +100,9 @@ export const BookView = ({
               transformOrigin: direction === "right" ? "right" : "left"
             }}
             transition={{
-              type: "spring",
-              damping: 20,
-              stiffness: 100,
-              duration: 0.8
+              type: "tween",
+              duration: 0.6,
+              ease: "easeInOut"
             }}
           >
             <div className="relative w-full h-full overflow-hidden">
@@ -111,7 +121,7 @@ export const BookView = ({
                   <div className="meme-text text-2xl text-accent">Most Wanted</div>
                   <div className="flex items-center text-muted-foreground">
                     <BookOpen className="w-5 h-5 mr-2" />
-                    <span>Page {currentPage} of {totalPages}</span>
+                    <span>Page {visiblePage} of {totalPages}</span>
                   </div>
                 </div>
                 
@@ -120,7 +130,7 @@ export const BookView = ({
                     <div className="meme-card w-full max-w-2xl p-8 flex flex-col items-center bg-card">
                       <div className="text-center mb-6">
                         <div className="font-impact text-meme-purple text-4xl mb-2">
-                          #{currentPage}
+                          #{visiblePage}
                         </div>
                         <Avatar className="h-32 w-32 border-4 border-meme-blue mx-auto mb-4">
                           <AvatarImage src={currentScammer.photoUrl} alt={currentScammer.name} />
