@@ -13,7 +13,8 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { FileText } from "lucide-react";
 
-const ITEMS_PER_PAGE = 10;
+// Change this to 1 for the book view to show one scammer per page
+const ITEMS_PER_PAGE = 1;
 
 const MostWanted = () => {
   const { isConnected } = useWallet();
@@ -41,6 +42,11 @@ const MostWanted = () => {
 
     fetchScammers();
   }, []);
+
+  // Reset to page 1 when search query changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, viewMode]);
 
   const filteredScammers = scammers.filter(scammer => 
     scammer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -134,10 +140,13 @@ const MostWanted = () => {
           ) : sortedScammers.length > 0 ? (
             viewMode === "list" ? (
               <ScammerTable 
-                paginatedScammers={paginatedScammers}
+                paginatedScammers={sortedScammers.slice(
+                  (currentPage - 1) * 10,  // Keep list view at 10 per page
+                  currentPage * 10
+                )}
                 currentPage={currentPage}
-                totalPages={totalPages}
-                itemsPerPage={ITEMS_PER_PAGE}
+                totalPages={Math.ceil(sortedScammers.length / 10)}  // Keep list view at 10 per page
+                itemsPerPage={10}  // Keep list view at 10 per page
                 setCurrentPage={setCurrentPage}
                 formatCurrency={formatCurrency}
                 formatDate={formatDate}

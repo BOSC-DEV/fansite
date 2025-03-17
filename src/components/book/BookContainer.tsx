@@ -28,16 +28,16 @@ export const BookContainer = ({
 }: BookContainerProps) => {
   const [displayedScammerIndex, setDisplayedScammerIndex] = useState(0);
   
-  // Get the current scammer to display based on index
-  const currentScammer = scammers.length > 0 && displayedScammerIndex < scammers.length 
+  // Get the current scammer to display
+  const currentScammer = scammers.length > 0 
     ? scammers[displayedScammerIndex] 
     : null;
   
   // Update the displayed scammer index when the page changes
   useEffect(() => {
     if (scammers.length > 0) {
-      // If we're in a paginated view, we need to set displayedScammerIndex to 0
-      // because each "page" from parent already contains the correct scammer for this page
+      // Since we're showing one scammer per page, the displayedScammerIndex is always 0
+      // because the pagination already gives us the correct scammer for this page
       setDisplayedScammerIndex(0);
     }
   }, [currentPage, scammers]);
