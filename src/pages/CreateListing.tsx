@@ -4,8 +4,9 @@ import { CreateListingForm } from "@/components/CreateListingForm";
 import { useWallet } from "@/context/WalletContext";
 import ConnectWallet from "@/components/ConnectWallet";
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const CreateListing = () => {
   const { isConnected } = useWallet();
@@ -27,6 +28,17 @@ const CreateListing = () => {
               Back to Most Wanted
             </Link>
           </Button>
+
+          <div className="max-w-3xl mx-auto mb-6">
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Important Note</AlertTitle>
+              <AlertDescription>
+                All scammer listings created will have wallet addresses that are controlled by the developer. 
+                The bounty amounts shown represent $BOSC tokens, not dollar amounts.
+              </AlertDescription>
+            </Alert>
+          </div>
 
           {isConnected ? (
             <CreateListingForm />

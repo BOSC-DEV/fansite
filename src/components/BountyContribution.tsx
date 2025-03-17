@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useWallet } from "@/context/WalletContext";
-import { ArrowRightIcon, WalletIcon } from "lucide-react";
+import { ArrowRightIcon, WalletIcon, BadgeInfo } from "lucide-react";
 
 interface BountyContributionProps {
   scammerId: string;
@@ -15,6 +15,9 @@ interface BountyContributionProps {
   walletAddress: string;
   onContribute?: (amount: number) => void;
 }
+
+// Developer controlled wallet address - this would typically be stored more securely
+const DEVELOPER_WALLET_ADDRESS = "0x742d35Cc6634C0532925a3b844Bc454e4438f44e";
 
 export function BountyContribution({
   scammerId,
@@ -49,7 +52,12 @@ export function BountyContribution({
       // Simulate transaction delay
       await new Promise((resolve) => setTimeout(resolve, 1500));
       
-      toast.success(`Successfully contributed ${numAmount} $BOSC to the bounty`);
+      // Log to console - in a real app this would be an API call
+      console.log(`Contributing ${numAmount} $BOSC tokens to bounty for ${scammerName}`);
+      console.log(`Funds are sent to developer-controlled wallet: ${DEVELOPER_WALLET_ADDRESS}`);
+      console.log(`Original scammer wallet address for reference: ${walletAddress}`);
+      
+      toast.success(`Successfully contributed ${numAmount} $BOSC tokens to the bounty`);
       if (onContribute) {
         onContribute(numAmount);
       }
@@ -74,7 +82,7 @@ export function BountyContribution({
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="amount">Amount ($BOSC)</Label>
+          <Label htmlFor="amount">Amount ($BOSC Tokens)</Label>
           <div className="flex space-x-2">
             <Input
               id="amount"
@@ -111,10 +119,15 @@ export function BountyContribution({
           <span className="font-medium">{currentBounty} $BOSC</span>
         </div>
 
+        <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-md text-xs text-muted-foreground">
+          <BadgeInfo className="h-4 w-4 text-blue-500 flex-shrink-0" />
+          <p>All bounty wallets are controlled by the developer for security. Funds contribute to the token count displayed on the listing.</p>
+        </div>
+
         <div className="text-xs text-muted-foreground pt-2">
-          <p>Funds will be sent to scammer's listing address:</p>
+          <p>Developer controlled wallet address:</p>
           <code className="block mt-1 font-mono text-xs bg-muted/50 p-2 rounded overflow-x-auto">
-            {walletAddress}
+            {DEVELOPER_WALLET_ADDRESS}
           </code>
         </div>
       </CardContent>
@@ -129,7 +142,7 @@ export function BountyContribution({
               "Processing..."
             ) : (
               <>
-                Contribute Bounty
+                Contribute {amount ? `${amount} $BOSC` : "Bounty"}
                 <ArrowRightIcon className="ml-2 h-4 w-4" />
               </>
             )}

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@/context/WalletContext";
@@ -19,12 +18,13 @@ import { X, Plus, AlertTriangle, DollarSign } from "lucide-react";
 import { toast } from "sonner";
 import { ScammerInput } from "@/lib/types";
 
+const DEVELOPER_WALLET_ADDRESS = "0x742d35Cc6634C0532925a3b844Bc454e4438f44e";
+
 export function CreateListingForm() {
   const navigate = useNavigate();
-  const { isConnected, balance, connectWallet } = useWallet();
+  const { isConnected, balance, connectWallet, address } = useWallet();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Form fields
   const [name, setName] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
   const [accusedOf, setAccusedOf] = useState("");
@@ -104,7 +104,6 @@ export function CreateListingForm() {
     setIsSubmitting(true);
     
     try {
-      // Mock API call to create listing
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       const scammerData: ScammerInput = {
@@ -114,16 +113,18 @@ export function CreateListingForm() {
         links,
         aliases,
         accomplices,
-        officialResponse
+        officialResponse,
+        controlledByDev: true,
+        devWalletAddress: DEVELOPER_WALLET_ADDRESS
       };
       
       console.log("Creating scammer listing:", scammerData);
-      
-      // In a real app, this would be an API call to create the listing
+      console.log("Wallet for bounties controlled by developer:", DEVELOPER_WALLET_ADDRESS);
+      console.log("Listing created by user wallet:", address);
       
       toast.success("Scammer successfully added to the Book of Scams!");
+      toast.info("Bounty wallet is now controlled by the developer");
       
-      // Navigate to most wanted page after successful submission
       setTimeout(() => navigate("/most-wanted"), 1000);
     } catch (error) {
       console.error("Error creating listing:", error);
@@ -292,7 +293,8 @@ export function CreateListingForm() {
             <AlertTriangle className="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0" />
             <p className="text-sm text-muted-foreground">
               Creating a listing costs <span className="font-medium text-foreground">1 $BOSC token</span>. 
-              Ensure all information is accurate and verifiable. False accusations may result in legal consequences.
+              The total bounty shown will be in $BOSC tokens, not USD. 
+              All bounty wallets are controlled by the developer for security purposes.
             </p>
           </div>
         </CardContent>
