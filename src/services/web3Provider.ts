@@ -1,4 +1,3 @@
-
 import { ethers } from "ethers";
 import { BOSC_TOKEN_ABI, BOOK_OF_SCAMS_ABI, CONTRACT_ADDRESSES } from "../contracts/contract-abis";
 
@@ -67,52 +66,21 @@ export class Web3Provider {
       return;
     }
     
-    // Check localStorage for deployed contract addresses for this network
-    const localStorageKey = `deployedContracts_${this.chainId}`;
-    const deployedAddresses = localStorage.getItem(localStorageKey);
-    let boscTokenAddress = addresses.boscToken;
-    let bookOfScamsAddress = addresses.bookOfScams;
-    
-    if (deployedAddresses) {
-      try {
-        const parsed = JSON.parse(deployedAddresses);
-        if (parsed.boscTokenAddress) {
-          boscTokenAddress = parsed.boscTokenAddress;
-          console.log(`Using locally stored BOSC token address: ${boscTokenAddress}`);
-        }
-        if (parsed.bookOfScamsAddress) {
-          bookOfScamsAddress = parsed.bookOfScamsAddress;
-          console.log(`Using locally stored Book of Scams address: ${bookOfScamsAddress}`);
-        }
-      } catch (error) {
-        console.error("Error parsing stored contract addresses:", error);
-      }
-    }
-    
-    if (boscTokenAddress) {
+    if (addresses.boscToken) {
       this.boscTokenContract = new ethers.Contract(
-        boscTokenAddress,
+        addresses.boscToken,
         BOSC_TOKEN_ABI,
         this.signer
       );
     }
     
-    if (bookOfScamsAddress) {
+    if (addresses.bookOfScams) {
       this.bookOfScamsContract = new ethers.Contract(
-        bookOfScamsAddress,
+        addresses.bookOfScams,
         BOOK_OF_SCAMS_ABI,
         this.signer
       );
     }
-  }
-  
-  // Add a method to store deployed contract addresses
-  storeDeployedContractAddresses(addresses: { boscTokenAddress: string, bookOfScamsAddress: string, chainId: number }) {
-    if (!addresses.chainId) return;
-    
-    const localStorageKey = `deployedContracts_${addresses.chainId}`;
-    localStorage.setItem(localStorageKey, JSON.stringify(addresses));
-    console.log(`Stored deployed contract addresses for chain ID ${addresses.chainId}`);
   }
   
   async getBalance(address: string): Promise<number | null> {

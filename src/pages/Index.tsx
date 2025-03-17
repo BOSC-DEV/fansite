@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { Header } from "@/components/Header";
 import { BookView } from "@/components/BookView";
-import { DeployContracts } from "@/components/DeployContracts";
 import { MOCK_SCAMMERS } from "@/lib/types";
 
 const Index = () => {
@@ -67,32 +66,30 @@ const Index = () => {
             <div className="order-1 lg:order-2 flex flex-col justify-center">
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <h2 className="text-3xl font-bold">Deploy Your Contracts</h2>
+                  <h2 className="text-3xl font-bold">About Book of Scams</h2>
                   <p className="text-muted-foreground">
-                    Get started by deploying the BOSC token and Book of Scams contracts.
+                    A permanent on-chain record of scammers and fraudsters, with community-funded bounties.
                   </p>
                 </div>
-                
-                <DeployContracts />
                 
                 <div className="pt-4 border-t">
                   <h3 className="text-lg font-medium mb-2">How It Works</h3>
                   <ul className="space-y-2 text-sm">
                     <li className="flex gap-2">
                       <span className="font-bold text-bosc">1.</span>
-                      <span>Connect your wallet and deploy the contracts</span>
+                      <span>Connect your wallet to report scammers or contribute to bounties</span>
                     </li>
                     <li className="flex gap-2">
                       <span className="font-bold text-bosc">2.</span>
-                      <span>Use the deployed BOSC tokens to report scammers</span>
+                      <span>BOSC tokens are required to report new scammers to the registry</span>
                     </li>
                     <li className="flex gap-2">
                       <span className="font-bold text-bosc">3.</span>
-                      <span>Place bounties on scammers to incentivize action</span>
+                      <span>Place bounties on scammers to incentivize action against them</span>
                     </li>
                     <li className="flex gap-2">
                       <span className="font-bold text-bosc">4.</span>
-                      <span>All transactions are recorded on the blockchain</span>
+                      <span>All listings and bounties are permanently recorded on the blockchain</span>
                     </li>
                   </ul>
                 </div>
