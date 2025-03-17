@@ -30,6 +30,7 @@ export const BookView = ({
   const [isFlipping, setIsFlipping] = useState(false);
   const [direction, setDirection] = useState<"left" | "right">("right");
   const [displayedScammerIndex, setDisplayedScammerIndex] = useState(0);
+  const [animationKey, setAnimationKey] = useState(currentPage);
   
   // Get the current scammer to display (one per page)
   const currentScammer = scammers.length > 0 ? scammers[displayedScammerIndex] : null;
@@ -38,6 +39,7 @@ export const BookView = ({
     if (isFlipping || currentPage === totalPages) return;
     setIsFlipping(true);
     setDirection("right");
+    setAnimationKey(prev => prev + 1);
     
     // Delay the actual page change until animation is in progress
     setTimeout(() => {
@@ -49,6 +51,7 @@ export const BookView = ({
     if (isFlipping || currentPage === 1) return;
     setIsFlipping(true);
     setDirection("left");
+    setAnimationKey(prev => prev - 1);
     
     // Delay the actual page change until animation is in progress
     setTimeout(() => {
@@ -69,7 +72,7 @@ export const BookView = ({
       <div className="relative w-full max-w-4xl h-[600px] perspective-1000">
         <AnimatePresence initial={false} mode="wait">
           <motion.div
-            key={currentPage}
+            key={animationKey}
             className="w-full h-full"
             initial={{
               rotateY: direction === "right" ? -90 : 90,
