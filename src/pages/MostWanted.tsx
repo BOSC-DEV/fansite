@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { MOCK_SCAMMERS, Scammer } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import ConnectWallet from "@/components/ConnectWallet";
 import { 
   Table, 
@@ -22,10 +23,21 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { FileText, Search, FilterX, SortDesc, AlertTriangle, ExternalLink, DollarSign } from "lucide-react";
+import { 
+  FileText, 
+  Search, 
+  FilterX, 
+  SortDesc, 
+  AlertTriangle, 
+  ExternalLink, 
+  DollarSign,
+  BookOpen, 
+  List
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { BookView } from "@/components/BookView";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -36,6 +48,7 @@ const MostWanted = () => {
   const [sortOption, setSortOption] = useState<"recent" | "bounty">("bounty");
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [viewMode, setViewMode] = useState<"list" | "book">("list");
 
   useEffect(() => {
     // Simulate API call to fetch scammers
@@ -82,6 +95,10 @@ const MostWanted = () => {
 
   const toggleSort = () => {
     setSortOption(sortOption === "recent" ? "bounty" : "recent");
+  };
+
+  const toggleViewMode = () => {
+    setViewMode(viewMode === "list" ? "book" : "list");
   };
 
   const formatDate = (date: Date) => {
@@ -148,14 +165,26 @@ const MostWanted = () => {
                 </Button>
               )}
             </div>
-            <Button
-              variant="outline"
-              className="flex-shrink-0"
-              onClick={toggleSort}
-            >
-              <SortDesc className="h-4 w-4 mr-2" />
-              Sort by: {sortOption === "recent" ? "Most Recent" : "Highest Bounty"}
-            </Button>
+            <div className="flex items-center gap-4">
+              <Button
+                variant="outline"
+                className="flex-shrink-0"
+                onClick={toggleSort}
+              >
+                <SortDesc className="h-4 w-4 mr-2" />
+                Sort by: {sortOption === "recent" ? "Most Recent" : "Highest Bounty"}
+              </Button>
+              
+              <div className="flex items-center space-x-2">
+                <List className={`h-4 w-4 ${viewMode === 'list' ? 'text-primary' : 'text-muted-foreground'}`} />
+                <Switch 
+                  checked={viewMode === 'book'} 
+                  onCheckedChange={toggleViewMode} 
+                  aria-label="Toggle view mode"
+                />
+                <BookOpen className={`h-4 w-4 ${viewMode === 'book' ? 'text-primary' : 'text-muted-foreground'}`} />
+              </div>
+            </div>
           </div>
 
           {!isConnected ? (
@@ -166,121 +195,133 @@ const MostWanted = () => {
           ) : isLoading ? (
             <LoadingSkeletons />
           ) : sortedScammers.length > 0 ? (
-            <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[60px] text-center">#</TableHead>
-                    <TableHead>Scammer</TableHead>
-                    <TableHead>Accused Of</TableHead>
-                    <TableHead className="text-center">Aliases</TableHead>
-                    <TableHead className="text-right">Bounty</TableHead>
-                    <TableHead className="text-right">Added</TableHead>
-                    <TableHead className="w-[80px]"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {paginatedScammers.map((scammer, index) => (
-                    <TableRow key={scammer.id}>
-                      <TableCell className="font-medium text-center">
-                        {(currentPage - 1) * ITEMS_PER_PAGE + index + 1}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center space-x-3">
-                          <Avatar>
-                            <AvatarImage src={scammer.photoUrl} alt={scammer.name} />
-                            <AvatarFallback>{scammer.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div className="font-medium">{scammer.name}</div>
-                            <div className="text-xs text-muted-foreground truncate max-w-[150px]">
-                              {scammer.walletAddress}
+            viewMode === "list" ? (
+              <div className="rounded-md border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[60px] text-center">#</TableHead>
+                      <TableHead>Scammer</TableHead>
+                      <TableHead>Accused Of</TableHead>
+                      <TableHead className="text-center">Aliases</TableHead>
+                      <TableHead className="text-right">Bounty</TableHead>
+                      <TableHead className="text-right">Added</TableHead>
+                      <TableHead className="w-[80px]"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {paginatedScammers.map((scammer, index) => (
+                      <TableRow key={scammer.id}>
+                        <TableCell className="font-medium text-center">
+                          {(currentPage - 1) * ITEMS_PER_PAGE + index + 1}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center space-x-3">
+                            <Avatar>
+                              <AvatarImage src={scammer.photoUrl} alt={scammer.name} />
+                              <AvatarFallback>{scammer.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="font-medium">{scammer.name}</div>
+                              <div className="text-xs text-muted-foreground truncate max-w-[150px]">
+                                {scammer.walletAddress}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="max-w-[200px]">
-                        <p className="truncate">{scammer.accusedOf}</p>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {scammer.aliases.length > 0 ? (
-                          <div className="flex flex-wrap justify-center gap-1">
-                            <Badge variant="outline" className="text-xs">
-                              {scammer.aliases[0]}
-                              {scammer.aliases.length > 1 && ` +${scammer.aliases.length - 1}`}
-                            </Badge>
+                        </TableCell>
+                        <TableCell className="max-w-[200px]">
+                          <p className="truncate">{scammer.accusedOf}</p>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {scammer.aliases.length > 0 ? (
+                            <div className="flex flex-wrap justify-center gap-1">
+                              <Badge variant="outline" className="text-xs">
+                                {scammer.aliases[0]}
+                                {scammer.aliases.length > 1 && ` +${scammer.aliases.length - 1}`}
+                              </Badge>
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground text-sm">-</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right font-medium">
+                          <div className="flex items-center justify-end">
+                            <DollarSign className="h-3.5 w-3.5 text-bosc mr-1" />
+                            <span className="text-bosc">{formatCurrency(scammer.bountyAmount)}</span>
                           </div>
-                        ) : (
-                          <span className="text-muted-foreground text-sm">-</span>
-                        )}
-                      </TableCell>
-                      <TableCell className="text-right font-medium">
-                        <div className="flex items-center justify-end">
-                          <DollarSign className="h-3.5 w-3.5 text-bosc mr-1" />
-                          <span className="text-bosc">{formatCurrency(scammer.bountyAmount)}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right text-muted-foreground text-sm">
-                        {formatDate(scammer.dateAdded)}
-                      </TableCell>
-                      <TableCell>
-                        <Button asChild size="sm" variant="ghost">
-                          <Link to={`/scammer/${scammer.id}`}>
-                            <span className="sr-only">View</span>
-                            <ExternalLink className="h-4 w-4" />
-                          </Link>
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              
-              {totalPages > 1 && (
-                <div className="py-4 border-t">
-                  <Pagination>
-                    <PaginationContent>
-                      <PaginationItem>
-                        <PaginationPrevious 
-                          href="#" 
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setCurrentPage(p => Math.max(1, p - 1));
-                          }}
-                          className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
-                        />
-                      </PaginationItem>
-                      
-                      {Array.from({ length: totalPages }).map((_, i) => (
-                        <PaginationItem key={i}>
-                          <PaginationLink 
+                        </TableCell>
+                        <TableCell className="text-right text-muted-foreground text-sm">
+                          {formatDate(scammer.dateAdded)}
+                        </TableCell>
+                        <TableCell>
+                          <Button asChild size="sm" variant="ghost">
+                            <Link to={`/scammer/${scammer.id}`}>
+                              <span className="sr-only">View</span>
+                              <ExternalLink className="h-4 w-4" />
+                            </Link>
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                
+                {totalPages > 1 && (
+                  <div className="py-4 border-t">
+                    <Pagination>
+                      <PaginationContent>
+                        <PaginationItem>
+                          <PaginationPrevious 
                             href="#" 
                             onClick={(e) => {
                               e.preventDefault();
-                              setCurrentPage(i + 1);
+                              setCurrentPage(p => Math.max(1, p - 1));
                             }}
-                            isActive={currentPage === i + 1}
-                          >
-                            {i + 1}
-                          </PaginationLink>
+                            className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                          />
                         </PaginationItem>
-                      ))}
-                      
-                      <PaginationItem>
-                        <PaginationNext 
-                          href="#" 
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setCurrentPage(p => Math.min(totalPages, p + 1));
-                          }}
-                          className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
-                        />
-                      </PaginationItem>
-                    </PaginationContent>
-                  </Pagination>
-                </div>
-              )}
-            </div>
+                        
+                        {Array.from({ length: totalPages }).map((_, i) => (
+                          <PaginationItem key={i}>
+                            <PaginationLink 
+                              href="#" 
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setCurrentPage(i + 1);
+                              }}
+                              isActive={currentPage === i + 1}
+                            >
+                              {i + 1}
+                            </PaginationLink>
+                          </PaginationItem>
+                        ))}
+                        
+                        <PaginationItem>
+                          <PaginationNext 
+                            href="#" 
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setCurrentPage(p => Math.min(totalPages, p + 1));
+                            }}
+                            className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                          />
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <BookView 
+                scammers={paginatedScammers} 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onNextPage={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                onPrevPage={() => setCurrentPage(p => Math.max(1, p - 1))}
+                formatCurrency={formatCurrency}
+                formatDate={formatDate}
+              />
+            )
           ) : (
             <div className="text-center py-16">
               <AlertTriangle className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
