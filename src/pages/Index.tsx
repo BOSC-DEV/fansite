@@ -1,17 +1,18 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
 import { Link } from "react-router-dom";
 import { Header } from "@/components/Header";
-import ScammerCard from "@/components/ScammerCard";
 import { MOCK_SCAMMERS } from "@/lib/types";
 import { ArrowRight, FileText, List, Shield, DollarSign, AlertTriangle, Zap, Skull, Ghost, PartyPopper, Flame } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
 const Index = () => {
   const { isConnected } = useWallet();
   const [scrolled, setScrolled] = useState(false);
-  const [featuredScammers, setFeaturedScammers] = useState(MOCK_SCAMMERS.slice(0, 3));
+  const [featuredScammers, setFeaturedScammers] = useState(MOCK_SCAMMERS.slice(0, 5));
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +22,22 @@ const Index = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'decimal',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
+  const formatDate = (date: Date) => {
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    }).format(date);
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -79,7 +96,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Featured Scammers Section */}
+      {/* Featured Scammers Section - List Format */}
       <section className="py-16 bg-muted/30">
         <div className="container mx-auto max-w-6xl px-4">
           <div className="flex justify-between items-center mb-10">
@@ -95,10 +112,75 @@ const Index = () => {
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredScammers.map((scammer) => (
-              <ScammerCard key={scammer.id} scammer={scammer} />
-            ))}
+          <div className="rounded-md border bg-card overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[60px] text-center">#</TableHead>
+                  <TableHead>Scammer</TableHead>
+                  <TableHead>Accused Of</TableHead>
+                  <TableHead className="hidden md:table-cell text-center">Aliases</TableHead>
+                  <TableHead className="text-right">Bounty</TableHead>
+                  <TableHead className="hidden md:table-cell text-right">Added</TableHead>
+                  <TableHead className="w-[80px]"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {featuredScammers.map((scammer, index) => (
+                  <TableRow key={scammer.id}>
+                    <TableCell className="font-medium text-center">
+                      {index + 1}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center space-x-3">
+                        <Avatar>
+                          <AvatarImage src={scammer.photoUrl} alt={scammer.name} />
+                          <AvatarFallback>{scammer.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="font-medium">{scammer.name}</div>
+                          <div className="text-xs text-muted-foreground truncate max-w-[150px] hidden md:block">
+                            {scammer.walletAddress}
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="max-w-[200px]">
+                      <p className="truncate">{scammer.accusedOf}</p>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell text-center">
+                      {scammer.aliases.length > 0 ? (
+                        <div className="flex flex-wrap justify-center gap-1">
+                          <Badge variant="outline" className="text-xs">
+                            {scammer.aliases[0]}
+                            {scammer.aliases.length > 1 && ` +${scammer.aliases.length - 1}`}
+                          </Badge>
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground text-sm">-</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right font-medium">
+                      <div className="flex items-center justify-end">
+                        <DollarSign className="h-3.5 w-3.5 text-bosc mr-1" />
+                        <span className="text-bosc">{formatCurrency(scammer.bountyAmount)}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell text-right text-muted-foreground text-sm">
+                      {formatDate(scammer.dateAdded)}
+                    </TableCell>
+                    <TableCell>
+                      <Button asChild size="sm" variant="ghost">
+                        <Link to={`/scammer/${scammer.id}`}>
+                          <span className="sr-only">View</span>
+                          <ArrowRight className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         </div>
       </section>
