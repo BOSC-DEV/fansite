@@ -33,13 +33,24 @@ export const BookView = ({
   const [animationKey, setAnimationKey] = useState(0);
   const [visiblePage, setVisiblePage] = useState(currentPage);
   
-  // Get the current scammer to display (one per page)
-  const currentScammer = scammers.length > 0 ? scammers[displayedScammerIndex] : null;
+  // Get the current scammer to display based on index
+  const currentScammer = scammers.length > 0 && displayedScammerIndex < scammers.length 
+    ? scammers[displayedScammerIndex] 
+    : null;
 
   // Update the visible page when currentPage changes from parent
   useEffect(() => {
     setVisiblePage(currentPage);
   }, [currentPage]);
+
+  // Update the displayed scammer index when the page changes
+  useEffect(() => {
+    if (scammers.length > 0) {
+      // If we're in a paginated view, we need to set displayedScammerIndex to 0
+      // because each "page" from parent already contains the correct scammer for this page
+      setDisplayedScammerIndex(0);
+    }
+  }, [currentPage, scammers]);
 
   const handleNextPage = () => {
     if (isFlipping || currentPage === totalPages) return;
@@ -49,7 +60,6 @@ export const BookView = ({
     setAnimationKey(prev => prev + 1);
     
     // Trigger the animation first, then update the page
-    // This ensures the animation completes before data changes
     setTimeout(() => {
       onNextPage();
     }, 400);
@@ -76,7 +86,7 @@ export const BookView = ({
     }
   }, [isFlipping]);
 
-  console.log("Animation key:", animationKey, "Direction:", direction, "Current page:", currentPage);
+  console.log("Animation key:", animationKey, "Direction:", direction, "Current page:", currentPage, "Scammers length:", scammers.length, "Displayed index:", displayedScammerIndex);
 
   return (
     <div className="flex flex-col items-center">
