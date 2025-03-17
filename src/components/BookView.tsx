@@ -29,22 +29,31 @@ export const BookView = ({
 }: BookViewProps) => {
   const [isFlipping, setIsFlipping] = useState(false);
   const [direction, setDirection] = useState<"left" | "right">("right");
-
+  const [displayedScammerIndex, setDisplayedScammerIndex] = useState(0);
+  
   // Get the current scammer to display (one per page)
-  const currentScammer = scammers.length > 0 ? scammers[0] : null;
+  const currentScammer = scammers.length > 0 ? scammers[displayedScammerIndex] : null;
 
   const handleNextPage = () => {
-    if (isFlipping) return;
+    if (isFlipping || currentPage === totalPages) return;
     setIsFlipping(true);
     setDirection("right");
-    onNextPage();
+    
+    // Delay the actual page change until animation is in progress
+    setTimeout(() => {
+      onNextPage();
+    }, 300); // Half the animation duration for a more natural feel
   };
 
   const handlePrevPage = () => {
-    if (isFlipping) return;
+    if (isFlipping || currentPage === 1) return;
     setIsFlipping(true);
     setDirection("left");
-    onPrevPage();
+    
+    // Delay the actual page change until animation is in progress
+    setTimeout(() => {
+      onPrevPage();
+    }, 300); // Half the animation duration for a more natural feel
   };
 
   // Reset flipping state after animation completes
