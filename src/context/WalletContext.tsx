@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { toast } from 'sonner';
 import web3Provider from '../services/web3Provider';
 import { DEVELOPER_WALLET_ADDRESS } from '../contracts/contract-abis';
-import { createSmartAccount } from '@coinbase/onchainkit';
+import { createSmartAccountClient } from '@coinbase/onchainkit';
 import { ethers } from 'ethers';
 
 interface WalletContextType {
@@ -58,7 +58,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       
-      const smartAccount = await createSmartAccount({
+      const smartAccount = await createSmartAccountClient({
         signer,
         transport: {
           type: 'fallback',
