@@ -2,54 +2,23 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, Check, Loader2 } from "lucide-react";
-import { deployContracts } from "@/contracts/deploy-contracts";
+import { AlertCircle, ExternalLink } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { toast } from "sonner";
 import { CONTRACT_ADDRESSES } from "@/contracts/contract-abis";
 import { useWallet } from "@/context/WalletContext";
-import web3Provider from "@/services/web3Provider";
 
 export function DeployContracts() {
-  const [isDeploying, setIsDeploying] = useState(false);
-  const [deployedAddresses, setDeployedAddresses] = useState<{
-    boscTokenAddress: string;
-    bookOfScamsAddress: string;
-    chainId: number;
-  } | null>(null);
-  const { isConnected, connectWallet } = useWallet();
-
-  const handleDeploy = async () => {
-    if (!isConnected) {
-      toast.error("Please connect your wallet first");
-      return;
-    }
-
-    setIsDeploying(true);
-    
-    try {
-      const result = await deployContracts();
-      setDeployedAddresses(result);
-      
-      toast.success("Contracts deployed successfully!");
-      
-      // Attempt to initialize with new contract addresses
-      await web3Provider.initProvider();
-
-    } catch (error: any) {
-      console.error("Failed to deploy contracts:", error);
-      toast.error(`Deployment failed: ${error.message || "Unknown error"}`);
-    } finally {
-      setIsDeploying(false);
-    }
-  };
+  const { isConnected, connectWallet, chainId } = useWallet();
+  
+  // Get the current network's contract addresses
+  const currentNetworkAddresses = chainId ? CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES] : null;
 
   return (
     <Card className="w-full max-w-lg">
       <CardHeader>
-        <CardTitle>Deploy Smart Contracts</CardTitle>
+        <CardTitle>Contract Information</CardTitle>
         <CardDescription>
-          Deploy the BOSC token and Book of Scams contracts to your connected network.
+          View the BOSC token and Book of Scams contract addresses for your connected network.
         </CardDescription>
       </CardHeader>
       
@@ -57,61 +26,52 @@ export function DeployContracts() {
         <Alert className="bg-yellow-50 border-yellow-200">
           <AlertCircle className="h-4 w-4 text-yellow-600" />
           <AlertDescription className="text-yellow-700">
-            Deploying will create new instances of both contracts. Make sure you're connected to your preferred network.
+            Connect your wallet to view contract addresses for your current network.
           </AlertDescription>
         </Alert>
 
-        {deployedAddresses && (
+        {isConnected && chainId && currentNetworkAddresses ? (
           <div className="p-4 border rounded-md bg-green-50 space-y-2">
-            <div className="flex items-center text-green-700 mb-2">
-              <Check className="h-4 w-4 mr-2" />
-              <span className="font-medium">Contracts deployed successfully!</span>
-            </div>
-            
             <div className="space-y-1 text-sm">
-              <p><span className="font-medium">Network ID:</span> {deployedAddresses.chainId}</p>
-              <p className="break-all"><span className="font-medium">BOSC Token:</span> {deployedAddresses.boscTokenAddress}</p>
-              <p className="break-all"><span className="font-medium">Book of Scams:</span> {deployedAddresses.bookOfScamsAddress}</p>
+              <p><span className="font-medium">Network ID:</span> {chainId}</p>
+              <p className="break-all">
+                <span className="font-medium">BOSC Token:</span> {currentNetworkAddresses.boscToken || "Not deployed on this network"}
+              </p>
+              <p className="break-all">
+                <span className="font-medium">Book of Scams:</span> {currentNetworkAddresses.bookOfScams || "Not deployed on this network"}
+              </p>
             </div>
-            
-            <p className="text-xs text-muted-foreground mt-2">
-              Remember to update the contract-abis.ts file with these addresses to use them in your application.
-            </p>
+          </div>
+        ) : (
+          <div className="p-4 border rounded-md bg-gray-50">
+            <h3 className="font-medium mb-2">Available Contract Addresses</h3>
+            {Object.entries(CONTRACT_ADDRESSES).map(([chainId, addresses]) => (
+              <div key={chainId} className="mb-2 text-sm">
+                <p className="font-medium">Chain ID: {chainId}</p>
+                <p className="break-all text-xs">BOSC Token: {addresses.boscToken || "Not deployed"}</p>
+                <p className="break-all text-xs">Book of Scams: {addresses.bookOfScams || "Not deployed"}</p>
+              </div>
+            ))}
           </div>
         )}
-
-        <div className="p-4 border rounded-md bg-gray-50">
-          <h3 className="font-medium mb-2">Current Contract Addresses</h3>
-          {Object.entries(CONTRACT_ADDRESSES).map(([chainId, addresses]) => (
-            <div key={chainId} className="mb-2 text-sm">
-              <p className="font-medium">Chain ID: {chainId}</p>
-              <p className="break-all text-xs">BOSC Token: {addresses.boscToken || "Not deployed"}</p>
-              <p className="break-all text-xs">Book of Scams: {addresses.bookOfScams || "Not deployed"}</p>
-            </div>
-          ))}
-        </div>
       </CardContent>
       
       <CardFooter>
         {isConnected ? (
           <Button 
-            onClick={handleDeploy} 
-            disabled={isDeploying}
+            variant="outline"
             className="w-full"
+            onClick={() => window.open(`https://etherscan.io/address/${currentNetworkAddresses?.bookOfScams}`, '_blank')}
           >
-            {isDeploying ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Deploying Contracts...
-              </>
-            ) : "Deploy Contracts"}
+            View on Etherscan
+            <ExternalLink className="ml-2 h-4 w-4" />
           </Button>
         ) : (
           <Button 
             onClick={connectWallet}
             className="w-full"
           >
-            Connect Wallet to Deploy
+            Connect Wallet to View Details
           </Button>
         )}
       </CardFooter>
