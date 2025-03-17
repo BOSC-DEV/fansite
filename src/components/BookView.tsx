@@ -30,6 +30,9 @@ export const BookView = ({
   const [isFlipping, setIsFlipping] = useState(false);
   const [direction, setDirection] = useState<"left" | "right">("right");
 
+  // Get the current scammer to display (one per page)
+  const currentScammer = scammers.length > 0 ? scammers[0] : null;
+
   const handleNextPage = () => {
     if (isFlipping) return;
     setIsFlipping(true);
@@ -87,6 +90,9 @@ export const BookView = ({
               {/* Book spine */}
               <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-meme-red to-muted transform -skew-y-12 origin-top"></div>
               
+              {/* Book page fold effect */}
+              <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-transparent to-muted transform -translate-y-2 translate-x-2 rotate-6 opacity-50"></div>
+              
               {/* Page content */}
               <div className="absolute inset-0 p-8 flex flex-col">
                 <div className="flex justify-between items-center mb-6">
@@ -97,65 +103,58 @@ export const BookView = ({
                   </div>
                 </div>
                 
-                <div className="flex-1 overflow-hidden">
-                  {scammers.length > 0 ? (
-                    <div className="space-y-4">
-                      {scammers.map((scammer, index) => (
-                        <div 
-                          key={scammer.id} 
-                          className="meme-card bg-card p-4 flex justify-between items-center"
-                        >
-                          <div className="flex items-center space-x-4">
-                            <div className="font-impact text-meme-purple text-2xl">
-                              #{(currentPage - 1) * 10 + index + 1}
-                            </div>
-                            <Avatar className="h-14 w-14 border-2 border-meme-blue">
-                              <AvatarImage src={scammer.photoUrl} alt={scammer.name} />
-                              <AvatarFallback className="bg-meme-red text-white font-impact">
-                                {scammer.name.charAt(0)}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <h3 className="font-impact text-xl">{scammer.name}</h3>
-                              <div className="text-sm text-muted-foreground truncate max-w-[200px]">
-                                {scammer.walletAddress}
-                              </div>
-                              <div className="flex space-x-2 mt-1">
-                                {scammer.aliases.length > 0 && (
-                                  <Badge variant="outline" className="text-xs">
-                                    {scammer.aliases[0]}
-                                    {scammer.aliases.length > 1 && ` +${scammer.aliases.length - 1}`}
-                                  </Badge>
-                                )}
-                                <span className="text-xs text-muted-foreground">
-                                  {formatDate(scammer.dateAdded)}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                          
-                          <div className="flex flex-col items-end space-y-2">
-                            <div className="text-right">
-                              <div className="font-bold flex items-center justify-end">
-                                <DollarSign className="h-4 w-4 text-meme-green mr-1" />
-                                <span className="text-meme-green">{formatCurrency(scammer.bountyAmount)}</span>
-                              </div>
-                              <div className="text-sm text-muted-foreground line-clamp-1 max-w-[250px]">
-                                {scammer.accusedOf}
-                              </div>
-                            </div>
-                            <Button asChild size="sm" variant="outline" className="w-8 h-8 p-0">
-                              <Link to={`/scammer/${scammer.id}`}>
-                                <ExternalLink className="h-4 w-4" />
-                              </Link>
-                            </Button>
-                          </div>
+                <div className="flex-1 flex items-center justify-center">
+                  {currentScammer ? (
+                    <div className="meme-card w-full max-w-2xl p-8 flex flex-col items-center bg-card">
+                      <div className="text-center mb-6">
+                        <div className="font-impact text-meme-purple text-4xl mb-2">
+                          #{currentPage}
                         </div>
-                      ))}
+                        <Avatar className="h-32 w-32 border-4 border-meme-blue mx-auto mb-4">
+                          <AvatarImage src={currentScammer.photoUrl} alt={currentScammer.name} />
+                          <AvatarFallback className="bg-meme-red text-white font-impact text-4xl">
+                            {currentScammer.name.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <h2 className="font-impact text-3xl mb-1">{currentScammer.name}</h2>
+                        <div className="text-sm text-muted-foreground break-all max-w-xs mx-auto mb-2">
+                          {currentScammer.walletAddress}
+                        </div>
+                        <div className="flex flex-wrap justify-center gap-2 mb-4">
+                          {currentScammer.aliases.map((alias, i) => (
+                            <Badge key={i} variant="outline">
+                              {alias}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div className="w-full mb-6">
+                        <div className="font-bold flex items-center justify-center mb-2">
+                          <DollarSign className="h-6 w-6 text-meme-green mr-1" />
+                          <span className="text-meme-green text-2xl">{formatCurrency(currentScammer.bountyAmount)}</span>
+                        </div>
+                        <div className="text-center p-4 bg-muted/50 rounded-lg">
+                          <h3 className="text-lg font-semibold mb-2">Accused Of:</h3>
+                          <p>{currentScammer.accusedOf}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-between items-center w-full">
+                        <div className="text-sm text-muted-foreground">
+                          Added on {formatDate(currentScammer.dateAdded)}
+                        </div>
+                        <Button asChild>
+                          <Link to={`/scammer/${currentScammer.id}`} className="flex items-center">
+                            View Details
+                            <ExternalLink className="h-4 w-4 ml-2" />
+                          </Link>
+                        </Button>
+                      </div>
                     </div>
                   ) : (
-                    <div className="h-full flex items-center justify-center">
-                      <p className="text-muted-foreground text-lg">No scammers on this page</p>
+                    <div className="text-center p-8">
+                      <p className="text-muted-foreground text-xl">No scammer found</p>
                     </div>
                   )}
                 </div>
