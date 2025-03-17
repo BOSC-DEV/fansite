@@ -1,9 +1,8 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { toast } from 'sonner';
 import web3Provider from '../services/web3Provider';
 import { DEVELOPER_WALLET_ADDRESS } from '../contracts/contract-abis';
-import { createSmartAccount, SmartAccountSigner } from '@coinbase/onchainkit';
+import { createSmartAccountClient, type SmartAccountSigner } from '@coinbase/onchainkit';
 import { ethers } from 'ethers';
 
 interface WalletContextType {
@@ -28,7 +27,6 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [smartWalletAddress, setSmartWalletAddress] = useState<string | null>(null);
   const [smartWalletLoading, setSmartWalletLoading] = useState(false);
 
-  // Check for existing connection
   useEffect(() => {
     const checkConnection = async () => {
       if (window.ethereum && window.ethereum.selectedAddress) {
@@ -36,14 +34,12 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         setAddress(connectedAddress);
         setConnected(true);
         
-        // Initialize contracts and get balance
         await web3Provider.connectWallet();
         if (connectedAddress) {
           const tokenBalance = await web3Provider.getBalance(connectedAddress);
           setBalance(tokenBalance);
           
-          // Initialize smart wallet
-          initializeSmartWallet(connectedAddress);
+          await initializeSmartWallet(connectedAddress);
         }
       }
     };
@@ -61,7 +57,6 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       
-      // Create a smart account
       const smartAccountSigner: SmartAccountSigner = {
         getAddress: async () => ownerAddress,
         signMessage: async (message: Uint8Array) => {
@@ -73,7 +68,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         }
       };
       
-      const smartAccount = await createSmartAccount({
+      const smartAccount = await createSmartAccountClient({
         signer: smartAccountSigner,
         transport: {
           type: 'fallback',
@@ -109,7 +104,6 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         const tokenBalance = await web3Provider.getBalance(connectedAddress);
         setBalance(tokenBalance);
         
-        // Initialize smart wallet after connecting
         await initializeSmartWallet(connectedAddress);
         
         toast.success('Wallet connected successfully!');
