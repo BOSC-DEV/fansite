@@ -1,9 +1,43 @@
 
+import { useState } from "react";
 import { Header } from "@/components/Header";
 import { BookView } from "@/components/BookView";
 import { DeployContracts } from "@/components/DeployContracts";
+import { MOCK_SCAMMERS } from "@/lib/types";
 
 const Index = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const scammers = MOCK_SCAMMERS.slice(0, 3); // Just show first few on the home page
+  const totalPages = scammers.length;
+  
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prev => prev + 1);
+    }
+  };
+  
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prev => prev - 1);
+    }
+  };
+  
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'decimal',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+  
+  const formatDate = (date: Date) => {
+    return new Intl.DateTimeFormat('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    }).format(date);
+  };
+
   return (
     <>
       <Header />
@@ -19,7 +53,15 @@ const Index = () => {
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="order-2 lg:order-1">
-              <BookView />
+              <BookView 
+                scammers={scammers}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onNextPage={handleNextPage}
+                onPrevPage={handlePrevPage}
+                formatCurrency={formatCurrency}
+                formatDate={formatDate}
+              />
             </div>
             
             <div className="order-1 lg:order-2 flex flex-col justify-center">
