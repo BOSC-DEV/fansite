@@ -1,3 +1,4 @@
+
 import { ethers } from "ethers";
 import { BOSC_TOKEN_ABI, BOOK_OF_SCAMS_ABI, CONTRACT_ADDRESSES } from "../contracts/contract-abis";
 
