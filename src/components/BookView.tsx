@@ -67,6 +67,23 @@ export const BookView = ({
     }
   }, [isFlipping]);
 
+  // Add keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") {
+        handleNextPage();
+      } else if (e.key === "ArrowLeft") {
+        handlePrevPage();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [currentPage, isFlipping, totalPages]);
+
   return (
     <div className="flex flex-col items-center">
       <BookContainer
