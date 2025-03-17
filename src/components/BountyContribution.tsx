@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +16,7 @@ interface BountyContributionProps {
 }
 
 // Developer controlled wallet address - this would typically be stored more securely
-const DEVELOPER_WALLET_ADDRESS = "0x742d35Cc6634C0532925a3b844Bc454e4438f44e";
+const DEVELOPER_WALLET_ADDRESS = "0x80ec8C9A7ac3b601a9628a840306e85a01809074";
 
 export function BountyContribution({
   scammerId,

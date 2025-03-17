@@ -2,6 +2,9 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { toast } from 'sonner';
 
+// Developer controlled wallet address
+const DEVELOPER_WALLET_ADDRESS = "0x80ec8C9A7ac3b601a9628a840306e85a01809074";
+
 interface WalletContextType {
   connected: boolean;
   connecting: boolean;
@@ -52,6 +55,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         setBalance(125); // Mock $BOSC balance
         localStorage.setItem('walletAddress', mockAddress);
         toast.success('Wallet connected successfully!');
+        console.log(`Funds will flow to developer wallet: ${DEVELOPER_WALLET_ADDRESS}`);
       }, 1500);
     } catch (error) {
       console.error('Failed to connect wallet:', error);
