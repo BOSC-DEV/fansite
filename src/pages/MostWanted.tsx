@@ -11,6 +11,7 @@ import { ScammerTable } from "@/components/scammer/ScammerTable";
 import { NoResults } from "@/components/scammer/NoResults";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { ScammerStatsCard } from "@/components/stats/ScammerStatsCard";
 import { FileText } from "lucide-react";
 
 // Change this to 1 for the book view to show one scammer per page
@@ -114,6 +115,11 @@ const MostWanted = () => {
             actionLabel="Report a Scammer"
             actionIcon={<FileText className="h-4 w-4 mr-2" />}
           />
+
+          {/* Stats card */}
+          {isConnected && !isLoading && sortedScammers.length > 0 && (
+            <ScammerStatsCard scammers={sortedScammers} />
+          )}
 
           {/* Search and filter controls */}
           <div className="mb-8 flex flex-col sm:flex-row gap-4">
