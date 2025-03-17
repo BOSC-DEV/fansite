@@ -18,13 +18,13 @@ export const PageControls = ({
   onNextPage
 }: PageControlsProps) => {
   return (
-    <div className="flex justify-center mt-6 space-x-8">
+    <div className="flex justify-center mt-8 space-x-12">
       <Button
         variant="outline"
         size="lg"
         onClick={onPrevPage}
         disabled={currentPage === 1 || isFlipping}
-        className="shadow-md hover:shadow-lg transition-transform hover:-translate-x-1"
+        className="shadow-md hover:shadow-lg transition-all hover:-translate-x-1 border-2 border-[#d1c7b7] dark:border-[#2d2841] bg-[#f8f5f0] dark:bg-[#252136] text-foreground"
       >
         <ChevronLeft className="mr-2 h-5 w-5" />
         Previous Page
@@ -35,7 +35,7 @@ export const PageControls = ({
         size="lg"
         onClick={onNextPage}
         disabled={currentPage === totalPages || isFlipping}
-        className="shadow-md hover:shadow-lg transition-transform hover:translate-x-1"
+        className="shadow-md hover:shadow-lg transition-all hover:translate-x-1 border-2 border-[#d1c7b7] dark:border-[#2d2841] bg-[#f8f5f0] dark:bg-[#252136] text-foreground"
       >
         Next Page
         <ChevronRight className="ml-2 h-5 w-5" />

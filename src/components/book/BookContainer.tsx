@@ -43,13 +43,13 @@ export const BookContainer = ({
   }, [currentPage, scammers]);
 
   return (
-    <div className="relative w-full max-w-4xl h-[600px] perspective-1000">
+    <div className="relative w-full max-w-4xl h-[700px] perspective-1000">
       <AnimatePresence mode="wait">
         <motion.div
           key={animationKey}
           className="w-full h-full"
           initial={{
-            rotateY: direction === "right" ? -90 : 90,
+            rotateY: direction === "right" ? -60 : 60,
             opacity: 0.5,
             transformOrigin: direction === "right" ? "left" : "right"
           }}
@@ -58,33 +58,42 @@ export const BookContainer = ({
             opacity: 1
           }}
           exit={{
-            rotateY: direction === "right" ? 90 : -90,
+            rotateY: direction === "right" ? 60 : -60,
             opacity: 0.5,
             transformOrigin: direction === "right" ? "right" : "left"
           }}
           transition={{
-            type: "tween",
-            duration: 0.6,
-            ease: "easeInOut"
+            type: "spring",
+            stiffness: 100,
+            damping: 20,
+            duration: 0.6
           }}
         >
           <div className="relative w-full h-full overflow-hidden">
-            {/* Book cover with page effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-muted to-background border-2 border-muted shadow-lg rounded-md"></div>
-            
-            {/* Book spine */}
-            <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-meme-red to-muted transform -skew-y-12 origin-top"></div>
-            
-            {/* Book page fold effect */}
-            <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-transparent to-muted transform -translate-y-2 translate-x-2 rotate-6 opacity-50"></div>
+            {/* Fancy book cover design */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#f8f5f0] to-[#e8e0d5] dark:from-[#252136] dark:to-[#1a1625] rounded-lg border-[3px] border-[#d1c7b7] dark:border-[#2d2841] shadow-[0_10px_15px_rgba(0,0,0,0.1),0_4px_6px_rgba(0,0,0,0.05),inset_0_0_0_1px_rgba(255,255,255,0.1)]">
+              {/* Book binding effect */}
+              <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#c2b8a3] to-[#d1c7b7] dark:from-[#352d4d] dark:to-[#2d2841] transform -skew-y-6 origin-top"></div>
+              
+              {/* Book page curl effect */}
+              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-transparent via-transparent to-[#d1c7b7]/30 dark:to-[#352d4d]/30 transform -translate-y-2 translate-x-2 rotate-6"></div>
+              
+              {/* Bottom page curl effect */}
+              <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tr from-transparent to-[#d1c7b7]/20 dark:to-[#352d4d]/20 transform translate-y-2 translate-x-2 -rotate-6"></div>
+              
+              {/* Book shine effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent dark:from-white/10 rounded-lg opacity-60"></div>
+            </div>
             
             {/* Page content */}
             <div className="absolute inset-0 p-8 flex flex-col">
               <div className="flex justify-between items-center mb-6">
-                <div className="meme-text text-2xl text-accent">Most Wanted</div>
+                <div className="font-impact text-2xl text-accent bg-gradient-to-r from-meme-red to-meme-purple bg-clip-text text-transparent uppercase tracking-wide">
+                  Most Wanted Scammers
+                </div>
                 <div className="flex items-center text-muted-foreground">
                   <BookOpen className="w-5 h-5 mr-2" />
-                  <span>Page {visiblePage} of {totalPages}</span>
+                  <span className="font-mono text-sm">Volume 1</span>
                 </div>
               </div>
               
