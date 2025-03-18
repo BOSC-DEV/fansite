@@ -16,10 +16,9 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { DollarSign, ExternalLink } from "lucide-react";
+import { DollarSign } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface ScammerTableProps {
@@ -42,38 +41,39 @@ export const ScammerTable = ({
   formatDate
 }: ScammerTableProps) => {
   return (
-    <div className="rounded-md border">
+    <div className="rounded-sm border-western-wood bg-western-parchment/80 overflow-hidden">
       <Table>
-        <TableHeader>
+        <TableHeader className="bg-western-sand/60 border-b border-western-wood/30">
           <TableRow>
-            <TableHead className="w-[60px] text-center">#</TableHead>
-            <TableHead>Scammer</TableHead>
-            <TableHead>Accused Of</TableHead>
-            <TableHead className="text-center">Aliases</TableHead>
-            <TableHead className="text-right">Bounty</TableHead>
-            <TableHead className="text-right">Added</TableHead>
-            <TableHead className="w-[80px]"></TableHead>
+            <TableHead className="w-[60px] text-center text-western-accent font-wanted">№</TableHead>
+            <TableHead className="text-western-accent font-wanted">Outlaw</TableHead>
+            <TableHead className="text-western-accent font-wanted">Crimes</TableHead>
+            <TableHead className="text-center text-western-accent font-wanted">Aliases</TableHead>
+            <TableHead className="text-center text-western-accent font-wanted">Bounty</TableHead>
+            <TableHead className="text-right text-western-accent font-wanted">Posted</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {paginatedScammers.map((scammer, index) => (
-            <TableRow key={scammer.id}>
+            <TableRow key={scammer.id} className="border-b border-western-wood/20 hover:bg-western-sand/10">
               <TableCell className="font-medium text-center">
                 {(currentPage - 1) * itemsPerPage + index + 1}
               </TableCell>
               <TableCell>
-                <div className="flex items-center space-x-3">
-                  <Avatar>
-                    <AvatarImage src={scammer.photoUrl} alt={scammer.name} />
-                    <AvatarFallback>{scammer.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <div className="font-medium">{scammer.name}</div>
-                    <div className="text-xs text-muted-foreground truncate max-w-[150px]">
-                      {scammer.walletAddress}
+                <Link to={`/scammer/${scammer.id}`}>
+                  <div className="flex items-center space-x-3">
+                    <Avatar className="border-2 border-western-wood">
+                      <AvatarImage src={scammer.photoUrl} alt={scammer.name} />
+                      <AvatarFallback className="bg-western-wood text-western-parchment">{scammer.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className="font-medium font-western">{scammer.name}</div>
+                      <div className="text-xs text-western-wood/70 truncate max-w-[150px] hidden md:block">
+                        {scammer.walletAddress}
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               </TableCell>
               <TableCell className="max-w-[200px]">
                 <p className="truncate">{scammer.accusedOf}</p>
@@ -81,31 +81,22 @@ export const ScammerTable = ({
               <TableCell className="text-center">
                 {scammer.aliases.length > 0 ? (
                   <div className="flex flex-wrap justify-center gap-1">
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="outline" className="text-sm bg-western-sand/20 border-western-wood/30 text-western-wood">
                       {scammer.aliases[0]}
                       {scammer.aliases.length > 1 && ` +${scammer.aliases.length - 1}`}
                     </Badge>
                   </div>
                 ) : (
-                  <span className="text-muted-foreground text-sm">-</span>
+                  <span className="text-western-wood/50 text-sm">-</span>
                 )}
               </TableCell>
-              <TableCell className="text-right font-medium">
-                <div className="flex items-center justify-end">
-                  <DollarSign className="h-3.5 w-3.5 text-bosc mr-1" />
-                  <span className="text-bosc">BOSC {formatCurrency(scammer.bountyAmount)}</span>
+              <TableCell className="text-center font-medium">
+                <div className="flex items-center justify-center">
+                  <span className="text-western-accent font-wanted">$ {formatCurrency(scammer.bountyAmount)} BOSC</span>
                 </div>
               </TableCell>
-              <TableCell className="text-right text-muted-foreground text-sm">
+              <TableCell className="text-right text-western-wood/90 text-sm">
                 {formatDate(scammer.dateAdded)}
-              </TableCell>
-              <TableCell>
-                <Button asChild size="sm" variant="ghost">
-                  <Link to={`/scammer/${scammer.id}`}>
-                    <span className="sr-only">View</span>
-                    <ExternalLink className="h-4 w-4" />
-                  </Link>
-                </Button>
               </TableCell>
             </TableRow>
           ))}
@@ -113,7 +104,7 @@ export const ScammerTable = ({
       </Table>
       
       {totalPages > 1 && (
-        <div className="py-4 border-t">
+        <div className="py-4 border-t border-western-wood/20 bg-western-sand/20">
           <Pagination>
             <PaginationContent>
               <PaginationItem>
@@ -136,6 +127,7 @@ export const ScammerTable = ({
                       setCurrentPage(i + 1);
                     }}
                     isActive={currentPage === i + 1}
+                    className={currentPage === i + 1 ? "bg-western-wood text-western-parchment" : "hover:bg-western-sand/30"}
                   >
                     {i + 1}
                   </PaginationLink>

@@ -2,7 +2,7 @@
 import { Scammer } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AlertCircle, DollarSign, ExternalLink } from "lucide-react";
+import { AlertCircle, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -33,7 +33,7 @@ export function ScammerCard({ scammer, className }: ScammerCardProps) {
   };
 
   return (
-    <Card className={cn("overflow-hidden transition-all duration-300 hover:shadow-md h-full", className)}>
+    <Card className={cn("overflow-hidden transition-all duration-300 hover:shadow-md h-full border-western-wood bg-western-parchment/80", className)}>
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
         {!imageLoaded && (
           <div className="absolute inset-0 flex items-center justify-center bg-muted animate-pulse">
@@ -62,19 +62,18 @@ export function ScammerCard({ scammer, className }: ScammerCardProps) {
       <CardContent className="p-4 space-y-3">
         <div className="flex justify-between items-start">
           <div>
-            <p className="text-xs text-muted-foreground">Accused of</p>
-            <p className="text-sm font-medium line-clamp-2">{scammer.accusedOf}</p>
+            <p className="text-xs text-western-wood/70">Accused of</p>
+            <p className="text-sm font-medium line-clamp-2 text-western-wood">{scammer.accusedOf}</p>
           </div>
         </div>
         
         <div className="flex justify-between items-center">
           <div className="flex items-center">
-            <DollarSign className="h-4 w-4 text-bosc mr-1" />
-            <span className="text-sm font-bold text-bosc">
-              BOSC {formatCurrency(scammer.bountyAmount)}
+            <span className="text-sm font-bold text-western-accent font-wanted">
+              $ {formatCurrency(scammer.bountyAmount)} BOSC
             </span>
           </div>
-          <div className="text-xs text-muted-foreground">
+          <div className="text-xs text-western-wood/70">
             Added {formatDate(scammer.dateAdded)}
           </div>
         </div>
@@ -82,12 +81,12 @@ export function ScammerCard({ scammer, className }: ScammerCardProps) {
         {scammer.aliases.length > 0 && (
           <div className="flex flex-wrap gap-1">
             {scammer.aliases.slice(0, 2).map((alias, i) => (
-              <Badge key={i} variant="outline" className="text-xs">
+              <Badge key={i} variant="outline" className="text-xs bg-western-sand/20 border-western-wood/30 text-western-wood">
                 {alias}
               </Badge>
             ))}
             {scammer.aliases.length > 2 && (
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="outline" className="text-xs bg-western-sand/20 border-western-wood/30 text-western-wood">
                 +{scammer.aliases.length - 2} more
               </Badge>
             )}
@@ -96,7 +95,7 @@ export function ScammerCard({ scammer, className }: ScammerCardProps) {
         
         <div className="pt-2">
           <Link to={`/scammer/${scammer.id}`}>
-            <Button variant="outline" size="sm" className="w-full">
+            <Button variant="outline" size="sm" className="w-full border-western-wood text-western-accent hover:bg-western-sand/20">
               View Details
               <ExternalLink className="ml-2 h-3 w-3" />
             </Button>

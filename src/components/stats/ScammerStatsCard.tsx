@@ -43,61 +43,61 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
   };
 
   return (
-    <Card className={cn("mb-8", className)}>
+    <Card className={cn("mb-8 border-western-wood bg-western-parchment/80", className)}>
       <CardContent className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="flex items-center gap-4">
-            <div className="rounded-md bg-muted/60 p-2 text-primary">
+            <div className="rounded-md bg-western-sand/30 p-2 text-western-accent">
               <Users className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Total Scammers</p>
-              <h4 className="text-2xl font-bold">{stats.totalScammers}</h4>
+              <p className="text-sm font-medium text-western-wood/70">Total Scammers</p>
+              <h4 className="text-2xl font-bold text-western-wood">{stats.totalScammers}</h4>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="rounded-md bg-muted/60 p-2 text-meme-red">
+            <div className="rounded-md bg-western-sand/30 p-2 text-western-accent">
               <Award className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Highest Bounty</p>
-              <h4 className="text-2xl font-bold">BOSC {formatCurrency(stats.highestBounty)}</h4>
-              <p className="text-xs text-muted-foreground truncate">
+              <p className="text-sm font-medium text-western-wood/70">Highest Bounty</p>
+              <h4 className="text-2xl font-bold text-western-accent">$ {formatCurrency(stats.highestBounty)} BOSC</h4>
+              <p className="text-xs text-western-wood/70 truncate">
                 {stats.highestBountyScammer?.name}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="rounded-md bg-muted/60 p-2 text-bosc">
+            <div className="rounded-md bg-western-sand/30 p-2 text-western-accent">
               <TrendingUp className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Total Bounties</p>
-              <h4 className="text-2xl font-bold">BOSC {formatCurrency(stats.totalBounty)}</h4>
+              <p className="text-sm font-medium text-western-wood/70">Total Bounties</p>
+              <h4 className="text-2xl font-bold text-western-accent">$ {formatCurrency(stats.totalBounty)} BOSC</h4>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="rounded-md bg-muted/60 p-2 text-meme-blue">
+            <div className="rounded-md bg-western-sand/30 p-2 text-western-accent">
               <BarChart className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Recently Added</p>
-              <h4 className="text-base font-bold truncate">{stats.recentScammer?.name}</h4>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-sm font-medium text-western-wood/70">Recently Added</p>
+              <h4 className="text-base font-bold truncate text-western-wood">{stats.recentScammer?.name}</h4>
+              <p className="text-xs text-western-wood/70">
                 {new Date(stats.recentScammer?.dateAdded).toLocaleDateString()}
               </p>
             </div>
           </div>
         </div>
 
-        <Separator className="my-6" />
+        <Separator className="my-6 bg-western-wood/30" />
 
         <div className="flex justify-between items-center">
-          <p className="text-sm text-muted-foreground">Statistics updated in real-time</p>
-          <p className="text-sm font-medium text-primary">Most Wanted List</p>
+          <p className="text-sm text-western-wood/70">Statistics updated in real-time</p>
+          <p className="text-sm font-medium text-western-accent font-wanted">Most Wanted List</p>
         </div>
       </CardContent>
     </Card>

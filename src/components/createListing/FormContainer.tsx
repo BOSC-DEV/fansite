@@ -83,15 +83,15 @@ export function FormContainer() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Card className="w-full max-w-3xl mx-auto">
-        <CardHeader>
-          <CardTitle>Report a Scammer</CardTitle>
-          <CardDescription>
+      <Card className="w-full max-w-3xl mx-auto border-western-wood/60 bg-western-parchment/70">
+        <CardHeader className="border-b border-western-wood/20">
+          <CardTitle className="text-western-accent font-wanted">Wanted Poster Details</CardTitle>
+          <CardDescription className="text-western-wood">
             Add a scammer to the Book of Scams. This will cost 1 $BOSC token.
           </CardDescription>
         </CardHeader>
         
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 pt-6">
           <BasicInfoFields 
             name={name}
             setName={setName}
@@ -124,7 +124,7 @@ export function FormContainer() {
           <ListingDisclaimer />
         </CardContent>
         
-        <CardFooter>
+        <CardFooter className="border-t border-western-wood/20 bg-western-sand/10">
           <ListingFormActions isSubmitting={isSubmitting} />
         </CardFooter>
       </Card>
