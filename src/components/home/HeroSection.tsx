@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Trophy, BookOpen, Shield, Star } from "lucide-react";
+import { Star, BookOpen, Shield, Flame } from "lucide-react";
 
 export const HeroSection = () => {
   return (
@@ -10,7 +10,7 @@ export const HeroSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="space-y-6 md:pr-8 animate-fade-in">
             <div className="inline-flex items-center rounded-full px-3 py-1 text-sm font-bold bg-western-accent/10 text-western-accent border-2 border-dashed border-western-accent/50">
-              <Trophy className="h-3.5 w-3.5 mr-1 animate-spin-slow" />
+              <Star className="h-3.5 w-3.5 mr-1 animate-spin-slow" />
               <span>Authentic Wild West Bounties</span>
             </div>
             
@@ -29,7 +29,7 @@ export const HeroSection = () => {
               <Button asChild size="lg" className="western-btn gap-2 hover:animate-wiggle bg-western-leather hover:bg-western-accent text-western-parchment">
                 <Link to="/most-wanted">
                   View Most Wanted
-                  <Trophy className="h-4 w-4 ml-1" />
+                  <Star className="h-4 w-4 ml-1" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="western-btn gap-2 border-2 border-dashed border-western-wood hover:animate-wiggle hover:bg-western-parchment/80">

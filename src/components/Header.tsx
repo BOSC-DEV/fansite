@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Wallet, Menu, X, Trophy, Home, BookOpen } from "lucide-react";
+import { Wallet, Menu, X, Star, Home, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Header = () => {
@@ -52,7 +52,7 @@ export const Header = () => {
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2 text-xl">
-          <Trophy className="h-6 w-6 text-western-parchment animate-bounce-slight" />
+          <Star className="h-6 w-6 text-western-parchment animate-bounce-slight" />
           <span className="font-wanted text-western-parchment">Book of Scams</span>
           <span className="px-2 py-1 bg-western-sand/20 text-western-parchment text-xs font-bold rounded-full border-2 border-dashed border-western-sand/50 animate-pulse-subtle">
             BOSC
