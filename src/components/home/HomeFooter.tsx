@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { Flame, Scroll } from "lucide-react";
+import { Flame, Trophy } from "lucide-react";
 
 export const HomeFooter = () => {
   return (
@@ -8,7 +8,7 @@ export const HomeFooter = () => {
       <div className="container mx-auto max-w-6xl px-4">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center space-x-2">
-            <Scroll className="h-5 w-5 text-western-accent" />
+            <Trophy className="h-5 w-5 text-western-accent" />
             <span className="font-wanted text-transparent bg-clip-text bg-gradient-to-r from-western-accent to-western-leather">Book of Scams</span>
             <span className="px-2 py-1 bg-western-accent/10 text-western-accent text-xs font-bold rounded-full border-2 border-dashed border-western-accent/50">
               BOSC

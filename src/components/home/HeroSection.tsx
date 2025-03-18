@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { FileText, BookOpen, Shield, Scroll } from "lucide-react";
+import { Trophy, BookOpen, Shield, Star } from "lucide-react";
 
 export const HeroSection = () => {
   return (
@@ -10,7 +10,7 @@ export const HeroSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="space-y-6 md:pr-8 animate-fade-in">
             <div className="inline-flex items-center rounded-full px-3 py-1 text-sm font-bold bg-western-accent/10 text-western-accent border-2 border-dashed border-western-accent/50">
-              <Scroll className="h-3.5 w-3.5 mr-1 animate-spin-slow" />
+              <Trophy className="h-3.5 w-3.5 mr-1 animate-spin-slow" />
               <span>Authentic Wild West Bounties</span>
             </div>
             
@@ -29,7 +29,7 @@ export const HeroSection = () => {
               <Button asChild size="lg" className="western-btn gap-2 hover:animate-wiggle bg-western-leather hover:bg-western-accent text-western-parchment">
                 <Link to="/most-wanted">
                   View Most Wanted
-                  <FileText className="h-4 w-4 ml-1" />
+                  <Trophy className="h-4 w-4 ml-1" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="western-btn gap-2 border-2 border-dashed border-western-wood hover:animate-wiggle hover:bg-western-parchment/80">
@@ -46,7 +46,7 @@ export const HeroSection = () => {
             <div className="absolute inset-0 flex items-center justify-center text-western-wood p-6">
               <div className="text-center space-y-4">
                 <div className="sheriff-badge inline-block p-4 bg-western-accent/80 rounded-full border-4 border-western-wood flex items-center justify-center animate-bounce-slight">
-                  <Shield className="h-12 w-12 text-western-parchment" />
+                  <Star className="h-12 w-12 text-western-parchment" />
                 </div>
                 <h2 className="font-wanted text-3xl text-western-leather uppercase tracking-wide">Wanted: Dead or Alive</h2>
                 <p className="text-western-wood/90 max-w-md font-western text-lg">
