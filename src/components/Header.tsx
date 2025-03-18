@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Wallet, Menu, X, Star, Home, BookOpen } from "lucide-react";
+import { Wallet, Menu, X, Star, Home, BookOpen, Award } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Header = () => {
@@ -35,7 +35,7 @@ export const Header = () => {
 
   const menuItems = [
     { path: "/", label: "Home", icon: <Home className="h-4 w-4 mr-2" /> },
-    { path: "/most-wanted", label: "Most Wanted", icon: <Trophy className="h-4 w-4 mr-2" /> },
+    { path: "/most-wanted", label: "Most Wanted", icon: <Award className="h-4 w-4 mr-2" /> },
     { path: "/create-listing", label: "Report Scammer", icon: <BookOpen className="h-4 w-4 mr-2" /> },
   ];
 
