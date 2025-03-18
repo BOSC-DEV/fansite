@@ -18,7 +18,7 @@ export const HowItWorksSection = () => {
             <div className="w-16 h-16 rounded-full bg-western-parchment/90 flex items-center justify-center mb-4 border-2 border-western-wood">
               <BookOpen className="h-8 w-8 text-western-accent" />
             </div>
-            <h3 className="text-xl font-wanted mb-2 text-western-accent">Report an Outlaw</h3>
+            <h3 className="text-xl font-wanted mb-2 text-western-sand">Report an Outlaw</h3>
             <p className="text-western-parchment font-western">
               Post a bounty with evidence for 1 BOSC token. Each listing creates a unique wallet for tracking.
             </p>
@@ -28,7 +28,7 @@ export const HowItWorksSection = () => {
             <div className="w-16 h-16 rounded-full bg-western-parchment/90 flex items-center justify-center mb-4 border-2 border-western-wood">
               <FileText className="h-8 w-8 text-western-accent" />
             </div>
-            <h3 className="text-xl font-wanted mb-2 text-western-accent">Add to Bounties</h3>
+            <h3 className="text-xl font-wanted mb-2 text-western-sand">Add to Bounties</h3>
             <p className="text-western-parchment font-western">
               Contribute more BOSC tokens to increase the bounty on outlaws you want brought to justice.
             </p>
@@ -38,7 +38,7 @@ export const HowItWorksSection = () => {
             <div className="w-16 h-16 rounded-full bg-western-parchment/90 flex items-center justify-center mb-4 border-2 border-western-wood">
               <Shield className="h-8 w-8 text-western-accent" />
             </div>
-            <h3 className="text-xl font-wanted mb-2 text-western-accent">Protect the Territory</h3>
+            <h3 className="text-xl font-wanted mb-2 text-western-sand">Protect the Territory</h3>
             <p className="text-western-parchment font-western">
               Help create a safer crypto frontier by making outlaws identifiable and accountable.
             </p>
