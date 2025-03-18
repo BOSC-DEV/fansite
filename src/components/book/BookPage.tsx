@@ -66,7 +66,7 @@ export const BookPage = ({
           <div className="mt-auto w-full">
             <div className="font-bold flex items-center justify-center text-meme-green text-2xl">
               <DollarSign className="h-6 w-6 mr-1" />
-              {formatCurrency(scammer.bountyAmount)}
+              {formatCurrency(scammer.bountyAmount)} $BOSC
             </div>
           </div>
         </div>
