@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Wallet, Menu, X, Hat, Cactus, Home } from "lucide-react";
+import { Wallet, Menu, X, FileText, Home, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Header = () => {
@@ -35,8 +35,8 @@ export const Header = () => {
 
   const menuItems = [
     { path: "/", label: "Home", icon: <Home className="h-4 w-4 mr-2" /> },
-    { path: "/most-wanted", label: "Most Wanted", icon: <Hat className="h-4 w-4 mr-2" /> },
-    { path: "/create-listing", label: "Report Scammer", icon: <Cactus className="h-4 w-4 mr-2" /> },
+    { path: "/most-wanted", label: "Most Wanted", icon: <FileText className="h-4 w-4 mr-2" /> },
+    { path: "/create-listing", label: "Report Scammer", icon: <BookOpen className="h-4 w-4 mr-2" /> },
   ];
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
@@ -52,7 +52,7 @@ export const Header = () => {
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2 text-xl">
-          <Hat className="h-6 w-6 text-western-parchment animate-bounce-slight" />
+          <FileText className="h-6 w-6 text-western-parchment animate-bounce-slight" />
           <span className="font-wanted text-western-parchment">Book of Scams</span>
           <span className="px-2 py-1 bg-western-sand/20 text-western-parchment text-xs font-bold rounded-full border-2 border-dashed border-western-sand/50 animate-pulse-subtle">
             BOSC
