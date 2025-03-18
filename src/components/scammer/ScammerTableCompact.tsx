@@ -43,7 +43,7 @@ export const ScammerTableCompact = ({
               </TableCell>
               <TableCell className="text-center font-medium py-4">
                 <div className="flex items-center justify-center">
-                  <span className="text-western-accent font-wanted">$ {formatCurrency(scammer.bountyAmount)} BOSC</span>
+                  <span className="text-western-accent font-wanted">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
                 </div>
               </TableCell>
               <TableCell className="text-right text-western-wood/90 text-sm py-4">

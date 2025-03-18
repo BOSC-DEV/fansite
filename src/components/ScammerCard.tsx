@@ -70,7 +70,7 @@ export function ScammerCard({ scammer, className }: ScammerCardProps) {
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <span className="text-sm font-bold text-western-accent font-wanted">
-              $ {formatCurrency(scammer.bountyAmount)} BOSC
+              {formatCurrency(scammer.bountyAmount)} $BOSC
             </span>
           </div>
           <div className="text-xs text-western-wood/70">

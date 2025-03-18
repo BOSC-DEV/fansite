@@ -70,7 +70,7 @@ export function ScammerDetailsCard({
           <div className="flex items-center">
             <DollarSign className="h-5 w-5 text-bosc mr-1" />
             <span className="text-xl font-bold text-bosc">
-              BOSC {bountyAmount.toLocaleString()}
+              {bountyAmount.toLocaleString()} $BOSC
             </span>
           </div>
           <div className="flex items-center text-sm text-muted-foreground">
