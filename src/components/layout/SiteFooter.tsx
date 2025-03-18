@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { Skull, Flame } from "lucide-react";
+import { Hat } from "lucide-react";
 
 export const SiteFooter = () => {
   return (
@@ -8,7 +8,7 @@ export const SiteFooter = () => {
       <div className="container mx-auto max-w-6xl px-4">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center space-x-2">
-            <Flame className="h-5 w-5 text-western-accent" />
+            <Hat className="h-5 w-5 text-western-accent" />
             <span className="text-xl font-wanted text-western-accent">Book of Scams</span>
             <span className="px-2 py-1 bg-western-sand/20 text-western-accent text-xs font-medium rounded-full border border-western-accent/30">
               BOSC

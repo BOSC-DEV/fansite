@@ -1,5 +1,5 @@
 
-import { Ghost, Flame, PartyPopper } from "lucide-react";
+import { Cactus, Hat, PartyPopper } from "lucide-react";
 
 export const HowItWorksSection = () => {
   return (
@@ -16,7 +16,7 @@ export const HowItWorksSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-card border-4 border-meme-green rounded-xl p-6 flex flex-col items-center text-center transform hover:scale-105 transition-transform hover:-rotate-2">
             <div className="w-12 h-12 rounded-full bg-bosc/10 flex items-center justify-center mb-4">
-              <Ghost className="h-6 w-6 text-bosc" />
+              <Cactus className="h-6 w-6 text-bosc" />
             </div>
             <h3 className="text-xl font-bold mb-2">Report a Scammer</h3>
             <p className="text-muted-foreground">
@@ -26,7 +26,7 @@ export const HowItWorksSection = () => {
           
           <div className="bg-card border-4 border-meme-yellow rounded-xl p-6 flex flex-col items-center text-center transform hover:scale-105 transition-transform hover:rotate-2">
             <div className="w-12 h-12 rounded-full bg-bosc/10 flex items-center justify-center mb-4">
-              <Flame className="h-6 w-6 text-bosc" />
+              <Hat className="h-6 w-6 text-bosc" />
             </div>
             <h3 className="text-xl font-bold mb-2">Add to Bounties</h3>
             <p className="text-muted-foreground">

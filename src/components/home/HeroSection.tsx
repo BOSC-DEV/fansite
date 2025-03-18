@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Flame, Skull, Ghost, Shield, Scroll } from "lucide-react";
+import { Hat, Cactus, Shield, Scroll } from "lucide-react";
 
 export const HeroSection = () => {
   return (
@@ -29,13 +29,13 @@ export const HeroSection = () => {
               <Button asChild size="lg" className="western-btn gap-2 hover:animate-wiggle bg-western-leather hover:bg-western-accent text-western-parchment">
                 <Link to="/most-wanted">
                   View Most Wanted
-                  <Skull className="h-4 w-4 ml-1" />
+                  <Hat className="h-4 w-4 ml-1" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="western-btn gap-2 border-2 border-dashed border-western-wood hover:animate-wiggle hover:bg-western-parchment/80">
                 <Link to="/create-listing">
                   Report a Scammer
-                  <Ghost className="h-4 w-4 ml-1" />
+                  <Cactus className="h-4 w-4 ml-1" />
                 </Link>
               </Button>
             </div>

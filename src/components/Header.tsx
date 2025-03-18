@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Wallet, Menu, X, Flame, Skull, Ghost, Home } from "lucide-react";
+import { Wallet, Menu, X, Hat, Cactus, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Header = () => {
@@ -35,8 +35,8 @@ export const Header = () => {
 
   const menuItems = [
     { path: "/", label: "Home", icon: <Home className="h-4 w-4 mr-2" /> },
-    { path: "/most-wanted", label: "Most Wanted", icon: <Skull className="h-4 w-4 mr-2" /> },
-    { path: "/create-listing", label: "Report Scammer", icon: <Ghost className="h-4 w-4 mr-2" /> },
+    { path: "/most-wanted", label: "Most Wanted", icon: <Hat className="h-4 w-4 mr-2" /> },
+    { path: "/create-listing", label: "Report Scammer", icon: <Cactus className="h-4 w-4 mr-2" /> },
   ];
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
@@ -52,10 +52,10 @@ export const Header = () => {
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2 text-xl">
-          <Flame className="h-6 w-6 text-western-parchment animate-bounce-slight" />
+          <Hat className="h-6 w-6 text-western-parchment animate-bounce-slight" />
           <span className="font-wanted text-western-parchment">Book of Scams</span>
           <span className="px-2 py-1 bg-western-sand/20 text-western-parchment text-xs font-bold rounded-full border-2 border-dashed border-western-sand/50 animate-pulse-subtle">
-            $BOSC
+            BOSC
           </span>
         </Link>
 
@@ -86,7 +86,7 @@ export const Header = () => {
                   {formatAddress(address || "")}
                 </span>
                 <span className="text-xs font-bold text-western-sand">
-                  {balance} $BOSC
+                  {balance} BOSC
                 </span>
               </div>
               <Button
@@ -156,7 +156,7 @@ export const Header = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-western-parchment">Balance</span>
-                    <span className="text-sm text-western-sand font-bold">{balance} $BOSC</span>
+                    <span className="text-sm text-western-sand font-bold">{balance} BOSC</span>
                   </div>
                   <Button variant="outline" size="sm" onClick={handleConnectClick} className="w-full mt-2 text-western-parchment border-western-sand/50 hover:bg-western-sand/20">
                     <Wallet className="h-4 w-4 mr-2" />
