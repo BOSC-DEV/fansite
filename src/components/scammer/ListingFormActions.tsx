@@ -1,6 +1,5 @@
 
 import { Button } from "@/components/ui/button";
-import { DollarSign } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@/context/WalletContext";
 
@@ -33,8 +32,7 @@ export function ListingFormActions({ isSubmitting, onCancel }: ListingFormAction
           disabled={isSubmitting}
           className="space-x-2"
         >
-          <DollarSign className="h-4 w-4 mr-1" />
-          {isSubmitting ? "Creating Listing..." : "Create Listing (1 BOSC)"}
+          {isSubmitting ? "Creating Listing..." : "Create Listing (1 $BOSC)"}
         </Button>
       ) : (
         <Button type="button" onClick={connectWallet}>

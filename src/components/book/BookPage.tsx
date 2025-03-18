@@ -3,7 +3,7 @@ import { Scammer } from "@/lib/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, DollarSign, ExternalLink, LinkIcon, Users } from "lucide-react";
+import { Calendar, ExternalLink, LinkIcon, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -65,7 +65,6 @@ export const BookPage = ({
           
           <div className="mt-auto w-full">
             <div className="font-bold flex items-center justify-center text-meme-green text-2xl">
-              <DollarSign className="h-6 w-6 mr-1" />
               {formatCurrency(scammer.bountyAmount)} $BOSC
             </div>
           </div>

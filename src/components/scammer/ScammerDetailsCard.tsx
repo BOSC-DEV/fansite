@@ -13,7 +13,6 @@ import {
   Users,
   MessageSquare,
   ExternalLink,
-  DollarSign,
   AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -68,7 +67,6 @@ export function ScammerDetailsCard({
       <CardContent className="p-6">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center">
-            <DollarSign className="h-5 w-5 text-bosc mr-1" />
             <span className="text-xl font-bold text-bosc">
               {bountyAmount.toLocaleString()} $BOSC
             </span>

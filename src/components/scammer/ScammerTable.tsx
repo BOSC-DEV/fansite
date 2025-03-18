@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/pagination";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { DollarSign } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface ScammerTableProps {

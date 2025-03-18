@@ -5,7 +5,7 @@ import { BookContainer } from "./book/BookContainer";
 import { PageControls } from "./book/PageControls";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { PlusCircle, DollarSign } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 
@@ -124,7 +124,7 @@ export const BookView = ({
       setBountyAmount("");
       setIsAddingBounty(false);
       
-      toast.success(`Added BOSC ${amount} to the bounty for ${currentScammer.name}`);
+      toast.success(`Added ${amount} $BOSC to the bounty for ${currentScammer.name}`);
     }, 1500);
   };
 
@@ -165,7 +165,6 @@ export const BookView = ({
           ) : (
             <>
               <PlusCircle className="h-4 w-4" />
-              <DollarSign className="h-4 w-4" />
               <span>Add Bounty</span>
             </>
           )}
