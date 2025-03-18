@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -67,7 +66,7 @@ export default {
 					dark: '#071128',
 				},
 				alert: '#E63946',
-				bosc: '#FF6B00',  // Changed to a more vibrant orange
+				bosc: '#FF6B00',
 				meme: {
 					red: '#FF3C69',
 					blue: '#00DBDE',

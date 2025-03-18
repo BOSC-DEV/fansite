@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { MOCK_SCAMMERS, Scammer } from "@/lib/types";
@@ -26,14 +26,14 @@ export const FeaturedScammers = () => {
   };
 
   return (
-    <section className="py-16 bg-muted/30">
+    <section className="py-16 bg-western-parchment/30">
       <div className="container mx-auto max-w-6xl px-4">
         <div className="flex justify-between items-center mb-10">
           <div>
-            <h2 className="text-3xl font-impact text-transparent bg-clip-text bg-gradient-to-r from-meme-red to-bosc">Most Wanted</h2>
-            <p className="text-muted-foreground">Recently added high-profile scammers</p>
+            <h2 className="text-3xl font-wanted text-western-accent uppercase tracking-wide">Most Wanted</h2>
+            <p className="text-western-wood">Recently added high-profile scammers</p>
           </div>
-          <Button asChild variant="ghost" className="gap-1 hover:animate-wiggle">
+          <Button asChild variant="ghost" className="gap-1 hover:animate-wiggle border-2 border-dashed border-western-wood/50">
             <Link to="/most-wanted">
               View All
               <ArrowRight className="h-4 w-4 ml-1" />
@@ -41,11 +41,13 @@ export const FeaturedScammers = () => {
           </Button>
         </div>
         
-        <ScammerTableCompact 
-          scammers={featuredScammers}
-          formatCurrency={formatCurrency}
-          formatDate={formatDate}
-        />
+        <div className="wanted-poster-border paper-texture rounded-sm">
+          <ScammerTableCompact 
+            scammers={featuredScammers}
+            formatCurrency={formatCurrency}
+            formatDate={formatDate}
+          />
+        </div>
       </div>
     </section>
   );
