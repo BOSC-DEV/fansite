@@ -20,7 +20,7 @@ export class Web3Provider {
         console.error("Error initializing provider:", error);
       }
     } else {
-      console.log("Ethereum provider not found");
+      console.log("MetaMask not installed");
     }
   }
   
@@ -47,7 +47,7 @@ export class Web3Provider {
       this.signer = await this.provider.getSigner();
       return accounts[0];
     } catch (error) {
-      console.error("Error connecting wallet:", error);
+      console.error("Error connecting MetaMask:", error);
       return null;
     }
   }
