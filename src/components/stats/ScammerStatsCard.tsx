@@ -1,4 +1,3 @@
-
 import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -62,7 +61,7 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
             </div>
             <div>
               <p className="text-sm font-medium text-muted-foreground">Highest Bounty</p>
-              <h4 className="text-2xl font-bold">{formatCurrency(stats.highestBounty)} <span className="text-xs text-muted-foreground">BOSC</span></h4>
+              <h4 className="text-2xl font-bold">{formatCurrency(stats.highestBounty)} BOSC</h4>
               <p className="text-xs text-muted-foreground truncate">
                 {stats.highestBountyScammer?.name}
               </p>
@@ -75,7 +74,7 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
             </div>
             <div>
               <p className="text-sm font-medium text-muted-foreground">Total Bounties</p>
-              <h4 className="text-2xl font-bold">{formatCurrency(stats.totalBounty)} <span className="text-xs text-muted-foreground">BOSC</span></h4>
+              <h4 className="text-2xl font-bold">{formatCurrency(stats.totalBounty)} BOSC</h4>
             </div>
           </div>
 

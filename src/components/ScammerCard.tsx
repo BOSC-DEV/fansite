@@ -1,4 +1,3 @@
-
 import { Scammer } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -58,6 +57,7 @@ export function ScammerCard({ scammer, className }: ScammerCardProps) {
           </div>
         </div>
       </div>
+      
       <CardContent className="p-4 space-y-3">
         <div className="flex justify-between items-start">
           <div>
