@@ -1,4 +1,3 @@
-
 import { ethers } from "ethers";
 import { ContractService } from "./contracts";
 
@@ -115,3 +114,9 @@ export class ScammerService extends ContractService {
     }
   }
 }
+
+// Create a singleton instance
+const scammerService = new ScammerService();
+
+// Export the fetchScammerById function
+export const fetchScammerById = (id: string) => scammerService.getScammerDetails(id);

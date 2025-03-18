@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { ScammerDetailsCard } from "@/components/scammer/ScammerDetailsCard";
@@ -66,7 +66,12 @@ const ScammerDetail = () => {
           </div>
 
           <div>
-            <BountyContribution scammerId={scammer.id} currentBounty={scammer.bountyAmount} />
+            <BountyContribution 
+              scammerId={scammer.id}
+              currentBounty={scammer.bountyAmount}
+              scammerName={scammer.name}
+              walletAddress={scammer.walletAddress}
+            />
           </div>
         </div>
       </div>
