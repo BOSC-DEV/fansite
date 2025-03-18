@@ -4,10 +4,11 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { MOCK_SCAMMERS, Scammer } from "@/lib/types";
 import { ArrowRight } from "lucide-react";
-import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
+import { ScammerTable } from "@/components/scammer/ScammerTable";
 
 export const FeaturedScammers = () => {
   const [featuredScammers, setFeaturedScammers] = useState<Scammer[]>(MOCK_SCAMMERS.slice(0, 5));
+  const [currentPage, setCurrentPage] = useState(1);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -24,6 +25,10 @@ export const FeaturedScammers = () => {
       day: 'numeric'
     }).format(date);
   };
+
+  // Always one page for featured scammers
+  const totalPages = 1;
+  const itemsPerPage = 5;
 
   return (
     <section className="py-16 bg-western-parchment/30">
@@ -42,8 +47,12 @@ export const FeaturedScammers = () => {
         </div>
         
         <div className="wanted-poster-border paper-texture rounded-sm">
-          <ScammerTableCompact 
-            scammers={featuredScammers}
+          <ScammerTable 
+            paginatedScammers={featuredScammers}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            itemsPerPage={itemsPerPage}
+            setCurrentPage={setCurrentPage}
             formatCurrency={formatCurrency}
             formatDate={formatDate}
           />
