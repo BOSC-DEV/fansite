@@ -1,5 +1,5 @@
 
-import { BookOpen, Shield, PartyPopper } from "lucide-react";
+import { BookOpen, Shield, PartyPopper, FileText } from "lucide-react";
 
 export const HowItWorksSection = () => {
   return (
