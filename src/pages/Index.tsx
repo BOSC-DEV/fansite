@@ -22,7 +22,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col old-paper">
+    <div className="min-h-screen flex flex-col old-paper cowboy-pattern">
       <div className="dust-swirl"></div>
       <Header />
       <HeroSection />
