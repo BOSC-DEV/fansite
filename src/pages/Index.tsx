@@ -22,7 +22,8 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col old-paper">
+      <div className="dust-swirl"></div>
       <Header />
       <HeroSection />
       <FeaturedScammers />

@@ -1,5 +1,8 @@
-import { useLocation } from "react-router-dom";
+
+import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
+import { ArrowLeft, Skull } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const NotFound = () => {
   const location = useLocation();
@@ -12,13 +15,20 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">404</h1>
-        <p className="text-xl text-gray-600 mb-4">Oops! Page not found</p>
-        <a href="/" className="text-blue-500 hover:text-blue-700 underline">
-          Return to Home
-        </a>
+    <div className="min-h-screen flex items-center justify-center parchment-bg">
+      <div className="text-center wanted-poster-border paper-texture p-8 max-w-md">
+        <Skull className="h-12 w-12 mx-auto text-western-accent mb-4" />
+        <h1 className="text-4xl font-wanted text-western-accent mb-4 uppercase tracking-wide">Wanted Dead or Alive</h1>
+        <p className="text-xl text-western-wood font-western mb-4">This page seems to have fled town.</p>
+        <p className="text-western-wood/80 mb-6 font-western">
+          The sheriff can't find what you're looking for at {location.pathname}
+        </p>
+        <Button asChild variant="outline" className="western-btn gap-2">
+          <Link to="/">
+            <ArrowLeft className="h-4 w-4" />
+            Return to Saloon
+          </Link>
+        </Button>
       </div>
     </div>
   );
