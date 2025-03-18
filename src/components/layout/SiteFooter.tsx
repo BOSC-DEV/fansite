@@ -11,7 +11,7 @@ export const SiteFooter = () => {
             <Flame className="h-5 w-5 text-western-accent" />
             <span className="text-xl font-wanted text-western-accent">Book of Scams</span>
             <span className="px-2 py-1 bg-western-sand/20 text-western-accent text-xs font-medium rounded-full border border-western-accent/30">
-              $BOSC
+              BOSC
             </span>
           </div>
           

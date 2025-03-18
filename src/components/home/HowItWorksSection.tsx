@@ -20,7 +20,7 @@ export const HowItWorksSection = () => {
             </div>
             <h3 className="text-xl font-bold mb-2">Report a Scammer</h3>
             <p className="text-muted-foreground">
-              Create a listing with evidence for 1 $BOSC token. Each listing generates a unique wallet.
+              Create a listing with evidence for 1 BOSC token. Each listing generates a unique wallet.
             </p>
           </div>
           
@@ -30,7 +30,7 @@ export const HowItWorksSection = () => {
             </div>
             <h3 className="text-xl font-bold mb-2">Add to Bounties</h3>
             <p className="text-muted-foreground">
-              Contribute additional $BOSC tokens to increase the bounty on scammers you want to prioritize.
+              Contribute additional BOSC tokens to increase the bounty on scammers you want to prioritize.
             </p>
           </div>
           

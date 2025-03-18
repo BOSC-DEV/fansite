@@ -11,7 +11,7 @@ export const HomeFooter = () => {
             <Flame className="h-5 w-5 text-bosc" />
             <span className="font-impact text-transparent bg-clip-text bg-gradient-to-r from-bosc to-meme-red">Book of Scams</span>
             <span className="px-2 py-1 bg-bosc/10 text-bosc text-xs font-bold rounded-full border-2 border-dashed border-bosc/50">
-              $BOSC
+              BOSC
             </span>
           </div>
           
@@ -34,4 +34,4 @@ export const HomeFooter = () => {
       </div>
     </footer>
   );
-};
+}

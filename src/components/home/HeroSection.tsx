@@ -11,7 +11,7 @@ export const HeroSection = () => {
           <div className="space-y-6 md:pr-8 animate-fade-in">
             <div className="inline-flex items-center rounded-full px-3 py-1 text-sm font-bold bg-bosc/10 text-bosc border-2 border-dashed border-bosc/50">
               <Flame className="h-3.5 w-3.5 mr-1 animate-spin-slow" />
-              <span>Powered by $BOSC Token</span>
+              <span>Powered by BOSC Token</span>
             </div>
             
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-impact text-transparent bg-clip-text bg-gradient-to-r from-meme-red via-bosc to-meme-purple tracking-wide">

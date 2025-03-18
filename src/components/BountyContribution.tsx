@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,7 +42,7 @@ export function BountyContribution({
     }
 
     if (balance !== null && numAmount > balance) {
-      toast.error("Insufficient $BOSC balance");
+      toast.error("Insufficient BOSC balance");
       return;
     }
 
@@ -50,7 +51,7 @@ export function BountyContribution({
       const success = await web3Provider.contributeToBounty(scammerId, numAmount);
       
       if (success) {
-        toast.success(`Successfully contributed ${numAmount} $BOSC tokens to the bounty`);
+        toast.success(`Successfully contributed ${numAmount} BOSC tokens to the bounty`);
         if (onContribute) {
           onContribute(numAmount);
         }
@@ -73,12 +74,12 @@ export function BountyContribution({
       <CardHeader className="pb-3">
         <CardTitle className="text-lg">Contribute to Bounty</CardTitle>
         <CardDescription>
-          Add $BOSC tokens to increase the bounty for {scammerName}
+          Add BOSC tokens to increase the bounty for {scammerName}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="amount">Amount ($BOSC Tokens)</Label>
+          <Label htmlFor="amount">Amount (BOSC Tokens)</Label>
           <div className="flex space-x-2">
             <Input
               id="amount"
@@ -91,7 +92,7 @@ export function BountyContribution({
               className="flex-1"
             />
             <span className="flex items-center font-medium text-sm px-3 border rounded-md bg-muted/50">
-              $BOSC
+              BOSC
             </span>
           </div>
         </div>
@@ -112,7 +113,7 @@ export function BountyContribution({
 
         <div className="flex items-center justify-between py-2 px-3 bg-muted/50 rounded-md">
           <span className="text-sm text-muted-foreground">Current Bounty</span>
-          <span className="font-medium">{currentBounty} $BOSC</span>
+          <span className="font-medium">{currentBounty} BOSC</span>
         </div>
 
         <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-md text-xs text-muted-foreground">
@@ -138,7 +139,7 @@ export function BountyContribution({
               "Processing..."
             ) : (
               <>
-                Contribute {amount ? `${amount} $BOSC` : "Bounty"}
+                Contribute {amount ? `${amount} BOSC` : "Bounty"}
                 <ArrowRightIcon className="ml-2 h-4 w-4" />
               </>
             )}

@@ -93,7 +93,7 @@ export const ScammerTable = ({
               <TableCell className="text-right font-medium">
                 <div className="flex items-center justify-end">
                   <DollarSign className="h-3.5 w-3.5 text-bosc mr-1" />
-                  <span className="text-bosc">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
+                  <span className="text-bosc">{formatCurrency(scammer.bountyAmount)} BOSC</span>
                 </div>
               </TableCell>
               <TableCell className="text-right text-muted-foreground text-sm">

@@ -34,7 +34,7 @@ export function ListingFormActions({ isSubmitting, onCancel }: ListingFormAction
           className="space-x-2"
         >
           <DollarSign className="h-4 w-4 mr-1" />
-          {isSubmitting ? "Creating Listing..." : "Create Listing (1 $BOSC)"}
+          {isSubmitting ? "Creating Listing..." : "Create Listing (1 BOSC)"}
         </Button>
       ) : (
         <Button type="button" onClick={connectWallet}>
