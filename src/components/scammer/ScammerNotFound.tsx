@@ -7,20 +7,22 @@ import { ArrowLeft } from "lucide-react";
 
 export function ScammerNotFound() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen old-paper">
       <Header />
       <div className="container mx-auto max-w-6xl px-4 pt-32 pb-16 text-center">
-        <AlertTriangle className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-        <h1 className="text-3xl font-bold mb-4">Scammer Not Found</h1>
-        <p className="text-muted-foreground mb-8">
-          The scammer you're looking for doesn't exist or has been removed.
-        </p>
-        <Button asChild>
-          <Link to="/most-wanted">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Most Wanted
-          </Link>
-        </Button>
+        <div className="wanted-poster-border paper-texture p-8 max-w-md mx-auto">
+          <AlertTriangle className="h-16 w-16 mx-auto text-western-accent mb-4" />
+          <h1 className="text-3xl font-wanted text-western-accent mb-4 uppercase tracking-wide">Outlaw Not Found</h1>
+          <p className="text-western-wood font-western mb-8">
+            This scammer seems to have fled town or doesn't exist.
+          </p>
+          <Button asChild className="western-btn">
+            <Link to="/most-wanted" className="flex items-center">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Most Wanted
+            </Link>
+          </Button>
+        </div>
       </div>
     </div>
   );

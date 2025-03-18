@@ -15,7 +15,7 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center parchment-bg">
+    <div className="min-h-screen flex items-center justify-center old-paper">
       <div className="text-center wanted-poster-border paper-texture p-8 max-w-md">
         <Skull className="h-12 w-12 mx-auto text-western-accent mb-4" />
         <h1 className="text-4xl font-wanted text-western-accent mb-4 uppercase tracking-wide">Wanted Dead or Alive</h1>
