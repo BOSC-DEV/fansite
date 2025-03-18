@@ -1,3 +1,4 @@
+
 import { Scammer } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -70,7 +71,7 @@ export function ScammerCard({ scammer, className }: ScammerCardProps) {
           <div className="flex items-center">
             <DollarSign className="h-4 w-4 text-bosc mr-1" />
             <span className="text-sm font-bold text-bosc">
-              {formatCurrency(scammer.bountyAmount)} BOSC
+              BOSC {formatCurrency(scammer.bountyAmount)}
             </span>
           </div>
           <div className="text-xs text-muted-foreground">

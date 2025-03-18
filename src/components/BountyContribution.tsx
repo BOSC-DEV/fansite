@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -113,7 +112,7 @@ export function BountyContribution({
 
         <div className="flex items-center justify-between py-2 px-3 bg-muted/50 rounded-md">
           <span className="text-sm text-muted-foreground">Current Bounty</span>
-          <span className="font-medium">{currentBounty} BOSC</span>
+          <span className="font-medium">BOSC {currentBounty}</span>
         </div>
 
         <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-md text-xs text-muted-foreground">
@@ -139,7 +138,7 @@ export function BountyContribution({
               "Processing..."
             ) : (
               <>
-                Contribute {amount ? `${amount} BOSC` : "Bounty"}
+                Contribute BOSC {amount ? amount : ""}
                 <ArrowRightIcon className="ml-2 h-4 w-4" />
               </>
             )}

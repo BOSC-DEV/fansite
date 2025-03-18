@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Scammer } from "@/lib/types";
 import { BookContainer } from "./book/BookContainer";
@@ -123,7 +124,7 @@ export const BookView = ({
       setBountyAmount("");
       setIsAddingBounty(false);
       
-      toast.success(`Added ${amount} $BOSC to the bounty for ${currentScammer.name}`);
+      toast.success(`Added BOSC ${amount} to the bounty for ${currentScammer.name}`);
     }, 1500);
   };
 

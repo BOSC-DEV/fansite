@@ -1,3 +1,4 @@
+
 import { Scammer } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -69,7 +70,7 @@ export function ScammerDetailsCard({
           <div className="flex items-center">
             <DollarSign className="h-5 w-5 text-bosc mr-1" />
             <span className="text-xl font-bold text-bosc">
-              {bountyAmount.toLocaleString()} BOSC
+              BOSC {bountyAmount.toLocaleString()}
             </span>
           </div>
           <div className="flex items-center text-sm text-muted-foreground">
