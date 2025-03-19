@@ -6,9 +6,9 @@ import { ScammerDetailsCard } from "@/components/scammer/ScammerDetailsCard";
 import { ScammerDetailSkeleton } from "@/components/scammer/ScammerDetailSkeleton";
 import { ScammerNotFound } from "@/components/scammer/ScammerNotFound";
 import { BountyContribution } from "@/components/BountyContribution";
+import { CommentSection } from "@/components/comments/CommentSection";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { Scammer } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import { fetchScammerById } from "@/services/web3/scammers";
 
@@ -63,6 +63,11 @@ const ScammerDetail = () => {
               setImageLoaded={setImageLoaded}
               formatDate={formatDate}
             />
+            
+            {/* Add comment section below the details card */}
+            <div className="mt-8">
+              <CommentSection scammerId={scammer.id} />
+            </div>
           </div>
 
           <div>
