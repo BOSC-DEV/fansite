@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import { ContractService } from "./contracts";
+import { toast } from "sonner";
 
 export class ScammerService extends ContractService {
   constructor() {
@@ -7,20 +8,30 @@ export class ScammerService extends ContractService {
   }
   
   async addScammer(name: string, accusedOf: string, photoUrl: string): Promise<string | null> {
-    if (!this.bookOfScamsContract || !this.signer) return null;
+    if (!this.bookOfScamsContract || !this.signer) {
+      console.error("Contract or signer not initialized");
+      toast.error("Wallet connection issue. Please reconnect your wallet.");
+      return null;
+    }
     
     try {
       // First approve the tokens
       const bookOfScamsAddress = await this.bookOfScamsContract.getAddress();
+      console.log("Approving tokens for address:", bookOfScamsAddress);
       const approved = await this.approveTokens(bookOfScamsAddress, 1);
       
       if (!approved) {
+        console.error("Token approval failed");
+        toast.error("Failed to approve tokens. Please check your balance and try again.");
         throw new Error("Failed to approve tokens");
       }
       
+      console.log("Adding scammer with name:", name);
       // Add the scammer
       const tx = await this.bookOfScamsContract.addScammer(name, accusedOf, photoUrl);
+      console.log("Transaction sent:", tx.hash);
       const receipt = await tx.wait();
+      console.log("Transaction confirmed:", receipt);
       
       // Find the ScammerAdded event to get the scammer ID
       const event = receipt.logs
@@ -31,12 +42,15 @@ export class ScammerService extends ContractService {
         })[0];
       
       if (event && event.scammerId) {
+        console.log("Scammer added with ID:", event.scammerId);
         return event.scammerId;
       }
       
+      console.error("No scammer ID found in events");
       return null;
     } catch (error) {
       console.error("Error adding scammer:", error);
+      toast.error(`Transaction failed: ${error instanceof Error ? error.message : "Unknown error"}`);
       return null;
     }
   }
