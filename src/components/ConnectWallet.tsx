@@ -41,9 +41,9 @@ export function ConnectWallet({
             <Wallet className="h-8 w-8 text-muted-foreground" />
           </div>
           <div className="space-y-2 max-w-md">
-            <h3 className="text-xl font-semibold">MetaMask Wallet</h3>
+            <h3 className="text-xl font-semibold">Wallet Connection</h3>
             <p className="text-sm text-muted-foreground">
-              Book of Scams uses your MetaMask wallet for secure transactions and identity verification.
+              Book of Scams uses your wallet for secure transactions and identity verification.
             </p>
           </div>
           
@@ -68,7 +68,7 @@ export function ConnectWallet({
           ) : (
             <span className="flex items-center">
               <Wallet className="mr-2 h-4 w-4" />
-              Connect MetaMask
+              Connect Wallet
             </span>
           )}
         </Button>

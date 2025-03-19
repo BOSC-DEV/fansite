@@ -45,7 +45,7 @@ export function ListingFormActions({ isSubmitting, onCancel }: ListingFormAction
           onClick={connectWallet}
           className="bg-western-wood hover:bg-western-wood/90 text-western-parchment font-western min-w-[220px]"
         >
-          Connect MetaMask to Continue
+          Connect Wallet
         </Button>
       )}
     </div>
