@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@/context/WalletContext";
@@ -21,7 +20,7 @@ import { AdditionalInfoFields } from "./AdditionalInfoFields";
 
 export function FormContainer() {
   const navigate = useNavigate();
-  const { isConnected, balance, address } = useWallet();
+  const { isConnected, address } = useWallet();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const { 
@@ -52,7 +51,7 @@ export function FormContainer() {
       return;
     }
     
-    if (!validateForm(balance)) {
+    if (!validateForm()) {
       return;
     }
     
