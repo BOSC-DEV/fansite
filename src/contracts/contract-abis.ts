@@ -1,4 +1,3 @@
-
 export const BOSC_TOKEN_ABI = [
   "function name() view returns (string)",
   "function symbol() view returns (string)",
@@ -25,27 +24,22 @@ export const BOOK_OF_SCAMS_ABI = [
   "event BountyIncreased(bytes32 indexed scammerId, uint256 amount, uint256 newTotal, address contributor)"
 ];
 
-// Replace these with your actual deployed contract addresses
+// Production contract addresses - to be updated after deployment
 export const CONTRACT_ADDRESSES = {
   // Ethereum Mainnet
   1: {
-    boscToken: "", // To be filled after deployment
-    bookOfScams: "" // To be filled after deployment
-  },
-  // Goerli Testnet
-  5: {
-    boscToken: "", // To be filled after deployment
-    bookOfScams: "" // To be filled after deployment
+    boscToken: "", // Production contract address
+    bookOfScams: "" // Production contract address
   },
   // Sepolia Testnet
   11155111: {
-    boscToken: "", // To be filled after deployment
-    bookOfScams: "" // To be filled after deployment
+    boscToken: "", // Testnet contract address
+    bookOfScams: "" // Testnet contract address
   },
   // Polygon
   137: {
-    boscToken: "", // To be filled after deployment
-    bookOfScams: "" // To be filled after deployment
+    boscToken: "", // Production contract address
+    bookOfScams: "" // Production contract address
   }
 };
 

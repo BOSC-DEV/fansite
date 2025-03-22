@@ -5,38 +5,51 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 // Get private key from environment or use a default one for development
-const PRIVATE_KEY = process.env.PRIVATE_KEY || "0x0000000000000000000000000000000000000000000000000000000000000000";
+const PRIVATE_KEY = process.env.PRIVATE_KEY || "";
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "";
 const POLYGONSCAN_API_KEY = process.env.POLYGONSCAN_API_KEY || "";
+const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY || "";
+
+// Safety check for production deployments
+if (!PRIVATE_KEY && process.env.NODE_ENV === 'production') {
+  console.error("Error: PRIVATE_KEY not found in environment variables");
+  process.exit(1);
+}
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.17",
+  solidity: {
+    version: "0.8.17",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200
+      }
+    }
+  },
   networks: {
     hardhat: {},
     // Mainnet
     ethereum: {
-      url: `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY || ""}`,
-      accounts: [PRIVATE_KEY],
+      url: `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
+      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
+      gasPrice: 'auto'
     },
-    // Testnets
-    goerli: {
-      url: `https://eth-goerli.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY || ""}`,
-      accounts: [PRIVATE_KEY],
-    },
+    // Testnet
     sepolia: {
-      url: `https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY || ""}`,
-      accounts: [PRIVATE_KEY],
+      url: `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
+      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
+      gasPrice: 'auto'
     },
     // Other networks
     polygon: {
-      url: `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY || ""}`,
-      accounts: [PRIVATE_KEY],
+      url: `https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
+      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
+      gasPrice: 'auto'
     },
   },
   etherscan: {
     apiKey: {
       mainnet: ETHERSCAN_API_KEY,
-      goerli: ETHERSCAN_API_KEY,
       sepolia: ETHERSCAN_API_KEY,
       polygon: POLYGONSCAN_API_KEY,
     },

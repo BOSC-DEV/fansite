@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { Header } from "@/components/Header";
-import { MOCK_SCAMMERS, Scammer } from "@/lib/types";
+import { Scammer } from "@/lib/types";
 import ConnectWallet from "@/components/ConnectWallet";
 import { BookView } from "@/components/BookView";
 import { SearchBar } from "@/components/search/SearchBar";
@@ -18,7 +18,7 @@ import { FileText } from "lucide-react";
 const ITEMS_PER_PAGE = 1;
 
 const MostWanted = () => {
-  const { isConnected } = useWallet();
+  const { isConnected, chainId } = useWallet();
   const [scammers, setScammers] = useState<Scammer[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState<"recent" | "bounty">("bounty");
@@ -27,13 +27,15 @@ const MostWanted = () => {
   const [viewMode, setViewMode] = useState<"list" | "book">("list");
 
   useEffect(() => {
-    // Simulate API call to fetch scammers
     const fetchScammers = async () => {
       setIsLoading(true);
       try {
-        // In a real app, this would be an API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setScammers(MOCK_SCAMMERS);
+        // In production, this would fetch from your contract or API
+        // const data = await getAllScammers();
+        // setScammers(data);
+        
+        // Temporarily use empty array until contract is ready
+        setScammers([]);
       } catch (error) {
         console.error("Error fetching scammers:", error);
       } finally {
@@ -41,8 +43,13 @@ const MostWanted = () => {
       }
     };
 
-    fetchScammers();
-  }, []);
+    if (isConnected) {
+      fetchScammers();
+    } else {
+      setScammers([]);
+      setIsLoading(false);
+    }
+  }, [isConnected, chainId]);
 
   // Reset to page 1 when search query changes
   useEffect(() => {
@@ -52,7 +59,7 @@ const MostWanted = () => {
   const filteredScammers = scammers.filter(scammer => 
     scammer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     scammer.accusedOf.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    scammer.aliases.some(alias => alias.toLowerCase().includes(searchQuery.toLowerCase()))
+    scammer.aliases?.some(alias => alias.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   const sortedScammers = [...filteredScammers].sort((a, b) => {

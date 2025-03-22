@@ -1,14 +1,37 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { MOCK_SCAMMERS, Scammer } from "@/lib/types";
+import { Scammer } from "@/lib/types";
 import { ArrowRight } from "lucide-react";
 import { ScammerTable } from "@/components/scammer/ScammerTable";
+import { useWallet } from "@/context/WalletContext";
 
 export const FeaturedScammers = () => {
-  const [featuredScammers, setFeaturedScammers] = useState<Scammer[]>(MOCK_SCAMMERS.slice(0, 5));
+  const [featuredScammers, setFeaturedScammers] = useState<Scammer[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const { chainId } = useWallet();
+
+  useEffect(() => {
+    const fetchFeaturedScammers = async () => {
+      setIsLoading(true);
+      try {
+        // In production, this would fetch from your contract or API
+        // const data = await getTopScammers(5);
+        // setFeaturedScammers(data);
+        
+        // Temporarily use empty array until contract is ready
+        setFeaturedScammers([]);
+      } catch (error) {
+        console.error("Error fetching featured scammers:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFeaturedScammers();
+  }, [chainId]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -47,15 +70,28 @@ export const FeaturedScammers = () => {
         </div>
         
         <div className="wanted-poster-border paper-texture rounded-sm">
-          <ScammerTable 
-            paginatedScammers={featuredScammers}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            itemsPerPage={itemsPerPage}
-            setCurrentPage={setCurrentPage}
-            formatCurrency={formatCurrency}
-            formatDate={formatDate}
-          />
+          {isLoading ? (
+            <div className="p-6 text-center">
+              <p className="text-muted-foreground">Loading scammers...</p>
+            </div>
+          ) : featuredScammers.length > 0 ? (
+            <ScammerTable 
+              paginatedScammers={featuredScammers}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              itemsPerPage={itemsPerPage}
+              setCurrentPage={setCurrentPage}
+              formatCurrency={formatCurrency}
+              formatDate={formatDate}
+            />
+          ) : (
+            <div className="p-6 text-center">
+              <p className="text-muted-foreground">No scammers have been reported yet.</p>
+              <Button asChild variant="outline" className="mt-4">
+                <Link to="/create-listing">Report a Scammer</Link>
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </section>
