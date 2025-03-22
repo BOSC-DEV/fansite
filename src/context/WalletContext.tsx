@@ -15,6 +15,7 @@ interface WalletContextType {
   isConnected: boolean;
   smartWalletAddress: string | null;
   smartWalletLoading: boolean;
+  chainId: number | null;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -26,6 +27,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [balance, setBalance] = useState<number | null>(null);
   const [smartWalletAddress, setSmartWalletAddress] = useState<string | null>(null);
   const [smartWalletLoading, setSmartWalletLoading] = useState(false);
+  const [chainId, setChainId] = useState<number | null>(null);
 
   useEffect(() => {
     const checkConnection = async () => {
@@ -33,6 +35,10 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         const connectedAddress = window.ethereum.selectedAddress;
         setAddress(connectedAddress);
         setConnected(true);
+        
+        if (window.ethereum.chainId) {
+          setChainId(Number(window.ethereum.chainId));
+        }
         
         await web3Provider.connectWallet();
         if (connectedAddress) {
@@ -45,6 +51,22 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     checkConnection();
   }, []);
 
+  useEffect(() => {
+    const handleChainChanged = (chainIdHex: string) => {
+      setChainId(Number(chainIdHex));
+    };
+
+    if (window.ethereum) {
+      window.ethereum.on('chainChanged', handleChainChanged);
+    }
+
+    return () => {
+      if (window.ethereum) {
+        window.ethereum.removeListener('chainChanged', handleChainChanged);
+      }
+    };
+  }, []);
+
   const connectWallet = async () => {
     setConnecting(true);
     try {
@@ -53,6 +75,10 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       if (connectedAddress) {
         setAddress(connectedAddress);
         setConnected(true);
+        
+        if (window.ethereum && window.ethereum.chainId) {
+          setChainId(Number(window.ethereum.chainId));
+        }
         
         const tokenBalance = await web3Provider.getBalance(connectedAddress);
         setBalance(tokenBalance);
@@ -75,6 +101,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     setConnected(false);
     setBalance(null);
     setSmartWalletAddress(null);
+    setChainId(null);
     toast.success('Wallet disconnected');
   };
 
@@ -88,6 +115,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     isConnected: connected && !!address,
     smartWalletAddress,
     smartWalletLoading,
+    chainId,
   };
 
   return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>;
