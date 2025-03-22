@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@/context/WalletContext";
@@ -17,11 +18,18 @@ import { ListingFormActions } from "@/components/scammer/ListingFormActions";
 import { useListingForm } from "./useListingForm";
 import { BasicInfoFields } from "./BasicInfoFields";
 import { AdditionalInfoFields } from "./AdditionalInfoFields";
+import { CloudflareTurnstile } from "@/components/CloudflareTurnstile";
+import { Alert, AlertDescription, AlertIcon } from "@/components/ui/alert";
+import { Info } from "lucide-react";
+
+// Use a public site key for development - replace with your actual site key in production
+const TURNSTILE_SITE_KEY = '1x00000000000000000000BB';
 
 export function FormContainer() {
   const navigate = useNavigate();
   const { isConnected, address } = useWallet();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   
   const { 
     name, setName,
@@ -43,6 +51,10 @@ export function FormContainer() {
     validateForm
   } = useListingForm();
 
+  const handleVerify = (token: string) => {
+    setTurnstileToken(token);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -54,10 +66,19 @@ export function FormContainer() {
     if (!validateForm()) {
       return;
     }
+
+    if (!turnstileToken) {
+      toast.error("Please complete the Cloudflare security verification");
+      return;
+    }
     
     setIsSubmitting(true);
     
     try {
+      // In a real implementation, you would validate the turnstile token server-side
+      // before proceeding with the transaction
+      console.log("Turnstile token for verification:", turnstileToken);
+      
       const scammerId = await web3Provider.addScammer(name, accusedOf, photoUrl);
       
       if (!scammerId) {
@@ -119,6 +140,22 @@ export function FormContainer() {
             officialResponse={officialResponse}
             setOfficialResponse={setOfficialResponse}
           />
+
+          <div className="mt-6 border-t border-western-wood/20 pt-6">
+            <h3 className="text-lg font-western text-western-accent mb-2">Security Verification</h3>
+            <p className="text-sm text-western-wood mb-4">Please complete the security check to prevent spam</p>
+            
+            <CloudflareTurnstile 
+              siteKey={TURNSTILE_SITE_KEY} 
+              onVerify={handleVerify} 
+            />
+            
+            {!turnstileToken && (
+              <p className="text-sm text-western-accent mt-2">
+                * Required to submit the form
+              </p>
+            )}
+          </div>
 
           <ListingDisclaimer />
         </CardContent>
