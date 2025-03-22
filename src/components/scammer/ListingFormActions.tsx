@@ -37,7 +37,7 @@ export function ListingFormActions({ isSubmitting, onCancel }: ListingFormAction
           disabled={isSubmitting}
           className="bg-western-accent hover:bg-western-accent/90 text-western-parchment font-wanted min-w-[220px]"
         >
-          {isSubmitting ? "Creating Listing..." : "Create Listing (1 $BOSC)"}
+          {isSubmitting ? "Creating Listing..." : "Create Listing"}
         </Button>
       ) : (
         <Button 

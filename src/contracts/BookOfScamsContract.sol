@@ -40,9 +40,6 @@ contract BookOfScams is Ownable {
         string memory _accusedOf,
         string memory _photoUrl
     ) external returns (bytes32) {
-        // Transfer 1 BOSC token from user to developer wallet
-        require(boscToken.transferFrom(msg.sender, developerWallet, 1 ether), "Token transfer failed");
-        
         // Generate a unique ID for this scammer
         bytes32 scammerId = keccak256(abi.encodePacked(_name, msg.sender, block.timestamp));
         
@@ -54,7 +51,7 @@ contract BookOfScams is Ownable {
             name: _name,
             accusedOf: _accusedOf,
             photoUrl: _photoUrl,
-            bountyAmount: 1 ether, // Initial bounty of 1 BOSC
+            bountyAmount: 0, // Initial bounty of 0 BOSC
             reporter: msg.sender,
             dateAdded: block.timestamp,
             exists: true
@@ -63,7 +60,7 @@ contract BookOfScams is Ownable {
         // Add to the list of scammers
         scammerIds.push(scammerId);
         
-        emit ScammerAdded(scammerId, _name, msg.sender, 1 ether);
+        emit ScammerAdded(scammerId, _name, msg.sender, 0);
         
         return scammerId;
     }

@@ -47,7 +47,7 @@ export function useListingForm() {
     setAccomplices(accomplices.filter(a => a !== accomplice));
   };
 
-  const validateForm = (balance: number | null): boolean => {
+  const validateForm = (): boolean => {
     if (!name.trim()) {
       toast.error("Name is required");
       return false;
@@ -58,10 +58,6 @@ export function useListingForm() {
     }
     if (!photoUrl.trim()) {
       toast.error("Photo URL is required");
-      return false;
-    }
-    if (balance !== null && balance < 1) {
-      toast.error("Insufficient $BOSC balance. You need at least 1 $BOSC to create a listing.");
       return false;
     }
     return true;

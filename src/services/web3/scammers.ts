@@ -15,17 +15,6 @@ export class ScammerService extends ContractService {
     }
     
     try {
-      // First approve the tokens
-      const bookOfScamsAddress = await this.bookOfScamsContract.getAddress();
-      console.log("Approving tokens for address:", bookOfScamsAddress);
-      const approved = await this.approveTokens(bookOfScamsAddress, 1);
-      
-      if (!approved) {
-        console.error("Token approval failed");
-        toast.error("Failed to approve tokens. Please check your balance and try again.");
-        throw new Error("Failed to approve tokens");
-      }
-      
       console.log("Adding scammer with name:", name);
       // Add the scammer
       const tx = await this.bookOfScamsContract.addScammer(name, accusedOf, photoUrl);
