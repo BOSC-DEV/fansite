@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { toast } from 'sonner';
 import web3Provider from '../services/web3Provider';
@@ -15,7 +14,7 @@ interface WalletContextType {
   isConnected: boolean;
   smartWalletAddress: string | null;
   smartWalletLoading: boolean;
-  chainId: number | null;
+  chainId: number | null;  // Ensuring this is included
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -115,7 +114,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     isConnected: connected && !!address,
     smartWalletAddress,
     smartWalletLoading,
-    chainId,
+    chainId,  // Ensuring this is included in the value object
   };
 
   return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>;
