@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { UserCircle2, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { storageService } from "@/services/storage/storageService";
 
 interface ProfilePictureUploadProps {
   displayName: string;
@@ -39,13 +40,35 @@ export function ProfilePictureUpload({
     setIsUploading(true);
     
     try {
+      // Use the storageService to upload the image
+      const publicUrl = await uploadProfileImage(file, userId);
+      
+      if (publicUrl) {
+        onProfilePicChange(publicUrl);
+        toast.success("Image uploaded successfully");
+      } else {
+        toast.error("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("Error uploading image");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // Helper function to upload the image directly
+  const uploadProfileImage = async (file: File, userId: string): Promise<string | null> => {
+    try {
       // Generate a unique file name
       const fileExt = file.name.split('.').pop();
       const fileName = `${userId}-${Date.now()}.${fileExt}`;
       const filePath = `${fileName}`;
       
+      console.log("Uploading file:", filePath);
+      
       // Upload the file to the 'profile-images' bucket
-      const { error: uploadError, data } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('profile-images')
         .upload(filePath, file, {
           cacheControl: '3600',
@@ -54,26 +77,19 @@ export function ProfilePictureUpload({
         
       if (uploadError) {
         console.error('Error uploading image:', uploadError);
-        toast.error("Failed to upload image: " + uploadError.message);
-        return;
+        return null;
       }
       
       // Get the public URL for the uploaded file
       const { data: publicUrlData } = supabase.storage
         .from('profile-images')
         .getPublicUrl(filePath);
-        
-      if (publicUrlData.publicUrl) {
-        onProfilePicChange(publicUrlData.publicUrl);
-        toast.success("Image uploaded successfully");
-      } else {
-        toast.error("Failed to get public URL for uploaded image");
-      }
+      
+      console.log("Uploaded successfully, public URL:", publicUrlData.publicUrl);
+      return publicUrlData.publicUrl;
     } catch (error) {
-      console.error("Error uploading image:", error);
-      toast.error("Error uploading image");
-    } finally {
-      setIsUploading(false);
+      console.error("Error in uploadProfileImage:", error);
+      return null;
     }
   };
 
