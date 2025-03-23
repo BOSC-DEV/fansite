@@ -1,14 +1,12 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProfilePictureUpload } from "./ProfilePictureUpload";
 import { useProfileForm } from "./useProfileForm";
-import { Twitter, Globe } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { BasicInfoForm } from "./BasicInfoForm";
 
 export function UserProfile() {
   const navigate = useNavigate();
@@ -32,8 +30,10 @@ export function UserProfile() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Profile form submitted");
     const success = await saveProfile();
     if (success) {
+      console.log("Profile saved successfully, navigating back");
       navigate(-1);
     }
   };
@@ -62,7 +62,7 @@ export function UserProfile() {
             displayName={formData.displayName} 
             profilePicUrl={formData.profilePicUrl} 
             onProfilePicChange={setProfilePicUrl}
-            userId={profileId || address}
+            userId={address}
           />
           
           <div className="space-y-4">
@@ -121,26 +121,18 @@ export function UserProfile() {
                 </p>
               </div>
 
-              {/* Social Links - now with icons in the same row as input fields */}
+              {/* Social Links */}
               <div className="space-y-2 pt-2 border-t">
                 <Label className="text-base font-medium">Social Links</Label>
                 
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Twitter size={24} className="text-muted-foreground min-w-[24px]" />
-                    <div className="flex-1">
-                      <Input id="xLink" placeholder="https://x.com/username" value={formData.xLink} onChange={e => setXLink(e.target.value)} />
-                    </div>
-                  </div>
+                  <Label htmlFor="xLink">X (Twitter) Profile</Label>
+                  <Input id="xLink" placeholder="https://x.com/username" value={formData.xLink} onChange={e => setXLink(e.target.value)} />
                 </div>
                 
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Globe size={24} className="text-muted-foreground min-w-[24px]" />
-                    <div className="flex-1">
-                      <Input id="websiteLink" placeholder="https://example.com" value={formData.websiteLink} onChange={e => setWebsiteLink(e.target.value)} />
-                    </div>
-                  </div>
+                  <Label htmlFor="websiteLink">Website</Label>
+                  <Input id="websiteLink" placeholder="https://example.com" value={formData.websiteLink} onChange={e => setWebsiteLink(e.target.value)} />
                 </div>
               </div>
 

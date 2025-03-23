@@ -4,6 +4,7 @@ import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { storageService, UserProfile } from "@/services/storage";
 import { isSupabaseConfigured } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface ProfileFormData {
   displayName: string;
@@ -12,6 +13,7 @@ export interface ProfileFormData {
   xLink: string;
   websiteLink: string;
   bio: string;
+  bioCharCount: number;
 }
 
 export function useProfileForm() {
@@ -188,38 +190,69 @@ export function useProfileForm() {
     }
 
     setIsSubmitting(true);
+    console.log("[useProfileForm] Starting profile save for address:", address);
     
     try {
-      console.log("[useProfileForm] Saving profile for address:", address);
-      
-      // Use the wallet address as the profile ID
+      // Use the wallet address as the unique ID
       const uniqueId = address;
+      console.log("[useProfileForm] Using ID:", uniqueId);
       
-      // Store profile using storageService
+      // Direct database insert/update to eliminate potential issues with the service layer
       if (address && supabaseReady) {
-        const profile: UserProfile = {
-          id: uniqueId, // Using wallet address as ID
-          displayName,
-          username,
-          profilePicUrl,
-          walletAddress: address,
-          createdAt: new Date().toISOString(),
-          xLink,
-          websiteLink,
-          bio
-        };
+        // Check if profile exists
+        const { data: existingProfile, error: checkError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('wallet_address', address)
+          .maybeSingle();
         
-        console.log("[useProfileForm] Profile to save:", profile);
-        const success = await storageService.saveProfile(profile);
-        if (success) {
-          toast.success("Profile saved successfully");
-          setHasProfile(true);
-          setProfileId(uniqueId);
-          return true;
-        } else {
-          toast.error("Failed to save profile");
+        if (checkError) {
+          console.error('[useProfileForm] Error checking profile existence:', checkError);
+          toast.error("Error checking if profile exists");
           return false;
         }
+        
+        // Convert to database format
+        const dbProfile = {
+          id: uniqueId,
+          display_name: displayName,
+          username: username,
+          profile_pic_url: profilePicUrl,
+          wallet_address: address,
+          created_at: new Date().toISOString(),
+          x_link: xLink || null,
+          website_link: websiteLink || null,
+          bio: bio || null
+        };
+        
+        console.log("[useProfileForm] Prepared profile data:", dbProfile);
+        
+        let result;
+        
+        if (existingProfile) {
+          console.log("[useProfileForm] Updating existing profile");
+          result = await supabase
+            .from('profiles')
+            .update(dbProfile)
+            .eq('wallet_address', address);
+        } else {
+          console.log("[useProfileForm] Creating new profile");
+          result = await supabase
+            .from('profiles')
+            .insert(dbProfile);
+        }
+        
+        if (result.error) {
+          console.error('[useProfileForm] Error saving profile:', result.error);
+          toast.error(`Failed to save profile: ${result.error.message}`);
+          return false;
+        }
+        
+        console.log("[useProfileForm] Profile saved successfully");
+        toast.success("Profile saved successfully");
+        setHasProfile(true);
+        setProfileId(uniqueId);
+        return true;
       }
       return false;
     } catch (error) {
