@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@/context/WalletContext";
@@ -19,7 +18,7 @@ import { useListingForm } from "./useListingForm";
 import { BasicInfoFields } from "./BasicInfoFields";
 import { AdditionalInfoFields } from "./AdditionalInfoFields";
 import { CloudflareTurnstile } from "@/components/CloudflareTurnstile";
-import { Alert, AlertDescription, AlertIcon } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Info } from "lucide-react";
 
 // Use a public site key for development - replace with your actual site key in production
