@@ -38,7 +38,7 @@ export function ScammerSidebar({
   formatDate
 }: ScammerSidebarProps) {
   return (
-    <div className="flex-shrink-0 w-full sm:w-1/3 lg:w-1/4">
+    <div className="flex-shrink-0 w-full">
       <div className="space-y-3">
         <ScammerAvatar name={name} photoUrl={photoUrl} />
         
