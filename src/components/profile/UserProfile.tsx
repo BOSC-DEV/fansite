@@ -35,8 +35,8 @@ export function UserProfile() {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error("File size should be less than 5MB");
+      if (file.size > 1 * 1024 * 1024) {
+        toast.error("File size should be less than 1MB");
         return;
       }
 
@@ -135,7 +135,7 @@ export function UserProfile() {
             />
             
             <p className="text-xs text-muted-foreground text-center">
-              Max file size: 5MB<br />
+              Max file size: 1MB<br />
               Supported formats: JPEG, PNG, GIF
             </p>
           </div>
