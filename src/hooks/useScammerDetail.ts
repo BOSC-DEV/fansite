@@ -50,7 +50,7 @@ export function useScammerDetail(id: string | undefined) {
         try {
           console.log("Attempting to load scammer with ID:", id);
           
-          // First try to load from Supabase
+          // First try to load from Supabase - properly await the Promise
           const supabaseScammer = await scammerService.getScammer(id);
           
           if (supabaseScammer) {
