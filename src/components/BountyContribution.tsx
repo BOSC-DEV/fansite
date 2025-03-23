@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { ArrowRight, Coins } from "lucide-react";
+import { AlertCircle, ArrowRight, Coins } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
 import { storageService } from "@/services/storage/localStorageService";
 
@@ -91,6 +91,16 @@ export function BountyContribution({
       </CardHeader>
       
       <CardContent className="pt-6">
+        <div className="mb-6">
+          <Alert className="border-western-wood bg-western-sand/20">
+            <AlertCircle className="h-4 w-4 text-western-accent" />
+            <AlertTitle className="text-western-accent">Important</AlertTitle>
+            <AlertDescription className="text-western-wood">
+              All bounty contributions go to the developer wallet for demonstration purposes.
+            </AlertDescription>
+          </Alert>
+        </div>
+        
         <div className="space-y-4">
           <div>
             <Label htmlFor="current-bounty" className="text-western-wood">Current Bounty</Label>

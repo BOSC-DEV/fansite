@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useWallet } from "@/context/WalletContext";
@@ -16,9 +16,6 @@ export function CommentForm({ scammerId, onCommentAdded }: CommentFormProps) {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { isConnected, connectWallet, address } = useWallet();
-  
-  // Remove the profile check since user already has a profile
-  // This allows any connected user to comment directly
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,8 +30,12 @@ export function CommentForm({ scammerId, onCommentAdded }: CommentFormProps) {
       return;
     }
     
-    // Get the profile before submitting, but continue even if not found
-    const profile = await storageService.getProfile(address);
+    // Check if user has a profile
+    const profile = storageService.getProfile(address);
+    if (!profile) {
+      toast.error("You need to create a profile before commenting");
+      return;
+    }
     
     setIsSubmitting(true);
     
@@ -46,8 +47,8 @@ export function CommentForm({ scammerId, onCommentAdded }: CommentFormProps) {
         scammerId,
         content: content.trim(),
         author: address,
-        authorName: profile?.displayName || "Anonymous",
-        authorProfilePic: profile?.profilePicUrl || "",
+        authorName: profile.displayName,
+        authorProfilePic: profile.profilePicUrl,
         createdAt: new Date().toISOString(),
         likes: 0,
         dislikes: 0

@@ -1,4 +1,3 @@
-
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 import { toast } from 'sonner';
@@ -135,15 +134,6 @@ export class StorageService extends BaseSupabaseService {
     }
   }
 
-  async recordScammerView(scammerId: string, ipHash: string): Promise<boolean> {
-    try {
-      return await scammerService.recordScammerView(scammerId, ipHash);
-    } catch (error) {
-      console.error("Error recording scammer view:", error);
-      return false;
-    }
-  }
-
   async likeScammer(scammerId: string): Promise<boolean> {
     try {
       return await scammerService.likeScammer(scammerId);
@@ -166,38 +156,9 @@ export class StorageService extends BaseSupabaseService {
     return scammerService.updateScammerStats(scammerId, stats);
   }
   
-  async saveUserScammerInteraction(userId: string, scammerId: string, interaction: { liked: boolean; disliked: boolean }): Promise<boolean> {
-    try {
-      return await scammerService.saveUserScammerInteraction(userId, scammerId, interaction);
-    } catch (error) {
-      console.error("Error saving user interaction:", error);
-      return false;
-    }
-  }
-  
-  async getUserScammerInteractions(userId: string, scammerId: string): Promise<any> {
-    try {
-      return await scammerService.getUserScammerInteractions(userId, scammerId);
-    } catch (error) {
-      console.error("Error getting user interactions:", error);
-      return null;
-    }
-  }
-  
   // Forward leaderboard methods
   async getLeaderboardUsers(): Promise<LeaderboardUser[]> {
     return leaderboardService.getLeaderboardUsers();
-  }
-  
-  // Helper function to generate a simple hash for IP address
-  hashIpAddress(ip: string): string {
-    let hash = 0;
-    for (let i = 0; i < ip.length; i++) {
-      const char = ip.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash.toString(16);
   }
 }
 

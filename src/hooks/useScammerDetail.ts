@@ -5,17 +5,6 @@ import { scammerService } from "@/services/storage";
 import { Scammer } from "@/lib/types";
 import { toast } from "sonner";
 
-// Utility function to create IP hash
-const hashIpAddress = (ip: string): string => {
-  let hash = 0;
-  for (let i = 0; i < ip.length; i++) {
-    const char = ip.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32bit integer
-  }
-  return hash.toString(16);
-};
-
 export function useScammerDetail(id: string | undefined) {
   const [scammer, setScammer] = useState<Scammer | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,32 +14,6 @@ export function useScammerDetail(id: string | undefined) {
     dislikes: 0,
     views: 0
   });
-  const [ipHash, setIpHash] = useState<string | null>(null);
-
-  // Get IP address and create a hash for view tracking
-  useEffect(() => {
-    const getIp = async () => {
-      try {
-        // Use a service to get the user's IP
-        const response = await fetch('https://api.ipify.org?format=json');
-        const data = await response.json();
-        if (data && data.ip) {
-          // Hash the IP for privacy
-          const hash = hashIpAddress(data.ip);
-          setIpHash(hash);
-        }
-      } catch (error) {
-        console.error("Error getting IP:", error);
-        // Fallback to a session-based identifier if IP can't be retrieved
-        const sessionId = sessionStorage.getItem('viewerSessionId') || 
-                          Math.random().toString(36).substring(2, 15);
-        sessionStorage.setItem('viewerSessionId', sessionId);
-        setIpHash(hashIpAddress(sessionId));
-      }
-    };
-    
-    getIp();
-  }, []);
 
   useEffect(() => {
     const loadScammer = async () => {
@@ -80,8 +43,7 @@ export function useScammerDetail(id: string | undefined) {
               bountyAmount: supabaseScammer.bountyAmount,
               walletAddress: supabaseScammer.walletAddress || "",
               dateAdded: new Date(supabaseScammer.dateAdded),
-              addedBy: supabaseScammer.addedBy,
-              xLink: supabaseScammer.xLink
+              addedBy: supabaseScammer.addedBy
             });
             
             setScammerStats({
@@ -90,18 +52,11 @@ export function useScammerDetail(id: string | undefined) {
               views: supabaseScammer.views || 0
             });
             
-            // Track view using IP hash if available
-            if (ipHash) {
-              try {
-                await scammerService.recordScammerView(id, ipHash);
-              } catch (error) {
-                console.error("Failed to record view with IP hash:", error);
-                // Fallback to the old method
-                await scammerService.incrementScammerViews(id);
-              }
-            } else {
-              // Fallback to the old method if IP hash is not available
+            // Track view
+            try {
               await scammerService.incrementScammerViews(id);
+            } catch (error) {
+              console.error("Failed to increment view count in Supabase:", error);
             }
           } else {
             console.log("Scammer not found in Supabase, checking localStorage");
@@ -188,7 +143,7 @@ export function useScammerDetail(id: string | undefined) {
     };
 
     loadScammer();
-  }, [id, ipHash]);
+  }, [id]);
 
   const handleLikeScammer = async () => {
     if (id) {

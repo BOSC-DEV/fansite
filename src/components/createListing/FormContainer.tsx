@@ -69,7 +69,7 @@ export function FormContainer() {
         <CardHeader className="border-b border-western-wood/20">
           <CardTitle className="text-western-accent font-wanted">Wanted Poster Details</CardTitle>
           <CardDescription className="text-western-wood">
-            Add a scammer to the Book of Scams
+            Add a scammer to the Book of Scams. This will cost 1 $BOSC token.
           </CardDescription>
         </CardHeader>
         

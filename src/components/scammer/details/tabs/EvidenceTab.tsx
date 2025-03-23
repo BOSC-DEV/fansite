@@ -6,7 +6,7 @@ interface EvidenceTabProps {
   links: string[];
 }
 
-export function EvidenceTab({ links = [] }: EvidenceTabProps) {
+export function EvidenceTab({ links }: EvidenceTabProps) {
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Evidence Links</h3>

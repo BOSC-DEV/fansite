@@ -1,4 +1,3 @@
-
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService, safeJsonToStringArray } from './baseSupabaseService';
 import { Scammer } from "@/lib/types";
@@ -10,7 +9,6 @@ export interface ScammerListing extends Omit<Scammer, 'dateAdded'> {
   likes: number;
   dislikes: number;
   views: number;
-  xLink?: string; // Added X.com link field
 }
 
 export class ScammerService extends BaseSupabaseService {
@@ -55,8 +53,7 @@ export class ScammerService extends BaseSupabaseService {
           addedBy: item.added_by || '',
           likes: item.likes || 0,
           dislikes: item.dislikes || 0,
-          views: item.views || 0,
-          xLink: item.x_link || '' // Include X.com link from database
+          views: item.views || 0
         };
       });
     } catch (error) {
@@ -98,11 +95,8 @@ export class ScammerService extends BaseSupabaseService {
         added_by: scammer.addedBy,
         likes: scammer.likes || 0,
         dislikes: scammer.dislikes || 0,
-        views: scammer.views || 0,
-        x_link: scammer.xLink || "" // Include X.com link in database save
+        views: scammer.views || 0
       };
-      
-      console.log('Database scammer object:', dbScammer);
       
       // Check if scammer exists
       const { data: existingScammer, error: checkError } = await this.supabase
@@ -179,8 +173,7 @@ export class ScammerService extends BaseSupabaseService {
       addedBy: data.added_by || '',
       likes: data.likes || 0,
       dislikes: data.dislikes || 0,
-      views: data.views || 0,
-      xLink: data.x_link || '' // Include X.com link in fetch result
+      views: data.views || 0
     };
   }
 

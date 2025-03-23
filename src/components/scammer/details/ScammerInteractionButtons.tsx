@@ -2,8 +2,6 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { ThumbsUp, ThumbsDown, Eye } from "lucide-react";
-import { useWallet } from "@/context/WalletContext";
-import { toast } from "sonner";
 
 interface ScammerInteractionButtonsProps {
   likes: number;
@@ -13,7 +11,6 @@ interface ScammerInteractionButtonsProps {
   isDisliked: boolean;
   onLike: () => void;
   onDislike: () => void;
-  hasProfile: boolean;
 }
 
 export function ScammerInteractionButtons({ 
@@ -23,70 +20,39 @@ export function ScammerInteractionButtons({
   isLiked, 
   isDisliked,
   onLike,
-  onDislike,
-  hasProfile
+  onDislike
 }: ScammerInteractionButtonsProps) {
-  const { isConnected } = useWallet();
-
-  const handleLikeClick = () => {
-    if (!isConnected) {
-      toast.error("Please connect your wallet to like this post");
-      return;
-    }
-    
-    if (!hasProfile) {
-      toast.error("You need to create a profile before liking posts");
-      return;
-    }
-    
-    onLike();
-  };
-
-  const handleDislikeClick = () => {
-    if (!isConnected) {
-      toast.error("Please connect your wallet to dislike this post");
-      return;
-    }
-    
-    if (!hasProfile) {
-      toast.error("You need to create a profile before disliking posts");
-      return;
-    }
-    
-    onDislike();
-  };
-
   return (
-    <div className="flex items-center gap-3">
-      <div className="flex items-center gap-1">
+    <div className="flex justify-start gap-4">
+      <div className="flex flex-col items-center">
         <Button 
           variant="outline"
-          size="icon"
-          className={`h-8 w-8 rounded-full ${isLiked ? 'bg-green-100 border-green-500 text-green-700' : ''}`}
-          onClick={handleLikeClick}
+          size="sm"
+          className={`h-10 w-10 rounded-full ${isLiked ? 'bg-green-100 border-green-500 text-green-700' : ''}`}
+          onClick={onLike}
         >
-          <ThumbsUp className="h-4 w-4" />
+          <ThumbsUp className="h-5 w-5" />
         </Button>
-        <span className="text-xs">{likes}</span>
+        <span className="text-sm mt-1">{likes}</span>
       </div>
       
-      <div className="flex items-center gap-1">
+      <div className="flex flex-col items-center">
         <Button 
           variant="outline"
-          size="icon"
-          className={`h-8 w-8 rounded-full ${isDisliked ? 'bg-red-100 border-red-500 text-red-700' : ''}`}
-          onClick={handleDislikeClick}
+          size="sm"
+          className={`h-10 w-10 rounded-full ${isDisliked ? 'bg-red-100 border-red-500 text-red-700' : ''}`}
+          onClick={onDislike}
         >
-          <ThumbsDown className="h-4 w-4" />
+          <ThumbsDown className="h-5 w-5" />
         </Button>
-        <span className="text-xs">{dislikes}</span>
+        <span className="text-sm mt-1">{dislikes}</span>
       </div>
       
-      <div className="flex items-center gap-1">
-        <div className="h-8 w-8 rounded-full border flex items-center justify-center">
-          <Eye className="h-4 w-4" />
+      <div className="flex flex-col items-center">
+        <div className="h-10 w-10 rounded-full border flex items-center justify-center">
+          <Eye className="h-5 w-5" />
         </div>
-        <span className="text-xs">{views}</span>
+        <span className="text-sm mt-1">{views}</span>
       </div>
     </div>
   );
