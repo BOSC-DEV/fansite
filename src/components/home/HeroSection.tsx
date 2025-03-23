@@ -1,14 +1,19 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Star, BookOpen } from "lucide-react";
+import { Star, BookOpen, Shield, Flame } from "lucide-react";
 
 export const HeroSection = () => {
   return (
     <section className="pt-28 pb-16 md:pt-32 md:pb-24 px-4 old-paper">
       <div className="container mx-auto max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          <div className="space-y-6 md:pr-8 animate-fade-in">            
+          <div className="space-y-6 md:pr-8 animate-fade-in">
+            <div className="inline-flex items-center rounded-full px-3 py-1 text-sm font-bold bg-western-accent/10 text-western-accent border-2 border-dashed border-western-accent/50">
+              <Star className="h-3.5 w-3.5 mr-1 animate-spin-slow" />
+              <span>Authentic Wild West Bounties</span>
+            </div>
+            
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-wanted text-western-accent uppercase tracking-wide wanted-poster">
               BOOK OF SCAMS
             </h1>
@@ -36,14 +41,14 @@ export const HeroSection = () => {
             </div>
           </div>
           
-          <div className="relative h-[300px] md:h-[400px] animate-fade-in overflow-hidden transform -rotate-1 shadow-lg">
-            <div className="sheriff-badge-large w-full h-full flex items-center justify-center">
-              <div className="absolute inset-0 bg-gradient-to-br from-western-leather/30 via-western-accent/20 to-western-parchment/50 opacity-70"></div>
-              <div className="relative text-center space-y-4 p-6">
-                <h2 className="font-wanted text-3xl text-western-leather uppercase tracking-wide">Wanted: Dead or Alive</h2>
-                <div className="flex justify-center">
-                  <Star className="h-12 w-12 text-western-parchment/80 animate-spin-slow" />
+          <div className="relative h-[300px] md:h-[400px] animate-fade-in rounded-sm overflow-hidden border-4 border-western-wood transform -rotate-1 shadow-lg wanted-poster-bg">
+            <div className="absolute inset-0 bg-gradient-to-br from-western-leather/30 via-western-accent/20 to-western-parchment/50 opacity-70 rounded-sm"></div>
+            <div className="absolute inset-0 flex items-center justify-center text-western-wood p-6">
+              <div className="text-center space-y-4">
+                <div className="sheriff-badge inline-block p-4 bg-western-accent/80 rounded-full border-4 border-western-wood flex items-center justify-center animate-bounce-slight">
+                  <Star className="h-12 w-12 text-western-parchment" />
                 </div>
+                <h2 className="font-wanted text-3xl text-western-leather uppercase tracking-wide">Wanted: Dead or Alive</h2>
                 <p className="text-western-wood/90 max-w-md font-western text-lg">
                   Join our posse to identify and track down the outlaws of the crypto frontier.
                 </p>
