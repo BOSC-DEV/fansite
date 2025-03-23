@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { AlertCircle, ExternalLink, EyeIcon, ThumbsUp, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { formatCurrency, formatDate, truncateText } from "@/utils/formatters";
 
@@ -16,6 +16,7 @@ interface ScammerCardProps {
 
 export function ScammerCard({ scammer, className }: ScammerCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
   
   const formattedBounty = useMemo(() => 
     formatCurrency(scammer.bountyAmount), 
@@ -29,25 +30,44 @@ export function ScammerCard({ scammer, className }: ScammerCardProps) {
     truncateText(scammer.accusedOf, 100), 
   [scammer.accusedOf]);
 
+  // Reset image states when scammer changes
+  useEffect(() => {
+    setImageLoaded(false);
+    setImageError(false);
+  }, [scammer.id, scammer.photoUrl]);
+
+  const handleImageError = () => {
+    console.log(`Image failed to load for scammer: ${scammer.name}`);
+    setImageError(true);
+  };
+
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+  };
+
+  // Fallback URL when image fails to load
+  const fallbackImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(scammer.name)}&background=random&size=200`;
+
   return (
     <Card className={cn(
       "overflow-hidden transition-all duration-300 hover:shadow-md h-full border-western-wood bg-western-parchment/80",
       className
     )}>
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-        {!imageLoaded && (
+        {!imageLoaded && !imageError && (
           <div className="absolute inset-0 flex items-center justify-center bg-muted animate-pulse">
             <AlertCircle className="h-8 w-8 text-muted-foreground/50" />
           </div>
         )}
         <img
-          src={scammer.photoUrl}
+          src={imageError ? fallbackImageUrl : scammer.photoUrl}
           alt={scammer.name}
           className={cn(
             "object-cover w-full h-full transition-opacity duration-300",
             imageLoaded ? "opacity-100" : "opacity-0"
           )}
-          onLoad={() => setImageLoaded(true)}
+          onLoad={handleImageLoad}
+          onError={handleImageError}
           loading="lazy"
         />
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
