@@ -14,6 +14,32 @@ export function useScammerDetail(id: string | undefined) {
     dislikes: 0,
     views: 0
   });
+  const [ipHash, setIpHash] = useState<string | null>(null);
+
+  // Get IP address and create a hash for view tracking
+  useEffect(() => {
+    const getIp = async () => {
+      try {
+        // Use a service to get the user's IP
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        if (data && data.ip) {
+          // Hash the IP for privacy
+          const hash = storageService.hashIpAddress(data.ip);
+          setIpHash(hash);
+        }
+      } catch (error) {
+        console.error("Error getting IP:", error);
+        // Fallback to a session-based identifier if IP can't be retrieved
+        const sessionId = sessionStorage.getItem('viewerSessionId') || 
+                          Math.random().toString(36).substring(2, 15);
+        sessionStorage.setItem('viewerSessionId', sessionId);
+        setIpHash(storageService.hashIpAddress(sessionId));
+      }
+    };
+    
+    getIp();
+  }, []);
 
   useEffect(() => {
     const loadScammer = async () => {
@@ -52,11 +78,18 @@ export function useScammerDetail(id: string | undefined) {
               views: supabaseScammer.views || 0
             });
             
-            // Track view
-            try {
+            // Track view using IP hash if available
+            if (ipHash) {
+              try {
+                await scammerService.recordScammerView(id, ipHash);
+              } catch (error) {
+                console.error("Failed to record view with IP hash:", error);
+                // Fallback to the old method
+                await scammerService.incrementScammerViews(id);
+              }
+            } else {
+              // Fallback to the old method if IP hash is not available
               await scammerService.incrementScammerViews(id);
-            } catch (error) {
-              console.error("Failed to increment view count in Supabase:", error);
             }
           } else {
             console.log("Scammer not found in Supabase, checking localStorage");
@@ -143,7 +176,7 @@ export function useScammerDetail(id: string | undefined) {
     };
 
     loadScammer();
-  }, [id]);
+  }, [id, ipHash]);
 
   const handleLikeScammer = async () => {
     if (id) {

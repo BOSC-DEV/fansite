@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Edit } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useWallet } from "@/context/WalletContext";
+import { useProfileFetch } from "@/hooks/profile/useProfileFetch";
 
 interface ScammerDetailsCardProps {
   scammer: Scammer;
@@ -37,6 +38,7 @@ export function ScammerDetailsCard({
   onDislikeScammer 
 }: ScammerDetailsCardProps) {
   const { address } = useWallet();
+  const { hasProfile } = useProfileFetch();
   const [isLiked, setIsLiked] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
   const [likes, setLikes] = useState(scammer.likes || 0);
@@ -74,29 +76,72 @@ export function ScammerDetailsCard({
       setDislikes(scammerStats.dislikes);
       setViews(scammerStats.views);
     }
-  }, [scammer.addedBy, scammerStats]);
+    
+    // Check if user has already liked/disliked this scammer
+    const checkInteractions = async () => {
+      if (address) {
+        try {
+          const interactions = await storageService.getUserScammerInteractions(address, scammer.id);
+          if (interactions) {
+            setIsLiked(interactions.liked || false);
+            setIsDisliked(interactions.disliked || false);
+          }
+        } catch (error) {
+          console.error("Error checking user interactions:", error);
+        }
+      }
+    };
+    
+    checkInteractions();
+  }, [scammer.addedBy, scammerStats, address, scammer.id]);
 
   const handleLike = async () => {
-    if (isLiked) {
-      setIsLiked(false);
-      setLikes(likes - 1);
-      toast.info("Like removed");
-    } else {
-      if (isDisliked) {
-        setIsDisliked(false);
-        setDislikes(dislikes - 1);
-      }
-      setIsLiked(true);
-      setLikes(likes + 1);
-      toast.success("Scammer liked");
+    if (!address || !hasProfile) {
+      return; // Handled in ScammerInteractionButtons now
     }
 
     try {
-      // Update in local storage and Supabase
-      await storageService.updateScammerStats(scammer.id, {
-        likes: isLiked ? likes - 1 : likes + 1,
-        dislikes: isDisliked ? dislikes - 1 : dislikes,
-      });
+      // Already liked, so remove like
+      if (isLiked) {
+        setIsLiked(false);
+        setLikes(likes - 1);
+        toast.info("Like removed");
+        
+        // Update in Supabase
+        await storageService.updateScammerStats(scammer.id, {
+          likes: likes - 1,
+        });
+        
+        // Update user interaction
+        await storageService.saveUserScammerInteraction(address, scammer.id, {
+          liked: false,
+          disliked: isDisliked
+        });
+      } 
+      // Not liked yet
+      else {
+        // If already disliked, remove dislike
+        if (isDisliked) {
+          setIsDisliked(false);
+          setDislikes(dislikes - 1);
+        }
+        
+        setIsLiked(true);
+        setLikes(likes + 1);
+        toast.success("Scammer liked");
+        
+        // Update in Supabase
+        await storageService.updateScammerStats(scammer.id, {
+          likes: likes + 1,
+          dislikes: isDisliked ? dislikes - 1 : dislikes,
+        });
+        
+        // Update user interaction
+        await storageService.saveUserScammerInteraction(address, scammer.id, {
+          liked: true, 
+          disliked: false
+        });
+      }
       
       // Call parent handler if provided
       if (onLikeScammer) {
@@ -109,26 +154,52 @@ export function ScammerDetailsCard({
   };
 
   const handleDislike = async () => {
-    if (isDisliked) {
-      setIsDisliked(false);
-      setDislikes(dislikes - 1);
-      toast.info("Dislike removed");
-    } else {
-      if (isLiked) {
-        setIsLiked(false);
-        setLikes(likes - 1);
-      }
-      setIsDisliked(true);
-      setDislikes(dislikes + 1);
-      toast.success("Scammer disliked");
+    if (!address || !hasProfile) {
+      return; // Handled in ScammerInteractionButtons now
     }
 
     try {
-      // Update in local storage and Supabase
-      await storageService.updateScammerStats(scammer.id, {
-        likes: isLiked ? likes - 1 : likes,
-        dislikes: isDisliked ? dislikes - 1 : dislikes + 1,
-      });
+      // Already disliked, so remove dislike
+      if (isDisliked) {
+        setIsDisliked(false);
+        setDislikes(dislikes - 1);
+        toast.info("Dislike removed");
+        
+        // Update in Supabase
+        await storageService.updateScammerStats(scammer.id, {
+          dislikes: dislikes - 1,
+        });
+        
+        // Update user interaction
+        await storageService.saveUserScammerInteraction(address, scammer.id, {
+          liked: isLiked,
+          disliked: false
+        });
+      } 
+      // Not disliked yet
+      else {
+        // If already liked, remove like
+        if (isLiked) {
+          setIsLiked(false);
+          setLikes(likes - 1);
+        }
+        
+        setIsDisliked(true);
+        setDislikes(dislikes + 1);
+        toast.success("Scammer disliked");
+        
+        // Update in Supabase
+        await storageService.updateScammerStats(scammer.id, {
+          likes: isLiked ? likes - 1 : likes,
+          dislikes: dislikes + 1,
+        });
+        
+        // Update user interaction
+        await storageService.saveUserScammerInteraction(address, scammer.id, {
+          liked: false,
+          disliked: true
+        });
+      }
       
       // Call parent handler if provided
       if (onDislikeScammer) {
@@ -172,6 +243,7 @@ export function ScammerDetailsCard({
               isDisliked={isDisliked}
               onLike={handleLike}
               onDislike={handleDislike}
+              hasProfile={hasProfile}
             />
           </div>
         </div>
