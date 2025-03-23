@@ -22,7 +22,7 @@ export class LeaderboardService extends BaseSupabaseService {
     console.log("[LeaderboardService] Fetching leaderboard data");
 
     try {
-      // Get profiles ordered by creation date
+      // Get profiles ordered by creation date (oldest first)
       const { data: profiles, error: profilesError } = await this.supabase
         .from('profiles')
         .select(`
@@ -33,7 +33,7 @@ export class LeaderboardService extends BaseSupabaseService {
           profile_pic_url,
           created_at
         `)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: true });
 
       if (profilesError) {
         console.error('[LeaderboardService] Error fetching profiles:', profilesError);
