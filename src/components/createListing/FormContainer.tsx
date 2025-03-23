@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@/context/WalletContext";
@@ -17,7 +18,7 @@ import { BasicInfoFields } from "./BasicInfoFields";
 import { AdditionalInfoFields } from "./AdditionalInfoFields";
 import { CloudflareTurnstile } from "@/components/CloudflareTurnstile";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Shield } from "lucide-react";
+import { Shield, CheckCircle2 } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import { storageService } from "@/services/storage/localStorageService";
 
@@ -52,6 +53,10 @@ export function FormContainer() {
 
   const handleVerify = (token: string) => {
     setTurnstileToken(token);
+    toast.success("Verification successful!", {
+      icon: <CheckCircle2 className="h-4 w-4" />,
+      duration: 3000
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -171,12 +176,20 @@ export function FormContainer() {
             <CloudflareTurnstile 
               siteKey={TURNSTILE_SITE_KEY} 
               onVerify={handleVerify} 
+              theme="auto"
             />
             
             {!turnstileToken && (
               <p className="text-sm text-western-accent mt-2">
                 * Required to submit the form
               </p>
+            )}
+            
+            {turnstileToken && (
+              <div className="flex items-center gap-2 text-green-600 mt-2">
+                <CheckCircle2 className="h-4 w-4" />
+                <p className="text-sm">Verification successful</p>
+              </div>
             )}
           </div>
 
