@@ -30,7 +30,10 @@ const MostWanted = () => {
     totalPages,
     startIndex,
     endIndex
-  } = usePagination(filteredScammers.length, viewType);
+  } = usePagination({
+    totalItems: filteredScammers.length,
+    viewType: viewType
+  });
   
   const paginatedScammers = filteredScammers.slice(startIndex, endIndex);
 

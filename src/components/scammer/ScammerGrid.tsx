@@ -1,6 +1,6 @@
 
 import { Scammer } from "@/lib/types";
-import ScammerCard from "@/components/ScammerCard";
+import { ScammerCard } from "@/components/ScammerCard";
 import { Pagination } from "@/components/pagination/Pagination";
 
 interface ScammerGridProps {
