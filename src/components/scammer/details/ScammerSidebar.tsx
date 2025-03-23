@@ -38,29 +38,27 @@ export function ScammerSidebar({
   formatDate
 }: ScammerSidebarProps) {
   return (
-    <div className="flex-shrink-0 w-full bg-background rounded-lg p-4 shadow-sm border border-border">
-      <div className="space-y-6">
+    <div className="flex-shrink-0 w-full sm:w-1/3 lg:w-1/4">
+      <div className="space-y-3">
         <ScammerAvatar name={name} photoUrl={photoUrl} />
         
-        <div className="space-y-6">
-          <ScammerInteractionButtons 
-            likes={likes}
-            dislikes={dislikes}
-            views={views}
-            isLiked={isLiked}
-            isDisliked={isDisliked}
-            onLike={onLike}
-            onDislike={onDislike}
-          />
+        <ScammerInteractionButtons 
+          likes={likes}
+          dislikes={dislikes}
+          views={views}
+          isLiked={isLiked}
+          isDisliked={isDisliked}
+          onLike={onLike}
+          onDislike={onDislike}
+        />
 
-          <ScammerDetailsSection 
-            dateAdded={dateAdded}
-            addedBy={addedBy}
-            addedByUsername={addedByUsername}
-            isProfileLoading={isProfileLoading}
-            formatDate={formatDate}
-          />
-        </div>
+        <ScammerDetailsSection 
+          dateAdded={dateAdded}
+          addedBy={addedBy}
+          addedByUsername={addedByUsername}
+          isProfileLoading={isProfileLoading}
+          formatDate={formatDate}
+        />
       </div>
     </div>
   );
