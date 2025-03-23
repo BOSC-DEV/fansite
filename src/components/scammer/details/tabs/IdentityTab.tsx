@@ -9,12 +9,15 @@ interface IdentityTabProps {
 export function IdentityTab({ aliases = [] }: IdentityTabProps) {
   console.log("IdentityTab rendering with aliases:", aliases);
   
+  // Ensure aliases is always an array
+  const safeAliases = Array.isArray(aliases) ? aliases : [];
+  
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Known Aliases</h3>
-      {aliases && aliases.length > 0 ? (
+      {safeAliases.length > 0 ? (
         <div className="flex flex-wrap gap-2">
-          {aliases.map((alias, index) => (
+          {safeAliases.map((alias, index) => (
             <Badge key={index} variant="outline" className="bg-western-sand/10">
               {alias}
             </Badge>

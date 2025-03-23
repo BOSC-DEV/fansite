@@ -9,12 +9,15 @@ interface EvidenceTabProps {
 export function EvidenceTab({ links = [] }: EvidenceTabProps) {
   console.log("EvidenceTab rendering with links:", links);
   
+  // Ensure links is always an array
+  const safeLinks = Array.isArray(links) ? links : [];
+  
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Evidence Links</h3>
-      {links && links.length > 0 ? (
+      {safeLinks.length > 0 ? (
         <ul className="space-y-1">
-          {links.map((link, index) => (
+          {safeLinks.map((link, index) => (
             <li key={index} className="flex items-center gap-2">
               <LinkIcon className="h-4 w-4 text-muted-foreground" />
               <a 
