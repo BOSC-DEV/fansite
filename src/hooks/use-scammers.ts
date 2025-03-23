@@ -28,14 +28,14 @@ export const useScammers = () => {
           name: s.name,
           photoUrl: s.photoUrl,
           accusedOf: s.accusedOf,
-          links: s.links,
-          aliases: s.aliases,
-          accomplices: s.accomplices,
-          officialResponse: s.officialResponse,
+          links: s.links || [],
+          aliases: Array.isArray(s.aliases) ? s.aliases : [],
+          accomplices: s.accomplices || [],
+          officialResponse: s.officialResponse || '',
           bountyAmount: s.bountyAmount,
-          walletAddress: s.walletAddress,
+          walletAddress: s.walletAddress || '',
           dateAdded: new Date(s.dateAdded),
-          addedBy: s.addedBy
+          addedBy: s.addedBy || ''
         }));
       } catch (err) {
         console.error("Error loading from Supabase:", err);
@@ -47,14 +47,14 @@ export const useScammers = () => {
         name: s.name,
         photoUrl: s.photoUrl,
         accusedOf: s.accusedOf,
-        links: s.links,
-        aliases: s.aliases,
-        accomplices: s.accomplices,
-        officialResponse: s.officialResponse,
+        links: s.links || [],
+        aliases: Array.isArray(s.aliases) ? s.aliases : [],
+        accomplices: s.accomplices || [],
+        officialResponse: s.officialResponse || '',
         bountyAmount: s.bountyAmount,
-        walletAddress: s.walletAddress,
+        walletAddress: s.walletAddress || '',
         dateAdded: new Date(s.dateAdded),
-        addedBy: s.addedBy
+        addedBy: s.addedBy || ''
       }));
 
       // Merge the scammers, preferring Supabase versions but including local-only ones
@@ -95,7 +95,7 @@ export const useScammers = () => {
         scammer => 
           scammer.name.toLowerCase().includes(query) ||
           scammer.accusedOf.toLowerCase().includes(query) ||
-          scammer.aliases.some(alias => alias.toLowerCase().includes(query))
+          (Array.isArray(scammer.aliases) && scammer.aliases.some(alias => alias.toLowerCase().includes(query)))
       );
     }
     

@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService, safeJsonToStringArray } from './baseSupabaseService';
 import { Scammer } from "@/lib/types";
@@ -32,23 +33,29 @@ export class ScammerService extends BaseSupabaseService {
       console.log(`Retrieved ${data.length} scammers from Supabase`);
 
       // Convert from database format to client format
-      return data.map(item => ({
-        id: item.id,
-        name: item.name,
-        photoUrl: item.photo_url || '',
-        accusedOf: item.accused_of || '',
-        links: safeJsonToStringArray(item.links),
-        aliases: safeJsonToStringArray(item.aliases),
-        accomplices: safeJsonToStringArray(item.accomplices),
-        officialResponse: item.official_response || '',
-        bountyAmount: Number(item.bounty_amount) || 0,
-        walletAddress: item.wallet_address || '',
-        dateAdded: item.date_added,
-        addedBy: item.added_by || '',
-        likes: item.likes || 0,
-        dislikes: item.dislikes || 0,
-        views: item.views || 0
-      }));
+      return data.map(item => {
+        // Ensure aliases is properly converted from JSON
+        const aliases = safeJsonToStringArray(item.aliases);
+        console.log(`Scammer ${item.name} has aliases:`, aliases);
+        
+        return {
+          id: item.id,
+          name: item.name,
+          photoUrl: item.photo_url || '',
+          accusedOf: item.accused_of || '',
+          links: safeJsonToStringArray(item.links),
+          aliases: aliases,
+          accomplices: safeJsonToStringArray(item.accomplices),
+          officialResponse: item.official_response || '',
+          bountyAmount: Number(item.bounty_amount) || 0,
+          walletAddress: item.wallet_address || '',
+          dateAdded: item.date_added,
+          addedBy: item.added_by || '',
+          likes: item.likes || 0,
+          dislikes: item.dislikes || 0,
+          views: item.views || 0
+        };
+      });
     } catch (error) {
       console.error('Unexpected error fetching scammers:', error);
       return [];

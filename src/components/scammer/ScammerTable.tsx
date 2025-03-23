@@ -53,52 +53,57 @@ export const ScammerTable = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {paginatedScammers.map((scammer, index) => (
-            <TableRow key={scammer.id} className="border-b border-western-wood/20 hover:bg-western-sand/10">
-              <TableCell className="font-medium text-center">
-                {(currentPage - 1) * itemsPerPage + index + 1}
-              </TableCell>
-              <TableCell>
-                <Link to={`/scammer/${scammer.id}`}>
-                  <div className="flex items-center space-x-3">
-                    <Avatar className="border-2 border-western-wood">
-                      <AvatarImage src={scammer.photoUrl} alt={scammer.name} />
-                      <AvatarFallback className="bg-western-wood text-western-parchment">{scammer.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <div className="font-medium font-western">{scammer.name}</div>
-                      <div className="text-xs text-western-wood/70 truncate max-w-[150px] hidden md:block">
-                        {scammer.walletAddress}
+          {paginatedScammers.map((scammer, index) => {
+            // Ensure aliases is always an array
+            const aliases = Array.isArray(scammer.aliases) ? scammer.aliases : [];
+            
+            return (
+              <TableRow key={scammer.id} className="border-b border-western-wood/20 hover:bg-western-sand/10">
+                <TableCell className="font-medium text-center">
+                  {(currentPage - 1) * itemsPerPage + index + 1}
+                </TableCell>
+                <TableCell>
+                  <Link to={`/scammer/${scammer.id}`}>
+                    <div className="flex items-center space-x-3">
+                      <Avatar className="border-2 border-western-wood">
+                        <AvatarImage src={scammer.photoUrl} alt={scammer.name} />
+                        <AvatarFallback className="bg-western-wood text-western-parchment">{scammer.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="font-medium font-western">{scammer.name}</div>
+                        <div className="text-xs text-western-wood/70 truncate max-w-[150px] hidden md:block">
+                          {scammer.walletAddress}
+                        </div>
                       </div>
                     </div>
+                  </Link>
+                </TableCell>
+                <TableCell className="max-w-[200px]">
+                  <p className="truncate">{scammer.accusedOf}</p>
+                </TableCell>
+                <TableCell className="text-center">
+                  {aliases.length > 0 ? (
+                    <div className="flex flex-wrap justify-center gap-1">
+                      <Badge variant="outline" className="text-sm bg-western-sand/20 border-western-wood/30 text-western-wood">
+                        {aliases[0]}
+                        {aliases.length > 1 && ` +${aliases.length - 1}`}
+                      </Badge>
+                    </div>
+                  ) : (
+                    <span className="text-western-wood/50 text-sm">-</span>
+                  )}
+                </TableCell>
+                <TableCell className="text-center font-medium">
+                  <div className="flex items-center justify-center">
+                    <span className="text-western-accent font-wanted">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
                   </div>
-                </Link>
-              </TableCell>
-              <TableCell className="max-w-[200px]">
-                <p className="truncate">{scammer.accusedOf}</p>
-              </TableCell>
-              <TableCell className="text-center">
-                {scammer.aliases.length > 0 ? (
-                  <div className="flex flex-wrap justify-center gap-1">
-                    <Badge variant="outline" className="text-sm bg-western-sand/20 border-western-wood/30 text-western-wood">
-                      {scammer.aliases[0]}
-                      {scammer.aliases.length > 1 && ` +${scammer.aliases.length - 1}`}
-                    </Badge>
-                  </div>
-                ) : (
-                  <span className="text-western-wood/50 text-sm">-</span>
-                )}
-              </TableCell>
-              <TableCell className="text-center font-medium">
-                <div className="flex items-center justify-center">
-                  <span className="text-western-accent font-wanted">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
-                </div>
-              </TableCell>
-              <TableCell className="text-right text-western-wood/90 text-sm">
-                {formatDate(scammer.dateAdded)}
-              </TableCell>
-            </TableRow>
-          ))}
+                </TableCell>
+                <TableCell className="text-right text-western-wood/90 text-sm">
+                  {formatDate(scammer.dateAdded)}
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
       

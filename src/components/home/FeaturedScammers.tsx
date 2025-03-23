@@ -29,7 +29,7 @@ export const FeaturedScammers = () => {
             photoUrl: s.photoUrl || '',
             accusedOf: s.accusedOf || '',
             links: s.links || [],
-            aliases: s.aliases || [],
+            aliases: Array.isArray(s.aliases) ? s.aliases : [],
             accomplices: s.accomplices || [],
             officialResponse: s.officialResponse || '',
             bountyAmount: Number(s.bountyAmount) || 0,

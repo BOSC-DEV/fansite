@@ -29,14 +29,20 @@ export const ScammerTableCompact = ({
           {scammers.map((scammer, index) => (
             <TableRow key={scammer.id} className="border-b border-western-wood/20 hover:bg-western-sand/10">
               <TableCell className="font-medium py-4">
-                <div className="flex justify-center">
-                  {scammer.aliases.length > 0 ? (
-                    <Badge variant="outline" className="text-sm bg-western-sand/20 border-western-wood/30 text-western-wood px-4 py-2 font-medium">
-                      {scammer.aliases[0]}
-                      {scammer.aliases.length > 1 && ` +${scammer.aliases.length - 1}`}
-                    </Badge>
+                <div className="flex flex-wrap justify-center gap-1">
+                  {scammer.aliases && scammer.aliases.length > 0 ? (
+                    <>
+                      <Badge variant="outline" className="text-sm bg-western-sand/20 border-western-wood/30 text-western-wood px-4 py-2 font-medium">
+                        {scammer.aliases[0]}
+                      </Badge>
+                      {scammer.aliases.length > 1 && (
+                        <Badge variant="outline" className="text-sm bg-western-sand/20 border-western-wood/30 text-western-wood px-2 py-2 font-medium">
+                          +{scammer.aliases.length - 1}
+                        </Badge>
+                      )}
+                    </>
                   ) : (
-                    <span className="text-western-wood/50 text-sm">-</span>
+                    <span className="text-western-wood/50 text-sm">None known</span>
                   )}
                 </div>
               </TableCell>

@@ -48,6 +48,9 @@ export function ScammerCard({ scammer, className }: ScammerCardProps) {
   // Fallback URL when image fails to load
   const fallbackImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(scammer.name)}&background=random&size=200`;
 
+  // Make sure aliases is always an array, even if it's null or undefined
+  const aliases = Array.isArray(scammer.aliases) ? scammer.aliases : [];
+
   return (
     <Card className={cn(
       "overflow-hidden transition-all duration-300 hover:shadow-md h-full border-western-wood bg-western-parchment/80",
@@ -99,16 +102,16 @@ export function ScammerCard({ scammer, className }: ScammerCardProps) {
           </div>
         </div>
         
-        {scammer.aliases.length > 0 && (
+        {aliases.length > 0 && (
           <div className="flex flex-wrap gap-1">
-            {scammer.aliases.slice(0, 2).map((alias, i) => (
+            {aliases.slice(0, 2).map((alias, i) => (
               <Badge key={i} variant="outline" className="text-xs bg-western-sand/20 border-western-wood/30 text-western-wood">
                 {alias}
               </Badge>
             ))}
-            {scammer.aliases.length > 2 && (
+            {aliases.length > 2 && (
               <Badge variant="outline" className="text-xs bg-western-sand/20 border-western-wood/30 text-western-wood">
-                +{scammer.aliases.length - 2} more
+                +{aliases.length - 2} more
               </Badge>
             )}
           </div>
