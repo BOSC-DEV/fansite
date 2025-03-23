@@ -19,6 +19,11 @@ const ScammerDetail = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [scammer, setScammer] = useState<Scammer | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [scammerStats, setScammerStats] = useState({
+    likes: 0,
+    dislikes: 0,
+    views: 0
+  });
 
   useEffect(() => {
     const loadScammer = async () => {
@@ -100,12 +105,40 @@ const ScammerDetail = () => {
             toast.error("Failed to load scammer details");
           }
         }
+
+        // Load scammer stats
+        loadScammerStats(id);
       }
       setIsLoading(false);
     };
 
     loadScammer();
   }, [id]);
+
+  const loadScammerStats = (scammerId: string) => {
+    const scammerData = storageService.getScammer(scammerId);
+    if (scammerData) {
+      setScammerStats({
+        likes: scammerData.likes || 0,
+        dislikes: scammerData.dislikes || 0,
+        views: scammerData.views || 0
+      });
+    }
+  };
+
+  const handleLikeScammer = () => {
+    if (id) {
+      storageService.likeScammer(id);
+      loadScammerStats(id);
+    }
+  };
+
+  const handleDislikeScammer = () => {
+    if (id) {
+      storageService.dislikeScammer(id);
+      loadScammerStats(id);
+    }
+  };
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
@@ -147,6 +180,9 @@ const ScammerDetail = () => {
               imageLoaded={imageLoaded}
               setImageLoaded={setImageLoaded}
               formatDate={formatDate}
+              scammerStats={scammerStats}
+              onLikeScammer={handleLikeScammer}
+              onDislikeScammer={handleDislikeScammer}
             />
             
             <div className="mt-8">

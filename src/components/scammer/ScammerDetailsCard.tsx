@@ -14,9 +14,13 @@ import {
   MessageSquare,
   ExternalLink,
   AlertCircle,
+  ThumbsUp,
+  ThumbsDown,
+  Eye,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { profileService } from "@/services/storage/profileService";
+import { storageService } from "@/services/storage/localStorageService";
 
 interface ScammerDetailsCardProps {
   scammer: Scammer;
@@ -24,6 +28,13 @@ interface ScammerDetailsCardProps {
   setImageLoaded: (loaded: boolean) => void;
   formatDate: (date: Date) => string;
   bountyAmount: number;
+  scammerStats: {
+    likes: number;
+    dislikes: number;
+    views: number;
+  };
+  onLikeScammer: () => void;
+  onDislikeScammer: () => void;
 }
 
 export function ScammerDetailsCard({
@@ -32,6 +43,9 @@ export function ScammerDetailsCard({
   setImageLoaded,
   formatDate,
   bountyAmount,
+  scammerStats,
+  onLikeScammer,
+  onDislikeScammer,
 }: ScammerDetailsCardProps) {
   const [addedByUsername, setAddedByUsername] = useState<string | null>(null);
   const [isLoadingUsername, setIsLoadingUsername] = useState(true);
@@ -61,28 +75,57 @@ export function ScammerDetailsCard({
 
   return (
     <Card>
-      <div className="relative aspect-video overflow-hidden bg-muted rounded-t-lg">
-        {!imageLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center bg-muted">
-            <AlertCircle className="h-10 w-10 text-muted-foreground/50" />
-          </div>
-        )}
-        <img
-          src={scammer.photoUrl}
-          alt={scammer.name}
-          className={cn(
-            "object-cover w-full h-full transition-opacity duration-300",
-            imageLoaded ? "opacity-100" : "opacity-0"
+      <div className="relative">
+        <div className="aspect-video overflow-hidden bg-muted rounded-t-lg">
+          {!imageLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-muted">
+              <AlertCircle className="h-10 w-10 text-muted-foreground/50" />
+            </div>
           )}
-          onLoad={() => setImageLoaded(true)}
-          onError={(e) => {
-            // If image fails to load, show a fallback
-            const target = e.target as HTMLImageElement;
-            target.src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(scammer.name) + "&background=random";
-            setImageLoaded(true);
-          }}
-        />
+          <img
+            src={scammer.photoUrl}
+            alt={scammer.name}
+            className={cn(
+              "object-cover w-full h-full transition-opacity duration-300",
+              imageLoaded ? "opacity-100" : "opacity-0"
+            )}
+            onLoad={() => setImageLoaded(true)}
+            onError={(e) => {
+              // If image fails to load, show a fallback
+              const target = e.target as HTMLImageElement;
+              target.src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(scammer.name) + "&background=random";
+              setImageLoaded(true);
+            }}
+          />
+        </div>
+        
+        {/* Stats bar below image */}
+        <div className="flex items-center justify-between px-6 py-3 bg-muted/20 border-b">
+          <div className="flex space-x-4">
+            <button 
+              onClick={onLikeScammer}
+              className="flex items-center space-x-1 text-sm hover:text-green-600 transition-colors"
+            >
+              <ThumbsUp className="h-4 w-4" />
+              <span>{scammerStats.likes}</span>
+            </button>
+
+            <button 
+              onClick={onDislikeScammer}
+              className="flex items-center space-x-1 text-sm hover:text-red-600 transition-colors"
+            >
+              <ThumbsDown className="h-4 w-4" />
+              <span>{scammerStats.dislikes}</span>
+            </button>
+          </div>
+
+          <div className="flex items-center space-x-1 text-sm text-muted-foreground">
+            <Eye className="h-4 w-4" />
+            <span>{scammerStats.views} views</span>
+          </div>
+        </div>
       </div>
+      
       <CardContent className="p-6">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center">
