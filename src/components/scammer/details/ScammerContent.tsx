@@ -1,15 +1,14 @@
 
 import React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { IdentityTab } from './tabs/IdentityTab';
-import { EvidenceTab } from './tabs/EvidenceTab';
 import { NetworkTab } from './tabs/NetworkTab';
-import { ResponseTab } from './tabs/ResponseTab';
+import { EvidenceTab } from './tabs/EvidenceTab';
+import { Separator } from "@/components/ui/separator";
 
 interface ScammerContentProps {
   aliases: string[];
-  links: string[];
   accomplices: string[];
+  links: string[];
   officialResponse: string;
   likes: number;
   dislikes: number;
@@ -20,11 +19,11 @@ interface ScammerContentProps {
   onDislike: () => void;
 }
 
-export function ScammerContent({ 
-  aliases, 
-  links, 
-  accomplices, 
-  officialResponse,
+export function ScammerContent({
+  aliases = [],
+  accomplices = [],
+  links = [],
+  officialResponse = "",
   likes,
   dislikes,
   views,
@@ -34,36 +33,29 @@ export function ScammerContent({
   onDislike
 }: ScammerContentProps) {
   return (
-    <div className="w-full">
-      <Tabs defaultValue="identity" className="w-full">
-        <div className="flex flex-row gap-6">
-          {/* TabsList moved to the left side */}
-          <TabsList className="flex-col h-auto p-1 w-40">
-            <TabsTrigger value="identity" className="w-full justify-start px-4 py-3">Identity</TabsTrigger>
-            <TabsTrigger value="evidence" className="w-full justify-start px-4 py-3">Evidence</TabsTrigger>
-            <TabsTrigger value="network" className="w-full justify-start px-4 py-3">Network</TabsTrigger>
-            <TabsTrigger value="response" className="w-full justify-start px-4 py-3">Response</TabsTrigger>
-          </TabsList>
-          
-          <div className="flex-1">
-            <TabsContent value="identity">
-              <IdentityTab aliases={aliases} />
-            </TabsContent>
-            
-            <TabsContent value="evidence">
-              <EvidenceTab links={links} />
-            </TabsContent>
-            
-            <TabsContent value="network">
-              <NetworkTab accomplices={accomplices} />
-            </TabsContent>
-            
-            <TabsContent value="response">
-              <ResponseTab officialResponse={officialResponse} />
-            </TabsContent>
+    <div className="space-y-8">
+      <IdentityTab aliases={aliases} />
+      
+      <Separator className="my-4 bg-western-wood/20" />
+      
+      <NetworkTab accomplices={accomplices} />
+      
+      <Separator className="my-4 bg-western-wood/20" />
+      
+      <EvidenceTab links={links} />
+      
+      <Separator className="my-4 bg-western-wood/20" />
+      
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Official Response</h3>
+        {officialResponse ? (
+          <div className="bg-western-parchment/40 p-4 rounded-md border border-western-wood/20">
+            <p className="text-sm text-western-wood italic whitespace-pre-line">{officialResponse}</p>
           </div>
-        </div>
-      </Tabs>
+        ) : (
+          <p className="text-sm text-muted-foreground">No official response provided</p>
+        )}
+      </div>
     </div>
   );
 }

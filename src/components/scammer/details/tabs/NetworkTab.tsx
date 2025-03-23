@@ -6,7 +6,7 @@ interface NetworkTabProps {
   accomplices: string[];
 }
 
-export function NetworkTab({ accomplices }: NetworkTabProps) {
+export function NetworkTab({ accomplices = [] }: NetworkTabProps) {
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Known Accomplices</h3>
