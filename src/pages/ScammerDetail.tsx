@@ -38,7 +38,7 @@ const ScammerDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-western-parchment to-western-sand/30">
+    <div className="min-h-screen old-paper">
       <Header />
       <ScammerDetailLayout
         scammer={scammer}

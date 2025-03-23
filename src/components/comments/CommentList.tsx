@@ -1,6 +1,5 @@
 
-import { Comment as CommentType } from "@/services/storage/commentService";
-import { Comment } from "./Comment";
+import { Comment, CommentType } from "./Comment";
 
 interface CommentListProps {
   comments: CommentType[];
