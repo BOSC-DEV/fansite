@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 
@@ -16,6 +17,8 @@ export interface UserProfile {
 
 export class ProfileService extends BaseSupabaseService {
   async getProfile(walletAddress: string): Promise<UserProfile | null> {
+    console.log("getProfile service: looking up by wallet address:", walletAddress);
+    
     // Use maybeSingle() instead of single() to avoid errors when no profile exists
     const { data, error } = await this.supabase
       .from('profiles')
@@ -24,14 +27,17 @@ export class ProfileService extends BaseSupabaseService {
       .maybeSingle();
 
     if (error) {
-      console.error('Error fetching profile:', error);
+      console.error('Error fetching profile by wallet address:', error);
       return null;
     }
 
     if (!data) {
+      console.log("No profile found for wallet address:", walletAddress);
       return null;
     }
 
+    console.log("Profile found by wallet address:", data);
+    
     // Convert snake_case to camelCase for client-side usage
     return {
       id: data.id,
@@ -47,6 +53,8 @@ export class ProfileService extends BaseSupabaseService {
   }
 
   async getProfileByUsername(username: string): Promise<UserProfile | null> {
+    console.log("getProfileByUsername service: looking up by username:", username);
+    
     const { data, error } = await this.supabase
       .from('profiles')
       .select('*')
@@ -59,8 +67,11 @@ export class ProfileService extends BaseSupabaseService {
     }
 
     if (!data) {
+      console.log("No profile found for username:", username);
       return null;
     }
+
+    console.log("Profile found by username:", data);
 
     return {
       id: data.id,
@@ -76,6 +87,13 @@ export class ProfileService extends BaseSupabaseService {
   }
 
   async isUsernameAvailable(username: string, currentUserWallet?: string): Promise<boolean> {
+    // Don't check empty usernames
+    if (!username || username.trim() === '') {
+      return false;
+    }
+    
+    console.log("Checking username availability:", username);
+    
     const { data, error } = await this.supabase
       .from('profiles')
       .select('wallet_address')
@@ -98,6 +116,8 @@ export class ProfileService extends BaseSupabaseService {
   }
 
   async saveProfile(profile: UserProfile): Promise<boolean> {
+    console.log("Saving profile for wallet:", profile.walletAddress);
+    
     // Now we'll use the wallet address as the ID
     const profileId = profile.walletAddress;
     
@@ -115,21 +135,27 @@ export class ProfileService extends BaseSupabaseService {
     };
     
     // Check if profile exists
-    const { data: existingProfile } = await this.supabase
+    const { data: existingProfile, error: lookupError } = await this.supabase
       .from('profiles')
       .select('id')
       .eq('wallet_address', profile.walletAddress)
       .maybeSingle();
+    
+    if (lookupError) {
+      console.error('Error checking if profile exists:', lookupError);
+    }
 
     let result;
     
     if (existingProfile) {
+      console.log("Updating existing profile");
       // Update
       result = await this.supabase
         .from('profiles')
         .update(dbProfile)
         .eq('wallet_address', profile.walletAddress);
     } else {
+      console.log("Creating new profile");
       // Insert
       result = await this.supabase
         .from('profiles')
@@ -141,17 +167,25 @@ export class ProfileService extends BaseSupabaseService {
       return false;
     }
     
+    console.log("Profile saved successfully");
     return true;
   }
 
   async hasProfile(walletAddress: string): Promise<boolean> {
+    console.log("Checking if wallet has profile:", walletAddress);
+    
     const { data, error } = await this.supabase
       .from('profiles')
       .select('id')
       .eq('wallet_address', walletAddress)
-      .single();
+      .maybeSingle();
 
-    return !error && !!data;
+    if (error) {
+      console.error('Error checking if profile exists:', error);
+      return false;
+    }
+    
+    return !!data;
   }
 }
 

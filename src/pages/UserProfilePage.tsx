@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -10,6 +11,7 @@ import { Scammer } from "@/lib/types";
 import { ScammerCard } from "@/components/ScammerCard";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Info } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export function UserProfilePage() {
   const { username } = useParams<{ username: string }>();
@@ -29,24 +31,97 @@ export function UserProfilePage() {
           return;
         }
         
-        console.log("Fetching profile for username:", username);
+        console.log("Fetching profile for:", username);
         
+        // First try directly from Supabase
+        try {
+          // Try by username
+          const { data: usernameProfile, error: usernameError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('username', username)
+            .maybeSingle();
+          
+          if (usernameProfile) {
+            console.log("Profile found by username in Supabase:", usernameProfile);
+            setProfile({
+              id: usernameProfile.id,
+              displayName: usernameProfile.display_name,
+              username: usernameProfile.username || '',
+              profilePicUrl: usernameProfile.profile_pic_url || '',
+              walletAddress: usernameProfile.wallet_address,
+              createdAt: usernameProfile.created_at,
+              xLink: usernameProfile.x_link || '',
+              websiteLink: usernameProfile.website_link || '',
+              bio: usernameProfile.bio || ''
+            });
+            
+            // Fetch scammers by this user's wallet address
+            const allScammers = await storageService.getAllScammers();
+            const userScammers = allScammers.filter(
+              scammer => scammer.addedBy === usernameProfile.wallet_address
+            );
+            
+            console.log(`Found ${userScammers.length} scammers by wallet address ${usernameProfile.wallet_address}`);
+            setScammers(userScammers);
+            setIsLoading(false);
+            return;
+          }
+          
+          // Try by wallet address if username query returned nothing
+          const { data: walletProfile, error: walletError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('wallet_address', username)
+            .maybeSingle();
+          
+          if (walletProfile) {
+            console.log("Profile found by wallet address in Supabase:", walletProfile);
+            setProfile({
+              id: walletProfile.id,
+              displayName: walletProfile.display_name,
+              username: walletProfile.username || '',
+              profilePicUrl: walletProfile.profile_pic_url || '',
+              walletAddress: walletProfile.wallet_address,
+              createdAt: walletProfile.created_at,
+              xLink: walletProfile.x_link || '',
+              websiteLink: walletProfile.website_link || '',
+              bio: walletProfile.bio || ''
+            });
+            
+            // Fetch scammers by this user's wallet address
+            const allScammers = await storageService.getAllScammers();
+            const userScammers = allScammers.filter(
+              scammer => scammer.addedBy === walletProfile.wallet_address
+            );
+            
+            console.log(`Found ${userScammers.length} scammers by wallet address ${walletProfile.wallet_address}`);
+            setScammers(userScammers);
+            setIsLoading(false);
+            return;
+          }
+        } catch (supabaseError) {
+          console.error("Supabase query error:", supabaseError);
+        }
+        
+        // Fallback to service methods if Supabase direct query fails
         // First try to get profile by username
         let profileData = await storageService.getProfileByUsername(username);
         
         // If not found by username, try by wallet address (for backward compatibility)
         if (!profileData) {
-          console.log("Profile not found by username, trying by wallet address");
+          console.log("Profile not found by username in service, trying by wallet address");
           profileData = await storageService.getProfile(username);
         }
         
         if (!profileData) {
-          console.log("Profile not found");
+          console.log("Profile not found in any data source");
           setError("Profile not found");
+          setIsLoading(false);
           return;
         }
         
-        console.log("Profile found:", profileData);
+        console.log("Profile found via service:", profileData);
         setProfile(profileData);
         
         // Fetch scammers added by this user
