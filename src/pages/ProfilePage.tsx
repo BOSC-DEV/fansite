@@ -13,6 +13,7 @@ interface UserProfileData {
   profilePicUrl?: string;
   xLink?: string;
   websiteLink?: string;
+  bio?: string;
 }
 
 export function ProfilePage() {
@@ -46,11 +47,16 @@ export function ProfilePage() {
                     </AvatarFallback>
                   </Avatar>
                   
-                  <div>
+                  <div className="flex-1">
                     <h2 className="text-xl font-semibold">{profileData.displayName}</h2>
                     <p className="text-sm text-muted-foreground truncate">
                       {address}
                     </p>
+                    {profileData.bio && (
+                      <p className="text-sm mt-2 text-muted-foreground">
+                        {profileData.bio}
+                      </p>
+                    )}
                     <ProfileLinks 
                       xLink={profileData.xLink} 
                       websiteLink={profileData.websiteLink} 

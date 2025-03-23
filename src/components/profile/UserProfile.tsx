@@ -5,6 +5,7 @@ import { useWallet } from "@/context/WalletContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,6 +19,8 @@ export function UserProfile() {
   const [profilePicUrl, setProfilePicUrl] = useState("");
   const [xLink, setXLink] = useState("");
   const [websiteLink, setWebsiteLink] = useState("");
+  const [bio, setBio] = useState("");
+  const [bioCharCount, setBioCharCount] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -32,6 +35,8 @@ export function UserProfile() {
         setProfilePicUrl(profile.profilePicUrl);
         setXLink(profile.xLink || "");
         setWebsiteLink(profile.websiteLink || "");
+        setBio(profile.bio || "");
+        setBioCharCount(profile.bio ? profile.bio.length : 0);
         setHasProfile(true);
       }
     }
@@ -52,6 +57,14 @@ export function UserProfile() {
         }
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.target.value;
+    if (text.length <= 142) {
+      setBio(text);
+      setBioCharCount(text.length);
     }
   };
 
@@ -83,6 +96,7 @@ export function UserProfile() {
           profilePicUrl,
           xLink,
           websiteLink,
+          bio,
           walletAddress: address,
           createdAt: new Date().toISOString()
         };
@@ -196,6 +210,24 @@ export function UserProfile() {
                   onChange={(e) => setDisplayName(e.target.value)}
                   required
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="bio">Bio</Label>
+                <Textarea
+                  id="bio"
+                  placeholder="Short bio about yourself (142 chars max)"
+                  value={bio}
+                  onChange={handleBioChange}
+                  maxLength={142}
+                  className="resize-none"
+                />
+                <p className="text-xs text-muted-foreground flex justify-between">
+                  <span>Brief description about yourself</span>
+                  <span className={bioCharCount > 120 ? "text-amber-500" : ""}>
+                    {bioCharCount}/142
+                  </span>
+                </p>
               </div>
 
               <div className="space-y-2">
