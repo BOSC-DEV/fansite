@@ -27,7 +27,6 @@ export function FormContainer() {
     accusedOf, setAccusedOf,
     currentLink, setCurrentLink,
     links, setLinks,
-    xLink, setXLink,
     currentAlias, setCurrentAlias,
     aliases, setAliases,
     currentAccomplice, setCurrentAccomplice,
@@ -55,7 +54,6 @@ export function FormContainer() {
       aliases,
       accomplices,
       officialResponse,
-      xLink,
       turnstileToken,
       validateForm,
       onSubmitStart: () => {},
@@ -101,8 +99,6 @@ export function FormContainer() {
             removeAccomplice={removeAccomplice}
             officialResponse={officialResponse}
             setOfficialResponse={setOfficialResponse}
-            xLink={xLink}
-            setXLink={setXLink}
           />
 
           <TurnstileVerification 

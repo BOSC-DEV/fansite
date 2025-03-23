@@ -24,8 +24,7 @@ const EditListing = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [scammer, setScammer] = useState<Scammer | null>(null);
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const [xLink, setXLink] = useState("");
-
+  
   const { 
     name, setName,
     photoUrl, setPhotoUrl,
@@ -52,6 +51,7 @@ const EditListing = () => {
       }
 
       try {
+        // Load scammer details
         const scammerData = await storageService.getScammer(id);
         
         if (!scammerData) {
@@ -59,6 +59,7 @@ const EditListing = () => {
           return;
         }
 
+        // Convert to Scammer type
         const scammerObj: Scammer = {
           id: scammerData.id,
           name: scammerData.name,
@@ -74,15 +75,16 @@ const EditListing = () => {
           addedBy: scammerData.addedBy,
           likes: scammerData.likes || 0,
           dislikes: scammerData.dislikes || 0,
-          views: scammerData.views || 0,
-          xLink: scammerData.xLink
+          views: scammerData.views || 0
         };
         
         setScammer(scammerObj);
         
+        // Check if user is authorized to edit
         if (isConnected && address === scammerObj.addedBy) {
           setIsAuthorized(true);
           
+          // Populate form with existing data
           setName(scammerObj.name);
           setPhotoUrl(scammerObj.photoUrl);
           setAccusedOf(scammerObj.accusedOf);
@@ -90,7 +92,6 @@ const EditListing = () => {
           setAliases(scammerObj.aliases);
           setAccomplices(scammerObj.accomplices);
           setOfficialResponse(scammerObj.officialResponse);
-          setXLink(scammerObj.xLink || "");
         }
       } catch (error) {
         console.error("Error loading scammer for editing:", error);
@@ -111,6 +112,7 @@ const EditListing = () => {
       return;
     }
     
+    // Update scammer data
     const updatedScammer = {
       ...scammer,
       name,
@@ -120,7 +122,7 @@ const EditListing = () => {
       aliases,
       accomplices,
       officialResponse,
-      xLink,
+      // Keep original date and other stats
       dateAdded: scammer.dateAdded.toISOString(),
       likes: scammer.likes,
       dislikes: scammer.dislikes,
@@ -128,6 +130,7 @@ const EditListing = () => {
       addedBy: scammer.addedBy
     };
     
+    // Convert date to string for storage
     const scammerToSave = {
       ...updatedScammer,
       dateAdded: updatedScammer.dateAdded,
@@ -146,39 +149,6 @@ const EditListing = () => {
       console.error("Error updating scammer:", error);
       toast.error("Failed to update scammer listing");
     }
-  };
-
-  const handleAddLinkWrapper = () => {
-    if (currentLink.trim()) {
-      setLinks([...links, currentLink.trim()]);
-      setCurrentLink("");
-    }
-  };
-
-  const removeLinkWrapper = (link: string) => {
-    setLinks(links.filter(l => l !== link));
-  };
-
-  const handleAddAliasWrapper = () => {
-    if (currentAlias.trim()) {
-      setAliases([...aliases, currentAlias.trim()]);
-      setCurrentAlias("");
-    }
-  };
-
-  const removeAliasWrapper = (alias: string) => {
-    setAliases(aliases.filter(a => a !== alias));
-  };
-
-  const handleAddAccompliceWrapper = () => {
-    if (currentAccomplice.trim()) {
-      setAccomplices([...accomplices, currentAccomplice.trim()]);
-      setCurrentAccomplice("");
-    }
-  };
-
-  const removeAccompliceWrapper = (accomplice: string) => {
-    setAccomplices(accomplices.filter(a => a !== accomplice));
   };
 
   if (isLoading) {
@@ -274,22 +244,50 @@ const EditListing = () => {
                     currentLink={currentLink}
                     setCurrentLink={setCurrentLink}
                     links={links}
-                    handleAddLink={handleAddLinkWrapper}
-                    removeLink={removeLinkWrapper}
+                    handleAddLink={(e) => {
+                      e.preventDefault();
+                      if (currentLink.trim()) {
+                        setLinks([...links, currentLink.trim()]);
+                        setCurrentLink("");
+                      }
+                    }}
+                    removeLink={(index) => {
+                      const newLinks = [...links];
+                      newLinks.splice(index, 1);
+                      setLinks(newLinks);
+                    }}
                     currentAlias={currentAlias}
                     setCurrentAlias={setCurrentAlias}
                     aliases={aliases}
-                    handleAddAlias={handleAddAliasWrapper}
-                    removeAlias={removeAliasWrapper}
+                    handleAddAlias={(e) => {
+                      e.preventDefault();
+                      if (currentAlias.trim()) {
+                        setAliases([...aliases, currentAlias.trim()]);
+                        setCurrentAlias("");
+                      }
+                    }}
+                    removeAlias={(index) => {
+                      const newAliases = [...aliases];
+                      newAliases.splice(index, 1);
+                      setAliases(newAliases);
+                    }}
                     currentAccomplice={currentAccomplice}
                     setCurrentAccomplice={setCurrentAccomplice}
                     accomplices={accomplices}
-                    handleAddAccomplice={handleAddAccompliceWrapper}
-                    removeAccomplice={removeAccompliceWrapper}
+                    handleAddAccomplice={(e) => {
+                      e.preventDefault();
+                      if (currentAccomplice.trim()) {
+                        setAccomplices([...accomplices, currentAccomplice.trim()]);
+                        setCurrentAccomplice("");
+                      }
+                    }}
+                    removeAccomplice={(index) => {
+                      const newAccomplices = [...accomplices];
+                      newAccomplices.splice(index, 1);
+                      setAccomplices(newAccomplices);
+                    }}
                     officialResponse={officialResponse}
                     setOfficialResponse={setOfficialResponse}
-                    xLink={xLink}
-                    setXLink={setXLink}
                   />
 
                   <ListingDisclaimer />

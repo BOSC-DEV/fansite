@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@/context/WalletContext";
@@ -16,7 +15,6 @@ interface SubmitListingHandlerProps {
   aliases: string[];
   accomplices: string[];
   officialResponse: string;
-  xLink?: string;
   turnstileToken: string | null;
   validateForm: () => boolean;
   onSubmitStart: () => void;
@@ -37,7 +35,6 @@ export function useSubmitListing() {
       aliases,
       accomplices,
       officialResponse,
-      xLink,
       turnstileToken,
       validateForm,
       onSubmitStart,
@@ -87,8 +84,7 @@ export function useSubmitListing() {
         comments: [],
         likes: 0,
         dislikes: 0,
-        views: 0,
-        xLink: xLink || ""
+        views: 0
       };
       
       // Save to localStorage and try to save to Supabase

@@ -38,8 +38,6 @@ export function useListingForm() {
     setLinks: linksForm.setLinks,
     handleAddLink: linksForm.handleAddLink,
     removeLink: linksForm.removeLink,
-    xLink: linksForm.xLink,
-    setXLink: linksForm.setXLink,
     
     // Aliases
     currentAlias: aliasesForm.currentAlias, 

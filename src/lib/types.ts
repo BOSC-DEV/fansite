@@ -14,7 +14,6 @@ export interface Scammer {
   likes?: number;
   dislikes?: number;
   views?: number;
-  xLink?: string; // Added for X.com social link
 }
 
 export interface ScammerInput {
@@ -45,8 +44,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xAbC123...',
     likes: 100,
     dislikes: 50,
-    views: 200,
-    xLink: 'https://x.com/johncrypto'
+    views: 200
   },
   {
     id: '2',
@@ -63,8 +61,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xDeF456...',
     likes: 150,
     dislikes: 75,
-    views: 300,
-    xLink: 'https://x.com/aliceblockchain'
+    views: 300
   },
   {
     id: '3',
@@ -81,8 +78,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xGhI789...',
     likes: 200,
     dislikes: 100,
-    views: 400,
-    xLink: 'https://x.com/charliedefi'
+    views: 400
   },
   {
     id: '4',
@@ -99,8 +95,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xJkL101...',
     likes: 250,
     dislikes: 150,
-    views: 500,
-    xLink: 'https://x.com/davidtoken'
+    views: 500
   },
   {
     id: '5',
@@ -117,8 +112,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xMnO234...',
     likes: 300,
     dislikes: 200,
-    views: 600,
-    xLink: 'https://x.com/evaethereum'
+    views: 600
   },
   {
     id: '6',
@@ -135,8 +129,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xPqR567...',
     likes: 350,
     dislikes: 250,
-    views: 700,
-    xLink: 'https://x.com/frankphisher'
+    views: 700
   },
   {
     id: '7',
@@ -153,8 +146,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xStU890...',
     likes: 400,
     dislikes: 300,
-    views: 800,
-    xLink: 'https://x.com/gracenft'
+    views: 800
   },
   {
     id: '8',
@@ -171,8 +163,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xVwX123...',
     likes: 450,
     dislikes: 350,
-    views: 900,
-    xLink: 'https://x.com/harryhacker'
+    views: 900
   },
   {
     id: '9',
@@ -189,8 +180,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xYzA456...',
     likes: 500,
     dislikes: 400,
-    views: 1000,
-    xLink: 'https://x.com/ivyimpostor'
+    views: 1000
   },
   {
     id: '10',
@@ -207,7 +197,6 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xBcD789...',
     likes: 550,
     dislikes: 450,
-    views: 1100,
-    xLink: 'https://x.com/jackjumper'
+    views: 1100
   }
 ];

@@ -1,3 +1,4 @@
+
 import { supabase } from '@/lib/supabase';
 import { ScammerListing, ScammerStats, ScammerDbRecord } from './scammerTypes';
 import { ScammerDataProcessor } from './scammerDataProcessor';
@@ -38,8 +39,7 @@ class ScammerService {
           likes: dbRecord.likes || 0,
           dislikes: dbRecord.dislikes || 0,
           views: dbRecord.views || 0,
-          comments: dbRecord.comments,
-          x_link: dbRecord.x_link
+          comments: dbRecord.comments
         }, { 
           onConflict: 'id',
           ignoreDuplicates: false 
@@ -175,7 +175,7 @@ class ScammerService {
       
       const { data: existingScammer, error: fetchError } = await supabase
         .from('scammers')
-        .select('views, name')
+        .select('views')
         .eq('id', scammerId)
         .single();
         
@@ -187,13 +187,9 @@ class ScammerService {
       const currentViews = existingScammer?.views || 0;
       const newViews = currentViews + 1;
       
-      // Make sure to include the required fields (id and name)
       const { error } = await supabase
         .from('scammers')
-        .update({ 
-          views: newViews,
-          name: existingScammer.name
-        })
+        .update({ views: newViews })
         .eq('id', scammerId);
 
       if (error) {
@@ -218,7 +214,7 @@ class ScammerService {
       
       const { data: existingScammer, error: fetchError } = await supabase
         .from('scammers')
-        .select('likes, name')
+        .select('likes')
         .eq('id', scammerId)
         .single();
         
@@ -230,13 +226,9 @@ class ScammerService {
       const currentLikes = existingScammer?.likes || 0;
       const newLikes = currentLikes + 1;
       
-      // Make sure to include the required fields (id and name)
       const { error } = await supabase
         .from('scammers')
-        .update({ 
-          likes: newLikes,
-          name: existingScammer.name
-        })
+        .update({ likes: newLikes })
         .eq('id', scammerId);
 
       if (error) {
@@ -261,7 +253,7 @@ class ScammerService {
       
       const { data: existingScammer, error: fetchError } = await supabase
         .from('scammers')
-        .select('dislikes, name')
+        .select('dislikes')
         .eq('id', scammerId)
         .single();
         
@@ -273,13 +265,9 @@ class ScammerService {
       const currentDislikes = existingScammer?.dislikes || 0;
       const newDislikes = currentDislikes + 1;
       
-      // Make sure to include the required fields (id and name)
       const { error } = await supabase
         .from('scammers')
-        .update({ 
-          dislikes: newDislikes,
-          name: existingScammer.name  
-        })
+        .update({ dislikes: newDislikes })
         .eq('id', scammerId);
 
       if (error) {

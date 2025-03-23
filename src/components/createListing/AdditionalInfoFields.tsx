@@ -1,6 +1,5 @@
 
-import { TagInput, TextAreaField, TextField } from "@/components/scammer/FormFields";
-import { X } from "lucide-react";
+import { TagInput, TextAreaField } from "@/components/scammer/FormFields";
 
 interface AdditionalInfoFieldsProps {
   currentLink: string;
@@ -23,9 +22,6 @@ interface AdditionalInfoFieldsProps {
   
   officialResponse: string;
   setOfficialResponse: (value: string) => void;
-  
-  xLink: string;
-  setXLink: (value: string) => void;
 }
 
 export function AdditionalInfoFields({
@@ -45,9 +41,7 @@ export function AdditionalInfoFields({
   handleAddAccomplice,
   removeAccomplice,
   officialResponse,
-  setOfficialResponse,
-  xLink,
-  setXLink
+  setOfficialResponse
 }: AdditionalInfoFieldsProps) {
   return (
     <>
@@ -59,16 +53,6 @@ export function AdditionalInfoFields({
         setCurrentValue={setCurrentLink}
         addValue={handleAddLink}
         removeValue={removeLink}
-      />
-
-      <TextField
-        id="xLink"
-        label="X.com Profile Link"
-        placeholder="https://x.com/username"
-        value={xLink}
-        onChange={(e) => setXLink(e.target.value)}
-        required={false}
-        icon={<X className="h-4 w-4" />}
       />
 
       <TagInput

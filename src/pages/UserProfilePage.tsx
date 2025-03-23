@@ -14,8 +14,8 @@ import { CommentsTab } from "@/components/profile/tabs/CommentsTab";
 import { BookOpen, User, Heart, MessageSquare } from "lucide-react";
 
 export function UserProfilePage() {
-  const { walletAddress } = useParams<{ walletAddress: string }>();
-  const { profile, scammers, isLoading, error } = useUserProfile(walletAddress);
+  const { username } = useParams<{ username: string }>();
+  const { profile, scammers, isLoading, error } = useUserProfile(username);
   const [activeTab, setActiveTab] = useState("reports");
   
   return (

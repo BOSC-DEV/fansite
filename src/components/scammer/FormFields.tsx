@@ -68,7 +68,6 @@ interface TextFieldProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
-  icon?: React.ReactNode;
 }
 
 export function TextField({ 
@@ -77,27 +76,18 @@ export function TextField({
   placeholder, 
   value, 
   onChange, 
-  required = false,
-  icon
+  required = false 
 }: TextFieldProps) {
   return (
     <div className="space-y-2">
       <Label htmlFor={id}>{label} {required && '*'}</Label>
-      <div className="relative">
-        {icon && (
-          <div className="absolute inset-y-0 left-3 flex items-center text-muted-foreground">
-            {icon}
-          </div>
-        )}
-        <Input
-          id={id}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          required={required}
-          className={icon ? "pl-10" : ""}
-        />
-      </div>
+      <Input
+        id={id}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        required={required}
+      />
     </div>
   );
 }

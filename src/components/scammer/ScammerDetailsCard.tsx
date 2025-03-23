@@ -30,7 +30,7 @@ export function ScammerDetailsCard({
   scammer, 
   imageLoaded, 
   setImageLoaded, 
-  formatDate = (date) => new Date(date).toLocaleDateString(), 
+  formatDate = (date) => new Date(date).toLocaleDateString(), // Default implementation accepts string 
   scammerStats, 
   onLikeScammer, 
   onDislikeScammer 
@@ -165,32 +165,30 @@ export function ScammerDetailsCard({
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex flex-col gap-6">
-          <div className="md:w-full mx-auto">
-            <ScammerSidebar
-              name={scammer.name}
-              photoUrl={scammer.photoUrl}
-              dateAdded={scammer.dateAdded.toString()}
-              addedBy={scammer.addedBy}
-              addedByUsername={addedByUsername}
-              isProfileLoading={isProfileLoading}
-              formatDate={formatDate}
-            />
-          </div>
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+          <ScammerSidebar
+            name={scammer.name}
+            photoUrl={scammer.photoUrl}
+            dateAdded={scammer.dateAdded.toString()} // Convert Date to string
+            addedBy={scammer.addedBy}
+            addedByUsername={addedByUsername}
+            isProfileLoading={isProfileLoading}
+            likes={likes}
+            dislikes={dislikes}
+            views={views}
+            isLiked={isLiked}
+            isDisliked={isDisliked}
+            onLike={handleLike}
+            onDislike={handleDislike}
+            formatDate={formatDate}
+          />
           
-          <div className="w-full">
+          <div className="flex-1">
             <ScammerContent 
               aliases={scammer.aliases}
               links={scammer.links}
               accomplices={scammer.accomplices}
               officialResponse={scammer.officialResponse}
-              likes={likes}
-              dislikes={dislikes}
-              views={views}
-              isLiked={isLiked}
-              isDisliked={isDisliked}
-              onLike={handleLike}
-              onDislike={handleDislike}
             />
           </div>
         </div>

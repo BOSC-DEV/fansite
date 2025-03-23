@@ -127,7 +127,8 @@ export class StorageService extends BaseSupabaseService {
 
   async incrementScammerViews(scammerId: string): Promise<boolean> {
     try {
-      return await scammerService.incrementScammerViews(scammerId);
+      await scammerService.incrementScammerViews(scammerId);
+      return true;
     } catch (error) {
       console.error("Error incrementing scammer views:", error);
       return false;
@@ -136,7 +137,8 @@ export class StorageService extends BaseSupabaseService {
 
   async likeScammer(scammerId: string): Promise<boolean> {
     try {
-      return await scammerService.likeScammer(scammerId);
+      await scammerService.likeScammer(scammerId);
+      return true;
     } catch (error) {
       console.error("Error liking scammer:", error);
       return false;
@@ -145,7 +147,8 @@ export class StorageService extends BaseSupabaseService {
 
   async dislikeScammer(scammerId: string): Promise<boolean> {
     try {
-      return await scammerService.dislikeScammer(scammerId);
+      await scammerService.dislikeScammer(scammerId);
+      return true;
     } catch (error) {
       console.error("Error disliking scammer:", error);
       return false;
