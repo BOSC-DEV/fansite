@@ -10,7 +10,7 @@ import { CommentSection } from "@/components/comments/CommentSection";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { storageService } from "@/services/storage/localStorageService";
-import { scammerService } from "@/services/storage/scammerService";
+import { scammerService } from "@/services/storage";
 import { Scammer } from "@/lib/types";
 import { toast } from "sonner";
 

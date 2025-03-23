@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { storageService } from "@/services/storage";
-import { scammerService } from "@/services/storage/scammerService";
+import { scammerService } from "@/services/storage";
 import { profileService } from "@/services/storage/profileService";
 
 interface SubmitListingHandlerProps {

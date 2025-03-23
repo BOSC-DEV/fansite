@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -6,7 +5,7 @@ import { Scammer } from "@/lib/types";
 import { ArrowRight } from "lucide-react";
 import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
 import { useWallet } from "@/context/WalletContext";
-import { scammerService } from "@/services/storage/scammerService";
+import { scammerService } from "@/services/storage";
 
 export const FeaturedScammers = () => {
   const [featuredScammers, setFeaturedScammers] = useState<Scammer[]>([]);
@@ -17,10 +16,8 @@ export const FeaturedScammers = () => {
     const fetchFeaturedScammers = async () => {
       setIsLoading(true);
       try {
-        // Fetch data from Supabase through our service
         const supabaseScammers = await scammerService.getAllScammers();
         
-        // Convert to Scammer type and sort by date (newest first)
         const scammers: Scammer[] = supabaseScammers
           .map(s => ({
             id: s.id,
@@ -37,11 +34,10 @@ export const FeaturedScammers = () => {
             addedBy: s.addedBy || ''
           }))
           .sort((a, b) => b.dateAdded.getTime() - a.dateAdded.getTime())
-          .slice(0, 5); // Get only the 5 most recent scammers for the preview
+          .slice(0, 5);
         
         setFeaturedScammers(scammers);
         console.log('Featured scammers loaded:', scammers.length);
-        // Log the aliases for debugging
         scammers.forEach(scammer => {
           console.log(`Scammer ${scammer.name} has aliases:`, scammer.aliases);
         });

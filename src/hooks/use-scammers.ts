@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Scammer } from "@/lib/types";
-import { scammerService } from "@/services/storage/scammerService";
+import { scammerService } from "@/services/storage";
 import { storageService } from "@/services/storage/localStorageService";
 import { toast } from "sonner";
 

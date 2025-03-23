@@ -3,10 +3,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 import { toast } from 'sonner';
 import { profileService } from './profileService';
-import { scammerService } from './scammerService';
+import { scammerService } from './scammer/scammerService';
 import { leaderboardService } from './leaderboardService';
 import { UserProfile } from './profileService';
-import { ScammerListing } from './scammerService';
+import { ScammerListing } from './scammer/scammerTypes';
 import { LeaderboardUser } from './leaderboardService';
 
 export class StorageService extends BaseSupabaseService {
