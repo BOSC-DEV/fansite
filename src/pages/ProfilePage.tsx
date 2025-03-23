@@ -1,8 +1,13 @@
 
+import React from "react";
 import { Header } from "@/components/Header";
 import { UserProfile } from "@/components/profile/UserProfile";
+import { useWallet } from "@/context/WalletContext";
 
 export function ProfilePage() {
+  // Check if wallet context is accessible to confirm WalletProvider is working
+  const walletContext = useWallet();
+  
   return (
     <div className="min-h-screen old-paper">
       <Header />
