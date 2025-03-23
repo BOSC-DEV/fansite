@@ -24,9 +24,33 @@ export function useUserProfile(username: string | undefined) {
         
         console.log("Fetching profile for:", username);
         
-        // First try directly from Supabase - check if it's a wallet address or username
+        // Try profile service first (this handles both wallet address and username)
+        const profileData = await storageService.getProfile(username) || 
+                           await storageService.getProfileByUsername(username);
+        
+        if (profileData) {
+          console.log("Profile found:", profileData);
+          setProfile(profileData);
+          
+          // Fetch scammers added by this user's wallet address
+          const allScammers = await storageService.getAllScammers();
+          const userScammers = allScammers.filter(
+            scammer => scammer.addedBy === profileData.walletAddress
+          );
+          
+          console.log(`Found ${userScammers.length} scammers by this user`);
+          const convertedScammers = userScammers.map(scammer => ({
+            ...scammer,
+            dateAdded: new Date(scammer.dateAdded)
+          }));
+          setScammers(convertedScammers);
+          setIsLoading(false);
+          return;
+        }
+        
+        // Direct Supabase queries if service methods fail
         try {
-          // Try by wallet address first (more common case)
+          // Try by wallet address first
           const { data: walletProfile, error: walletError } = await supabase
             .from('profiles')
             .select('*')
@@ -54,7 +78,6 @@ export function useUserProfile(username: string | undefined) {
             );
             
             console.log(`Found ${userScammers.length} scammers by wallet address ${walletProfile.wallet_address}`);
-            // Convert ScammerListing to Scammer (with date conversion)
             const convertedScammers = userScammers.map(scammer => ({
               ...scammer,
               dateAdded: new Date(scammer.dateAdded)
@@ -92,7 +115,6 @@ export function useUserProfile(username: string | undefined) {
             );
             
             console.log(`Found ${userScammers.length} scammers by wallet address ${usernameProfile.wallet_address}`);
-            // Convert ScammerListing to Scammer (with date conversion)
             const convertedScammers = userScammers.map(scammer => ({
               ...scammer,
               dateAdded: new Date(scammer.dateAdded)
@@ -105,44 +127,8 @@ export function useUserProfile(username: string | undefined) {
           console.error("Supabase query error:", supabaseError);
         }
         
-        // Fallback to service methods if Supabase direct query fails
-        try {
-          // First try by wallet address
-          let profileData = await storageService.getProfile(username);
-          
-          // If not found by wallet address, try by username
-          if (!profileData) {
-            console.log("Profile not found by wallet address in service, trying by username");
-            profileData = await storageService.getProfileByUsername(username);
-          }
-          
-          if (!profileData) {
-            console.log("Profile not found in any data source");
-            setError("Profile not found");
-            setIsLoading(false);
-            return;
-          }
-          
-          console.log("Profile found via service:", profileData);
-          setProfile(profileData);
-          
-          // Fetch scammers added by this user
-          const allScammers = await storageService.getAllScammers();
-          const userScammers = allScammers.filter(
-            scammer => scammer.addedBy === profileData.walletAddress
-          );
-          
-          console.log(`Found ${userScammers.length} scammers by this user`);
-          // Convert ScammerListing to Scammer (with date conversion)
-          const convertedScammers = userScammers.map(scammer => ({
-            ...scammer,
-            dateAdded: new Date(scammer.dateAdded)
-          }));
-          setScammers(convertedScammers);
-        } catch (serviceError) {
-          console.error("Error in service methods:", serviceError);
-          setError("Profile not found");
-        }
+        console.log("Profile not found in any data source");
+        setError("Profile not found");
       } catch (err) {
         console.error("Error fetching profile data:", err);
         setError("Failed to load profile data");
