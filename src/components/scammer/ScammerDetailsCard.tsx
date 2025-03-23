@@ -6,6 +6,10 @@ import { toast } from "sonner";
 import { storageService } from "@/services/storage";
 import { ScammerSidebar } from './details/ScammerSidebar';
 import { ScammerContent } from './details/ScammerContent';
+import { Button } from "@/components/ui/button";
+import { Edit } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useWallet } from "@/context/WalletContext";
 
 interface ScammerDetailsCardProps {
   scammer: Scammer;
@@ -31,6 +35,7 @@ export function ScammerDetailsCard({
   onLikeScammer, 
   onDislikeScammer 
 }: ScammerDetailsCardProps) {
+  const { address } = useWallet();
   const [isLiked, setIsLiked] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
   const [likes, setLikes] = useState(scammer.likes || 0);
@@ -38,6 +43,7 @@ export function ScammerDetailsCard({
   const [views, setViews] = useState(scammer.views || 0);
   const [addedByUsername, setAddedByUsername] = useState<string | null>(null);
   const [isProfileLoading, setIsProfileLoading] = useState(true);
+  const isCreator = scammer.addedBy === address;
 
   useEffect(() => {
     // Fetch profile information for the addedBy user
@@ -143,6 +149,19 @@ export function ScammerDetailsCard({
               Accused of: {scammer.accusedOf}
             </CardDescription>
           </div>
+          {isCreator && (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="ml-4"
+              asChild
+            >
+              <Link to={`/edit-listing/${scammer.id}`}>
+                <Edit className="h-4 w-4 mr-1" />
+                Edit Listing
+              </Link>
+            </Button>
+          )}
         </div>
       </CardHeader>
       <CardContent className="space-y-6">

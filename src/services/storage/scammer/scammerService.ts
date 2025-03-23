@@ -1,3 +1,4 @@
+
 import { supabase } from '@/lib/supabase';
 import { ScammerListing, ScammerStats, ScammerDbRecord } from './scammerTypes';
 import { ScammerDataProcessor } from './scammerDataProcessor';
@@ -124,20 +125,26 @@ class ScammerService {
     try {
       console.log("Updating stats for scammer:", scammerId, stats);
       
-      // Use a properly constructed update payload with required id field
-      const updatePayload: Record<string, any> = { id: scammerId };
-      
-      if (stats.likes !== undefined) {
-        updatePayload.likes = stats.likes;
+      // Get the current scammer to ensure we have valid data
+      const { data: scammer, error: fetchError } = await supabase
+        .from('scammers')
+        .select('id, name, likes, dislikes, views')
+        .eq('id', scammerId)
+        .single();
+        
+      if (fetchError || !scammer) {
+        console.error("Error fetching scammer for stats update:", fetchError);
+        return false;
       }
       
-      if (stats.dislikes !== undefined) {
-        updatePayload.dislikes = stats.dislikes;
-      }
-      
-      if (stats.views !== undefined) {
-        updatePayload.views = stats.views;
-      }
+      // Create the update object with required name field
+      const updatePayload = {
+        id: scammerId,
+        name: scammer.name, // Required field
+        likes: stats.likes !== undefined ? stats.likes : scammer.likes,
+        dislikes: stats.dislikes !== undefined ? stats.dislikes : scammer.dislikes,
+        views: stats.views !== undefined ? stats.views : scammer.views
+      };
       
       const { error } = await supabase
         .from('scammers')
