@@ -11,13 +11,21 @@ interface PaginationProps {
 export const Pagination = ({ currentPage, totalPages, setCurrentPage }: PaginationProps) => {
   const isMobile = useIsMobile();
 
+  const handlePrevious = () => {
+    setCurrentPage(Math.max(1, currentPage - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentPage(Math.min(totalPages, currentPage + 1));
+  };
+
   return (
     <div className="flex justify-center mt-6 md:mt-8">
       <div className="flex space-x-2">
         <Button
           variant="outline"
           size={isMobile ? "sm" : "default"}
-          onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+          onClick={handlePrevious}
           disabled={currentPage === 1}
         >
           Previous
@@ -72,7 +80,7 @@ export const Pagination = ({ currentPage, totalPages, setCurrentPage }: Paginati
         <Button
           variant="outline"
           size={isMobile ? "sm" : "default"}
-          onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+          onClick={handleNext}
           disabled={currentPage === totalPages}
         >
           Next
