@@ -29,7 +29,7 @@ const Index = () => {
       
       <Header />
       
-      <main className="flex-grow px-0 sm:px-0">
+      <main className="flex-grow">
         <HeroSection />
         <div className="relative px-0">
           <div className="torn-edge-top"></div>
