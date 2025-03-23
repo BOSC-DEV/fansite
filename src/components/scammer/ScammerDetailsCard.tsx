@@ -1,4 +1,6 @@
 
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Scammer } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,8 +15,8 @@ import {
   ExternalLink,
   AlertCircle,
 } from "lucide-react";
-import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { profileService } from "@/services/storage/profileService";
 
 interface ScammerDetailsCardProps {
   scammer: Scammer;
@@ -31,6 +33,32 @@ export function ScammerDetailsCard({
   formatDate,
   bountyAmount,
 }: ScammerDetailsCardProps) {
+  const [addedByUsername, setAddedByUsername] = useState<string | null>(null);
+  const [isLoadingUsername, setIsLoadingUsername] = useState(true);
+
+  // Fetch the username of the person who added the scammer
+  useEffect(() => {
+    const fetchAddedByProfile = async () => {
+      if (scammer.addedBy) {
+        try {
+          setIsLoadingUsername(true);
+          const profile = await profileService.getProfile(scammer.addedBy);
+          if (profile) {
+            setAddedByUsername(profile.displayName || profile.username);
+          }
+        } catch (error) {
+          console.error("Failed to fetch profile for addedBy:", error);
+        } finally {
+          setIsLoadingUsername(false);
+        }
+      } else {
+        setIsLoadingUsername(false);
+      }
+    };
+
+    fetchAddedByProfile();
+  }, [scammer.addedBy]);
+
   return (
     <Card>
       <div className="relative aspect-video overflow-hidden bg-muted rounded-t-lg">
@@ -47,6 +75,12 @@ export function ScammerDetailsCard({
             imageLoaded ? "opacity-100" : "opacity-0"
           )}
           onLoad={() => setImageLoaded(true)}
+          onError={(e) => {
+            // If image fails to load, show a fallback
+            const target = e.target as HTMLImageElement;
+            target.src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(scammer.name) + "&background=random";
+            setImageLoaded(true);
+          }}
         />
       </div>
       <CardContent className="p-6">
@@ -67,9 +101,18 @@ export function ScammerDetailsCard({
             <User className="h-4 w-4 mr-1" />
             Added by:
           </div>
-          <code className="text-xs bg-muted px-2 py-1 rounded font-mono">
-            {scammer.addedBy}
-          </code>
+          {isLoadingUsername ? (
+            <div className="text-xs bg-muted px-2 py-1 rounded animate-pulse">
+              Loading...
+            </div>
+          ) : (
+            <Link 
+              to={`/profile/${scammer.addedBy}`}
+              className="text-xs bg-muted px-2 py-1 rounded font-mono hover:bg-muted/80 transition-colors hover:underline"
+            >
+              {addedByUsername || scammer.addedBy}
+            </Link>
+          )}
         </div>
 
         <Separator className="my-6" />

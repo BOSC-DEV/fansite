@@ -23,6 +23,8 @@ const ScammerDetail = () => {
   useEffect(() => {
     const loadScammer = async () => {
       setIsLoading(true);
+      setImageLoaded(false); // Reset image loaded state when loading a new scammer
+      
       if (id) {
         try {
           // First try to load from Supabase
@@ -40,10 +42,17 @@ const ScammerDetail = () => {
               accomplices: supabaseScammer.accomplices,
               officialResponse: supabaseScammer.officialResponse,
               bountyAmount: supabaseScammer.bountyAmount,
-              walletAddress: "",
+              walletAddress: supabaseScammer.walletAddress || "",
               dateAdded: new Date(supabaseScammer.dateAdded),
               addedBy: supabaseScammer.addedBy
             });
+            
+            // Track view
+            try {
+              await scammerService.incrementScammerViews(id);
+            } catch (error) {
+              console.error("Failed to increment view count:", error);
+            }
           } else {
             // If not found in Supabase, try localStorage
             const localScammer = storageService.getScammer(id);
@@ -59,7 +68,7 @@ const ScammerDetail = () => {
                 accomplices: localScammer.accomplices,
                 officialResponse: localScammer.officialResponse,
                 bountyAmount: localScammer.bountyAmount,
-                walletAddress: "",
+                walletAddress: localScammer.walletAddress || "",
                 dateAdded: new Date(localScammer.dateAdded),
                 addedBy: localScammer.addedBy
               });
@@ -83,7 +92,7 @@ const ScammerDetail = () => {
               accomplices: localScammer.accomplices,
               officialResponse: localScammer.officialResponse,
               bountyAmount: localScammer.bountyAmount,
-              walletAddress: "",
+              walletAddress: localScammer.walletAddress || "",
               dateAdded: new Date(localScammer.dateAdded),
               addedBy: localScammer.addedBy
             });
