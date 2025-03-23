@@ -17,10 +17,10 @@ export function ProfileLinks({ xLink, websiteLink }: ProfileLinksProps) {
         <Button
           variant="outline"
           size="sm"
-          className="h-8 px-2"
+          className="h-8 w-8 p-0"
           asChild
         >
-          <a href={xLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1" title="X (Twitter) Profile">
+          <a href={xLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
             <Twitter size={16} className="text-[#1DA1F2]" />
           </a>
         </Button>
@@ -30,10 +30,10 @@ export function ProfileLinks({ xLink, websiteLink }: ProfileLinksProps) {
         <Button
           variant="outline"
           size="sm"
-          className="h-8 px-2"
+          className="h-8 w-8 p-0"
           asChild
         >
-          <a href={websiteLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1" title="Website">
+          <a href={websiteLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
             <Globe size={16} className="text-western-accent" />
           </a>
         </Button>

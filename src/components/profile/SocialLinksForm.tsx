@@ -21,7 +21,6 @@ export function SocialLinksForm({
       <div className="space-y-2">
         <Label htmlFor="xLink" className="flex items-center gap-2">
           <Twitter size={16} className="text-muted-foreground" />
-          X (Twitter) Profile
         </Label>
         <Input
           id="xLink"
@@ -29,13 +28,11 @@ export function SocialLinksForm({
           value={xLink}
           onChange={(e) => onXLinkChange(e.target.value)}
         />
-        <p className="text-xs text-muted-foreground">Your X (Twitter) profile URL</p>
       </div>
       
       <div className="space-y-2">
         <Label htmlFor="websiteLink" className="flex items-center gap-2">
           <Globe size={16} className="text-muted-foreground" />
-          Website
         </Label>
         <Input
           id="websiteLink"
@@ -43,7 +40,6 @@ export function SocialLinksForm({
           value={websiteLink}
           onChange={(e) => onWebsiteLinkChange(e.target.value)}
         />
-        <p className="text-xs text-muted-foreground">Your personal or business website</p>
       </div>
     </div>
   );
