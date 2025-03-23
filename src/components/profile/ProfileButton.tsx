@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { 
   DropdownMenu,
@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
 import { UserCircle2 } from "lucide-react";
 import { storageService, UserProfile } from "@/services/storage";
-import { useEffect } from "react";
 
 export function ProfileButton() {
   const { isConnected, address } = useWallet();

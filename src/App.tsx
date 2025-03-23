@@ -1,4 +1,5 @@
 
+import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WalletProvider } from "./context/WalletContext";
@@ -44,12 +45,14 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <WalletProvider>
-        <RouterProvider router={router} />
-        <Toaster />
-      </WalletProvider>
-    </QueryClientProvider>
+    <React.StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <WalletProvider>
+          <RouterProvider router={router} />
+          <Toaster />
+        </WalletProvider>
+      </QueryClientProvider>
+    </React.StrictMode>
   );
 }
 

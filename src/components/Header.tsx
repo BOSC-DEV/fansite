@@ -1,7 +1,6 @@
-
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
-import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Wallet, Menu, X, Home, BookOpen, Award } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -56,7 +55,6 @@ export const Header = () => {
           <span className="font-wanted text-western-parchment">Book of Scams</span>
         </Link>
 
-        {/* Desktop Menu */}
         <nav className="hidden md:flex items-center space-x-6">
           {menuItems.map((item) => (
             <Link
@@ -96,7 +94,6 @@ export const Header = () => {
                 Disconnect
               </Button>
               
-              {/* Add the profile button */}
               <ProfileButton />
             </div>
           ) : (
@@ -112,7 +109,6 @@ export const Header = () => {
             </Button>
           )}
 
-          {/* Mobile menu toggle */}
           <Button
             variant="ghost"
             size="icon"
@@ -124,7 +120,6 @@ export const Header = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 pt-16 z-40 wood-texture md:hidden animate-fade-in">
           <div className="container px-4 py-6 flex flex-col space-y-6">
@@ -159,7 +154,6 @@ export const Header = () => {
                     <span className="text-sm text-western-sand font-bold">{balance} BOSC</span>
                   </div>
                   
-                  {/* Add profile link in mobile menu */}
                   <Link to="/profile" className="flex items-center justify-between">
                     <span className="text-sm font-medium text-western-parchment">Profile</span>
                     <Button variant="ghost" size="sm" className="p-0 h-auto text-western-sand hover:text-western-parchment">
