@@ -20,7 +20,7 @@ import { CloudflareTurnstile } from "@/components/CloudflareTurnstile";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Shield, CheckCircle2 } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
-import { storageService } from "@/services/storage/localStorageService";
+import { storageService } from "@/services/storage";
 
 // Get Cloudflare Turnstile site key from environment variables or use development key as fallback
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY || '1x00000000000000000000BB';
