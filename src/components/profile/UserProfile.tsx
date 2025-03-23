@@ -8,6 +8,7 @@ import { useProfileForm } from "./useProfileForm";
 import { Twitter, Globe } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { BasicInfoForm } from "./BasicInfoForm";
 
 export function UserProfile() {
   const navigate = useNavigate();
