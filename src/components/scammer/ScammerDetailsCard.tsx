@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { storageService } from "@/services/storage";
 import { ScammerSidebar } from './details/ScammerSidebar';
 import { ScammerContent } from './details/ScammerContent';
+import { ScammerInteractionButtons } from './details/ScammerInteractionButtons';
 import { Button } from "@/components/ui/button";
 import { Edit } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -149,19 +150,30 @@ export function ScammerDetailsCard({
               Accused of: {scammer.accusedOf}
             </CardDescription>
           </div>
-          {isCreator && (
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="ml-4"
-              asChild
-            >
-              <Link to={`/edit-listing/${scammer.id}`}>
-                <Edit className="h-4 w-4 mr-1" />
-                Edit Listing
-              </Link>
-            </Button>
-          )}
+          <div className="flex flex-col gap-2 items-end">
+            {isCreator && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="ml-4"
+                asChild
+              >
+                <Link to={`/edit-listing/${scammer.id}`}>
+                  <Edit className="h-4 w-4 mr-1" />
+                  Edit Listing
+                </Link>
+              </Button>
+            )}
+            <ScammerInteractionButtons
+              likes={likes}
+              dislikes={dislikes}
+              views={views}
+              isLiked={isLiked}
+              isDisliked={isDisliked}
+              onLike={handleLike}
+              onDislike={handleDislike}
+            />
+          </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-6">

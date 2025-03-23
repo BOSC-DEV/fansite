@@ -5,7 +5,6 @@ import { IdentityTab } from './tabs/IdentityTab';
 import { EvidenceTab } from './tabs/EvidenceTab';
 import { NetworkTab } from './tabs/NetworkTab';
 import { ResponseTab } from './tabs/ResponseTab';
-import { ScammerInteractionButtons } from './ScammerInteractionButtons';
 
 interface ScammerContentProps {
   aliases: string[];
@@ -36,19 +35,6 @@ export function ScammerContent({
 }: ScammerContentProps) {
   return (
     <div className="w-full">
-      {/* Interaction buttons moved to the top */}
-      <div className="flex justify-end mb-6">
-        <ScammerInteractionButtons
-          likes={likes}
-          dislikes={dislikes}
-          views={views}
-          isLiked={isLiked}
-          isDisliked={isDisliked}
-          onLike={onLike}
-          onDislike={onDislike}
-        />
-      </div>
-      
       <Tabs defaultValue="identity" className="w-full">
         <div className="flex flex-row gap-6">
           {/* TabsList moved to the left side */}
