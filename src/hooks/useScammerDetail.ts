@@ -4,6 +4,7 @@ import { storageService } from "@/services/storage/storageService";
 import { scammerService } from "@/services/storage";
 import { Scammer } from "@/lib/types";
 import { toast } from "sonner";
+import { ScammerListing } from "@/services/storage/scammer/scammerTypes";
 
 export function useScammerDetail(id: string | undefined) {
   const [scammer, setScammer] = useState<Scammer | null>(null);
@@ -51,32 +52,38 @@ export function useScammerDetail(id: string | undefined) {
           console.log("Attempting to load scammer with ID:", id);
           
           // First try to load from Supabase - properly await the Promise
-          const supabaseScammer = await scammerService.getScammer(id);
+          let scammerData: ScammerListing | null = null;
           
-          if (supabaseScammer) {
-            console.log("Scammer found in Supabase:", supabaseScammer.name);
+          try {
+            scammerData = await scammerService.getScammer(id);
+          } catch (error) {
+            console.error("Error fetching from Supabase:", error);
+          }
+          
+          if (scammerData) {
+            console.log("Scammer found in Supabase:", scammerData.name);
             
             // Convert to Scammer type
             setScammer({
-              id: supabaseScammer.id,
-              name: supabaseScammer.name,
-              photoUrl: supabaseScammer.photoUrl,
-              accusedOf: supabaseScammer.accusedOf,
-              links: supabaseScammer.links || [],
-              aliases: supabaseScammer.aliases || [],
-              accomplices: supabaseScammer.accomplices || [],
-              officialResponse: supabaseScammer.officialResponse,
-              bountyAmount: supabaseScammer.bountyAmount,
-              walletAddress: supabaseScammer.walletAddress || "",
-              dateAdded: new Date(supabaseScammer.dateAdded),
-              addedBy: supabaseScammer.addedBy,
-              xLink: supabaseScammer.xLink || ""
+              id: scammerData.id,
+              name: scammerData.name,
+              photoUrl: scammerData.photoUrl,
+              accusedOf: scammerData.accusedOf,
+              links: scammerData.links || [],
+              aliases: scammerData.aliases || [],
+              accomplices: scammerData.accomplices || [],
+              officialResponse: scammerData.officialResponse,
+              bountyAmount: scammerData.bountyAmount,
+              walletAddress: scammerData.walletAddress || "",
+              dateAdded: new Date(scammerData.dateAdded),
+              addedBy: scammerData.addedBy,
+              xLink: scammerData.xLink || ""
             });
             
             setScammerStats({
-              likes: supabaseScammer.likes || 0,
-              dislikes: supabaseScammer.dislikes || 0,
-              views: supabaseScammer.views || 0
+              likes: scammerData.likes || 0,
+              dislikes: scammerData.dislikes || 0,
+              views: scammerData.views || 0
             });
             
             // Track view using IP hash if available

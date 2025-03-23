@@ -20,9 +20,9 @@ interface ScammerContentProps {
 }
 
 export function ScammerContent({ 
-  aliases = [], 
-  links = [], 
-  accomplices = [], 
+  aliases = [],
+  links = [],
+  accomplices = [],
   officialResponse = "",
   likes = 0,
   dislikes = 0,
