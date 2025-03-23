@@ -12,6 +12,7 @@ import CreateListing from "./pages/CreateListing";
 import NotFound from "./pages/NotFound";
 import ProfilePage from "./pages/ProfilePage";
 import UserProfilePage from "./pages/UserProfilePage";
+import Leaderboard from "./pages/Leaderboard";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: "/profile",
     element: <ProfilePage />,
+  },
+  {
+    path: "/leaderboard",
+    element: <Leaderboard />,
   },
   {
     path: "/:username",

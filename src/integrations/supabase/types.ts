@@ -68,6 +68,47 @@ export type Database = {
           },
         ]
       }
+      leaderboard_stats: {
+        Row: {
+          id: string
+          total_bounty: number | null
+          total_comments: number | null
+          total_likes: number | null
+          total_reports: number | null
+          total_views: number | null
+          updated_at: string | null
+          wallet_address: string
+        }
+        Insert: {
+          id?: string
+          total_bounty?: number | null
+          total_comments?: number | null
+          total_likes?: number | null
+          total_reports?: number | null
+          total_views?: number | null
+          updated_at?: string | null
+          wallet_address: string
+        }
+        Update: {
+          id?: string
+          total_bounty?: number | null
+          total_comments?: number | null
+          total_likes?: number | null
+          total_reports?: number | null
+          total_views?: number | null
+          updated_at?: string | null
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leaderboard_stats_wallet_address_fkey"
+            columns: ["wallet_address"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["wallet_address"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           bio: string | null

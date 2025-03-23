@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
 import { Link, useLocation } from "react-router-dom";
-import { Wallet, Home, Award, BookOpen, User } from "lucide-react";
+import { Wallet, Home, Award, BookOpen, User, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProfileButton } from "./profile/ProfileButton";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -46,6 +46,10 @@ export const Header = () => {
     path: "/most-wanted",
     label: "Most Wanted",
     icon: <Award className="h-4 w-4" />
+  }, {
+    path: "/leaderboard",
+    label: "Leaderboard",
+    icon: <Trophy className="h-4 w-4" />
   }, {
     path: "/create-listing",
     label: "Report",

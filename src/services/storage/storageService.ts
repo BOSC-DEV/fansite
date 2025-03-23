@@ -1,10 +1,13 @@
+
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 import { toast } from 'sonner';
 import { profileService } from './profileService';
 import { scammerService } from './scammerService';
+import { leaderboardService } from './leaderboardService';
 import { UserProfile } from './profileService';
 import { ScammerListing } from './scammerService';
+import { LeaderboardUser } from './leaderboardService';
 
 export class StorageService extends BaseSupabaseService {
   // Create a storage bucket for profile images if it doesn't exist
@@ -144,6 +147,11 @@ export class StorageService extends BaseSupabaseService {
 
   async updateScammerStats(scammerId: string, stats: { likes?: number; dislikes?: number; views?: number }): Promise<boolean> {
     return scammerService.updateScammerStats(scammerId, stats);
+  }
+  
+  // Forward leaderboard methods
+  async getLeaderboardUsers(): Promise<LeaderboardUser[]> {
+    return leaderboardService.getLeaderboardUsers();
   }
 }
 
