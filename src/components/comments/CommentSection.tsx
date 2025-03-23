@@ -6,37 +6,28 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MessageSquare } from "lucide-react";
 import { storageService, Comment } from "@/services/storage/localStorageService";
 import { Badge } from "@/components/ui/badge";
+import { useComments } from "@/hooks/useComments";
 
 interface CommentSectionProps {
   scammerId: string;
 }
 
 export function CommentSection({ scammerId }: CommentSectionProps) {
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { 
+    comments, 
+    isLoading, 
+    content, 
+    setContent, 
+    isSubmitting, 
+    handleSubmit, 
+    isConnected,
+    connectWallet
+  } = useComments(scammerId);
 
   useEffect(() => {
-    loadComments();
-    
     // Increment view count when component mounts
     storageService.incrementScammerViews(scammerId);
   }, [scammerId]);
-
-  const loadComments = () => {
-    setIsLoading(true);
-    try {
-      const loadedComments = storageService.getCommentsForScammer(scammerId);
-      setComments(loadedComments);
-    } catch (error) {
-      console.error("Error fetching comments:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleCommentAdded = () => {
-    loadComments();
-  };
 
   return (
     <div className="space-y-6">
@@ -55,7 +46,13 @@ export function CommentSection({ scammerId }: CommentSectionProps) {
         <CardContent className="space-y-6">
           <CommentForm 
             scammerId={scammerId} 
-            onCommentAdded={handleCommentAdded} 
+            onCommentAdded={() => {}} 
+            content={content}
+            setContent={setContent}
+            isSubmitting={isSubmitting}
+            handleSubmit={handleSubmit}
+            isConnected={isConnected}
+            connectWallet={connectWallet}
           />
           
           {isLoading ? (
