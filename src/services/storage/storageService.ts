@@ -1,4 +1,3 @@
-
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 import { toast } from 'sonner';
@@ -10,39 +9,9 @@ import { ScammerListing } from './scammerService';
 import { LeaderboardUser } from './leaderboardService';
 
 export class StorageService extends BaseSupabaseService {
-  // Create a storage bucket for profile images if it doesn't exist
+  // We'll no longer need this as we created the bucket via SQL
   async ensureProfileImagesBucketExists() {
-    try {
-      // Try to list buckets first
-      const { data: buckets, error: listError } = await this.supabase.storage.listBuckets();
-      
-      if (listError) {
-        console.error('Error listing buckets:', listError);
-        return false;
-      }
-      
-      const bucketExists = buckets?.some(bucket => bucket.name === 'profile-images');
-      
-      if (!bucketExists) {
-        // Create the bucket if it doesn't exist
-        const { error } = await this.supabase.storage.createBucket('profile-images', {
-          public: true, // Make the bucket publicly accessible
-        });
-        
-        if (error) {
-          console.error('Error creating profile-images bucket:', error);
-          // We'll consider this a non-fatal error, just return false
-          return false;
-        }
-        
-        return true;
-      }
-      
-      return true;
-    } catch (error) {
-      console.error('Error ensuring profile-images bucket exists:', error);
-      return false;
-    }
+    return true;
   }
 
   async uploadProfileImage(file: File, userId: string): Promise<string | null> {
@@ -51,16 +20,6 @@ export class StorageService extends BaseSupabaseService {
       const fileExt = file.name.split('.').pop();
       const fileName = `${userId}-${Date.now()}.${fileExt}`;
       const filePath = `${fileName}`;
-      
-      // Try to get a signed URL to check if the bucket exists and is accessible
-      const { data: urlData, error: urlError } = await this.supabase.storage
-        .from('profile-images')
-        .createSignedUrl(filePath, 60);
-      
-      if (urlError && !urlError.message.includes('not found')) {
-        // The bucket exists but we can't access it
-        console.error("Error testing bucket access:", urlError);
-      }
       
       // Upload the file to the 'profile-images' bucket
       const { error: uploadError, data } = await this.supabase.storage
@@ -72,14 +31,6 @@ export class StorageService extends BaseSupabaseService {
         
       if (uploadError) {
         console.error('Error uploading image:', uploadError);
-        
-        // If the error is due to permissions or bucket not existing, we'll use a placeholder
-        if (uploadError.message.includes('Bucket not found') || 
-            uploadError.message.includes('row-level security policy')) {
-          // Return a placeholder image URL instead
-          return `https://ui-avatars.com/api/?name=${encodeURIComponent(userId)}&background=random`;
-        }
-        
         return null;
       }
       

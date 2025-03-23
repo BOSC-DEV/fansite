@@ -2,10 +2,9 @@
 import { useState, useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { UserCircle2, Upload } from "lucide-react";
 import { toast } from "sonner";
-import { storageService } from "@/services/storage";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ProfilePictureUploadProps {
   displayName: string;
@@ -40,14 +39,35 @@ export function ProfilePictureUpload({
     setIsUploading(true);
     
     try {
-      // Upload the file to Supabase Storage
-      const imageUrl = await storageService.uploadProfileImage(file, userId);
+      // Generate a unique file name
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${userId}-${Date.now()}.${fileExt}`;
+      const filePath = `${fileName}`;
       
-      if (imageUrl) {
-        onProfilePicChange(imageUrl);
+      // Upload the file to the 'profile-images' bucket
+      const { error: uploadError, data } = await supabase.storage
+        .from('profile-images')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true // Overwrite if the file already exists
+        });
+        
+      if (uploadError) {
+        console.error('Error uploading image:', uploadError);
+        toast.error("Failed to upload image: " + uploadError.message);
+        return;
+      }
+      
+      // Get the public URL for the uploaded file
+      const { data: publicUrlData } = supabase.storage
+        .from('profile-images')
+        .getPublicUrl(filePath);
+        
+      if (publicUrlData.publicUrl) {
+        onProfilePicChange(publicUrlData.publicUrl);
         toast.success("Image uploaded successfully");
       } else {
-        toast.error("Failed to upload image");
+        toast.error("Failed to get public URL for uploaded image");
       }
     } catch (error) {
       console.error("Error uploading image:", error);
