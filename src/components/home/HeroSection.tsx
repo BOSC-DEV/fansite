@@ -1,8 +1,6 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Star, BookOpen, Shield, Flame } from "lucide-react";
-
 export const HeroSection = () => {
   return <section className="pt-20 pb-12 md:pt-32 md:pb-24 px-3 sm:px-4 old-paper">
       <div className="container mx-auto max-w-6xl">
@@ -10,9 +8,7 @@ export const HeroSection = () => {
           <div className="space-y-4 md:space-y-6 md:pr-8 animate-fade-in">
             <h1 className="sm:text-5xl md:text-6xl lg:text-7xl font-wanted text-western-accent uppercase tracking-wide wanted-poster mx-0 my-0 py-[20px] text-7xl px-0">$BOSC</h1>
             
-            <p className="text-lg sm:text-xl text-western-wood max-w-lg font-western">
-              Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists.
-            </p>
+            <p className="sm:text-xl text-western-wood max-w-lg font-western text-xl">Draining the swamp, recording history and bringing whatever justice we can to scammers, grifters & on-chain terrorists.</p>
             
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <Button asChild size="lg" className="western-btn gap-2 hover:animate-wiggle bg-western-leather hover:bg-western-accent text-western-parchment">
