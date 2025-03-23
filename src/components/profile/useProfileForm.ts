@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
+import { storageService, UserProfile } from "@/services/storage/localStorageService";
 
 export interface ProfileFormData {
   displayName: string;
@@ -23,13 +24,13 @@ export function useProfileForm() {
   const [hasProfile, setHasProfile] = useState(false);
 
   useEffect(() => {
-    // Check if user already has a profile
+    // Check if user already has a profile using the storageService
     if (isConnected && address) {
-      const storedProfile = localStorage.getItem(`profile-${address}`);
-      if (storedProfile) {
-        const profile = JSON.parse(storedProfile);
-        setDisplayName(profile.displayName);
-        setProfilePicUrl(profile.profilePicUrl);
+      const profile = storageService.getProfile(address);
+      if (profile) {
+        setDisplayName(profile.displayName || "");
+        setProfilePicUrl(profile.profilePicUrl || "");
+        // The following fields might not exist in older profile objects
         setXLink(profile.xLink || "");
         setWebsiteLink(profile.websiteLink || "");
         setBio(profile.bio || "");
@@ -77,24 +78,24 @@ export function useProfileForm() {
   };
 
   const saveProfile = async () => {
-    if (!validateForm()) return;
+    if (!validateForm()) return false;
 
     setIsSubmitting(true);
     
     try {
-      // Store profile in localStorage
+      // Store profile using storageService
       if (address) {
-        const profile = {
+        const profile: UserProfile = {
           displayName,
           profilePicUrl,
+          walletAddress: address,
+          createdAt: new Date().toISOString(),
           xLink,
           websiteLink,
-          bio,
-          walletAddress: address,
-          createdAt: new Date().toISOString()
+          bio
         };
         
-        localStorage.setItem(`profile-${address}`, JSON.stringify(profile));
+        storageService.saveProfile(profile);
         toast.success("Profile saved successfully");
         setHasProfile(true);
         

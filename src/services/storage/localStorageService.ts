@@ -1,4 +1,3 @@
-
 import { Scammer } from "@/lib/types";
 
 // Types for our localStorage data structures
@@ -7,6 +6,9 @@ export interface UserProfile {
   profilePicUrl: string;
   walletAddress: string;
   createdAt: string;
+  xLink?: string;
+  websiteLink?: string;
+  bio?: string;
 }
 
 export interface Comment {

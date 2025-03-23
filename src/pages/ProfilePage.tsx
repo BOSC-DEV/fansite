@@ -7,24 +7,17 @@ import { ProfileLinks } from "@/components/profile/ProfileLinks";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserCircle2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-
-interface UserProfileData {
-  displayName: string;
-  profilePicUrl?: string;
-  xLink?: string;
-  websiteLink?: string;
-  bio?: string;
-}
+import { storageService, UserProfile as ProfileType } from "@/services/storage/localStorageService";
 
 export function ProfilePage() {
   const { isConnected, address } = useWallet();
-  const [profileData, setProfileData] = useState<UserProfileData | null>(null);
+  const [profileData, setProfileData] = useState<ProfileType | null>(null);
   
   useEffect(() => {
     if (isConnected && address) {
-      const storedProfile = localStorage.getItem(`profile-${address}`);
-      if (storedProfile) {
-        setProfileData(JSON.parse(storedProfile));
+      const profile = storageService.getProfile(address);
+      if (profile) {
+        setProfileData(profile);
       }
     }
   }, [isConnected, address]);
