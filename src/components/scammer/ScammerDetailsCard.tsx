@@ -150,7 +150,7 @@ export function ScammerDetailsCard({
             </div>
           ) : (
             <Link 
-              to={`/profile/${scammer.addedBy}`}
+              to={`/${addedByUsername || scammer.addedBy}`}
               className="text-xs bg-muted px-2 py-1 rounded font-mono hover:bg-muted/80 transition-colors hover:underline"
             >
               {addedByUsername || scammer.addedBy}

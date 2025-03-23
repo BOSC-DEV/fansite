@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -30,14 +29,24 @@ export function UserProfilePage() {
           return;
         }
         
-        // Fetch profile by username
-        const profileData = await storageService.getProfileByUsername(username);
+        console.log("Fetching profile for username:", username);
+        
+        // First try to get profile by username
+        let profileData = await storageService.getProfileByUsername(username);
+        
+        // If not found by username, try by wallet address (for backward compatibility)
+        if (!profileData) {
+          console.log("Profile not found by username, trying by wallet address");
+          profileData = await storageService.getProfile(username);
+        }
         
         if (!profileData) {
+          console.log("Profile not found");
           setError("Profile not found");
           return;
         }
         
+        console.log("Profile found:", profileData);
         setProfile(profileData);
         
         // Fetch scammers added by this user
@@ -46,6 +55,7 @@ export function UserProfilePage() {
           scammer => scammer.addedBy === profileData.walletAddress
         );
         
+        console.log(`Found ${userScammers.length} scammers by this user`);
         setScammers(userScammers);
       } catch (err) {
         console.error("Error fetching profile data:", err);

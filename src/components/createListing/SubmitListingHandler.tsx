@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { storageService } from "@/services/storage";
 import { scammerService } from "@/services/storage/scammerService";
-import { CheckCircle2 } from "lucide-react";
+import { profileService } from "@/services/storage/profileService";
 
 interface SubmitListingHandlerProps {
   name: string;
