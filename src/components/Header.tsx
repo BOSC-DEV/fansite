@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
 import { Link, useLocation } from "react-router-dom";
-import { Wallet, Home, Award, BookOpen, User, Trophy, Leaf } from "lucide-react";
+import { Wallet, Home, Award, BookOpen, User, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProfileButton } from "./profile/ProfileButton";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -63,11 +63,7 @@ export const Header = () => {
         {/* Logo */}
         <div className="flex-shrink-0 mr-8">
           <Link to="/" className="flex items-center space-x-2 text-xl">
-            <div className="relative w-8 h-8">
-              <Leaf className="absolute text-western-accent transform rotate-[30deg] w-7 h-7" />
-              <div className="absolute bottom-0 left-0 right-0 h-5 bg-western-parchment rounded-full transform translate-y-1/4 opacity-80"></div>
-            </div>
-            <span className="font-wanted text-western-parchment">BOSC</span>
+            <span className="font-wanted text-western-parchment"></span>
           </Link>
         </div>
         
