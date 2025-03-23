@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Index from './pages/Index';
@@ -30,7 +31,8 @@ function App() {
         <Route path="/my-bounties" element={<MyBountiesPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <Toaster position="top-center" />
+      <Toaster />
+      <Sonner />
     </Router>
   );
 }
