@@ -5,20 +5,20 @@ interface AdditionalInfoFieldsProps {
   currentLink: string;
   setCurrentLink: (value: string) => void;
   links: string[];
-  handleAddLink: () => void;
-  removeLink: (link: string) => void;
+  handleAddLink: (e: React.FormEvent) => void;
+  removeLink: (index: number) => void;
   
   currentAlias: string;
   setCurrentAlias: (value: string) => void;
   aliases: string[];
-  handleAddAlias: () => void;
-  removeAlias: (alias: string) => void;
+  handleAddAlias: (e: React.FormEvent) => void;
+  removeAlias: (index: number) => void;
   
   currentAccomplice: string;
   setCurrentAccomplice: (value: string) => void;
   accomplices: string[];
-  handleAddAccomplice: () => void;
-  removeAccomplice: (accomplice: string) => void;
+  handleAddAccomplice: (e: React.FormEvent) => void;
+  removeAccomplice: (index: number) => void;
   
   officialResponse: string;
   setOfficialResponse: (value: string) => void;
@@ -52,7 +52,12 @@ export function AdditionalInfoFields({
         values={links}
         setCurrentValue={setCurrentLink}
         addValue={handleAddLink}
-        removeValue={removeLink}
+        removeValue={(link: string) => {
+          const index = links.indexOf(link);
+          if (index !== -1) {
+            removeLink(index);
+          }
+        }}
       />
 
       <TagInput
@@ -62,7 +67,12 @@ export function AdditionalInfoFields({
         values={aliases}
         setCurrentValue={setCurrentAlias}
         addValue={handleAddAlias}
-        removeValue={removeAlias}
+        removeValue={(alias: string) => {
+          const index = aliases.indexOf(alias);
+          if (index !== -1) {
+            removeAlias(index);
+          }
+        }}
       />
 
       <TagInput
@@ -72,7 +82,12 @@ export function AdditionalInfoFields({
         values={accomplices}
         setCurrentValue={setCurrentAccomplice}
         addValue={handleAddAccomplice}
-        removeValue={removeAccomplice}
+        removeValue={(accomplice: string) => {
+          const index = accomplices.indexOf(accomplice);
+          if (index !== -1) {
+            removeAccomplice(index);
+          }
+        }}
       />
 
       <TextAreaField
