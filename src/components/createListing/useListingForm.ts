@@ -1,96 +1,65 @@
 
-import { useState } from "react";
-import { toast } from "sonner";
+import { useBasicInfoForm } from "@/hooks/useBasicInfoForm";
+import { useLinksForm } from "@/hooks/useLinksForm";
+import { useAliasesForm } from "@/hooks/useAliasesForm";
+import { useAccomplicesForm } from "@/hooks/useAccomplicesForm";
+import { useResponseForm } from "@/hooks/useResponseForm";
+import { useFormValidation } from "@/hooks/useFormValidation";
 
 export function useListingForm() {
-  const [name, setName] = useState("");
-  const [photoUrl, setPhotoUrl] = useState("");
-  const [accusedOf, setAccusedOf] = useState("");
-  const [currentLink, setCurrentLink] = useState("");
-  const [links, setLinks] = useState<string[]>([]);
-  const [currentAlias, setCurrentAlias] = useState("");
-  const [aliases, setAliases] = useState<string[]>([]);
-  const [currentAccomplice, setCurrentAccomplice] = useState("");
-  const [accomplices, setAccomplices] = useState<string[]>([]);
-  const [officialResponse, setOfficialResponse] = useState("");
-
-  const handleAddLink = () => {
-    if (currentLink.trim() && !links.includes(currentLink.trim())) {
-      setLinks([...links, currentLink.trim()]);
-      setCurrentLink("");
-    }
-  };
-
-  const handleAddAlias = () => {
-    if (currentAlias.trim() && !aliases.includes(currentAlias.trim())) {
-      setAliases([...aliases, currentAlias.trim()]);
-      setCurrentAlias("");
-    }
-  };
-
-  const handleAddAccomplice = () => {
-    if (currentAccomplice.trim() && !accomplices.includes(currentAccomplice.trim())) {
-      setAccomplices([...accomplices, currentAccomplice.trim()]);
-      setCurrentAccomplice("");
-    }
-  };
-
-  const removeLink = (link: string) => {
-    setLinks(links.filter(l => l !== link));
-  };
-
-  const removeAlias = (alias: string) => {
-    setAliases(aliases.filter(a => a !== alias));
-  };
-
-  const removeAccomplice = (accomplice: string) => {
-    setAccomplices(accomplices.filter(a => a !== accomplice));
-  };
+  const basicInfo = useBasicInfoForm();
+  const linksForm = useLinksForm();
+  const aliasesForm = useAliasesForm();
+  const accomplicesForm = useAccomplicesForm();
+  const responseForm = useResponseForm();
+  const { validateForm: validateFormBase } = useFormValidation();
 
   const validateForm = (): boolean => {
-    let isValid = true;
-    const errors: string[] = [];
-    
-    if (!name.trim()) {
-      errors.push("Name is required");
-      isValid = false;
-    }
-    
-    if (!accusedOf.trim()) {
-      errors.push("Accusation is required");
-      isValid = false;
-    }
-    
-    // If photoUrl is empty, we'll use a placeholder later
-    if (!photoUrl) {
-      // This is just a warning, not an error that should block submission
-      toast.info("No image provided - a placeholder will be used");
-    }
-    
-    if (errors.length > 0) {
-      toast.error(errors.join(", "));
-    }
-    
-    return isValid;
+    return validateFormBase({
+      name: basicInfo.name,
+      accusedOf: basicInfo.accusedOf,
+      photoUrl: basicInfo.photoUrl
+    });
   };
 
   return {
-    name, setName,
-    photoUrl, setPhotoUrl,
-    accusedOf, setAccusedOf,
-    currentLink, setCurrentLink,
-    links, setLinks,
-    currentAlias, setCurrentAlias,
-    aliases, setAliases,
-    currentAccomplice, setCurrentAccomplice,
-    accomplices, setAccomplices,
-    officialResponse, setOfficialResponse,
-    handleAddLink,
-    handleAddAlias,
-    handleAddAccomplice,
-    removeLink,
-    removeAlias,
-    removeAccomplice,
+    // Basic info
+    name: basicInfo.name, 
+    setName: basicInfo.setName,
+    photoUrl: basicInfo.photoUrl, 
+    setPhotoUrl: basicInfo.setPhotoUrl,
+    accusedOf: basicInfo.accusedOf, 
+    setAccusedOf: basicInfo.setAccusedOf,
+    
+    // Links
+    currentLink: linksForm.currentLink, 
+    setCurrentLink: linksForm.setCurrentLink,
+    links: linksForm.links, 
+    setLinks: linksForm.setLinks,
+    handleAddLink: linksForm.handleAddLink,
+    removeLink: linksForm.removeLink,
+    
+    // Aliases
+    currentAlias: aliasesForm.currentAlias, 
+    setCurrentAlias: aliasesForm.setCurrentAlias,
+    aliases: aliasesForm.aliases, 
+    setAliases: aliasesForm.setAliases,
+    handleAddAlias: aliasesForm.handleAddAlias,
+    removeAlias: aliasesForm.removeAlias,
+    
+    // Accomplices
+    currentAccomplice: accomplicesForm.currentAccomplice, 
+    setCurrentAccomplice: accomplicesForm.setCurrentAccomplice,
+    accomplices: accomplicesForm.accomplices, 
+    setAccomplices: accomplicesForm.setAccomplices,
+    handleAddAccomplice: accomplicesForm.handleAddAccomplice,
+    removeAccomplice: accomplicesForm.removeAccomplice,
+    
+    // Official response
+    officialResponse: responseForm.officialResponse, 
+    setOfficialResponse: responseForm.setOfficialResponse,
+    
+    // Form validation
     validateForm
   };
 }
