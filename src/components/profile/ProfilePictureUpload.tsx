@@ -28,8 +28,8 @@ export function ProfilePictureUpload({
     const file = event.target.files?.[0];
     if (!file) return;
     
-    if (file.size > 2 * 1024 * 1024) {  // Increased to 2MB
-      toast.error("File size should be less than 2MB");
+    if (file.size > 1 * 1024 * 1024) {  // Changed to 1MB
+      toast.error("File size should be less than 1MB");
       return;
     }
 
@@ -91,7 +91,7 @@ export function ProfilePictureUpload({
       />
       
       <p className="text-xs text-muted-foreground text-center">
-        Max file size: 2MB<br />
+        Max file size: 1MB<br />
         Supported formats: JPEG, PNG, GIF
       </p>
 
