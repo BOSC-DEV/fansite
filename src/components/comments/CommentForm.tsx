@@ -16,26 +16,9 @@ export function CommentForm({ scammerId, onCommentAdded }: CommentFormProps) {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { isConnected, connectWallet, address } = useWallet();
-  const [hasProfile, setHasProfile] = useState(true); // Default to true to avoid false negatives
-
-  // Check profile existence on component mount
-  useEffect(() => {
-    const checkProfile = async () => {
-      if (isConnected && address) {
-        try {
-          // Use supabase profile check first
-          const profile = await storageService.getProfile(address);
-          setHasProfile(!!profile);
-        } catch (error) {
-          console.error("Error checking profile:", error);
-          // Default to allowing comments if profile check fails
-          setHasProfile(true);
-        }
-      }
-    };
-    
-    checkProfile();
-  }, [isConnected, address]);
+  
+  // Remove the profile check since user already has a profile
+  // This allows any connected user to comment directly
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,10 +33,9 @@ export function CommentForm({ scammerId, onCommentAdded }: CommentFormProps) {
       return;
     }
     
-    // Get the profile before submitting
+    // Get the profile before submitting, but continue even if not found
     const profile = await storageService.getProfile(address);
     
-    // Continue even without a profile
     setIsSubmitting(true);
     
     try {

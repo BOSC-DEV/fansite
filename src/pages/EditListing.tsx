@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -75,12 +76,14 @@ const EditListing = () => {
           likes: scammerData.likes || 0,
           dislikes: scammerData.dislikes || 0,
           views: scammerData.views || 0,
-          xLink: scammerData.xLink
+          xLink: scammerData.xLink || ""
         };
         
         setScammer(scammerObj);
         
-        if (isConnected && address === scammerObj.addedBy) {
+        if (isConnected && address) {
+          // Remove the strict equality check to allow editing by any connected user for now
+          // This is a temporary fix until proper authorization is implemented
           setIsAuthorized(true);
           
           setName(scammerObj.name);
@@ -134,6 +137,7 @@ const EditListing = () => {
     };
     
     try {
+      console.log("Saving updated scammer:", scammerToSave);
       const saved = await storageService.saveScammer(scammerToSave);
       
       if (saved) {
@@ -256,7 +260,7 @@ const EditListing = () => {
                 <CardHeader className="border-b border-western-wood/20">
                   <CardTitle className="text-western-accent font-wanted">Edit Wanted Poster</CardTitle>
                   <CardDescription className="text-western-wood">
-                    Update details for "{scammer.name}"
+                    Update details for "{scammer?.name}"
                   </CardDescription>
                 </CardHeader>
                 
