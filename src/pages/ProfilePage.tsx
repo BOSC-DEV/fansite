@@ -118,15 +118,7 @@ export function ProfilePage() {
                 </div>
               </Card>
             </div>
-          ) : isConnected && !profileData && !isLoading ? (
-            <Alert className="mb-8">
-              <Info className="h-4 w-4" />
-              <AlertTitle>No Profile Found</AlertTitle>
-              <AlertDescription>
-                You haven't created a profile yet. Fill out the form below to create your profile.
-              </AlertDescription>
-            </Alert>
-          ) : null}
+          ) : null /* Removed the "No Profile Found" alert box */}
           
           {supabaseReady ? (
             <UserProfile />
