@@ -62,14 +62,15 @@ export function useScammerDetail(id: string | undefined) {
               name: supabaseScammer.name,
               photoUrl: supabaseScammer.photoUrl,
               accusedOf: supabaseScammer.accusedOf,
-              links: supabaseScammer.links,
-              aliases: supabaseScammer.aliases,
-              accomplices: supabaseScammer.accomplices,
+              links: supabaseScammer.links || [],
+              aliases: supabaseScammer.aliases || [],
+              accomplices: supabaseScammer.accomplices || [],
               officialResponse: supabaseScammer.officialResponse,
               bountyAmount: supabaseScammer.bountyAmount,
               walletAddress: supabaseScammer.walletAddress || "",
               dateAdded: new Date(supabaseScammer.dateAdded),
-              addedBy: supabaseScammer.addedBy
+              addedBy: supabaseScammer.addedBy,
+              xLink: supabaseScammer.xLink
             });
             
             setScammerStats({
@@ -105,14 +106,15 @@ export function useScammerDetail(id: string | undefined) {
                 name: localScammer.name,
                 photoUrl: localScammer.photoUrl,
                 accusedOf: localScammer.accusedOf,
-                links: localScammer.links,
-                aliases: localScammer.aliases,
-                accomplices: localScammer.accomplices,
+                links: localScammer.links || [],
+                aliases: localScammer.aliases || [],
+                accomplices: localScammer.accomplices || [],
                 officialResponse: localScammer.officialResponse,
                 bountyAmount: localScammer.bountyAmount,
                 walletAddress: localScammer.walletAddress || "",
                 dateAdded: new Date(localScammer.dateAdded),
-                addedBy: localScammer.addedBy
+                addedBy: localScammer.addedBy,
+                xLink: localScammer.xLink
               });
               
               setScammerStats({
@@ -149,14 +151,15 @@ export function useScammerDetail(id: string | undefined) {
               name: localScammer.name,
               photoUrl: localScammer.photoUrl,
               accusedOf: localScammer.accusedOf,
-              links: localScammer.links,
-              aliases: localScammer.aliases,
-              accomplices: localScammer.accomplices,
+              links: localScammer.links || [],
+              aliases: localScammer.aliases || [],
+              accomplices: localScammer.accomplices || [],
               officialResponse: localScammer.officialResponse,
               bountyAmount: localScammer.bountyAmount,
               walletAddress: localScammer.walletAddress || "",
               dateAdded: new Date(localScammer.dateAdded),
-              addedBy: localScammer.addedBy
+              addedBy: localScammer.addedBy,
+              xLink: localScammer.xLink
             });
             
             setScammerStats({
