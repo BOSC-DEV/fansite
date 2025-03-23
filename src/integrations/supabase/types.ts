@@ -163,6 +163,7 @@ export type Database = {
           photo_url: string | null
           views: number | null
           wallet_address: string | null
+          x_link: string | null
         }
         Insert: {
           accomplices?: Json | null
@@ -181,6 +182,7 @@ export type Database = {
           photo_url?: string | null
           views?: number | null
           wallet_address?: string | null
+          x_link?: string | null
         }
         Update: {
           accomplices?: Json | null
@@ -199,6 +201,7 @@ export type Database = {
           photo_url?: string | null
           views?: number | null
           wallet_address?: string | null
+          x_link?: string | null
         }
         Relationships: []
       }
