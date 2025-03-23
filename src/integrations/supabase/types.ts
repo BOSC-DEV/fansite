@@ -145,27 +145,6 @@ export type Database = {
         }
         Relationships: []
       }
-      scammer_views: {
-        Row: {
-          id: string
-          ip_hash: string
-          scammer_id: string
-          viewed_at: string | null
-        }
-        Insert: {
-          id?: string
-          ip_hash: string
-          scammer_id: string
-          viewed_at?: string | null
-        }
-        Update: {
-          id?: string
-          ip_hash?: string
-          scammer_id?: string
-          viewed_at?: string | null
-        }
-        Relationships: []
-      }
       scammers: {
         Row: {
           accomplices: Json | null
@@ -223,33 +202,6 @@ export type Database = {
           views?: number | null
           wallet_address?: string | null
           x_link?: string | null
-        }
-        Relationships: []
-      }
-      user_scammer_interactions: {
-        Row: {
-          disliked: boolean | null
-          id: string
-          last_updated: string | null
-          liked: boolean | null
-          scammer_id: string
-          user_id: string
-        }
-        Insert: {
-          disliked?: boolean | null
-          id?: string
-          last_updated?: string | null
-          liked?: boolean | null
-          scammer_id: string
-          user_id: string
-        }
-        Update: {
-          disliked?: boolean | null
-          id?: string
-          last_updated?: string | null
-          liked?: boolean | null
-          scammer_id?: string
-          user_id?: string
         }
         Relationships: []
       }

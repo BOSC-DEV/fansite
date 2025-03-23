@@ -49,20 +49,13 @@ export function AdditionalInfoFields({
   xLink,
   setXLink
 }: AdditionalInfoFieldsProps) {
-  console.log("AdditionalInfoFields rendering with:", {
-    links,
-    aliases,
-    accomplices,
-    xLink
-  });
-  
   return (
     <>
       <TagInput
         label="Links to Evidence"
         placeholder="https://example.com/evidence"
         currentValue={currentLink}
-        values={links || []}
+        values={links}
         setCurrentValue={setCurrentLink}
         addValue={handleAddLink}
         removeValue={removeLink}
@@ -72,7 +65,7 @@ export function AdditionalInfoFields({
         id="xLink"
         label="X.com Profile Link"
         placeholder="https://x.com/username"
-        value={xLink || ""}
+        value={xLink}
         onChange={(e) => setXLink(e.target.value)}
         required={false}
         icon={<X className="h-4 w-4" />}
@@ -82,7 +75,7 @@ export function AdditionalInfoFields({
         label="Known Aliases"
         placeholder="Add alias or nickname"
         currentValue={currentAlias}
-        values={aliases || []}
+        values={aliases}
         setCurrentValue={setCurrentAlias}
         addValue={handleAddAlias}
         removeValue={removeAlias}
@@ -92,7 +85,7 @@ export function AdditionalInfoFields({
         label="Known Accomplices"
         placeholder="Add accomplice name"
         currentValue={currentAccomplice}
-        values={accomplices || []}
+        values={accomplices}
         setCurrentValue={setCurrentAccomplice}
         addValue={handleAddAccomplice}
         removeValue={removeAccomplice}
@@ -102,7 +95,7 @@ export function AdditionalInfoFields({
         id="officialResponse"
         label="Official Response (if any)"
         placeholder="Any official statements or responses from authorities"
-        value={officialResponse || ""}
+        value={officialResponse}
         onChange={(e) => setOfficialResponse(e.target.value)}
         required={false}
       />

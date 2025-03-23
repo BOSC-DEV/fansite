@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { storageService } from "@/services/storage/storageService";
+import { storageService } from "@/services/storage/localStorageService";
 import { scammerService } from "@/services/storage";
 import { Scammer } from "@/lib/types";
 import { toast } from "sonner";
@@ -50,7 +50,7 @@ export function useScammerDetail(id: string | undefined) {
         try {
           console.log("Attempting to load scammer with ID:", id);
           
-          // First try to load from Supabase - properly await the Promise
+          // First try to load from Supabase
           const supabaseScammer = await scammerService.getScammer(id);
           
           if (supabaseScammer) {
@@ -62,15 +62,14 @@ export function useScammerDetail(id: string | undefined) {
               name: supabaseScammer.name,
               photoUrl: supabaseScammer.photoUrl,
               accusedOf: supabaseScammer.accusedOf,
-              links: supabaseScammer.links || [],
-              aliases: supabaseScammer.aliases || [],
-              accomplices: supabaseScammer.accomplices || [],
+              links: supabaseScammer.links,
+              aliases: supabaseScammer.aliases,
+              accomplices: supabaseScammer.accomplices,
               officialResponse: supabaseScammer.officialResponse,
               bountyAmount: supabaseScammer.bountyAmount,
               walletAddress: supabaseScammer.walletAddress || "",
               dateAdded: new Date(supabaseScammer.dateAdded),
-              addedBy: supabaseScammer.addedBy,
-              xLink: supabaseScammer.xLink
+              addedBy: supabaseScammer.addedBy
             });
             
             setScammerStats({
@@ -106,15 +105,14 @@ export function useScammerDetail(id: string | undefined) {
                 name: localScammer.name,
                 photoUrl: localScammer.photoUrl,
                 accusedOf: localScammer.accusedOf,
-                links: localScammer.links || [],
-                aliases: localScammer.aliases || [],
-                accomplices: localScammer.accomplices || [],
+                links: localScammer.links,
+                aliases: localScammer.aliases,
+                accomplices: localScammer.accomplices,
                 officialResponse: localScammer.officialResponse,
                 bountyAmount: localScammer.bountyAmount,
                 walletAddress: localScammer.walletAddress || "",
                 dateAdded: new Date(localScammer.dateAdded),
-                addedBy: localScammer.addedBy,
-                xLink: localScammer.xLink
+                addedBy: localScammer.addedBy
               });
               
               setScammerStats({
@@ -151,15 +149,14 @@ export function useScammerDetail(id: string | undefined) {
               name: localScammer.name,
               photoUrl: localScammer.photoUrl,
               accusedOf: localScammer.accusedOf,
-              links: localScammer.links || [],
-              aliases: localScammer.aliases || [],
-              accomplices: localScammer.accomplices || [],
+              links: localScammer.links,
+              aliases: localScammer.aliases,
+              accomplices: localScammer.accomplices,
               officialResponse: localScammer.officialResponse,
               bountyAmount: localScammer.bountyAmount,
               walletAddress: localScammer.walletAddress || "",
               dateAdded: new Date(localScammer.dateAdded),
-              addedBy: localScammer.addedBy,
-              xLink: localScammer.xLink
+              addedBy: localScammer.addedBy
             });
             
             setScammerStats({

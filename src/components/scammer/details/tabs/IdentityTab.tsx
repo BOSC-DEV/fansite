@@ -6,9 +6,7 @@ interface IdentityTabProps {
   aliases: string[];
 }
 
-export function IdentityTab({ aliases = [] }: IdentityTabProps) {
-  console.log("IdentityTab rendering with aliases:", aliases);
-  
+export function IdentityTab({ aliases }: IdentityTabProps) {
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Known Aliases</h3>

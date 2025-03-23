@@ -54,9 +54,3 @@ export interface UserScammerInteraction {
   disliked: boolean;
   lastUpdated: string;
 }
-
-export interface ScammerView {
-  scammerId: string;
-  ipHash: string;
-  viewedAt: string;
-}

@@ -1,4 +1,3 @@
-
 import { Scammer } from "@/lib/types";
 
 // Types for our localStorage data structures
@@ -159,17 +158,6 @@ class LocalStorageService {
       comment.dislikes = (comment.dislikes || 0) + 1;
       this.saveComment(comment);
     }
-  }
-
-  // Helper function to generate a simple hash for IP address
-  hashIpAddress(ip: string): string {
-    let hash = 0;
-    for (let i = 0; i < ip.length; i++) {
-      const char = ip.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash.toString(16);
   }
 }
 
