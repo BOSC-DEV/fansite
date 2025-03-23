@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -110,7 +109,8 @@ const EditListing = () => {
               bountyAmount: localScammer.bountyAmount,
               walletAddress: localScammer.walletAddress || "",
               dateAdded: new Date(localScammer.dateAdded),
-              addedBy: localScammer.addedBy
+              addedBy: localScammer.addedBy,
+              xLink: localScammer.xLink || ""
             };
             
             setScammer(scammerObj);
@@ -314,39 +314,18 @@ const EditListing = () => {
                     currentLink={currentLink}
                     setCurrentLink={setCurrentLink}
                     links={links}
-                    handleAddLink={() => {
-                      if (currentLink.trim()) {
-                        setLinks([...links, currentLink.trim()]);
-                        setCurrentLink("");
-                      }
-                    }}
-                    removeLink={(link) => {
-                      setLinks(links.filter(l => l !== link));
-                    }}
+                    handleAddLink={handleAddLinkWrapper}
+                    removeLink={removeLinkWrapper}
                     currentAlias={currentAlias}
                     setCurrentAlias={setCurrentAlias}
                     aliases={aliases}
-                    handleAddAlias={() => {
-                      if (currentAlias.trim()) {
-                        setAliases([...aliases, currentAlias.trim()]);
-                        setCurrentAlias("");
-                      }
-                    }}
-                    removeAlias={(alias) => {
-                      setAliases(aliases.filter(a => a !== alias));
-                    }}
+                    handleAddAlias={handleAddAliasWrapper}
+                    removeAlias={removeAliasWrapper}
                     currentAccomplice={currentAccomplice}
                     setCurrentAccomplice={setCurrentAccomplice}
                     accomplices={accomplices}
-                    handleAddAccomplice={() => {
-                      if (currentAccomplice.trim()) {
-                        setAccomplices([...accomplices, currentAccomplice.trim()]);
-                        setCurrentAccomplice("");
-                      }
-                    }}
-                    removeAccomplice={(accomplice) => {
-                      setAccomplices(accomplices.filter(a => a !== accomplice));
-                    }}
+                    handleAddAccomplice={handleAddAccompliceWrapper}
+                    removeAccomplice={removeAccompliceWrapper}
                     officialResponse={officialResponse}
                     setOfficialResponse={setOfficialResponse}
                     xLink={xLink}
