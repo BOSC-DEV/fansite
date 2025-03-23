@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@/context/WalletContext";
@@ -78,9 +79,6 @@ export function FormContainer() {
     setIsSubmitting(true);
     
     try {
-      // First ensure that the storage bucket exists
-      await storageService.ensureProfileImagesBucketExists();
-      
       // In a real implementation, you would validate the turnstile token server-side
       console.log("Turnstile token for verification:", turnstileToken);
       
@@ -110,9 +108,18 @@ export function FormContainer() {
       // Save to localStorage
       storageService.saveScammer(scammerListing);
       
+      // Try to save to Supabase if available (but don't block on it)
+      try {
+        await storageService.scammerService.saveScammer(scammerListing);
+      } catch (error) {
+        console.error("Failed to save to Supabase, but saved locally:", error);
+        // Continue with local storage version only
+      }
+      
       toast.success("Scammer successfully added to the Book of Scams!");
       
-      setTimeout(() => navigate(`/scammer/${scammerId}`), 1000);
+      // Wait briefly for toast to be visible then navigate
+      setTimeout(() => navigate(`/scammer/${scammerId}`), 1500);
     } catch (error: any) {
       console.error("Error creating listing:", error);
       toast.error(`Failed to create listing: ${error.message || "Please try again"}`);

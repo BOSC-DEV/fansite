@@ -61,7 +61,11 @@ export function useListingForm() {
       isValid = false;
     }
     
-    // Removed the photoUrl validation since we'll handle that in the image upload component now
+    // If photoUrl is empty, we'll use a placeholder later
+    if (!photoUrl) {
+      // This is just a warning, not an error that should block submission
+      toast.info("No image provided - a placeholder will be used");
+    }
     
     if (errors.length > 0) {
       toast.error(errors.join(", "));

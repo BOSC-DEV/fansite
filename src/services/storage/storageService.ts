@@ -7,7 +7,7 @@ export class StorageService extends BaseSupabaseService {
   // Create a storage bucket for profile images if it doesn't exist
   async ensureProfileImagesBucketExists() {
     try {
-      // Check if the bucket exists
+      // Try to list buckets first
       const { data: buckets, error: listError } = await this.supabase.storage.listBuckets();
       
       if (listError) {
@@ -25,13 +25,8 @@ export class StorageService extends BaseSupabaseService {
         
         if (error) {
           console.error('Error creating profile-images bucket:', error);
+          // We'll consider this a non-fatal error, just return false
           return false;
-        }
-        
-        // Set bucket policy to public
-        const { error: policyError } = await this.supabase.storage.from('profile-images').createSignedUrl('dummy.txt', 60);
-        if (policyError && !policyError.message.includes('not found')) {
-          console.error('Error setting bucket policy:', policyError);
         }
         
         return true;
@@ -46,13 +41,20 @@ export class StorageService extends BaseSupabaseService {
 
   async uploadProfileImage(file: File, userId: string): Promise<string | null> {
     try {
-      // Ensure bucket exists first
-      await this.ensureProfileImagesBucketExists();
-      
       // Generate a unique file name
       const fileExt = file.name.split('.').pop();
       const fileName = `${userId}-${Date.now()}.${fileExt}`;
       const filePath = `${fileName}`;
+      
+      // Try to get a signed URL to check if the bucket exists and is accessible
+      const { data: urlData, error: urlError } = await this.supabase.storage
+        .from('profile-images')
+        .createSignedUrl(filePath, 60);
+      
+      if (urlError && !urlError.message.includes('not found')) {
+        // The bucket exists but we can't access it
+        console.error("Error testing bucket access:", urlError);
+      }
       
       // Upload the file to the 'profile-images' bucket
       const { error: uploadError, data } = await this.supabase.storage
@@ -65,23 +67,22 @@ export class StorageService extends BaseSupabaseService {
       if (uploadError) {
         console.error('Error uploading image:', uploadError);
         
-        // If the error is due to the bucket not existing, try creating it and uploading again
-        if (uploadError.message.includes('Bucket not found')) {
-          const bucketCreated = await this.ensureProfileImagesBucketExists();
-          if (bucketCreated) {
-            return this.uploadProfileImage(file, userId); // Try again after creating bucket
-          }
+        // If the error is due to permissions or bucket not existing, we'll use a placeholder
+        if (uploadError.message.includes('Bucket not found') || 
+            uploadError.message.includes('row-level security policy')) {
+          // Return a placeholder image URL instead
+          return `https://ui-avatars.com/api/?name=${encodeURIComponent(userId)}&background=random`;
         }
         
         return null;
       }
       
       // Get the public URL for the uploaded file
-      const { data: urlData } = this.supabase.storage
+      const { data: publicUrlData } = this.supabase.storage
         .from('profile-images')
         .getPublicUrl(filePath);
         
-      return urlData.publicUrl;
+      return publicUrlData.publicUrl;
     } catch (error) {
       console.error('Error in uploadProfileImage:', error);
       return null;

@@ -10,7 +10,9 @@ import { CommentSection } from "@/components/comments/CommentSection";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { storageService } from "@/services/storage/localStorageService";
+import { scammerService } from "@/services/storage/scammerService";
 import { Scammer } from "@/lib/types";
+import { toast } from "sonner";
 
 const ScammerDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -19,26 +21,75 @@ const ScammerDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadScammer = () => {
+    const loadScammer = async () => {
       setIsLoading(true);
       if (id) {
-        const scammerData = storageService.getScammer(id);
-        if (scammerData) {
-          // Convert to Scammer type
-          setScammer({
-            id: scammerData.id,
-            name: scammerData.name,
-            photoUrl: scammerData.photoUrl,
-            accusedOf: scammerData.accusedOf,
-            links: scammerData.links,
-            aliases: scammerData.aliases,
-            accomplices: scammerData.accomplices,
-            officialResponse: scammerData.officialResponse,
-            bountyAmount: scammerData.bountyAmount,
-            walletAddress: "",  // No longer using specific wallet addresses
-            dateAdded: new Date(scammerData.dateAdded),
-            addedBy: scammerData.addedBy
-          });
+        try {
+          // First try to load from Supabase
+          const supabaseScammer = await scammerService.getScammer(id);
+          
+          if (supabaseScammer) {
+            // Convert to Scammer type
+            setScammer({
+              id: supabaseScammer.id,
+              name: supabaseScammer.name,
+              photoUrl: supabaseScammer.photoUrl,
+              accusedOf: supabaseScammer.accusedOf,
+              links: supabaseScammer.links,
+              aliases: supabaseScammer.aliases,
+              accomplices: supabaseScammer.accomplices,
+              officialResponse: supabaseScammer.officialResponse,
+              bountyAmount: supabaseScammer.bountyAmount,
+              walletAddress: "",
+              dateAdded: new Date(supabaseScammer.dateAdded),
+              addedBy: supabaseScammer.addedBy
+            });
+          } else {
+            // If not found in Supabase, try localStorage
+            const localScammer = storageService.getScammer(id);
+            
+            if (localScammer) {
+              setScammer({
+                id: localScammer.id,
+                name: localScammer.name,
+                photoUrl: localScammer.photoUrl,
+                accusedOf: localScammer.accusedOf,
+                links: localScammer.links,
+                aliases: localScammer.aliases,
+                accomplices: localScammer.accomplices,
+                officialResponse: localScammer.officialResponse,
+                bountyAmount: localScammer.bountyAmount,
+                walletAddress: "",
+                dateAdded: new Date(localScammer.dateAdded),
+                addedBy: localScammer.addedBy
+              });
+            } else {
+              console.error("Scammer not found in either Supabase or localStorage");
+            }
+          }
+        } catch (error) {
+          console.error("Error loading scammer:", error);
+          // Fallback to localStorage if Supabase fails
+          const localScammer = storageService.getScammer(id);
+          
+          if (localScammer) {
+            setScammer({
+              id: localScammer.id,
+              name: localScammer.name,
+              photoUrl: localScammer.photoUrl,
+              accusedOf: localScammer.accusedOf,
+              links: localScammer.links,
+              aliases: localScammer.aliases,
+              accomplices: localScammer.accomplices,
+              officialResponse: localScammer.officialResponse,
+              bountyAmount: localScammer.bountyAmount,
+              walletAddress: "",
+              dateAdded: new Date(localScammer.dateAdded),
+              addedBy: localScammer.addedBy
+            });
+          } else {
+            toast.error("Failed to load scammer details");
+          }
         }
       }
       setIsLoading(false);
@@ -89,7 +140,6 @@ const ScammerDetail = () => {
               formatDate={formatDate}
             />
             
-            {/* Add comment section below the details card */}
             <div className="mt-8">
               <CommentSection scammerId={scammer.id} />
             </div>
