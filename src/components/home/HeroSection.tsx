@@ -9,11 +9,6 @@ export const HeroSection = () => {
       <div className="container mx-auto max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
           <div className="space-y-4 md:space-y-6 md:pr-8 animate-fade-in">
-            <div className="inline-flex items-center rounded-full px-3 py-1 text-sm font-bold bg-western-accent/10 text-western-accent border-2 border-dashed border-western-accent/50">
-              <Star className="h-3.5 w-3.5 mr-1 animate-spin-slow" />
-              <span>Authentic Wild West Bounties</span>
-            </div>
-            
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-wanted text-western-accent uppercase tracking-wide wanted-poster">
               BOOK OF SCAMS
             </h1>
