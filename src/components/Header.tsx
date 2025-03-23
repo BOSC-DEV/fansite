@@ -1,9 +1,11 @@
+
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Wallet, Menu, X, Home, BookOpen, Award } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ProfileButton } from "./profile/ProfileButton";
 
 export const Header = () => {
   const { isConnected, address, balance, connectWallet, disconnectWallet, connecting } = useWallet();
@@ -93,6 +95,9 @@ export const Header = () => {
                 <Wallet className="h-4 w-4 mr-2" />
                 Disconnect
               </Button>
+              
+              {/* Add the profile button */}
+              <ProfileButton />
             </div>
           ) : (
             <Button
@@ -153,6 +158,15 @@ export const Header = () => {
                     <span className="text-sm font-medium text-western-parchment">Balance</span>
                     <span className="text-sm text-western-sand font-bold">{balance} BOSC</span>
                   </div>
+                  
+                  {/* Add profile link in mobile menu */}
+                  <Link to="/profile" className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-western-parchment">Profile</span>
+                    <Button variant="ghost" size="sm" className="p-0 h-auto text-western-sand hover:text-western-parchment">
+                      <span>Manage</span>
+                    </Button>
+                  </Link>
+                  
                   <Button variant="outline" size="sm" onClick={handleConnectClick} className="w-full mt-2 text-western-parchment border-western-sand/50 hover:bg-western-sand/20">
                     <Wallet className="h-4 w-4 mr-2" />
                     Disconnect
