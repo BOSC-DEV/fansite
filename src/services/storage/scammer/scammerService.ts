@@ -38,7 +38,8 @@ class ScammerService {
           likes: dbRecord.likes || 0,
           dislikes: dbRecord.dislikes || 0,
           views: dbRecord.views || 0,
-          comments: dbRecord.comments
+          comments: dbRecord.comments,
+          x_link: dbRecord.x_link
         }, { 
           onConflict: 'id',
           ignoreDuplicates: false 

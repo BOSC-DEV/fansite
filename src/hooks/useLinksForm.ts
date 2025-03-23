@@ -4,6 +4,7 @@ import { useState } from "react";
 export function useLinksForm() {
   const [currentLink, setCurrentLink] = useState("");
   const [links, setLinks] = useState<string[]>([]);
+  const [xLink, setXLink] = useState("");
 
   const handleAddLink = () => {
     if (currentLink.trim() && !links.includes(currentLink.trim())) {
@@ -22,6 +23,8 @@ export function useLinksForm() {
     links, 
     setLinks,
     handleAddLink,
-    removeLink
+    removeLink,
+    xLink,
+    setXLink
   };
 }

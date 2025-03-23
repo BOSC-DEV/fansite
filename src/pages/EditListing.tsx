@@ -24,7 +24,8 @@ const EditListing = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [scammer, setScammer] = useState<Scammer | null>(null);
   const [isAuthorized, setIsAuthorized] = useState(false);
-  
+  const [xLink, setXLink] = useState("");
+
   const { 
     name, setName,
     photoUrl, setPhotoUrl,
@@ -73,7 +74,8 @@ const EditListing = () => {
           addedBy: scammerData.addedBy,
           likes: scammerData.likes || 0,
           dislikes: scammerData.dislikes || 0,
-          views: scammerData.views || 0
+          views: scammerData.views || 0,
+          xLink: scammerData.xLink
         };
         
         setScammer(scammerObj);
@@ -88,6 +90,7 @@ const EditListing = () => {
           setAliases(scammerObj.aliases);
           setAccomplices(scammerObj.accomplices);
           setOfficialResponse(scammerObj.officialResponse);
+          setXLink(scammerObj.xLink || "");
         }
       } catch (error) {
         console.error("Error loading scammer for editing:", error);
@@ -117,6 +120,7 @@ const EditListing = () => {
       aliases,
       accomplices,
       officialResponse,
+      xLink,
       dateAdded: scammer.dateAdded.toISOString(),
       likes: scammer.likes,
       dislikes: scammer.dislikes,
@@ -284,6 +288,8 @@ const EditListing = () => {
                     removeAccomplice={removeAccompliceWrapper}
                     officialResponse={officialResponse}
                     setOfficialResponse={setOfficialResponse}
+                    xLink={xLink}
+                    setXLink={setXLink}
                   />
 
                   <ListingDisclaimer />

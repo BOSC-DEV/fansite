@@ -22,6 +22,7 @@ export interface ScammerListing {
   likes: number;
   dislikes: number;
   views: number;
+  xLink?: string; // Added X.com link field
 }
 
 export interface ScammerStats {
@@ -47,4 +48,5 @@ export interface ScammerDbRecord {
   dislikes: number | null;
   views: number | null;
   comments: Json | null;
+  x_link: string | null; // Added X.com link field
 }
