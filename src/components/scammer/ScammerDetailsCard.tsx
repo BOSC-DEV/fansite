@@ -165,23 +165,18 @@ export function ScammerDetailsCard({
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-          <ScammerSidebar
-            name={scammer.name}
-            photoUrl={scammer.photoUrl}
-            dateAdded={scammer.dateAdded.toString()} // Convert Date to string
-            addedBy={scammer.addedBy}
-            addedByUsername={addedByUsername}
-            isProfileLoading={isProfileLoading}
-            likes={likes}
-            dislikes={dislikes}
-            views={views}
-            isLiked={isLiked}
-            isDisliked={isDisliked}
-            onLike={handleLike}
-            onDislike={handleDislike}
-            formatDate={formatDate}
-          />
+        <div className="flex flex-col md:flex-row md:items-start gap-6">
+          <div className="md:w-1/3 lg:w-1/4 sm:mx-auto md:mx-0">
+            <ScammerSidebar
+              name={scammer.name}
+              photoUrl={scammer.photoUrl}
+              dateAdded={scammer.dateAdded.toString()} // Convert Date to string
+              addedBy={scammer.addedBy}
+              addedByUsername={addedByUsername}
+              isProfileLoading={isProfileLoading}
+              formatDate={formatDate}
+            />
+          </div>
           
           <div className="flex-1">
             <ScammerContent 
@@ -189,6 +184,13 @@ export function ScammerDetailsCard({
               links={scammer.links}
               accomplices={scammer.accomplices}
               officialResponse={scammer.officialResponse}
+              likes={likes}
+              dislikes={dislikes}
+              views={views}
+              isLiked={isLiked}
+              isDisliked={isDisliked}
+              onLike={handleLike}
+              onDislike={handleDislike}
             />
           </div>
         </div>

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { ThumbsUp, ThumbsDown, View } from "lucide-react";
+import { ThumbsUp, ThumbsDown, Eye } from "lucide-react";
 
 interface ScammerInteractionButtonsProps {
   likes: number;
@@ -50,7 +50,7 @@ export function ScammerInteractionButtons({
       
       <div className="flex flex-col items-center">
         <div className="h-10 w-10 rounded-full border flex items-center justify-center">
-          <View className="h-5 w-5" />
+          <Eye className="h-5 w-5" />
         </div>
         <span className="text-sm mt-1">{views}</span>
       </div>
