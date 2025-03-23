@@ -1,13 +1,19 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { ThumbsUp, ThumbsDown, UserCircle2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { storageService } from "@/services/storage/localStorageService";
 
 export interface CommentType {
   id: string;
-  author: string;
-  authorAvatar?: string;
   content: string;
-  timestamp: Date;
+  author: string;
+  authorName: string;
+  authorProfilePic: string;
+  createdAt: string;
+  likes: number;
+  dislikes: number;
 }
 
 interface CommentProps {
@@ -15,24 +21,56 @@ interface CommentProps {
 }
 
 export function Comment({ comment }: CommentProps) {
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return formatDistanceToNow(date, { addSuffix: true });
+  };
+
+  const handleLike = () => {
+    storageService.likeComment(comment.id);
+  };
+
+  const handleDislike = () => {
+    storageService.dislikeComment(comment.id);
+  };
+
   return (
-    <div className="flex gap-4 py-4">
-      <Avatar className="h-10 w-10">
-        <AvatarImage src={comment.authorAvatar} alt={comment.author} />
-        <AvatarFallback className="bg-muted">
-          {comment.author.charAt(0).toUpperCase()}
-        </AvatarFallback>
-      </Avatar>
-      
-      <div className="flex-1 space-y-1">
-        <div className="flex items-center justify-between">
-          <p className="text-sm font-medium">{comment.author}</p>
-          <span className="text-xs text-muted-foreground">
-            {formatDistanceToNow(comment.timestamp, { addSuffix: true })}
-          </span>
+    <Card className="border-western-wood/30 bg-transparent">
+      <CardHeader className="pb-2 pt-4 px-4">
+        <div className="flex items-center space-x-3">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src={comment.authorProfilePic} alt={comment.authorName} />
+            <AvatarFallback className="bg-western-sand text-western-wood">
+              <UserCircle2 className="h-4 w-4" />
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="text-sm font-medium">{comment.authorName}</p>
+            <p className="text-xs text-muted-foreground">{formatDate(comment.createdAt)}</p>
+          </div>
         </div>
-        <p className="text-sm text-card-foreground">{comment.content}</p>
-      </div>
-    </div>
+      </CardHeader>
+      <CardContent className="pb-2 px-4">
+        <p className="text-sm">{comment.content}</p>
+      </CardContent>
+      <CardFooter className="pt-0 pb-2 px-4">
+        <div className="flex items-center space-x-4">
+          <button 
+            onClick={handleLike}
+            className="flex items-center space-x-1 text-xs hover:text-green-600 transition-colors"
+          >
+            <ThumbsUp className="h-3 w-3" />
+            <span>{comment.likes || 0}</span>
+          </button>
+          <button 
+            onClick={handleDislike}
+            className="flex items-center space-x-1 text-xs hover:text-red-600 transition-colors"
+          >
+            <ThumbsDown className="h-3 w-3" />
+            <span>{comment.dislikes || 0}</span>
+          </button>
+        </div>
+      </CardFooter>
+    </Card>
   );
 }

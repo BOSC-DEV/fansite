@@ -1,98 +1,107 @@
 
 import { useState, useEffect } from "react";
-import { useWallet } from "@/context/WalletContext";
+import { Link } from "react-router-dom";
 import { Header } from "@/components/Header";
-import { Scammer } from "@/lib/types";
-import ConnectWallet from "@/components/ConnectWallet";
-import { BookView } from "@/components/BookView";
 import { SearchBar } from "@/components/search/SearchBar";
 import { SortAndViewControls } from "@/components/sort/SortAndViewControls";
 import { ScammerTable } from "@/components/scammer/ScammerTable";
 import { NoResults } from "@/components/scammer/NoResults";
-import { PageHeader } from "@/components/layout/PageHeader";
-import { SiteFooter } from "@/components/layout/SiteFooter";
-import { ScammerStatsCard } from "@/components/stats/ScammerStatsCard";
-import { FileText } from "lucide-react";
-
-// Change this to 1 for the book view to show one scammer per page
-const ITEMS_PER_PAGE = 1;
+import { ScammerCard } from "@/components/ScammerCard";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { Scammer } from "@/lib/types";
+import { storageService } from "@/services/storage/localStorageService";
 
 const MostWanted = () => {
-  const { isConnected, chainId } = useWallet();
   const [scammers, setScammers] = useState<Scammer[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortOption, setSortOption] = useState<"recent" | "bounty">("bounty");
+  const [filteredScammers, setFilteredScammers] = useState<Scammer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [viewMode, setViewMode] = useState<"list" | "book">("list");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [viewType, setViewType] = useState<"grid" | "table">("table");
+  const [sortBy, setSortBy] = useState<"newest" | "oldest" | "bounty">("newest");
 
   useEffect(() => {
-    const fetchScammers = async () => {
+    const loadScammers = () => {
       setIsLoading(true);
       try {
-        // In production, this would fetch from your contract or API
-        // const data = await getAllScammers();
-        // setScammers(data);
+        const storedScammers = storageService.getAllScammers();
         
-        // Temporarily use empty array until contract is ready
-        setScammers([]);
+        // Convert to Scammer type
+        const scammersList: Scammer[] = storedScammers.map(s => ({
+          id: s.id,
+          name: s.name,
+          photoUrl: s.photoUrl,
+          accusedOf: s.accusedOf,
+          links: s.links,
+          aliases: s.aliases,
+          accomplices: s.accomplices,
+          officialResponse: s.officialResponse,
+          bountyAmount: s.bountyAmount,
+          walletAddress: s.walletAddress,
+          dateAdded: new Date(s.dateAdded),
+          addedBy: s.addedBy
+        }));
+        
+        setScammers(scammersList);
+        setFilteredScammers(scammersList);
       } catch (error) {
-        console.error("Error fetching scammers:", error);
+        console.error("Error loading scammers:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    if (isConnected) {
-      fetchScammers();
-    } else {
-      setScammers([]);
-      setIsLoading(false);
-    }
-  }, [isConnected, chainId]);
+    loadScammers();
+  }, []);
 
-  // Reset to page 1 when search query changes
   useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, viewMode]);
-
-  const filteredScammers = scammers.filter(scammer => 
-    scammer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    scammer.accusedOf.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    scammer.aliases?.some(alias => alias.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
-
-  const sortedScammers = [...filteredScammers].sort((a, b) => {
-    if (sortOption === "recent") {
-      return new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime();
-    } else {
-      return b.bountyAmount - a.bountyAmount;
+    let result = [...scammers];
+    
+    // Apply search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        scammer => 
+          scammer.name.toLowerCase().includes(query) ||
+          scammer.accusedOf.toLowerCase().includes(query) ||
+          scammer.aliases.some(alias => alias.toLowerCase().includes(query))
+      );
     }
-  });
+    
+    // Apply sorting
+    result = [...result].sort((a, b) => {
+      if (sortBy === "newest") {
+        return b.dateAdded.getTime() - a.dateAdded.getTime();
+      } else if (sortBy === "oldest") {
+        return a.dateAdded.getTime() - b.dateAdded.getTime();
+      } else if (sortBy === "bounty") {
+        return b.bountyAmount - a.bountyAmount;
+      }
+      return 0;
+    });
+    
+    setFilteredScammers(result);
+    setCurrentPage(1);
+  }, [scammers, searchQuery, sortBy]);
 
-  // Pagination
-  const totalPages = Math.ceil(sortedScammers.length / ITEMS_PER_PAGE);
-  const paginatedScammers = sortedScammers.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
-
-  const toggleSort = () => {
-    setSortOption(sortOption === "recent" ? "bounty" : "recent");
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
   };
 
-  const toggleViewMode = () => {
-    setViewMode(viewMode === "list" ? "book" : "list");
+  const handleSortChange = (sort: "newest" | "oldest" | "bounty") => {
+    setSortBy(sort);
   };
 
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
-    }).format(date);
+  const handleViewChange = (view: "grid" | "table") => {
+    setViewType(view);
   };
-  
+
+  const itemsPerPage = viewType === "grid" ? 12 : 10;
+  const totalPages = Math.max(1, Math.ceil(filteredScammers.length / itemsPerPage));
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedScammers = filteredScammers.slice(startIndex, startIndex + itemsPerPage);
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'decimal',
@@ -101,87 +110,113 @@ const MostWanted = () => {
     }).format(amount);
   };
 
-  const LoadingSkeletons = () => (
-    <div className="space-y-2">
-      {[1, 2, 3, 4, 5].map((item) => (
-        <div key={item} className="h-16 bg-card border animate-pulse rounded-md"></div>
-      ))}
-    </div>
-  );
+  const formatDate = (date: Date) => {
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    }).format(date);
+  };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen old-paper">
       <Header />
-
-      <main className="flex-1 pt-28 pb-16">
+      <main className="pt-28 pb-16">
         <div className="container mx-auto max-w-6xl px-4">
-          <PageHeader 
-            title="Most Wanted"
-            description="Tracking scammers and fraudsters in the crypto space"
-            actionLink="/create-listing"
-            actionLabel="Report a Scammer"
-            actionIcon={<FileText className="h-4 w-4 mr-2" />}
-          />
-
-          {/* Stats card */}
-          {isConnected && !isLoading && sortedScammers.length > 0 && (
-            <ScammerStatsCard scammers={sortedScammers} />
-          )}
-
-          {/* Search and filter controls */}
-          <div className="mb-8 flex flex-col sm:flex-row gap-4">
-            <SearchBar 
-              searchQuery={searchQuery} 
-              setSearchQuery={setSearchQuery} 
-            />
-            
-            <SortAndViewControls 
-              sortOption={sortOption}
-              toggleSort={toggleSort}
-              viewMode={viewMode}
-              toggleViewMode={toggleViewMode}
-            />
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h1 className="text-3xl font-wanted text-western-accent mb-2">Most Wanted Scammers</h1>
+              <p className="text-western-wood max-w-xl">Browse the list of reported scammers in the crypto space</p>
+            </div>
+            <Button asChild>
+              <Link to="/create-listing" className="bg-western-accent hover:bg-western-accent/90 text-western-parchment">
+                <Plus className="mr-2 h-4 w-4" />
+                Report a Scammer
+              </Link>
+            </Button>
           </div>
+          
+          <div className="space-y-6">
+            <div className="flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
+              <SearchBar 
+                onSearch={handleSearch} 
+                initialQuery={searchQuery}
+              />
+              
+              <SortAndViewControls
+                viewType={viewType}
+                sortBy={sortBy}
+                onViewChange={handleViewChange}
+                onSortChange={handleSortChange}
+              />
+            </div>
 
-          {!isConnected ? (
-            <ConnectWallet 
-              message="Connect your wallet to view and interact with the Most Wanted list"
-              className="max-w-2xl mx-auto my-12"
-            />
-          ) : isLoading ? (
-            <LoadingSkeletons />
-          ) : sortedScammers.length > 0 ? (
-            viewMode === "list" ? (
-              <ScammerTable 
-                paginatedScammers={sortedScammers.slice(
-                  (currentPage - 1) * 10,  // Keep list view at 10 per page
-                  currentPage * 10
-                )}
-                currentPage={currentPage}
-                totalPages={Math.ceil(sortedScammers.length / 10)}  // Keep list view at 10 per page
-                itemsPerPage={10}  // Keep list view at 10 per page
-                setCurrentPage={setCurrentPage}
-                formatCurrency={formatCurrency}
-                formatDate={formatDate}
-              />
+            {isLoading ? (
+              <div className="flex justify-center items-center py-20">
+                <p className="text-western-wood">Loading scammers...</p>
+              </div>
+            ) : filteredScammers.length === 0 ? (
+              <NoResults query={searchQuery} />
+            ) : viewType === "table" ? (
+              <div className="paper-texture border-2 border-western-wood rounded-sm">
+                <ScammerTable 
+                  paginatedScammers={paginatedScammers}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  itemsPerPage={itemsPerPage}
+                  setCurrentPage={setCurrentPage}
+                  formatCurrency={formatCurrency}
+                  formatDate={formatDate}
+                />
+              </div>
             ) : (
-              <BookView 
-                scammers={paginatedScammers} 
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onNextPage={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                onPrevPage={() => setCurrentPage(p => Math.max(1, p - 1))}
-                formatCurrency={formatCurrency}
-                formatDate={formatDate}
-              />
-            )
-          ) : (
-            <NoResults searchQuery={searchQuery} />
-          )}
+              <div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {paginatedScammers.map((scammer) => (
+                    <ScammerCard
+                      key={scammer.id}
+                      scammer={scammer}
+                    />
+                  ))}
+                </div>
+                
+                {totalPages > 1 && (
+                  <div className="flex justify-center mt-8">
+                    <div className="flex space-x-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                        disabled={currentPage === 1}
+                      >
+                        Previous
+                      </Button>
+                      <div className="flex items-center space-x-1">
+                        {[...Array(totalPages)].map((_, i) => (
+                          <Button
+                            key={i}
+                            variant={currentPage === i + 1 ? "default" : "outline"}
+                            className="w-8 h-8 p-0"
+                            onClick={() => setCurrentPage(i + 1)}
+                          >
+                            {i + 1}
+                          </Button>
+                        ))}
+                      </div>
+                      <Button
+                        variant="outline"
+                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                        disabled={currentPage === totalPages}
+                      >
+                        Next
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </main>
-
-      <SiteFooter />
     </div>
   );
 };

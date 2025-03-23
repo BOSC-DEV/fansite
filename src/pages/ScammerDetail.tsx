@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { ScammerDetailsCard } from "@/components/scammer/ScammerDetailsCard";
@@ -9,18 +9,43 @@ import { BountyContribution } from "@/components/BountyContribution";
 import { CommentSection } from "@/components/comments/CommentSection";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { fetchScammerById } from "@/services/web3/scammers";
+import { storageService } from "@/services/storage/localStorageService";
+import { Scammer } from "@/lib/types";
 
 const ScammerDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [scammer, setScammer] = useState<Scammer | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { data: scammer, isLoading, error } = useQuery({
-    queryKey: ['scammer', id],
-    queryFn: () => fetchScammerById(id || ''),
-    enabled: !!id
-  });
+  useEffect(() => {
+    const loadScammer = () => {
+      setIsLoading(true);
+      if (id) {
+        const scammerData = storageService.getScammer(id);
+        if (scammerData) {
+          // Convert to Scammer type
+          setScammer({
+            id: scammerData.id,
+            name: scammerData.name,
+            photoUrl: scammerData.photoUrl,
+            accusedOf: scammerData.accusedOf,
+            links: scammerData.links,
+            aliases: scammerData.aliases,
+            accomplices: scammerData.accomplices,
+            officialResponse: scammerData.officialResponse,
+            bountyAmount: scammerData.bountyAmount,
+            walletAddress: scammerData.walletAddress,
+            dateAdded: new Date(scammerData.dateAdded),
+            addedBy: scammerData.addedBy
+          });
+        }
+      }
+      setIsLoading(false);
+    };
+
+    loadScammer();
+  }, [id]);
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
@@ -34,7 +59,7 @@ const ScammerDetail = () => {
     return <ScammerDetailSkeleton />;
   }
 
-  if (error || !scammer) {
+  if (!scammer) {
     return <ScammerNotFound />;
   }
 
@@ -82,6 +107,6 @@ const ScammerDetail = () => {
       </div>
     </div>
   );
-};
+}
 
 export default ScammerDetail;

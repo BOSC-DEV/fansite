@@ -2,79 +2,139 @@
 import { useState, useEffect } from "react";
 import { CommentList } from "./CommentList";
 import { CommentForm } from "./CommentForm";
-import { CommentType } from "./Comment";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, ThumbsUp, ThumbsDown, Eye } from "lucide-react";
+import { storageService, Comment } from "@/services/storage/localStorageService";
+import { Badge } from "@/components/ui/badge";
 
 interface CommentSectionProps {
   scammerId: string;
 }
 
 export function CommentSection({ scammerId }: CommentSectionProps) {
-  const [comments, setComments] = useState<CommentType[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [scammerStats, setScammerStats] = useState({
+    likes: 0,
+    dislikes: 0,
+    views: 0
+  });
 
   useEffect(() => {
-    const fetchComments = async () => {
-      setIsLoading(true);
-      try {
-        // This would connect to your actual API endpoint
-        // const response = await fetch(`/api/comments/${scammerId}`);
-        // const data = await response.json();
-        // setComments(data);
-        
-        // Temporarily use empty array until backend is ready
-        setComments([]);
-      } catch (error) {
-        console.error("Error fetching comments:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchComments();
+    loadComments();
+    loadScammerStats();
+    
+    // Increment view count when component mounts
+    storageService.incrementScammerViews(scammerId);
   }, [scammerId]);
 
-  const handleCommentAdded = async () => {
-    // In production, this would refetch comments from the API
+  const loadComments = () => {
+    setIsLoading(true);
     try {
-      // const response = await fetch(`/api/comments/${scammerId}`);
-      // const data = await response.json();
-      // setComments(data);
-      
-      // For now, just refresh the empty comments array
-      setComments([...comments]);
+      const loadedComments = storageService.getCommentsForScammer(scammerId);
+      setComments(loadedComments);
     } catch (error) {
-      console.error("Error refreshing comments:", error);
+      console.error("Error fetching comments:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  const loadScammerStats = () => {
+    const scammer = storageService.getScammer(scammerId);
+    if (scammer) {
+      setScammerStats({
+        likes: scammer.likes || 0,
+        dislikes: scammer.dislikes || 0,
+        views: scammer.views || 0
+      });
+    }
+  };
+
+  const handleCommentAdded = () => {
+    loadComments();
+  };
+
+  const handleLikeScammer = () => {
+    storageService.likeScammer(scammerId);
+    loadScammerStats();
+  };
+
+  const handleDislikeScammer = () => {
+    storageService.dislikeScammer(scammerId);
+    loadScammerStats();
+  };
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-xl">
-          <MessageSquare className="h-5 w-5" />
-          Comments
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <CommentForm 
-          scammerId={scammerId} 
-          onCommentAdded={handleCommentAdded} 
-        />
-        
-        {isLoading ? (
-          <div className="py-4 text-center">
-            <p className="text-muted-foreground">Loading comments...</p>
+    <div className="space-y-6">
+      <Card className="mb-6">
+        <CardHeader className="pb-3">
+          <div className="flex justify-between items-center">
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <MessageSquare className="h-5 w-5" />
+              Listing Stats
+            </CardTitle>
           </div>
-        ) : comments.length > 0 ? (
-          <CommentList comments={comments} />
-        ) : (
-          <div className="py-6 text-center">
-            <p className="text-muted-foreground">No comments yet. Be the first to comment!</p>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between">
+            <div className="flex space-x-4">
+              <button 
+                onClick={handleLikeScammer}
+                className="flex items-center space-x-1 text-sm hover:text-green-600 transition-colors"
+              >
+                <ThumbsUp className="h-4 w-4" />
+                <span>{scammerStats.likes}</span>
+              </button>
+
+              <button 
+                onClick={handleDislikeScammer}
+                className="flex items-center space-x-1 text-sm hover:text-red-600 transition-colors"
+              >
+                <ThumbsDown className="h-4 w-4" />
+                <span>{scammerStats.dislikes}</span>
+              </button>
+            </div>
+
+            <div className="flex items-center space-x-1 text-sm text-muted-foreground">
+              <Eye className="h-4 w-4" />
+              <span>{scammerStats.views} views</span>
+            </div>
           </div>
-        )}
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <MessageSquare className="h-5 w-5" />
+              Comments
+            </CardTitle>
+            <Badge variant="outline">
+              {comments.length} {comments.length === 1 ? "comment" : "comments"}
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <CommentForm 
+            scammerId={scammerId} 
+            onCommentAdded={handleCommentAdded} 
+          />
+          
+          {isLoading ? (
+            <div className="py-4 text-center">
+              <p className="text-muted-foreground">Loading comments...</p>
+            </div>
+          ) : comments.length > 0 ? (
+            <CommentList comments={comments} />
+          ) : (
+            <div className="py-6 text-center">
+              <p className="text-muted-foreground">No comments yet. Be the first to comment!</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 }

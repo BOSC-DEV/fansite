@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
+import { storageService } from "@/services/storage/localStorageService";
 
 interface CommentFormProps {
   scammerId: string;
@@ -13,7 +15,7 @@ interface CommentFormProps {
 export function CommentForm({ scammerId, onCommentAdded }: CommentFormProps) {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { isConnected, connectWallet } = useWallet();
+  const { isConnected, connectWallet, address } = useWallet();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,14 +25,37 @@ export function CommentForm({ scammerId, onCommentAdded }: CommentFormProps) {
       return;
     }
     
+    if (!address) {
+      toast.error("You must be connected with a wallet to comment");
+      return;
+    }
+    
+    // Check if user has a profile
+    const profile = storageService.getProfile(address);
+    if (!profile) {
+      toast.error("You need to create a profile before commenting");
+      return;
+    }
+    
     setIsSubmitting(true);
     
     try {
-      // In a real app, this would call an API to save the comment
-      console.log("Submitting comment for scammer", scammerId, content);
+      // Create a new comment
+      const commentId = uuidv4();
+      const comment = {
+        id: commentId,
+        scammerId,
+        content: content.trim(),
+        author: address,
+        authorName: profile.displayName,
+        authorProfilePic: profile.profilePicUrl,
+        createdAt: new Date().toISOString(),
+        likes: 0,
+        dislikes: 0
+      };
       
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Save to localStorage
+      storageService.saveComment(comment);
       
       toast.success("Comment added successfully");
       setContent("");

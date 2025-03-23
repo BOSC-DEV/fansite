@@ -2,8 +2,27 @@
 import { FormContainer } from "./createListing/FormContainer";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Shield } from "lucide-react";
+import { useWallet } from "@/context/WalletContext";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { storageService } from "@/services/storage/localStorageService";
+import { toast } from "sonner";
 
 export function CreateListingForm() {
+  const { isConnected, address } = useWallet();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user has a profile
+    if (isConnected && address) {
+      const hasProfile = storageService.hasProfile(address);
+      if (!hasProfile) {
+        toast.info("You need to create a profile before reporting a scammer");
+        navigate("/profile");
+      }
+    }
+  }, [isConnected, address, navigate]);
+
   return (
     <div className="space-y-6">
       <Alert className="border-western-wood bg-western-sand/20">

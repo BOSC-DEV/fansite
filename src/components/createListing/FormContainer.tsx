@@ -11,7 +11,6 @@ import {
   CardTitle 
 } from "@/components/ui/card";
 import { toast } from "sonner";
-import web3Provider from "@/services/web3Provider";
 import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
 import { ListingDisclaimer } from "@/components/scammer/ListingDisclaimer";
 import { ListingFormActions } from "@/components/scammer/ListingFormActions";
@@ -20,7 +19,9 @@ import { BasicInfoFields } from "./BasicInfoFields";
 import { AdditionalInfoFields } from "./AdditionalInfoFields";
 import { CloudflareTurnstile } from "@/components/CloudflareTurnstile";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Info, Shield } from "lucide-react";
+import { Shield } from "lucide-react";
+import { v4 as uuidv4 } from "uuid";
+import { storageService } from "@/services/storage/localStorageService";
 
 // Get Cloudflare Turnstile site key from environment variables or use development key as fallback
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY || '1x00000000000000000000BB';
@@ -76,23 +77,43 @@ export function FormContainer() {
     
     try {
       // In a real implementation, you would validate the turnstile token server-side
-      // before proceeding with the transaction
       console.log("Turnstile token for verification:", turnstileToken);
       
-      const scammerId = await web3Provider.addScammer(name, accusedOf, photoUrl);
-      
-      if (!scammerId) {
-        throw new Error("Failed to create scammer listing");
+      // Get user profile
+      const userProfile = storageService.getProfile(address || "");
+      if (!userProfile) {
+        throw new Error("Profile not found. Please create a profile first.");
       }
       
-      console.log("Creating scammer listing with ID:", scammerId);
-      console.log("Wallet for bounties controlled by developer:", DEVELOPER_WALLET_ADDRESS);
-      console.log("Listing created by user wallet:", address);
+      // Generate scammer ID
+      const scammerId = uuidv4();
+      
+      // Create the scammer listing
+      const scammerListing = {
+        id: scammerId,
+        name,
+        photoUrl,
+        accusedOf,
+        links,
+        aliases,
+        accomplices,
+        officialResponse,
+        bountyAmount: 0, // No bounty for now
+        walletAddress: DEVELOPER_WALLET_ADDRESS,
+        dateAdded: new Date().toISOString(),
+        addedBy: address || "",
+        comments: [],
+        likes: 0,
+        dislikes: 0,
+        views: 0
+      };
+      
+      // Save to localStorage
+      storageService.saveScammer(scammerListing);
       
       toast.success("Scammer successfully added to the Book of Scams!");
-      toast.info("Bounty wallet is now controlled by the developer");
       
-      setTimeout(() => navigate("/most-wanted"), 1000);
+      setTimeout(() => navigate(`/scammer/${scammerId}`), 1000);
     } catch (error: any) {
       console.error("Error creating listing:", error);
       toast.error(`Failed to create listing: ${error.message || "Please try again"}`);
