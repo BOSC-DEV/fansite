@@ -46,7 +46,8 @@ export class ScammerDataProcessor {
       addedBy: record.added_by || '',
       likes: record.likes || 0,
       dislikes: record.dislikes || 0,
-      views: record.views || 0
+      views: record.views || 0,
+      xLink: record.x_link || '' // Add the xLink property here
     };
   }
 
@@ -71,7 +72,8 @@ export class ScammerDataProcessor {
       likes: listing.likes || 0,
       dislikes: listing.dislikes || 0,
       views: listing.views || 0,
-      comments: null
+      comments: null,
+      x_link: listing.xLink || "" // Add the x_link property here
     };
   }
 }
