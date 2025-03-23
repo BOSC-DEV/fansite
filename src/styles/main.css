@@ -1,0 +1,8 @@
+
+/* Main CSS file that imports all the other CSS files */
+@import './base.css';
+@import './animations.css';
+@import './western/borders.css';
+@import './western/backgrounds.css';
+@import './western/components.css';
+@import './western/badges.css';
