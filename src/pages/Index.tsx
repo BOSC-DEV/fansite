@@ -31,7 +31,7 @@ const Index = () => {
       
       <main className="flex-grow">
         <HeroSection />
-        <div className="relative">
+        <div className="relative px-0">
           <div className="torn-edge-top"></div>
           <FeaturedScammers />
           <div className="torn-edge-bottom"></div>
