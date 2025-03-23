@@ -8,13 +8,16 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserCircle2, Upload } from "lucide-react";
+import { UserCircle2, Upload, Twitter, Globe } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 export function UserProfile() {
   const { isConnected, address } = useWallet();
   const navigate = useNavigate();
   const [displayName, setDisplayName] = useState("");
   const [profilePicUrl, setProfilePicUrl] = useState("");
+  const [xLink, setXLink] = useState("");
+  const [websiteLink, setWebsiteLink] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -27,6 +30,8 @@ export function UserProfile() {
         const profile = JSON.parse(storedProfile);
         setDisplayName(profile.displayName);
         setProfilePicUrl(profile.profilePicUrl);
+        setXLink(profile.xLink || "");
+        setWebsiteLink(profile.websiteLink || "");
         setHasProfile(true);
       }
     }
@@ -57,6 +62,17 @@ export function UserProfile() {
       return;
     }
 
+    // Validate URLs if provided
+    if (xLink && !isValidUrl(xLink)) {
+      toast.error("Please enter a valid X (Twitter) URL");
+      return;
+    }
+
+    if (websiteLink && !isValidUrl(websiteLink)) {
+      toast.error("Please enter a valid website URL");
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
@@ -65,6 +81,8 @@ export function UserProfile() {
         const profile = {
           displayName,
           profilePicUrl,
+          xLink,
+          websiteLink,
           walletAddress: address,
           createdAt: new Date().toISOString()
         };
@@ -81,6 +99,15 @@ export function UserProfile() {
       toast.error("Failed to save profile");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const isValidUrl = (url: string) => {
+    try {
+      new URL(url);
+      return true;
+    } catch (e) {
+      return false;
     }
   };
 
@@ -153,27 +180,66 @@ export function UserProfile() {
             </div>
           )}
 
-          <div className="space-y-2">
-            <Label htmlFor="displayName">Display Name</Label>
-            <Input
-              id="displayName"
-              placeholder="Your Name"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-              required
-            />
-          </div>
+          <Tabs defaultValue="basic" className="w-full">
+            <TabsList className="w-full grid grid-cols-2">
+              <TabsTrigger value="basic">Basic Info</TabsTrigger>
+              <TabsTrigger value="social">Social Links</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="basic" className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="displayName">Display Name</Label>
+                <Input
+                  id="displayName"
+                  placeholder="Your Name"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  required
+                />
+              </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="walletAddress">Wallet Address</Label>
-            <Input
-              id="walletAddress"
-              value={address || ""}
-              disabled
-              className="bg-muted"
-            />
-            <p className="text-xs text-muted-foreground">Your connected wallet address (public)</p>
-          </div>
+              <div className="space-y-2">
+                <Label htmlFor="walletAddress">Wallet Address</Label>
+                <Input
+                  id="walletAddress"
+                  value={address || ""}
+                  disabled
+                  className="bg-muted"
+                />
+                <p className="text-xs text-muted-foreground">Your connected wallet address (public)</p>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="social" className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="xLink" className="flex items-center gap-2">
+                  <Twitter size={16} className="text-muted-foreground" />
+                  X (Twitter) Profile
+                </Label>
+                <Input
+                  id="xLink"
+                  placeholder="https://x.com/username"
+                  value={xLink}
+                  onChange={(e) => setXLink(e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground">Your X (Twitter) profile URL</p>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="websiteLink" className="flex items-center gap-2">
+                  <Globe size={16} className="text-muted-foreground" />
+                  Website
+                </Label>
+                <Input
+                  id="websiteLink"
+                  placeholder="https://example.com"
+                  value={websiteLink}
+                  onChange={(e) => setWebsiteLink(e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground">Your personal or business website</p>
+              </div>
+            </TabsContent>
+          </Tabs>
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button 
