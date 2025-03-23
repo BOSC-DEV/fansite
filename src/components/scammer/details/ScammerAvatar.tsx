@@ -29,7 +29,7 @@ export function ScammerAvatar({ name, photoUrl }: ScammerAvatarProps) {
             />
           ) : (
             <AvatarFallback className="rounded-lg bg-western-sand text-western-wood">
-              <UserCircle2 className="h-36 w-36 sm:h-48 sm:w-48" />
+              <UserCircle2 className="h-48 w-48 md:h-64 md:w-64" />
             </AvatarFallback>
           )}
         </Avatar>

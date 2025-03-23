@@ -23,7 +23,7 @@ export function ScammerInteractionButtons({
   onDislike
 }: ScammerInteractionButtonsProps) {
   return (
-    <div className="flex justify-center gap-4 mt-3">
+    <div className="flex justify-start gap-4">
       <div className="flex flex-col items-center">
         <Button 
           variant="outline"

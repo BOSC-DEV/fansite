@@ -39,7 +39,7 @@ export function ScammerContent({
     <div className="w-full">
       <Tabs defaultValue="identity" className="w-full">
         <div className="flex flex-col gap-6">
-          <div className="flex flex-row justify-between items-center gap-4 mt-4">
+          <div className="flex flex-row flex-wrap justify-between items-center gap-4 mt-6">
             <ScammerInteractionButtons
               likes={likes}
               dislikes={dislikes}
@@ -50,7 +50,7 @@ export function ScammerContent({
               onDislike={onDislike}
             />
             
-            <TabsList className="grid grid-cols-2 sm:grid-cols-4">
+            <TabsList className="grid grid-cols-4 w-auto">
               <TabsTrigger value="identity">Identity</TabsTrigger>
               <TabsTrigger value="evidence">Evidence</TabsTrigger>
               <TabsTrigger value="network">Network</TabsTrigger>

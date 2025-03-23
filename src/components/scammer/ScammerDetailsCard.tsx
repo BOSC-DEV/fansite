@@ -30,7 +30,7 @@ export function ScammerDetailsCard({
   scammer, 
   imageLoaded, 
   setImageLoaded, 
-  formatDate = (date) => new Date(date).toLocaleDateString(), // Default implementation accepts string 
+  formatDate = (date) => new Date(date).toLocaleDateString(), 
   scammerStats, 
   onLikeScammer, 
   onDislikeScammer 
@@ -165,12 +165,12 @@ export function ScammerDetailsCard({
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex flex-col md:flex-row md:items-start gap-6">
-          <div className="md:w-1/3 lg:w-1/4 sm:mx-auto md:mx-0">
+        <div className="flex flex-col gap-6">
+          <div className="md:w-full mx-auto">
             <ScammerSidebar
               name={scammer.name}
               photoUrl={scammer.photoUrl}
-              dateAdded={scammer.dateAdded.toString()} // Convert Date to string
+              dateAdded={scammer.dateAdded.toString()}
               addedBy={scammer.addedBy}
               addedByUsername={addedByUsername}
               isProfileLoading={isProfileLoading}
@@ -178,7 +178,7 @@ export function ScammerDetailsCard({
             />
           </div>
           
-          <div className="flex-1">
+          <div className="w-full">
             <ScammerContent 
               aliases={scammer.aliases}
               links={scammer.links}
