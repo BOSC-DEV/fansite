@@ -6,35 +6,55 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UserCircle2, Upload } from "lucide-react";
 import { toast } from "sonner";
+import { storageService } from "@/services/storage/supabaseService";
 
 interface ProfilePictureUploadProps {
   displayName: string;
   profilePicUrl: string;
   onProfilePicChange: (url: string) => void;
+  userId?: string;
 }
 
 export function ProfilePictureUpload({ 
   displayName, 
   profilePicUrl, 
-  onProfilePicChange 
+  onProfilePicChange,
+  userId
 }: ProfilePictureUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      if (file.size > 1 * 1024 * 1024) {
-        toast.error("File size should be less than 1MB");
-        return;
-      }
+    if (!file) return;
+    
+    if (file.size > 2 * 1024 * 1024) {  // Increased to 2MB
+      toast.error("File size should be less than 2MB");
+      return;
+    }
 
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === 'string') {
-          onProfilePicChange(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
+    if (!userId) {
+      toast.error("User ID is required for uploading images");
+      return;
+    }
+
+    setIsUploading(true);
+    
+    try {
+      // Upload the file to Supabase Storage
+      const imageUrl = await storageService.uploadProfileImage(file, userId);
+      
+      if (imageUrl) {
+        onProfilePicChange(imageUrl);
+        toast.success("Image uploaded successfully");
+      } else {
+        toast.error("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("Error uploading image");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -55,10 +75,11 @@ export function ProfilePictureUpload({
         type="button" 
         variant="outline" 
         onClick={triggerFileInput}
+        disabled={isUploading}
         className="flex items-center gap-2"
       >
         <Upload size={16} />
-        Upload Picture
+        {isUploading ? "Uploading..." : "Upload Picture"}
       </Button>
       
       <input 
@@ -70,7 +91,7 @@ export function ProfilePictureUpload({
       />
       
       <p className="text-xs text-muted-foreground text-center">
-        Max file size: 1MB<br />
+        Max file size: 2MB<br />
         Supported formats: JPEG, PNG, GIF
       </p>
 
@@ -83,7 +104,7 @@ export function ProfilePictureUpload({
             onChange={(e) => onProfilePicChange(e.target.value)}
             disabled
           />
-          <p className="text-xs text-muted-foreground">Your uploaded image or custom URL</p>
+          <p className="text-xs text-muted-foreground">Image URL (auto-filled after upload)</p>
         </div>
       )}
     </div>

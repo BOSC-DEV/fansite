@@ -49,7 +49,65 @@ const safeJsonToStringArray = (jsonArray: Json | null): string[] => {
   return [String(jsonArray)];
 };
 
+// Create a storage bucket for profile images if it doesn't exist
+async function ensureProfileImagesBucketExists() {
+  try {
+    // Check if the bucket exists
+    const { data: buckets } = await supabase.storage.listBuckets();
+    const bucketExists = buckets?.some(bucket => bucket.name === 'profile-images');
+    
+    if (!bucketExists) {
+      // Create the bucket if it doesn't exist
+      const { error } = await supabase.storage.createBucket('profile-images', {
+        public: true, // Make the bucket publicly accessible
+      });
+      
+      if (error) {
+        console.error('Error creating profile-images bucket:', error);
+      }
+    }
+  } catch (error) {
+    console.error('Error ensuring profile-images bucket exists:', error);
+  }
+}
+
+// Call this when the app initializes
+ensureProfileImagesBucketExists();
+
 class SupabaseService {
+  // File upload method
+  async uploadProfileImage(file: File, userId: string): Promise<string | null> {
+    try {
+      // Generate a unique file name
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${userId}-${Date.now()}.${fileExt}`;
+      const filePath = `${fileName}`;
+      
+      // Upload the file to the 'profile-images' bucket
+      const { error: uploadError } = await supabase.storage
+        .from('profile-images')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true // Overwrite if the file already exists
+        });
+        
+      if (uploadError) {
+        console.error('Error uploading image:', uploadError);
+        return null;
+      }
+      
+      // Get the public URL for the uploaded file
+      const { data } = supabase.storage
+        .from('profile-images')
+        .getPublicUrl(filePath);
+        
+      return data.publicUrl;
+    } catch (error) {
+      console.error('Error in uploadProfileImage:', error);
+      return null;
+    }
+  }
+
   // Profile methods
   async getProfile(walletAddress: string): Promise<UserProfile | null> {
     // Use maybeSingle() instead of single() to avoid errors when no profile exists

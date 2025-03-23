@@ -1,12 +1,13 @@
+
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProfilePictureUpload } from "./ProfilePictureUpload";
-import { BasicInfoForm } from "./BasicInfoForm";
 import { useProfileForm } from "./useProfileForm";
 import { Twitter, Globe } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+
 export function UserProfile() {
   const navigate = useNavigate();
   const {
@@ -20,8 +21,10 @@ export function UserProfile() {
     hasProfile,
     saveProfile,
     address,
-    isConnected
+    isConnected,
+    profileId
   } = useProfileForm();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const success = await saveProfile();
@@ -29,23 +32,33 @@ export function UserProfile() {
       navigate(-1);
     }
   };
+
   if (!isConnected) {
-    return <Card className="max-w-md mx-auto">
+    return (
+      <Card className="max-w-md mx-auto">
         <CardHeader>
           <CardTitle>Connect Your Wallet</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground">Please connect your wallet to create or update your profile.</p>
         </CardContent>
-      </Card>;
+      </Card>
+    );
   }
-  return <form onSubmit={handleSubmit}>
+
+  return (
+    <form onSubmit={handleSubmit}>
       <Card className="max-w-md mx-auto">
         <CardHeader>
           <CardTitle>{hasProfile ? "Update Your Profile" : "Create Your Profile"}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <ProfilePictureUpload displayName={formData.displayName} profilePicUrl={formData.profilePicUrl} onProfilePicChange={setProfilePicUrl} />
+          <ProfilePictureUpload 
+            displayName={formData.displayName} 
+            profilePicUrl={formData.profilePicUrl} 
+            onProfilePicChange={setProfilePicUrl}
+            userId={profileId || address}
+          />
           
           <div className="space-y-4">
             {/* Basic Info */}
@@ -57,7 +70,14 @@ export function UserProfile() {
 
               <div className="space-y-2">
                 <Label htmlFor="bio">Bio</Label>
-                <textarea id="bio" placeholder="Short bio about yourself (142 chars max)" value={formData.bio} onChange={handleBioChange} maxLength={142} className="resize-none w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[80px]" />
+                <textarea 
+                  id="bio" 
+                  placeholder="Short bio about yourself (142 chars max)" 
+                  value={formData.bio} 
+                  onChange={handleBioChange} 
+                  maxLength={142} 
+                  className="resize-none w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[80px]" 
+                />
                 <p className="text-xs text-muted-foreground flex justify-between">
                   <span>Brief description about yourself</span>
                   <span className={formData.bioCharCount > 120 ? "text-amber-500" : ""}>
@@ -106,6 +126,8 @@ export function UserProfile() {
           </Button>
         </CardFooter>
       </Card>
-    </form>;
+    </form>
+  );
 }
+
 export default UserProfile;

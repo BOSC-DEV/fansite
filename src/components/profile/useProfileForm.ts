@@ -178,5 +178,6 @@ export function useProfileForm() {
     address,
     isConnected,
     supabaseReady,
+    profileId,
   };
 }
