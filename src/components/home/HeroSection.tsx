@@ -6,9 +6,7 @@ export const HeroSection = () => {
       <div className="container mx-auto max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
           <div className="space-y-4 md:space-y-6 md:pr-8 animate-fade-in">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-wanted text-western-accent uppercase tracking-wide wanted-poster">
-              BOOK OF SCAMS
-            </h1>
+            <h1 className="sm:text-5xl md:text-6xl lg:text-7xl font-wanted text-western-accent uppercase tracking-wide wanted-poster mx-0 my-0 py-[20px] text-7xl px-0">$BOSC</h1>
             
             <p className="text-lg sm:text-xl text-western-wood max-w-lg font-western">
               A <span className="font-bold text-western-leather">decentralized registry</span> keeping track of 
