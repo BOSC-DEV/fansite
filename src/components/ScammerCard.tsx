@@ -2,11 +2,12 @@
 import { Scammer } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AlertCircle, ExternalLink } from "lucide-react";
+import { AlertCircle, ExternalLink, EyeIcon, ThumbsUp, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
+import { formatCurrency, formatDate, truncateText } from "@/utils/formatters";
 
 interface ScammerCardProps {
   scammer: Scammer;
@@ -16,24 +17,23 @@ interface ScammerCardProps {
 export function ScammerCard({ scammer, className }: ScammerCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
-    }).format(date);
-  };
+  const formattedBounty = useMemo(() => 
+    formatCurrency(scammer.bountyAmount), 
+  [scammer.bountyAmount]);
   
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'decimal',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
+  const formattedDate = useMemo(() => 
+    formatDate(scammer.dateAdded), 
+  [scammer.dateAdded]);
+  
+  const truncatedAccusation = useMemo(() => 
+    truncateText(scammer.accusedOf, 100), 
+  [scammer.accusedOf]);
 
   return (
-    <Card className={cn("overflow-hidden transition-all duration-300 hover:shadow-md h-full border-western-wood bg-western-parchment/80", className)}>
+    <Card className={cn(
+      "overflow-hidden transition-all duration-300 hover:shadow-md h-full border-western-wood bg-western-parchment/80",
+      className
+    )}>
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
         {!imageLoaded && (
           <div className="absolute inset-0 flex items-center justify-center bg-muted animate-pulse">
@@ -48,6 +48,7 @@ export function ScammerCard({ scammer, className }: ScammerCardProps) {
             imageLoaded ? "opacity-100" : "opacity-0"
           )}
           onLoad={() => setImageLoaded(true)}
+          loading="lazy"
         />
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
           <div className="flex justify-between items-center">
@@ -63,18 +64,18 @@ export function ScammerCard({ scammer, className }: ScammerCardProps) {
         <div className="flex justify-between items-start">
           <div>
             <p className="text-xs text-western-wood/70">Accused of</p>
-            <p className="text-sm font-medium line-clamp-2 text-western-wood">{scammer.accusedOf}</p>
+            <p className="text-sm font-medium line-clamp-2 text-western-wood">{truncatedAccusation}</p>
           </div>
         </div>
         
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <span className="text-sm font-bold text-western-accent font-wanted">
-              {formatCurrency(scammer.bountyAmount)} $BOSC
+              {formattedBounty} $BOSC
             </span>
           </div>
           <div className="text-xs text-western-wood/70">
-            Added {formatDate(scammer.dateAdded)}
+            Added {formattedDate}
           </div>
         </div>
         
@@ -105,5 +106,3 @@ export function ScammerCard({ scammer, className }: ScammerCardProps) {
     </Card>
   );
 }
-
-export default ScammerCard;
