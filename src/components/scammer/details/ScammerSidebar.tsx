@@ -38,11 +38,11 @@ export function ScammerSidebar({
   formatDate
 }: ScammerSidebarProps) {
   return (
-    <div className="flex-shrink-0 w-full">
-      <div className="space-y-4">
+    <div className="flex-shrink-0 w-full bg-background rounded-lg p-4 shadow-sm border border-border">
+      <div className="space-y-6">
         <ScammerAvatar name={name} photoUrl={photoUrl} />
         
-        <div className="space-y-4 px-2">
+        <div className="space-y-6">
           <ScammerInteractionButtons 
             likes={likes}
             dislikes={dislikes}

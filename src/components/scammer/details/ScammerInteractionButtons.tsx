@@ -23,36 +23,36 @@ export function ScammerInteractionButtons({
   onDislike
 }: ScammerInteractionButtonsProps) {
   return (
-    <div className="flex justify-between items-center border-b pb-3">
+    <div className="grid grid-cols-3 gap-2 border-b pb-4">
       <div className="flex flex-col items-center">
         <Button 
           variant="outline"
           size="sm"
-          className={`h-8 w-8 rounded-full ${isLiked ? 'bg-green-100 border-green-500 text-green-700' : ''}`}
+          className={`h-10 w-10 rounded-full ${isLiked ? 'bg-green-100 border-green-500 text-green-700' : ''}`}
           onClick={onLike}
         >
           <ThumbsUp className="h-4 w-4" />
         </Button>
-        <span className="text-xs mt-1">{likes}</span>
+        <span className="text-xs mt-1 font-medium">{likes}</span>
       </div>
       
       <div className="flex flex-col items-center">
         <Button 
           variant="outline"
           size="sm"
-          className={`h-8 w-8 rounded-full ${isDisliked ? 'bg-red-100 border-red-500 text-red-700' : ''}`}
+          className={`h-10 w-10 rounded-full ${isDisliked ? 'bg-red-100 border-red-500 text-red-700' : ''}`}
           onClick={onDislike}
         >
           <ThumbsDown className="h-4 w-4" />
         </Button>
-        <span className="text-xs mt-1">{dislikes}</span>
+        <span className="text-xs mt-1 font-medium">{dislikes}</span>
       </div>
       
       <div className="flex flex-col items-center">
-        <div className="h-8 w-8 rounded-full border flex items-center justify-center">
+        <div className="h-10 w-10 rounded-full border flex items-center justify-center">
           <View className="h-4 w-4" />
         </div>
-        <span className="text-xs mt-1">{views}</span>
+        <span className="text-xs mt-1 font-medium">{views}</span>
       </div>
     </div>
   );
