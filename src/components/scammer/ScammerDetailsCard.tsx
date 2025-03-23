@@ -27,7 +27,7 @@ interface ScammerDetailsCardProps {
   onDislikeScammer?: () => void;
 }
 
-export function ScammerDetailsCard({ scammer }: ScammerDetailsCardProps) {
+export function ScammerDetailsCard({ scammer, bountyAmount, imageLoaded, setImageLoaded, formatDate = (date) => date.toLocaleDateString(), scammerStats, onLikeScammer, onDislikeScammer }: ScammerDetailsCardProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
   const [likes, setLikes] = useState(scammer.likes || 0);
@@ -35,11 +35,15 @@ export function ScammerDetailsCard({ scammer }: ScammerDetailsCardProps) {
   const [views, setViews] = useState(scammer.views || 0);
   const [addedByUsername, setAddedByUsername] = useState<string | null>(null);
   const [isProfileLoading, setIsProfileLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     // Fetch profile information for the addedBy user
     const fetchAddedByProfile = async () => {
-      if (!scammer.addedBy) return;
+      if (!scammer.addedBy) {
+        setIsProfileLoading(false);
+        return;
+      }
       
       try {
         const profile = await storageService.getProfile(scammer.addedBy);
@@ -54,7 +58,14 @@ export function ScammerDetailsCard({ scammer }: ScammerDetailsCardProps) {
     };
 
     fetchAddedByProfile();
-  }, [scammer.addedBy]);
+    
+    // Initialize stats from props if available
+    if (scammerStats) {
+      setLikes(scammerStats.likes);
+      setDislikes(scammerStats.dislikes);
+      setViews(scammerStats.views);
+    }
+  }, [scammer.addedBy, scammerStats]);
 
   const handleLike = async () => {
     if (isLiked) {
@@ -77,6 +88,11 @@ export function ScammerDetailsCard({ scammer }: ScammerDetailsCardProps) {
         likes: isLiked ? likes - 1 : likes + 1,
         dislikes: isDisliked ? dislikes - 1 : dislikes,
       });
+      
+      // Call parent handler if provided
+      if (onLikeScammer) {
+        onLikeScammer();
+      }
     } catch (error) {
       console.error("Error updating likes:", error);
       toast.error("Failed to update likes");
@@ -104,10 +120,19 @@ export function ScammerDetailsCard({ scammer }: ScammerDetailsCardProps) {
         likes: isLiked ? likes - 1 : likes,
         dislikes: isDisliked ? dislikes - 1 : dislikes + 1,
       });
+      
+      // Call parent handler if provided
+      if (onDislikeScammer) {
+        onDislikeScammer();
+      }
     } catch (error) {
       console.error("Error updating dislikes:", error);
       toast.error("Failed to update dislikes");
     }
+  };
+
+  const handleImageError = () => {
+    setImageError(true);
   };
 
   return (
@@ -127,14 +152,18 @@ export function ScammerDetailsCard({ scammer }: ScammerDetailsCardProps) {
           <div className="flex-shrink-0 w-full sm:w-1/3 lg:w-1/4">
             <div className="space-y-3">
               <Avatar className="h-32 w-32 mx-auto rounded-lg">
-                <AvatarImage 
-                  src={scammer.photoUrl || `https://ui-avatars.com/api/?name=${scammer.name}&background=random`} 
-                  alt={scammer.name} 
-                  className="object-cover"
-                />
-                <AvatarFallback className="rounded-lg bg-western-sand text-western-wood">
-                  <UserCircle2 className="h-16 w-16" />
-                </AvatarFallback>
+                {!imageError ? (
+                  <AvatarImage 
+                    src={scammer.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(scammer.name)}&background=random`} 
+                    alt={scammer.name} 
+                    className="object-cover"
+                    onError={handleImageError}
+                  />
+                ) : (
+                  <AvatarFallback className="rounded-lg bg-western-sand text-western-wood">
+                    <UserCircle2 className="h-16 w-16" />
+                  </AvatarFallback>
+                )}
               </Avatar>
               
               {/* Thumbs up/down buttons */}

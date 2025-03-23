@@ -60,24 +60,26 @@ export function useSubmitListing() {
     onSubmitStart();
     
     try {
-      // In a real implementation, you would validate the turnstile token server-side
       console.log("Turnstile token for verification:", turnstileToken);
       
       // Generate scammer ID
       const scammerId = uuidv4();
       
+      // Use fallback image if photoUrl is empty
+      const finalPhotoUrl = photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`;
+      
       // Create the scammer listing
       const scammerListing = {
         id: scammerId,
         name,
-        photoUrl,
+        photoUrl: finalPhotoUrl,
         accusedOf,
         links,
         aliases,
         accomplices,
         officialResponse,
-        bountyAmount: 0, // No bounty for now
-        walletAddress: "", // No longer using specific wallet addresses
+        bountyAmount: 0,
+        walletAddress: "",
         dateAdded: new Date().toISOString(),
         addedBy: address || "",
         comments: [],
@@ -86,21 +88,13 @@ export function useSubmitListing() {
         views: 0
       };
       
-      // Save to localStorage
-      storageService.saveScammer(scammerListing);
+      // Save to localStorage and try to save to Supabase
+      const saved = await storageService.saveScammer(scammerListing);
       
-      // Try to save to Supabase if available (but don't block on it)
-      try {
-        console.log("Attempting to save scammer to Supabase...");
-        const saved = await scammerService.saveScammer(scammerListing);
-        if (saved) {
-          console.log("Successfully saved scammer to Supabase");
-        } else {
-          console.warn("Failed to save to Supabase, but saved locally");
-        }
-      } catch (error) {
-        console.error("Failed to save to Supabase, but saved locally:", error);
-        // Continue with local storage version only
+      if (saved) {
+        console.log("Successfully saved scammer to Supabase");
+      } else {
+        console.warn("Failed to save to Supabase, but saved locally");
       }
       
       toast.success("Scammer successfully added to the Book of Scams!");

@@ -14,8 +14,10 @@ import ProfilePage from "./pages/ProfilePage";
 import UserProfilePage from "./pages/UserProfilePage";
 import Leaderboard from "./pages/Leaderboard";
 
+// Create a QueryClient instance outside the component to prevent recreation on renders
 const queryClient = new QueryClient();
 
+// Define routes for the application
 const router = createBrowserRouter([
   {
     path: "/",

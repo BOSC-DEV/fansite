@@ -204,7 +204,7 @@ const ScammerDetail = () => {
           variant="ghost"
           size="sm"
           asChild
-          className="mb-8 hover:bg-western-sand/20 text-western-wood"
+          className="mb-8 hover:bg-western-sand/30 text-western-wood hover:text-western-wood"
         >
           <Link to="/most-wanted">
             <ArrowLeft className="h-4 w-4 mr-2" />

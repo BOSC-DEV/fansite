@@ -1,3 +1,4 @@
+
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,7 +27,13 @@ export function ImageUpload({ onImageChange, currentImage }: ImageUploadProps) {
       return;
     }
 
-    // Create a preview URL
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('File must be smaller than 10MB');
+      return;
+    }
+
+    // Create a preview URL for immediate feedback
     const objectUrl = URL.createObjectURL(file);
     setPreviewUrl(objectUrl);
 
@@ -43,13 +50,17 @@ export function ImageUpload({ onImageChange, currentImage }: ImageUploadProps) {
         onImageChange(imageUrl);
         toast.success("Image uploaded successfully");
       } else {
-        throw new Error("Failed to upload image");
+        // If upload fails, use a placeholder
+        const placeholderUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(file.name)}&background=random`;
+        onImageChange(placeholderUrl);
+        toast.warning("Using placeholder image due to upload issues");
       }
     } catch (error: any) {
       console.error("Error uploading image:", error);
-      // Keep the preview but show error message
-      toast.error(`Error uploading image: ${error.message || "Unknown error"}`);
-      // We won't reset the preview since the user might want to try again
+      // Fallback to a generated avatar
+      const placeholderUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(file.name)}&background=random`;
+      onImageChange(placeholderUrl);
+      toast.warning("Using placeholder image due to upload issues");
     } finally {
       setIsUploading(false);
     }
