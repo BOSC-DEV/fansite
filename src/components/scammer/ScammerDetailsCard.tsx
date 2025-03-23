@@ -16,7 +16,7 @@ interface ScammerDetailsCardProps {
   bountyAmount?: number;
   imageLoaded?: boolean;
   setImageLoaded?: React.Dispatch<React.SetStateAction<boolean>>;
-  formatDate?: (date: string) => string; // Type is string -> string
+  formatDate?: (date: string) => string;
   scammerStats?: {
     likes: number;
     dislikes: number;
@@ -30,7 +30,7 @@ export function ScammerDetailsCard({
   scammer, 
   imageLoaded, 
   setImageLoaded, 
-  formatDate = (date) => new Date(date).toLocaleDateString(), // Default implementation accepts string 
+  formatDate = (date) => new Date(date).toLocaleDateString(),
   scammerStats, 
   onLikeScammer, 
   onDislikeScammer 
@@ -140,12 +140,12 @@ export function ScammerDetailsCard({
   };
 
   return (
-    <Card className="mb-8">
-      <CardHeader>
+    <Card className="overflow-hidden bg-white/80 backdrop-blur-sm shadow-lg border-western-wood/20">
+      <CardHeader className="border-b border-western-wood/10 bg-gradient-to-r from-western-parchment to-western-sand/30">
         <div className="flex justify-between items-start">
           <div>
-            <CardTitle className="text-2xl">{scammer.name}</CardTitle>
-            <CardDescription className="text-muted-foreground mt-1">
+            <CardTitle className="text-3xl font-western text-western-accent">{scammer.name}</CardTitle>
+            <CardDescription className="text-western-wood text-lg mt-1">
               Accused of: {scammer.accusedOf}
             </CardDescription>
           </div>
@@ -153,7 +153,7 @@ export function ScammerDetailsCard({
             <Button 
               variant="outline" 
               size="sm" 
-              className="ml-4"
+              className="ml-4 border-western-accent/50 hover:bg-western-accent/10"
               asChild
             >
               <Link to={`/edit-listing/${scammer.id}`}>
@@ -164,26 +164,28 @@ export function ScammerDetailsCard({
           )}
         </div>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-          <ScammerSidebar
-            name={scammer.name}
-            photoUrl={scammer.photoUrl}
-            dateAdded={scammer.dateAdded.toString()} // Convert Date to string
-            addedBy={scammer.addedBy}
-            addedByUsername={addedByUsername}
-            isProfileLoading={isProfileLoading}
-            likes={likes}
-            dislikes={dislikes}
-            views={views}
-            isLiked={isLiked}
-            isDisliked={isDisliked}
-            onLike={handleLike}
-            onDislike={handleDislike}
-            formatDate={formatDate}
-          />
+      <CardContent className="p-0">
+        <div className="flex flex-col md:flex-row">
+          <div className="md:w-2/5 p-6">
+            <ScammerSidebar
+              name={scammer.name}
+              photoUrl={scammer.photoUrl}
+              dateAdded={scammer.dateAdded.toString()}
+              addedBy={scammer.addedBy}
+              addedByUsername={addedByUsername}
+              isProfileLoading={isProfileLoading}
+              likes={likes}
+              dislikes={dislikes}
+              views={views}
+              isLiked={isLiked}
+              isDisliked={isDisliked}
+              onLike={handleLike}
+              onDislike={handleDislike}
+              formatDate={formatDate}
+            />
+          </div>
           
-          <div className="flex-1">
+          <div className="md:w-3/5 border-t md:border-t-0 md:border-l border-western-wood/10 p-6 bg-gradient-to-br from-transparent to-western-sand/20">
             <ScammerContent 
               aliases={scammer.aliases}
               links={scammer.links}

@@ -44,7 +44,7 @@ export function AdditionalInfoFields({
   setOfficialResponse
 }: AdditionalInfoFieldsProps) {
   return (
-    <div className="space-y-5 pt-2">
+    <>
       <TagInput
         label="Links to Evidence"
         placeholder="https://example.com/evidence"
@@ -83,6 +83,6 @@ export function AdditionalInfoFields({
         onChange={(e) => setOfficialResponse(e.target.value)}
         required={false}
       />
-    </div>
+    </>
   );
 }

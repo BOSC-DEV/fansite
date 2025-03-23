@@ -37,7 +37,7 @@ export function ScammerDetailLayout({
         variant="ghost"
         size="sm"
         asChild
-        className="mb-8 hover:bg-western-sand/30 text-western-wood hover:text-western-wood"
+        className="mb-6 hover:bg-western-sand/30 text-western-wood hover:text-western-wood"
       >
         <Link to="/most-wanted">
           <ArrowLeft className="h-4 w-4 mr-2" />
@@ -45,8 +45,8 @@ export function ScammerDetailLayout({
         </Link>
       </Button>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <div className="lg:col-span-3 space-y-8">
           <ScammerDetailsCard
             scammer={scammer}
             bountyAmount={scammer.bountyAmount}
@@ -58,17 +58,19 @@ export function ScammerDetailLayout({
             onDislikeScammer={onDislikeScammer}
           />
           
-          <div className="mt-8">
+          <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-md">
             <CommentSection scammerId={scammer.id} />
           </div>
         </div>
 
-        <div>
-          <BountyContribution 
-            scammerId={scammer.id}
-            currentBounty={scammer.bountyAmount}
-            scammerName={scammer.name}
-          />
+        <div className="lg:col-span-2">
+          <div className="sticky top-28">
+            <BountyContribution 
+              scammerId={scammer.id}
+              currentBounty={scammer.bountyAmount}
+              scammerName={scammer.name}
+            />
+          </div>
         </div>
       </div>
     </div>
