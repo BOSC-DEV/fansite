@@ -1,7 +1,10 @@
-
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 import { toast } from 'sonner';
+import { profileService } from './profileService';
+import { scammerService } from './scammerService';
+import { UserProfile } from './profileService';
+import { ScammerListing } from './scammerService';
 
 export class StorageService extends BaseSupabaseService {
   // Create a storage bucket for profile images if it doesn't exist
@@ -87,6 +90,60 @@ export class StorageService extends BaseSupabaseService {
       console.error('Error in uploadProfileImage:', error);
       return null;
     }
+  }
+
+  // Forward profile methods
+  async getProfile(walletAddress: string): Promise<UserProfile | null> {
+    return profileService.getProfile(walletAddress);
+  }
+
+  async getProfileByUsername(username: string): Promise<UserProfile | null> {
+    return profileService.getProfileByUsername(username);
+  }
+
+  async isUsernameAvailable(username: string, currentUserWallet?: string): Promise<boolean> {
+    return profileService.isUsernameAvailable(username, currentUserWallet);
+  }
+
+  async saveProfile(profile: UserProfile): Promise<boolean> {
+    return profileService.saveProfile(profile);
+  }
+
+  async hasProfile(walletAddress: string): Promise<boolean> {
+    return profileService.hasProfile(walletAddress);
+  }
+
+  async getAllProfiles(): Promise<UserProfile[]> {
+    return profileService.getAllProfiles();
+  }
+
+  // Forward scammer methods
+  async saveScammer(scammer: ScammerListing): Promise<boolean> {
+    return scammerService.saveScammer(scammer);
+  }
+
+  async getScammer(scammerId: string): Promise<ScammerListing | null> {
+    return scammerService.getScammer(scammerId);
+  }
+
+  async getAllScammers(): Promise<ScammerListing[]> {
+    return scammerService.getAllScammers();
+  }
+
+  async incrementScammerViews(scammerId: string): Promise<void> {
+    return scammerService.incrementScammerViews(scammerId);
+  }
+
+  async likeScammer(scammerId: string): Promise<void> {
+    return scammerService.likeScammer(scammerId);
+  }
+
+  async dislikeScammer(scammerId: string): Promise<void> {
+    return scammerService.dislikeScammer(scammerId);
+  }
+
+  async updateScammerStats(scammerId: string, stats: { likes?: number; dislikes?: number; views?: number }): Promise<boolean> {
+    return scammerService.updateScammerStats(scammerId, stats);
   }
 }
 
