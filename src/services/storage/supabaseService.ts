@@ -51,14 +51,19 @@ const safeJsonToStringArray = (jsonArray: Json | null): string[] => {
 class SupabaseService {
   // Profile methods
   async getProfile(walletAddress: string): Promise<UserProfile | null> {
+    // Use maybeSingle() instead of single() to avoid errors when no profile exists
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
       .eq('wallet_address', walletAddress)
-      .single();
+      .maybeSingle();
 
-    if (error || !data) {
+    if (error) {
       console.error('Error fetching profile:', error);
+      return null;
+    }
+
+    if (!data) {
       return null;
     }
 

@@ -10,7 +10,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { storageService, UserProfile as ProfileType } from "@/services/storage/supabaseService";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Info } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function ProfilePage() {
   const { isConnected, address } = useWallet();
@@ -95,6 +96,14 @@ export function ProfilePage() {
                 </div>
               </Card>
             </div>
+          ) : isConnected && !profileData && !isLoading ? (
+            <Alert className="mb-8">
+              <Info className="h-4 w-4" />
+              <AlertTitle>No Profile Found</AlertTitle>
+              <AlertDescription>
+                You haven't created a profile yet. Fill out the form below to create your profile.
+              </AlertDescription>
+            </Alert>
           ) : null}
           
           {supabaseReady ? (
