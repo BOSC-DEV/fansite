@@ -29,7 +29,7 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ users, isLoa
   if (users.length === 0) {
     return (
       <div className="p-8 text-center">
-        <p className="text-western-sand">No hunters have claimed any bounties yet. Be the first!</p>
+        <p className="text-western-sand">No bounty hunters have signed up yet. Be the first!</p>
       </div>
     );
   }

@@ -36,7 +36,7 @@ export default function Leaderboard() {
       <main className="flex-1 container mx-auto max-w-6xl px-4 py-20">
         <PageHeader
           title="Bounty Hunter Leaderboard"
-          description="Top scam-fighting heroes ranked by total bounty generated"
+          description="Top scam-fighting heroes ranked by join date (bounty system coming soon)"
           actionIcon={<Trophy className="h-5 w-5 mr-1" />}
         />
 
