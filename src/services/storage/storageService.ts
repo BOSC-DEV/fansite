@@ -113,7 +113,7 @@ export class StorageService extends BaseSupabaseService {
     return profileService.getAllProfiles();
   }
 
-  // Forward scammer methods
+  // Forward scammer methods with the correct return types
   async saveScammer(scammer: ScammerListing): Promise<boolean> {
     return scammerService.saveScammer(scammer);
   }

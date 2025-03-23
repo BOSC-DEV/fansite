@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -196,6 +195,7 @@ const ScammerDetail = () => {
     }
   };
 
+  // Update formatDate to accept a string parameter
   const formatDate = (date: string) => {
     // Convert string to Date
     const dateObj = new Date(date);

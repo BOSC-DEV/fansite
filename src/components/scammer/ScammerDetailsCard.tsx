@@ -12,7 +12,7 @@ interface ScammerDetailsCardProps {
   bountyAmount?: number;
   imageLoaded?: boolean;
   setImageLoaded?: React.Dispatch<React.SetStateAction<boolean>>;
-  formatDate?: (date: Date) => string;
+  formatDate?: (date: string) => string; // Changed from Date to string
   scammerStats?: {
     likes: number;
     dislikes: number;
@@ -26,7 +26,7 @@ export function ScammerDetailsCard({
   scammer, 
   imageLoaded, 
   setImageLoaded, 
-  formatDate = (date) => date.toLocaleDateString(), 
+  formatDate = (date) => new Date(date).toLocaleDateString(), // Default implementation accepts string 
   scammerStats, 
   onLikeScammer, 
   onDislikeScammer 
@@ -150,7 +150,7 @@ export function ScammerDetailsCard({
           <ScammerSidebar
             name={scammer.name}
             photoUrl={scammer.photoUrl}
-            dateAdded={scammer.dateAdded.toString()}
+            dateAdded={scammer.dateAdded.toString()} // Convert Date to string
             addedBy={scammer.addedBy}
             addedByUsername={addedByUsername}
             isProfileLoading={isProfileLoading}

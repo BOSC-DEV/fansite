@@ -1,4 +1,3 @@
-
 import { supabase } from '@/lib/supabase';
 import { ScammerListing, ScammerStats, ScammerDbRecord } from './scammerTypes';
 import { ScammerDataProcessor } from './scammerDataProcessor';
@@ -20,8 +19,7 @@ class ScammerService {
         throw new Error('Scammer ID is required');
       }
       
-      // Since id is required by Supabase but optional in our type,
-      // we need to create a record with the known required id
+      // Use explicit object with all required fields to avoid type errors
       const { error } = await supabase
         .from('scammers')
         .upsert({
@@ -126,19 +124,8 @@ class ScammerService {
     try {
       console.log("Updating stats for scammer:", scammerId, stats);
       
-      const { data: existingScammer, error: fetchError } = await supabase
-        .from('scammers')
-        .select('id, likes, dislikes, views')
-        .eq('id', scammerId)
-        .single();
-        
-      if (fetchError) {
-        console.error("Error fetching scammer for stats update:", fetchError);
-        return false;
-      }
-      
-      // Create update payload with only the fields we want to update
-      const updatePayload: any = { id: scammerId };
+      // Use a properly constructed update payload with required id field
+      const updatePayload: Record<string, any> = { id: scammerId };
       
       if (stats.likes !== undefined) {
         updatePayload.likes = stats.likes;
