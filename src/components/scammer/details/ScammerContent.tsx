@@ -21,18 +21,24 @@ interface ScammerContentProps {
 }
 
 export function ScammerContent({ 
-  aliases, 
-  links, 
-  accomplices, 
-  officialResponse,
-  likes,
-  dislikes,
-  views,
-  isLiked,
-  isDisliked,
+  aliases = [], 
+  links = [], 
+  accomplices = [], 
+  officialResponse = "",
+  likes = 0,
+  dislikes = 0,
+  views = 0,
+  isLiked = false,
+  isDisliked = false,
   onLike,
   onDislike
 }: ScammerContentProps) {
+  console.log("ScammerContent rendering with:", {
+    links,
+    aliases,
+    accomplices
+  });
+  
   return (
     <div className="w-full">
       <Tabs defaultValue="identity" className="w-full">
@@ -47,19 +53,19 @@ export function ScammerContent({
           
           <div className="flex-1">
             <TabsContent value="identity">
-              <IdentityTab aliases={aliases} />
+              <IdentityTab aliases={aliases || []} />
             </TabsContent>
             
             <TabsContent value="evidence">
-              <EvidenceTab links={links} />
+              <EvidenceTab links={links || []} />
             </TabsContent>
             
             <TabsContent value="network">
-              <NetworkTab accomplices={accomplices} />
+              <NetworkTab accomplices={accomplices || []} />
             </TabsContent>
             
             <TabsContent value="response">
-              <ResponseTab officialResponse={officialResponse} />
+              <ResponseTab officialResponse={officialResponse || ""} />
             </TabsContent>
           </div>
         </div>

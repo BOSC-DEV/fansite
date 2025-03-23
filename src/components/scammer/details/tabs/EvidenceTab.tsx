@@ -6,7 +6,9 @@ interface EvidenceTabProps {
   links: string[];
 }
 
-export function EvidenceTab({ links }: EvidenceTabProps) {
+export function EvidenceTab({ links = [] }: EvidenceTabProps) {
+  console.log("EvidenceTab rendering with links:", links);
+  
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Evidence Links</h3>
