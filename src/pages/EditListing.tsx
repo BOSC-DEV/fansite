@@ -86,7 +86,7 @@ const EditListing = () => {
             setAliases(scammerObj.aliases || []);
             setAccomplices(scammerObj.accomplices || []);
             setOfficialResponse(scammerObj.officialResponse);
-            setXLink(supabaseScammer.xLink || "");
+            setXLink(scammerObj.xLink || "");
           }
         } else {
           console.log("Scammer not found in Supabase, checking localStorage");
