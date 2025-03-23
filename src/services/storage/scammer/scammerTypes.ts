@@ -1,4 +1,6 @@
 
+import { Json } from '@/integrations/supabase/types';
+
 /**
  * Type definitions for the scammer service
  */
@@ -29,13 +31,13 @@ export interface ScammerStats {
 }
 
 export interface ScammerDbRecord {
-  id: string;
+  id: string; // ID is required by Supabase
   name: string;
   photo_url: string | null;
   accused_of: string | null;
-  links: any;
-  aliases: any;
-  accomplices: any;
+  links: Json;
+  aliases: Json;
+  accomplices: Json;
   official_response: string | null;
   bounty_amount: number | null;
   wallet_address: string | null;
@@ -44,5 +46,5 @@ export interface ScammerDbRecord {
   likes: number | null;
   dislikes: number | null;
   views: number | null;
-  comments: any | null;
+  comments: Json | null;
 }

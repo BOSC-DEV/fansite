@@ -126,15 +126,15 @@ export class StorageService extends BaseSupabaseService {
     return scammerService.getAllScammers();
   }
 
-  async incrementScammerViews(scammerId: string): Promise<void> {
+  async incrementScammerViews(scammerId: string): Promise<boolean> {
     return scammerService.incrementScammerViews(scammerId);
   }
 
-  async likeScammer(scammerId: string): Promise<void> {
+  async likeScammer(scammerId: string): Promise<boolean> {
     return scammerService.likeScammer(scammerId);
   }
 
-  async dislikeScammer(scammerId: string): Promise<void> {
+  async dislikeScammer(scammerId: string): Promise<boolean> {
     return scammerService.dislikeScammer(scammerId);
   }
 

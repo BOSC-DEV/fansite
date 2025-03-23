@@ -1,6 +1,7 @@
 
 import { safeJsonToStringArray } from '../baseSupabaseService';
 import { ScammerDbRecord, ScammerListing } from './scammerTypes';
+import { Json } from '@/integrations/supabase/types';
 
 /**
  * Processes scammer data from the database format to client format
@@ -51,16 +52,17 @@ export class ScammerDataProcessor {
 
   /**
    * Convert client ScammerListing to database record format
+   * Note: This now returns a ScammerDbRecord with required id field
    */
-  static listingToDbRecord(listing: ScammerListing): Partial<ScammerDbRecord> {
+  static listingToDbRecord(listing: ScammerListing): ScammerDbRecord {
     return {
       id: listing.id,
       name: listing.name,
       photo_url: listing.photoUrl,
       accused_of: listing.accusedOf,
-      links: listing.links,
-      aliases: listing.aliases,
-      accomplices: listing.accomplices,
+      links: listing.links as Json,
+      aliases: listing.aliases as Json,
+      accomplices: listing.accomplices as Json,
       official_response: listing.officialResponse,
       bounty_amount: listing.bountyAmount,
       wallet_address: listing.walletAddress || "",
@@ -68,7 +70,8 @@ export class ScammerDataProcessor {
       added_by: listing.addedBy,
       likes: listing.likes || 0,
       dislikes: listing.dislikes || 0,
-      views: listing.views || 0
+      views: listing.views || 0,
+      comments: null
     };
   }
 }

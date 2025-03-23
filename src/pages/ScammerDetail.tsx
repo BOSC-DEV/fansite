@@ -166,26 +166,44 @@ const ScammerDetail = () => {
     }
   };
 
-  const handleLikeScammer = () => {
+  const handleLikeScammer = async () => {
     if (id) {
+      await scammerService.likeScammer(id);
+      // Also update in localStorage for redundancy
       storageService.likeScammer(id);
-      loadScammerStats(id);
+      
+      // Update the local state with the new stats
+      const updatedStats = {
+        ...scammerStats,
+        likes: scammerStats.likes + 1
+      };
+      setScammerStats(updatedStats);
     }
   };
 
-  const handleDislikeScammer = () => {
+  const handleDislikeScammer = async () => {
     if (id) {
+      await scammerService.dislikeScammer(id);
+      // Also update in localStorage for redundancy
       storageService.dislikeScammer(id);
-      loadScammerStats(id);
+      
+      // Update the local state with the new stats
+      const updatedStats = {
+        ...scammerStats,
+        dislikes: scammerStats.dislikes + 1
+      };
+      setScammerStats(updatedStats);
     }
   };
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date: string) => {
+    // Convert string to Date
+    const dateObj = new Date(date);
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
-    }).format(date);
+    }).format(dateObj);
   };
 
   if (isLoading) {
