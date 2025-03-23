@@ -1,6 +1,6 @@
 
 import { supabase } from '@/lib/supabase';
-import { ScammerListing, ScammerStats, ScammerDbRecord, UserScammerInteraction } from './scammerTypes';
+import { ScammerListing, ScammerStats, ScammerDbRecord, UserScammerInteraction, ScammerView } from './scammerTypes';
 import { ScammerDataProcessor } from './scammerDataProcessor';
 import { Json } from '@/integrations/supabase/types';
 
@@ -300,7 +300,7 @@ class ScammerService {
         .from('scammers')
         .update({ 
           views: newViews,
-          name: scammer.name
+          name: scammer.name // Required field
         })
         .eq('id', scammerId);
 

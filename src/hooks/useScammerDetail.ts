@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from "react";
-import { storageService } from "@/services/storage/localStorageService";
+import { storageService } from "@/services/storage/storageService";
 import { scammerService } from "@/services/storage";
 import { Scammer } from "@/lib/types";
 import { toast } from "sonner";
