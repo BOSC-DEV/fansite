@@ -1,209 +1,192 @@
 
-import { v4 as uuidv4 } from 'uuid';
-import { BaseSupabaseService } from '../baseSupabaseService';
+import { supabase } from '@/lib/supabase';
+import { ScammerListing, ScammerStats, ScammerDbRecord } from './scammerTypes';
 import { ScammerDataProcessor } from './scammerDataProcessor';
-import { ScammerListing, ScammerStats } from './scammerTypes';
 
-export class ScammerService extends BaseSupabaseService {
+class ScammerService {
   /**
-   * Retrieve all scammers from the database
+   * Save a scammer to Supabase
+   */
+  async saveScammer(scammer: ScammerListing): Promise<void> {
+    try {
+      console.log("Saving scammer to Supabase:", scammer.name);
+      
+      // Create database record from ScammerListing
+      const dbRecord = ScammerDataProcessor.listingToDbRecord(scammer);
+      
+      // Ensure ID is present since it's required
+      if (!dbRecord.id) {
+        throw new Error('Scammer ID is required');
+      }
+      
+      const { error } = await supabase
+        .from('scammers')
+        .upsert(dbRecord, { 
+          onConflict: 'id',
+          ignoreDuplicates: false 
+        });
+
+      if (error) {
+        console.error("Error saving scammer:", error);
+        throw error;
+      }
+      
+      console.log("Scammer saved successfully:", scammer.name);
+    } catch (error) {
+      console.error("Error in saveScammer:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get a scammer by ID
+   */
+  async getScammer(id: string): Promise<ScammerListing | null> {
+    try {
+      const { data, error } = await supabase
+        .from('scammers')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching scammer:", error);
+        return null;
+      }
+
+      if (!data) {
+        console.log("No scammer found with ID:", id);
+        return null;
+      }
+
+      const scammer = ScammerDataProcessor.dbRecordToListing(data as ScammerDbRecord);
+      return scammer;
+    } catch (error) {
+      console.error("Error in getScammer:", error);
+      return null;
+    }
+  }
+
+  /**
+   * Get all scammers
    */
   async getAllScammers(): Promise<ScammerListing[]> {
     try {
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .from('scammers')
         .select('*')
         .order('date_added', { ascending: false });
 
       if (error) {
-        console.error('Error fetching scammers from Supabase:', error);
+        console.error("Error fetching all scammers:", error);
         return [];
       }
 
       if (!data || data.length === 0) {
-        console.log('No scammers found in Supabase');
+        console.log("No scammers found in database");
         return [];
       }
 
-      console.log(`Retrieved ${data.length} scammers from Supabase`);
-
-      // Convert from database format to client format
-      return data.map(item => ScammerDataProcessor.dbRecordToListing(item));
+      const scammers = data.map(record => 
+        ScammerDataProcessor.dbRecordToListing(record as ScammerDbRecord)
+      );
+      
+      return scammers;
     } catch (error) {
-      console.error('Unexpected error fetching scammers:', error);
+      console.error("Error in getAllScammers:", error);
       return [];
     }
   }
 
   /**
-   * Save a scammer to the database
+   * Update scammer statistics
    */
-  async saveScammer(scammer: ScammerListing): Promise<boolean> {
-    console.log('Attempting to save scammer to Supabase:', scammer.id, scammer.name);
-    
+  async updateScammerStats(scammerId: string, stats: ScammerStats): Promise<void> {
     try {
-      // Convert from client format to database format
-      const dbScammer = ScammerDataProcessor.listingToDbRecord(scammer);
+      console.log("Updating stats for scammer:", scammerId, stats);
       
-      // Check if scammer exists
-      const { data: existingScammer, error: checkError } = await this.supabase
+      const { data: existingScammer, error: fetchError } = await supabase
         .from('scammers')
-        .select('id')
-        .eq('id', scammer.id)
-        .maybeSingle();
-
-      if (checkError) {
-        console.error('Error checking if scammer exists:', checkError);
-        return false;
-      }
-
-      let result;
-      
-      if (existingScammer) {
-        console.log('Updating existing scammer in Supabase:', scammer.id);
-        // Update
-        result = await this.supabase
-          .from('scammers')
-          .update(dbScammer)
-          .eq('id', scammer.id);
-      } else {
-        console.log('Inserting new scammer in Supabase:', scammer.id);
-        // Insert
-        result = await this.supabase
-          .from('scammers')
-          .insert(dbScammer);
-      }
-
-      if (result.error) {
-        console.error('Error saving scammer to Supabase:', result.error);
-        return false;
+        .select('id, likes, dislikes, views')
+        .eq('id', scammerId)
+        .single();
+        
+      if (fetchError) {
+        console.error("Error fetching scammer for stats update:", fetchError);
+        throw fetchError;
       }
       
-      console.log('Successfully saved scammer to Supabase:', scammer.id);
-      return true;
+      // Create update payload with only the fields we want to update
+      const updatePayload: any = { id: scammerId };
+      
+      if (stats.likes !== undefined) {
+        updatePayload.likes = stats.likes;
+      }
+      
+      if (stats.dislikes !== undefined) {
+        updatePayload.dislikes = stats.dislikes;
+      }
+      
+      if (stats.views !== undefined) {
+        updatePayload.views = stats.views;
+      }
+      
+      const { error } = await supabase
+        .from('scammers')
+        .upsert(updatePayload, { 
+          onConflict: 'id',
+          ignoreDuplicates: false 
+        });
+
+      if (error) {
+        console.error("Error updating scammer stats:", error);
+        throw error;
+      }
+      
+      console.log("Scammer stats updated successfully");
     } catch (error) {
-      console.error('Unexpected error saving scammer:', error);
-      return false;
+      console.error("Error in updateScammerStats:", error);
+      throw error;
     }
   }
-
+  
   /**
-   * Get a specific scammer by ID
-   */
-  async getScammer(scammerId: string): Promise<ScammerListing | null> {
-    const { data, error } = await this.supabase
-      .from('scammers')
-      .select('*')
-      .eq('id', scammerId)
-      .single();
-
-    if (error || !data) {
-      console.error('Error fetching scammer:', error);
-      return null;
-    }
-
-    // Convert from database format to client format
-    return ScammerDataProcessor.dbRecordToListing(data);
-  }
-
-  /**
-   * Increment the view count for a scammer
+   * Increment view count for a scammer
    */
   async incrementScammerViews(scammerId: string): Promise<void> {
-    const { data: scammer } = await this.supabase
-      .from('scammers')
-      .select('views')
-      .eq('id', scammerId)
-      .single();
-
-    if (scammer) {
-      await this.supabase
-        .from('scammers')
-        .update({ views: (scammer.views || 0) + 1 })
-        .eq('id', scammerId);
-    }
-  }
-
-  /**
-   * Increment the like count for a scammer
-   */
-  async likeScammer(scammerId: string): Promise<void> {
-    const { data: scammer } = await this.supabase
-      .from('scammers')
-      .select('likes')
-      .eq('id', scammerId)
-      .single();
-
-    if (scammer) {
-      await this.supabase
-        .from('scammers')
-        .update({ likes: (scammer.likes || 0) + 1 })
-        .eq('id', scammerId);
-    }
-  }
-
-  /**
-   * Increment the dislike count for a scammer
-   */
-  async dislikeScammer(scammerId: string): Promise<void> {
-    const { data: scammer } = await this.supabase
-      .from('scammers')
-      .select('dislikes')
-      .eq('id', scammerId)
-      .single();
-
-    if (scammer) {
-      await this.supabase
-        .from('scammers')
-        .update({ dislikes: (scammer.dislikes || 0) + 1 })
-        .eq('id', scammerId);
-    }
-  }
-
-  /**
-   * Update statistics for a scammer
-   */
-  async updateScammerStats(scammerId: string, stats: ScammerStats): Promise<boolean> {
     try {
-      console.log(`Updating stats for scammer ${scammerId}:`, stats);
+      console.log("Incrementing views for scammer:", scammerId);
       
-      const { data: scammer, error: getError } = await this.supabase
+      const { data: existingScammer, error: fetchError } = await supabase
         .from('scammers')
-        .select('likes, dislikes, views')
+        .select('views')
         .eq('id', scammerId)
-        .maybeSingle();
-      
-      if (getError) {
-        console.error('Error fetching scammer for stats update:', getError);
-        return false;
+        .single();
+        
+      if (fetchError) {
+        console.error("Error fetching scammer for view increment:", fetchError);
+        throw fetchError;
       }
       
-      if (!scammer) {
-        console.error('Scammer not found for stats update');
-        return false;
-      }
+      const currentViews = existingScammer?.views || 0;
+      const newViews = currentViews + 1;
       
-      const { error: updateError } = await this.supabase
+      const { error } = await supabase
         .from('scammers')
-        .update({
-          likes: stats.likes !== undefined ? stats.likes : scammer.likes,
-          dislikes: stats.dislikes !== undefined ? stats.dislikes : scammer.dislikes,
-          views: stats.views !== undefined ? stats.views : scammer.views
-        })
+        .update({ views: newViews })
         .eq('id', scammerId);
-      
-      if (updateError) {
-        console.error('Error updating scammer stats:', updateError);
-        return false;
+
+      if (error) {
+        console.error("Error incrementing scammer views:", error);
+        throw error;
       }
       
-      return true;
+      console.log("Scammer views incremented successfully to", newViews);
     } catch (error) {
-      console.error('Unexpected error updating scammer stats:', error);
-      return false;
+      console.error("Error in incrementScammerViews:", error);
+      throw error;
     }
   }
 }
 
-// Export a singleton instance of the service
 export const scammerService = new ScammerService();

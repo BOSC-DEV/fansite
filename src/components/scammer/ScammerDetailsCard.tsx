@@ -1,17 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ThumbsUp, ThumbsDown, UserCircle2, Link as LinkIcon, AlertCircle, View } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Scammer } from "@/lib/types";
-import { formatDate } from "@/lib/utils";
 import { toast } from "sonner";
 import { storageService } from "@/services/storage";
+import { ScammerSidebar } from './details/ScammerSidebar';
+import { ScammerContent } from './details/ScammerContent';
 
 interface ScammerDetailsCardProps {
   scammer: Scammer;
@@ -28,7 +22,15 @@ interface ScammerDetailsCardProps {
   onDislikeScammer?: () => void;
 }
 
-export function ScammerDetailsCard({ scammer, bountyAmount, imageLoaded, setImageLoaded, formatDate = (date) => date.toLocaleDateString(), scammerStats, onLikeScammer, onDislikeScammer }: ScammerDetailsCardProps) {
+export function ScammerDetailsCard({ 
+  scammer, 
+  imageLoaded, 
+  setImageLoaded, 
+  formatDate = (date) => date.toLocaleDateString(), 
+  scammerStats, 
+  onLikeScammer, 
+  onDislikeScammer 
+}: ScammerDetailsCardProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
   const [likes, setLikes] = useState(scammer.likes || 0);
@@ -36,7 +38,6 @@ export function ScammerDetailsCard({ scammer, bountyAmount, imageLoaded, setImag
   const [views, setViews] = useState(scammer.views || 0);
   const [addedByUsername, setAddedByUsername] = useState<string | null>(null);
   const [isProfileLoading, setIsProfileLoading] = useState(true);
-  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     // Fetch profile information for the addedBy user
@@ -132,10 +133,6 @@ export function ScammerDetailsCard({ scammer, bountyAmount, imageLoaded, setImag
     }
   };
 
-  const handleImageError = () => {
-    setImageError(true);
-  };
-
   return (
     <Card className="mb-8">
       <CardHeader>
@@ -150,173 +147,30 @@ export function ScammerDetailsCard({ scammer, bountyAmount, imageLoaded, setImag
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-          <div className="flex-shrink-0 w-full sm:w-1/3 lg:w-1/4">
-            <div className="space-y-3">
-              <Avatar className="h-32 w-32 mx-auto rounded-lg">
-                {!imageError ? (
-                  <AvatarImage 
-                    src={scammer.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(scammer.name)}&background=random`} 
-                    alt={scammer.name} 
-                    className="object-cover"
-                    onError={handleImageError}
-                  />
-                ) : (
-                  <AvatarFallback className="rounded-lg bg-western-sand text-western-wood">
-                    <UserCircle2 className="h-16 w-16" />
-                  </AvatarFallback>
-                )}
-              </Avatar>
-              
-              {/* Thumbs up/down buttons */}
-              <div className="flex justify-center gap-4 mt-3">
-                <div className="flex flex-col items-center">
-                  <Button 
-                    variant="outline"
-                    size="sm"
-                    className={`h-10 w-10 rounded-full ${isLiked ? 'bg-green-100 border-green-500 text-green-700' : ''}`}
-                    onClick={handleLike}
-                  >
-                    <ThumbsUp className="h-5 w-5" />
-                  </Button>
-                  <span className="text-sm mt-1">{likes}</span>
-                </div>
-                
-                <div className="flex flex-col items-center">
-                  <Button 
-                    variant="outline"
-                    size="sm"
-                    className={`h-10 w-10 rounded-full ${isDisliked ? 'bg-red-100 border-red-500 text-red-700' : ''}`}
-                    onClick={handleDislike}
-                  >
-                    <ThumbsDown className="h-5 w-5" />
-                  </Button>
-                  <span className="text-sm mt-1">{dislikes}</span>
-                </div>
-                
-                <div className="flex flex-col items-center">
-                  <div className="h-10 w-10 rounded-full border flex items-center justify-center">
-                    <View className="h-5 w-5" />
-                  </div>
-                  <span className="text-sm mt-1">{views}</span>
-                </div>
-              </div>
-
-              <div className="pt-4 space-y-2">
-                <h3 className="text-lg font-semibold mb-2">Details</h3>
-                <dl className="space-y-2 text-sm">
-                  <div className="flex flex-col space-y-1">
-                    <dt className="text-muted-foreground">Added on</dt>
-                    <dd>{formatDate(scammer.dateAdded)}</dd>
-                  </div>
-                  <div className="flex flex-col space-y-1">
-                    <dt className="text-muted-foreground">Added by</dt>
-                    <dd>
-                      {isProfileLoading ? (
-                        <span className="text-xs bg-muted px-2 py-1 rounded font-mono animate-pulse">
-                          Loading...
-                        </span>
-                      ) : addedByUsername ? (
-                        <Link 
-                          to={`/${addedByUsername}`}
-                          className="text-xs bg-muted px-2 py-1 rounded font-mono hover:bg-muted/80 transition-colors hover:underline"
-                        >
-                          {addedByUsername}
-                        </Link>
-                      ) : scammer.addedBy ? (
-                        <span 
-                          className="text-xs bg-muted px-2 py-1 rounded font-mono"
-                          title="User has no profile"
-                        >
-                          {scammer.addedBy.slice(0, 6)}...{scammer.addedBy.slice(-4)}
-                        </span>
-                      ) : (
-                        <span className="text-xs bg-muted px-2 py-1 rounded font-mono">
-                          Anonymous
-                        </span>
-                      )}
-                    </dd>
-                  </div>
-                </dl>
-              </div>
-            </div>
-          </div>
+          <ScammerSidebar
+            name={scammer.name}
+            photoUrl={scammer.photoUrl}
+            dateAdded={scammer.dateAdded.toString()}
+            addedBy={scammer.addedBy}
+            addedByUsername={addedByUsername}
+            isProfileLoading={isProfileLoading}
+            likes={likes}
+            dislikes={dislikes}
+            views={views}
+            isLiked={isLiked}
+            isDisliked={isDisliked}
+            onLike={handleLike}
+            onDislike={handleDislike}
+            formatDate={formatDate}
+          />
           
           <div className="flex-1">
-            <Tabs defaultValue="identity" className="w-full">
-              <TabsList className="w-full grid grid-cols-2 lg:grid-cols-4 mb-6">
-                <TabsTrigger value="identity">Identity</TabsTrigger>
-                <TabsTrigger value="evidence">Evidence</TabsTrigger>
-                <TabsTrigger value="network">Network</TabsTrigger>
-                <TabsTrigger value="response">Response</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="identity" className="space-y-4">
-                <h3 className="text-lg font-semibold">Known Aliases</h3>
-                {scammer.aliases && scammer.aliases.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {scammer.aliases.map((alias, index) => (
-                      <Badge key={index} variant="outline" className="bg-western-sand/10">
-                        {alias}
-                      </Badge>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground">No known aliases</p>
-                )}
-              </TabsContent>
-              
-              <TabsContent value="evidence" className="space-y-4">
-                <h3 className="text-lg font-semibold">Evidence Links</h3>
-                {scammer.links && scammer.links.length > 0 ? (
-                  <ul className="space-y-1">
-                    {scammer.links.map((link, index) => (
-                      <li key={index} className="flex items-center gap-2">
-                        <LinkIcon className="h-4 w-4 text-muted-foreground" />
-                        <a 
-                          href={link.startsWith('http') ? link : `https://${link}`} 
-                          target="_blank" 
-                          rel="noreferrer"
-                          className="text-sm hover:underline truncate max-w-[300px]"
-                        >
-                          {link}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-sm text-muted-foreground">No evidence links provided</p>
-                )}
-              </TabsContent>
-              
-              <TabsContent value="network" className="space-y-4">
-                <h3 className="text-lg font-semibold">Known Accomplices</h3>
-                {scammer.accomplices && scammer.accomplices.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {scammer.accomplices.map((accomplice, index) => (
-                      <Badge key={index} variant="outline" className="bg-western-sand/10">
-                        {accomplice}
-                      </Badge>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground">No known accomplices</p>
-                )}
-              </TabsContent>
-              
-              <TabsContent value="response" className="space-y-4">
-                <h3 className="text-lg font-semibold">Official Response</h3>
-                {scammer.officialResponse ? (
-                  <div className="bg-western-accent/10 border border-western-accent/30 p-4 rounded-md">
-                    <div className="flex items-start gap-3">
-                      <AlertCircle className="h-5 w-5 text-western-accent mt-1 flex-shrink-0" />
-                      <p className="text-sm">{scammer.officialResponse}</p>
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground">No official response provided</p>
-                )}
-              </TabsContent>
-            </Tabs>
+            <ScammerContent 
+              aliases={scammer.aliases}
+              links={scammer.links}
+              accomplices={scammer.accomplices}
+              officialResponse={scammer.officialResponse}
+            />
           </div>
         </div>
       </CardContent>
