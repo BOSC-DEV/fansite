@@ -1,4 +1,3 @@
-
 import { supabase } from '@/lib/supabase';
 import { ScammerListing, ScammerStats, ScammerDbRecord } from './scammerTypes';
 import { ScammerDataProcessor } from './scammerDataProcessor';
