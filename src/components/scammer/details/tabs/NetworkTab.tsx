@@ -4,10 +4,12 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface NetworkTabProps {
-  accomplices?: string[];
+  accomplices: string[];
 }
 
 export function NetworkTab({ accomplices = [] }: NetworkTabProps) {
+  console.log("NetworkTab rendering with accomplices:", accomplices);
+  
   return (
     <Card className="border border-western-wood/20 bg-western-parchment/20">
       <CardHeader className="pb-2">

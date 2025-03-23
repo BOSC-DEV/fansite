@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -18,7 +17,6 @@ import { ListingFormActions } from "@/components/scammer/ListingFormActions";
 import { ScammerNotFound } from "@/components/scammer/ScammerNotFound";
 import { Scammer } from "@/lib/types";
 import { scammerService } from "@/services/storage";
-import { ScammerListing } from "@/services/storage/scammer/scammerTypes";
 
 const EditListing = () => {
   const { id } = useParams<{ id: string }>();
@@ -35,13 +33,13 @@ const EditListing = () => {
     accusedOf, setAccusedOf,
     currentLink, setCurrentLink,
     links, setLinks,
-    xLink, setXLink,
     currentAlias, setCurrentAlias,
     aliases, setAliases,
     currentAccomplice, setCurrentAccomplice,
     accomplices, setAccomplices,
     officialResponse, setOfficialResponse,
     validateForm,
+    xLink, setXLink
   } = useListingForm();
 
   const { isSubmitting, handleSubmit } = useSubmitListing();
@@ -56,30 +54,24 @@ const EditListing = () => {
       }
 
       try {
-        let scammerData: ScammerListing | null = null;
+        const supabaseScammer = await scammerService.getScammer(id);
         
-        try {
-          scammerData = await scammerService.getScammer(id);
-        } catch (error) {
-          console.error("Error fetching from Supabase:", error);
-        }
-        
-        if (scammerData) {
-          console.log("Scammer found in Supabase:", scammerData.name);
+        if (supabaseScammer) {
+          console.log("Scammer found in Supabase:", supabaseScammer.name);
           const scammerObj: Scammer = {
-            id: scammerData.id,
-            name: scammerData.name,
-            photoUrl: scammerData.photoUrl,
-            accusedOf: scammerData.accusedOf,
-            links: scammerData.links || [],
-            aliases: scammerData.aliases || [],
-            accomplices: scammerData.accomplices || [],
-            officialResponse: scammerData.officialResponse,
-            bountyAmount: scammerData.bountyAmount,
-            walletAddress: scammerData.walletAddress || "",
-            dateAdded: new Date(scammerData.dateAdded),
-            addedBy: scammerData.addedBy,
-            xLink: scammerData.xLink || ""
+            id: supabaseScammer.id,
+            name: supabaseScammer.name,
+            photoUrl: supabaseScammer.photoUrl,
+            accusedOf: supabaseScammer.accusedOf,
+            links: supabaseScammer.links || [],
+            aliases: supabaseScammer.aliases || [],
+            accomplices: supabaseScammer.accomplices || [],
+            officialResponse: supabaseScammer.officialResponse,
+            bountyAmount: supabaseScammer.bountyAmount,
+            walletAddress: supabaseScammer.walletAddress || "",
+            dateAdded: new Date(supabaseScammer.dateAdded),
+            addedBy: supabaseScammer.addedBy,
+            xLink: supabaseScammer.xLink || ""
           };
           
           setScammer(scammerObj);
