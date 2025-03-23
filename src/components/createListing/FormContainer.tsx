@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@/context/WalletContext";
@@ -79,14 +78,11 @@ export function FormContainer() {
     setIsSubmitting(true);
     
     try {
+      // First ensure that the storage bucket exists
+      await storageService.ensureProfileImagesBucketExists();
+      
       // In a real implementation, you would validate the turnstile token server-side
       console.log("Turnstile token for verification:", turnstileToken);
-      
-      // Get user profile
-      const userProfile = storageService.getProfile(address || "");
-      if (!userProfile) {
-        throw new Error("Profile not found. Please create a profile first.");
-      }
       
       // Generate scammer ID
       const scammerId = uuidv4();

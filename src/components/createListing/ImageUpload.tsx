@@ -1,10 +1,10 @@
-
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Upload, Image as ImageIcon, X } from "lucide-react";
 import { storageService } from "@/services/storage";
 import { v4 as uuidv4 } from "uuid";
+import { toast } from "sonner";
 
 interface ImageUploadProps {
   onImageChange: (url: string) => void;
@@ -22,7 +22,7 @@ export function ImageUpload({ onImageChange, currentImage }: ImageUploadProps) {
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
-      console.error('File must be an image');
+      toast.error('File must be an image');
       return;
     }
 
@@ -32,19 +32,24 @@ export function ImageUpload({ onImageChange, currentImage }: ImageUploadProps) {
 
     setIsUploading(true);
     try {
+      // Try to create the bucket first to ensure it exists
+      await storageService.ensureProfileImagesBucketExists();
+      
       // Upload the file using the storage service
       const uniqueId = uuidv4();
       const imageUrl = await storageService.uploadProfileImage(file, uniqueId);
       
       if (imageUrl) {
         onImageChange(imageUrl);
+        toast.success("Image uploaded successfully");
       } else {
         throw new Error("Failed to upload image");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error uploading image:", error);
-      // Reset preview on error
-      setPreviewUrl(null);
+      // Keep the preview but show error message
+      toast.error(`Error uploading image: ${error.message || "Unknown error"}`);
+      // We won't reset the preview since the user might want to try again
     } finally {
       setIsUploading(false);
     }
@@ -120,8 +125,9 @@ export function ImageUpload({ onImageChange, currentImage }: ImageUploadProps) {
         size="sm"
         className="w-full mt-2 border-western-wood/30 text-western-wood hover:bg-western-sand/20"
         onClick={triggerFileInput}
+        disabled={isUploading}
       >
-        <Upload className="h-4 w-4 mr-2" /> Upload image
+        <Upload className="h-4 w-4 mr-2" /> {isUploading ? "Uploading..." : "Upload image"}
       </Button>
     </div>
   );

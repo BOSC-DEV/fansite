@@ -48,19 +48,26 @@ export function useListingForm() {
   };
 
   const validateForm = (): boolean => {
+    let isValid = true;
+    const errors: string[] = [];
+    
     if (!name.trim()) {
-      toast.error("Name is required");
-      return false;
+      errors.push("Name is required");
+      isValid = false;
     }
+    
     if (!accusedOf.trim()) {
-      toast.error("Accusation is required");
-      return false;
+      errors.push("Accusation is required");
+      isValid = false;
     }
-    if (!photoUrl.trim()) {
-      toast.error("Photo URL is required");
-      return false;
+    
+    // Removed the photoUrl validation since we'll handle that in the image upload component now
+    
+    if (errors.length > 0) {
+      toast.error(errors.join(", "));
     }
-    return true;
+    
+    return isValid;
   };
 
   return {
