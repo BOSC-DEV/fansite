@@ -175,7 +175,7 @@ class ScammerService {
       
       const { data: existingScammer, error: fetchError } = await supabase
         .from('scammers')
-        .select('views')
+        .select('views, name')
         .eq('id', scammerId)
         .single();
         
@@ -187,9 +187,13 @@ class ScammerService {
       const currentViews = existingScammer?.views || 0;
       const newViews = currentViews + 1;
       
+      // Make sure to include the required fields (id and name)
       const { error } = await supabase
         .from('scammers')
-        .update({ views: newViews })
+        .update({ 
+          views: newViews,
+          name: existingScammer.name
+        })
         .eq('id', scammerId);
 
       if (error) {
@@ -214,7 +218,7 @@ class ScammerService {
       
       const { data: existingScammer, error: fetchError } = await supabase
         .from('scammers')
-        .select('likes')
+        .select('likes, name')
         .eq('id', scammerId)
         .single();
         
@@ -226,9 +230,13 @@ class ScammerService {
       const currentLikes = existingScammer?.likes || 0;
       const newLikes = currentLikes + 1;
       
+      // Make sure to include the required fields (id and name)
       const { error } = await supabase
         .from('scammers')
-        .update({ likes: newLikes })
+        .update({ 
+          likes: newLikes,
+          name: existingScammer.name
+        })
         .eq('id', scammerId);
 
       if (error) {
@@ -253,7 +261,7 @@ class ScammerService {
       
       const { data: existingScammer, error: fetchError } = await supabase
         .from('scammers')
-        .select('dislikes')
+        .select('dislikes, name')
         .eq('id', scammerId)
         .single();
         
@@ -265,9 +273,13 @@ class ScammerService {
       const currentDislikes = existingScammer?.dislikes || 0;
       const newDislikes = currentDislikes + 1;
       
+      // Make sure to include the required fields (id and name)
       const { error } = await supabase
         .from('scammers')
-        .update({ dislikes: newDislikes })
+        .update({ 
+          dislikes: newDislikes,
+          name: existingScammer.name  
+        })
         .eq('id', scammerId);
 
       if (error) {
