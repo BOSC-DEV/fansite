@@ -1,4 +1,3 @@
-
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService, safeJsonToStringArray } from './baseSupabaseService';
 import { Scammer } from "@/lib/types";
@@ -34,27 +33,19 @@ export class ScammerService extends BaseSupabaseService {
 
       // Convert from database format to client format
       return data.map(item => {
-        // Ensure aliases is properly converted from JSON
-        let aliases: string[] = [];
-        try {
-          if (item.aliases) {
-            aliases = safeJsonToStringArray(item.aliases);
-          }
-        } catch (e) {
-          console.error(`Error parsing aliases for scammer ${item.name}:`, e, item.aliases);
-          aliases = [];
-        }
-        
-        console.log(`Scammer ${item.name} has aliases:`, aliases);
+        // Process arrays with better error handling
+        const processedAliases = this.processJsonField(item.aliases, 'aliases', item.name);
+        const processedLinks = this.processJsonField(item.links, 'links', item.name);
+        const processedAccomplices = this.processJsonField(item.accomplices, 'accomplices', item.name);
         
         return {
           id: item.id,
           name: item.name,
           photoUrl: item.photo_url || '',
           accusedOf: item.accused_of || '',
-          links: safeJsonToStringArray(item.links),
-          aliases: aliases,
-          accomplices: safeJsonToStringArray(item.accomplices),
+          links: processedLinks,
+          aliases: processedAliases,
+          accomplices: processedAccomplices,
           officialResponse: item.official_response || '',
           bountyAmount: Number(item.bounty_amount) || 0,
           walletAddress: item.wallet_address || '',
@@ -67,6 +58,19 @@ export class ScammerService extends BaseSupabaseService {
       });
     } catch (error) {
       console.error('Unexpected error fetching scammers:', error);
+      return [];
+    }
+  }
+
+  // Helper method to process JSON fields with robust error handling
+  private processJsonField(field: any, fieldName: string, scammerName: string): string[] {
+    try {
+      console.log(`Processing ${fieldName} for scammer ${scammerName}:`, field);
+      const result = safeJsonToStringArray(field);
+      console.log(`Processed ${fieldName} result:`, result);
+      return result;
+    } catch (e) {
+      console.error(`Error processing ${fieldName} for scammer ${scammerName}:`, e, field);
       return [];
     }
   }
@@ -148,15 +152,20 @@ export class ScammerService extends BaseSupabaseService {
       return null;
     }
 
+    // Process arrays with better error handling
+    const processedAliases = this.processJsonField(data.aliases, 'aliases', data.name);
+    const processedLinks = this.processJsonField(data.links, 'links', data.name);
+    const processedAccomplices = this.processJsonField(data.accomplices, 'accomplices', data.name);
+
     // Convert from database format to client format
     return {
       id: data.id,
       name: data.name,
       photoUrl: data.photo_url || '',
       accusedOf: data.accused_of || '',
-      links: safeJsonToStringArray(data.links),
-      aliases: safeJsonToStringArray(data.aliases),
-      accomplices: safeJsonToStringArray(data.accomplices),
+      links: processedLinks,
+      aliases: processedAliases,
+      accomplices: processedAccomplices,
       officialResponse: data.official_response || '',
       bountyAmount: Number(data.bounty_amount) || 0,
       walletAddress: data.wallet_address || '',

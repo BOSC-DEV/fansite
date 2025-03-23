@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ThumbsUp, ThumbsDown, UserCircle2, Link as LinkIcon, AlertCircle, View } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Scammer } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
 import { toast } from "sonner";
@@ -199,108 +200,125 @@ export function ScammerDetailsCard({ scammer, bountyAmount, imageLoaded, setImag
                   <span className="text-sm mt-1">{views}</span>
                 </div>
               </div>
+
+              <div className="pt-4 space-y-2">
+                <h3 className="text-lg font-semibold mb-2">Details</h3>
+                <dl className="space-y-2 text-sm">
+                  <div className="flex flex-col space-y-1">
+                    <dt className="text-muted-foreground">Added on</dt>
+                    <dd>{formatDate(scammer.dateAdded)}</dd>
+                  </div>
+                  <div className="flex flex-col space-y-1">
+                    <dt className="text-muted-foreground">Added by</dt>
+                    <dd>
+                      {isProfileLoading ? (
+                        <span className="text-xs bg-muted px-2 py-1 rounded font-mono animate-pulse">
+                          Loading...
+                        </span>
+                      ) : addedByUsername ? (
+                        <Link 
+                          to={`/${addedByUsername}`}
+                          className="text-xs bg-muted px-2 py-1 rounded font-mono hover:bg-muted/80 transition-colors hover:underline"
+                        >
+                          {addedByUsername}
+                        </Link>
+                      ) : scammer.addedBy ? (
+                        <span 
+                          className="text-xs bg-muted px-2 py-1 rounded font-mono"
+                          title="User has no profile"
+                        >
+                          {scammer.addedBy.slice(0, 6)}...{scammer.addedBy.slice(-4)}
+                        </span>
+                      ) : (
+                        <span className="text-xs bg-muted px-2 py-1 rounded font-mono">
+                          Anonymous
+                        </span>
+                      )}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
             </div>
           </div>
           
-          <div className="flex-1 space-y-4">
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Details</h3>
-              <dl className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                <div className="flex flex-col space-y-1">
-                  <dt className="text-muted-foreground">Added on</dt>
-                  <dd>{formatDate(scammer.dateAdded)}</dd>
-                </div>
-                <div className="flex flex-col space-y-1">
-                  <dt className="text-muted-foreground">Added by</dt>
-                  <dd>
-                    {isProfileLoading ? (
-                      <span className="text-xs bg-muted px-2 py-1 rounded font-mono animate-pulse">
-                        Loading...
-                      </span>
-                    ) : addedByUsername ? (
-                      <Link 
-                        to={`/${addedByUsername}`}
-                        className="text-xs bg-muted px-2 py-1 rounded font-mono hover:bg-muted/80 transition-colors hover:underline"
-                      >
-                        {addedByUsername}
-                      </Link>
-                    ) : scammer.addedBy ? (
-                      <span 
-                        className="text-xs bg-muted px-2 py-1 rounded font-mono"
-                        title="User has no profile"
-                      >
-                        {scammer.addedBy.slice(0, 6)}...{scammer.addedBy.slice(-4)}
-                      </span>
-                    ) : (
-                      <span className="text-xs bg-muted px-2 py-1 rounded font-mono">
-                        Anonymous
-                      </span>
-                    )}
-                  </dd>
-                </div>
-              </dl>
-            </div>
-
-            {scammer.aliases && scammer.aliases.length > 0 && (
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Known Aliases</h3>
-                <div className="flex flex-wrap gap-2">
-                  {scammer.aliases.map((alias, index) => (
-                    <Badge key={index} variant="outline" className="bg-western-sand/10">
-                      {alias}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {scammer.accomplices && scammer.accomplices.length > 0 && (
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Known Accomplices</h3>
-                <div className="flex flex-wrap gap-2">
-                  {scammer.accomplices.map((accomplice, index) => (
-                    <Badge key={index} variant="outline" className="bg-western-sand/10">
-                      {accomplice}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {scammer.links && scammer.links.length > 0 && (
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Associated Links</h3>
-                <ul className="space-y-1">
-                  {scammer.links.map((link, index) => (
-                    <li key={index} className="flex items-center gap-2">
-                      <LinkIcon className="h-4 w-4 text-muted-foreground" />
-                      <a 
-                        href={link.startsWith('http') ? link : `https://${link}`} 
-                        target="_blank" 
-                        rel="noreferrer"
-                        className="text-sm hover:underline truncate max-w-[300px]"
-                      >
-                        {link}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+          <div className="flex-1">
+            <Tabs defaultValue="identity" className="w-full">
+              <TabsList className="w-full grid grid-cols-2 lg:grid-cols-4 mb-6">
+                <TabsTrigger value="identity">Identity</TabsTrigger>
+                <TabsTrigger value="evidence">Evidence</TabsTrigger>
+                <TabsTrigger value="network">Network</TabsTrigger>
+                <TabsTrigger value="response">Response</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="identity" className="space-y-4">
+                <h3 className="text-lg font-semibold">Known Aliases</h3>
+                {scammer.aliases && scammer.aliases.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {scammer.aliases.map((alias, index) => (
+                      <Badge key={index} variant="outline" className="bg-western-sand/10">
+                        {alias}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">No known aliases</p>
+                )}
+              </TabsContent>
+              
+              <TabsContent value="evidence" className="space-y-4">
+                <h3 className="text-lg font-semibold">Evidence Links</h3>
+                {scammer.links && scammer.links.length > 0 ? (
+                  <ul className="space-y-1">
+                    {scammer.links.map((link, index) => (
+                      <li key={index} className="flex items-center gap-2">
+                        <LinkIcon className="h-4 w-4 text-muted-foreground" />
+                        <a 
+                          href={link.startsWith('http') ? link : `https://${link}`} 
+                          target="_blank" 
+                          rel="noreferrer"
+                          className="text-sm hover:underline truncate max-w-[300px]"
+                        >
+                          {link}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-muted-foreground">No evidence links provided</p>
+                )}
+              </TabsContent>
+              
+              <TabsContent value="network" className="space-y-4">
+                <h3 className="text-lg font-semibold">Known Accomplices</h3>
+                {scammer.accomplices && scammer.accomplices.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {scammer.accomplices.map((accomplice, index) => (
+                      <Badge key={index} variant="outline" className="bg-western-sand/10">
+                        {accomplice}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">No known accomplices</p>
+                )}
+              </TabsContent>
+              
+              <TabsContent value="response" className="space-y-4">
+                <h3 className="text-lg font-semibold">Official Response</h3>
+                {scammer.officialResponse ? (
+                  <div className="bg-western-accent/10 border border-western-accent/30 p-4 rounded-md">
+                    <div className="flex items-start gap-3">
+                      <AlertCircle className="h-5 w-5 text-western-accent mt-1 flex-shrink-0" />
+                      <p className="text-sm">{scammer.officialResponse}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">No official response provided</p>
+                )}
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
-
-        {scammer.officialResponse && (
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-2">Official Response</h3>
-            <div className="bg-western-accent/10 border border-western-accent/30 p-4 rounded-md">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="h-5 w-5 text-western-accent mt-1 flex-shrink-0" />
-                <p className="text-sm">{scammer.officialResponse}</p>
-              </div>
-            </div>
-          </div>
-        )}
       </CardContent>
     </Card>
   );

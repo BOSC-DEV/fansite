@@ -27,8 +27,9 @@ export const ScammerTableCompact = ({
         </TableHeader>
         <TableBody>
           {scammers.map((scammer) => {
-            // Ensure aliases is always an array
+            // Ensure aliases is always an array with proper type handling
             const aliases = Array.isArray(scammer.aliases) ? scammer.aliases : [];
+            console.log(`Scammer ${scammer.name} aliases:`, aliases);
             
             return (
               <TableRow key={scammer.id} className="border-b border-western-wood/20 hover:bg-western-sand/10">
