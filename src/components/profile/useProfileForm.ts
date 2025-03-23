@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
-import { storageService, UserProfile } from "@/services/storage/supabaseService";
+import { storageService, UserProfile } from "@/services/storage";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { v4 as uuidv4 } from 'uuid';
 

@@ -7,7 +7,7 @@ import { ProfileLinks } from "@/components/profile/ProfileLinks";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserCircle2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { storageService, UserProfile as ProfileType } from "@/services/storage/supabaseService";
+import { storageService, UserProfile as ProfileType } from "@/services/storage";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Info } from "lucide-react";
