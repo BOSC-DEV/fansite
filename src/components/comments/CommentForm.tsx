@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useWallet } from "@/context/WalletContext";
@@ -16,6 +16,26 @@ export function CommentForm({ scammerId, onCommentAdded }: CommentFormProps) {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { isConnected, connectWallet, address } = useWallet();
+  const [hasProfile, setHasProfile] = useState(true); // Default to true to avoid false negatives
+
+  // Check profile existence on component mount
+  useEffect(() => {
+    const checkProfile = async () => {
+      if (isConnected && address) {
+        try {
+          // Use supabase profile check first
+          const profile = await storageService.getProfile(address);
+          setHasProfile(!!profile);
+        } catch (error) {
+          console.error("Error checking profile:", error);
+          // Default to allowing comments if profile check fails
+          setHasProfile(true);
+        }
+      }
+    };
+    
+    checkProfile();
+  }, [isConnected, address]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,13 +50,10 @@ export function CommentForm({ scammerId, onCommentAdded }: CommentFormProps) {
       return;
     }
     
-    // Check if user has a profile
-    const profile = storageService.getProfile(address);
-    if (!profile) {
-      toast.error("You need to create a profile before commenting");
-      return;
-    }
+    // Get the profile before submitting
+    const profile = await storageService.getProfile(address);
     
+    // Continue even without a profile
     setIsSubmitting(true);
     
     try {
@@ -47,8 +64,8 @@ export function CommentForm({ scammerId, onCommentAdded }: CommentFormProps) {
         scammerId,
         content: content.trim(),
         author: address,
-        authorName: profile.displayName,
-        authorProfilePic: profile.profilePicUrl,
+        authorName: profile?.displayName || "Anonymous",
+        authorProfilePic: profile?.profilePicUrl || "",
         createdAt: new Date().toISOString(),
         likes: 0,
         dislikes: 0
