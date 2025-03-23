@@ -5,7 +5,7 @@ import { Star, BookOpen, Shield, Flame } from "lucide-react";
 
 export const HeroSection = () => {
   return (
-    <section className="pt-20 pb-12 md:pt-32 md:pb-24 px-3 sm:px-4 old-paper">
+    <section className="pt-16 sm:pt-20 md:pt-32 pb-10 sm:pb-12 md:pb-24 px-4 sm:px-6 old-paper">
       <div className="container mx-auto max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
           <div className="space-y-4 md:space-y-6 md:pr-8 animate-fade-in">
@@ -41,18 +41,19 @@ export const HeroSection = () => {
             </div>
           </div>
           
-          <div className="relative h-[250px] sm:h-[300px] md:h-[400px] animate-fade-in rounded-sm overflow-hidden border-4 border-western-wood transform -rotate-1 shadow-lg wanted-poster-bg mx-auto w-full max-w-[320px] sm:max-w-none">
-            <div className="absolute inset-0 bg-gradient-to-br from-western-leather/30 via-western-accent/20 to-western-parchment/50 opacity-70 rounded-sm"></div>
-            <div className="absolute inset-0 flex items-center justify-center text-western-wood p-4 sm:p-6">
-              <div className="text-center space-y-4">
-                <div className="sheriff-badge inline-block p-3 sm:p-4 bg-western-accent/80 rounded-full border-4 border-western-wood flex items-center justify-center animate-bounce-slight">
-                  <Star className="h-8 w-8 sm:h-12 sm:w-12 text-western-parchment" />
-                </div>
-                <h2 className="font-wanted text-2xl sm:text-3xl text-western-leather uppercase tracking-wide">Wanted: Dead or Alive</h2>
-                <p className="text-western-wood/90 max-w-md font-western text-base sm:text-lg px-2">
-                  Join our posse to identify and track down the outlaws of the crypto frontier.
-                </p>
+          <div className="relative mx-auto w-full max-w-[340px] sm:max-w-none md:max-w-[400px] animate-fade-in">
+            <div className="wanted-poster-card transform -rotate-1 shadow-xl">
+              <div className="bg-western-accent rounded-full w-full py-3 mb-4 flex items-center justify-center border-4 border-western-wood">
+                <Star className="h-6 w-6 text-western-parchment" />
               </div>
+              
+              <h2 className="font-wanted text-2xl sm:text-3xl text-western-wood uppercase tracking-wide mb-3">
+                WANTED: DEAD <br />OR ALIVE
+              </h2>
+              
+              <p className="text-western-wood/90 max-w-md font-western text-base sm:text-lg px-4 pb-4">
+                Join our posse to identify and track down the outlaws of the crypto frontier.
+              </p>
             </div>
           </div>
         </div>
