@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
-import { storageService, UserProfile } from "@/services/storage/localStorageService";
+import { storageService, UserProfile } from "@/services/storage/supabaseService";
 
 export interface ProfileFormData {
   displayName: string;
@@ -25,19 +25,23 @@ export function useProfileForm() {
 
   useEffect(() => {
     // Check if user already has a profile using the storageService
-    if (isConnected && address) {
-      const profile = storageService.getProfile(address);
-      if (profile) {
-        setDisplayName(profile.displayName || "");
-        setProfilePicUrl(profile.profilePicUrl || "");
-        // The following fields might not exist in older profile objects
-        setXLink(profile.xLink || "");
-        setWebsiteLink(profile.websiteLink || "");
-        setBio(profile.bio || "");
-        setBioCharCount(profile.bio ? profile.bio.length : 0);
-        setHasProfile(true);
+    const fetchProfile = async () => {
+      if (isConnected && address) {
+        const profile = await storageService.getProfile(address);
+        if (profile) {
+          setDisplayName(profile.displayName || "");
+          setProfilePicUrl(profile.profilePicUrl || "");
+          // The following fields might not exist in older profile objects
+          setXLink(profile.xLink || "");
+          setWebsiteLink(profile.websiteLink || "");
+          setBio(profile.bio || "");
+          setBioCharCount(profile.bio ? profile.bio.length : 0);
+          setHasProfile(true);
+        }
       }
-    }
+    };
+
+    fetchProfile();
   }, [isConnected, address]);
 
   const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -95,11 +99,15 @@ export function useProfileForm() {
           bio
         };
         
-        storageService.saveProfile(profile);
-        toast.success("Profile saved successfully");
-        setHasProfile(true);
-        
-        return true;
+        const success = await storageService.saveProfile(profile);
+        if (success) {
+          toast.success("Profile saved successfully");
+          setHasProfile(true);
+          return true;
+        } else {
+          toast.error("Failed to save profile");
+          return false;
+        }
       }
       return false;
     } catch (error) {

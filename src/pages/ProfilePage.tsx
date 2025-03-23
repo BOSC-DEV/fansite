@@ -7,19 +7,31 @@ import { ProfileLinks } from "@/components/profile/ProfileLinks";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserCircle2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { storageService, UserProfile as ProfileType } from "@/services/storage/localStorageService";
+import { storageService, UserProfile as ProfileType } from "@/services/storage/supabaseService";
 
 export function ProfilePage() {
   const { isConnected, address } = useWallet();
   const [profileData, setProfileData] = useState<ProfileType | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   
   useEffect(() => {
-    if (isConnected && address) {
-      const profile = storageService.getProfile(address);
-      if (profile) {
-        setProfileData(profile);
+    const fetchProfile = async () => {
+      if (isConnected && address) {
+        setIsLoading(true);
+        try {
+          const profile = await storageService.getProfile(address);
+          if (profile) {
+            setProfileData(profile);
+          }
+        } catch (error) {
+          console.error("Error fetching profile:", error);
+        } finally {
+          setIsLoading(false);
+        }
       }
-    }
+    };
+    
+    fetchProfile();
   }, [isConnected, address]);
 
   return (
@@ -29,7 +41,17 @@ export function ProfilePage() {
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl font-wanted text-western-accent text-center mb-8">Your Profile</h1>
           
-          {isConnected && profileData ? (
+          {isLoading ? (
+            <Card className="p-4">
+              <div className="animate-pulse flex items-center gap-4">
+                <div className="rounded-full bg-western-sand h-20 w-20"></div>
+                <div className="flex-1 space-y-2">
+                  <div className="h-4 bg-western-sand rounded w-3/4"></div>
+                  <div className="h-4 bg-western-sand rounded w-1/2"></div>
+                </div>
+              </div>
+            </Card>
+          ) : isConnected && profileData ? (
             <div className="mb-8">
               <Card className="p-4">
                 <div className="flex items-center gap-4">
