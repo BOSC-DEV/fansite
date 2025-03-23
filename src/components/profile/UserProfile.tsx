@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,7 +26,6 @@ export function UserProfile() {
     e.preventDefault();
     const success = await saveProfile();
     if (success) {
-      // Redirect to the previous page or home
       navigate(-1);
     }
   };
@@ -74,7 +72,7 @@ export function UserProfile() {
                 
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <Twitter size={24} className="text-[#1DA1F2] min-w-[24px]" />
+                    <Twitter size={24} className="text-muted-foreground min-w-[24px]" />
                     <div className="flex-1">
                       <Input id="xLink" placeholder="https://x.com/username" value={formData.xLink} onChange={e => setXLink(e.target.value)} />
                     </div>
@@ -83,7 +81,7 @@ export function UserProfile() {
                 
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <Globe size={24} className="text-western-accent min-w-[24px]" />
+                    <Globe size={24} className="text-muted-foreground min-w-[24px]" />
                     <div className="flex-1">
                       <Input id="websiteLink" placeholder="https://example.com" value={formData.websiteLink} onChange={e => setWebsiteLink(e.target.value)} />
                     </div>

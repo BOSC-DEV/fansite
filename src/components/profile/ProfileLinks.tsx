@@ -21,7 +21,7 @@ export function ProfileLinks({ xLink, websiteLink }: ProfileLinksProps) {
           asChild
         >
           <a href={xLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
-            <Twitter size={20} className="text-[#1DA1F2]" />
+            <Twitter size={20} className="text-muted-foreground" />
           </a>
         </Button>
       )}
@@ -34,7 +34,7 @@ export function ProfileLinks({ xLink, websiteLink }: ProfileLinksProps) {
           asChild
         >
           <a href={websiteLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
-            <Globe size={20} className="text-western-accent" />
+            <Globe size={20} className="text-muted-foreground" />
           </a>
         </Button>
       )}
