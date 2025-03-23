@@ -31,8 +31,8 @@ export function ScammerDetailsSection({
         {isProfileLoading ? (
           <div className="h-6 w-6 rounded-full bg-muted animate-pulse" />
         ) : (
-          addedByUsername ? (
-            <Link to={`/${addedByUsername}`} className="hover:opacity-80 transition-opacity">
+          addedByUsername && addedBy ? (
+            <Link to={`/user/${addedBy}`} className="hover:opacity-80 transition-opacity">
               <Avatar className="h-6 w-6">
                 <AvatarImage 
                   src={`https://ui-avatars.com/api/?name=${encodeURIComponent(addedByUsername)}&background=random`} 
@@ -44,15 +44,17 @@ export function ScammerDetailsSection({
               </Avatar>
             </Link>
           ) : addedBy ? (
-            <Avatar className="h-6 w-6" title={formatWalletAddress(addedBy)}>
-              <AvatarImage 
-                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(addedBy.slice(0, 2))}&background=random`} 
-                alt="Anonymous" 
-              />
-              <AvatarFallback className="text-xs bg-muted">
-                {addedBy.slice(0, 2).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
+            <Link to={`/user/${addedBy}`} className="hover:opacity-80 transition-opacity">
+              <Avatar className="h-6 w-6" title={formatWalletAddress(addedBy)}>
+                <AvatarImage 
+                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(addedBy.slice(0, 2))}&background=random`} 
+                  alt="Anonymous" 
+                />
+                <AvatarFallback className="text-xs bg-muted">
+                  {addedBy.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </Link>
           ) : (
             <Avatar className="h-6 w-6">
               <AvatarFallback className="text-xs bg-muted">
