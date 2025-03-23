@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 import { toast } from 'sonner';
@@ -9,13 +10,17 @@ import { ScammerListing } from './scammerService';
 import { LeaderboardUser } from './leaderboardService';
 
 export class StorageService extends BaseSupabaseService {
-  // We'll no longer need this as we created the bucket via SQL
+  // This bucket already exists, no need to create it again
   async ensureProfileImagesBucketExists() {
-    return true;
+    console.log('Checking if profile-images bucket exists');
+    const { data } = await this.supabase.storage.getBucket('profile-images');
+    return !!data;
   }
 
   async uploadProfileImage(file: File, userId: string): Promise<string | null> {
     try {
+      console.log('Uploading profile image for user:', userId);
+      
       // Generate a unique file name
       const fileExt = file.name.split('.').pop();
       const fileName = `${userId}-${Date.now()}.${fileExt}`;
@@ -39,6 +44,7 @@ export class StorageService extends BaseSupabaseService {
         .from('profile-images')
         .getPublicUrl(filePath);
         
+      console.log('Image uploaded successfully, public URL:', publicUrlData.publicUrl);
       return publicUrlData.publicUrl;
     } catch (error) {
       console.error('Error in uploadProfileImage:', error);
@@ -106,5 +112,5 @@ export class StorageService extends BaseSupabaseService {
   }
 }
 
-// Initialize the storage service and ensure bucket exists
+// Initialize the storage service
 export const storageService = new StorageService();

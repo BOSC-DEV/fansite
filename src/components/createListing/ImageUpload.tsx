@@ -39,17 +39,20 @@ export function ImageUpload({ onImageChange, currentImage }: ImageUploadProps) {
 
     setIsUploading(true);
     try {
-      // Try to create the bucket first to ensure it exists
-      await storageService.ensureProfileImagesBucketExists();
+      console.log("Starting image upload...");
+      
+      // Generate a unique ID for the image
+      const uniqueId = uuidv4();
       
       // Upload the file using the storage service
-      const uniqueId = uuidv4();
       const imageUrl = await storageService.uploadProfileImage(file, uniqueId);
       
       if (imageUrl) {
+        console.log("Image uploaded successfully:", imageUrl);
         onImageChange(imageUrl);
         toast.success("Image uploaded successfully");
       } else {
+        console.error("Failed to upload image, using placeholder");
         // If upload fails, use a placeholder
         const placeholderUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(file.name)}&background=random`;
         onImageChange(placeholderUrl);
