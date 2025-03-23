@@ -7,15 +7,12 @@ import { Separator } from "@/components/ui/separator";
 import {
   Calendar,
   User,
-  Copy,
-  CheckCircle2,
   Link2,
   Users,
   MessageSquare,
   ExternalLink,
   AlertCircle,
 } from "lucide-react";
-import { toast } from "sonner";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -34,18 +31,6 @@ export function ScammerDetailsCard({
   formatDate,
   bountyAmount,
 }: ScammerDetailsCardProps) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopyAddress = () => {
-    navigator.clipboard.writeText(scammer.walletAddress);
-    setCopied(true);
-    toast.success("Wallet address copied to clipboard");
-    
-    setTimeout(() => {
-      setCopied(false);
-    }, 2000);
-  };
-
   return (
     <Card>
       <div className="relative aspect-video overflow-hidden bg-muted rounded-t-lg">
@@ -85,29 +70,6 @@ export function ScammerDetailsCard({
           <code className="text-xs bg-muted px-2 py-1 rounded font-mono">
             {scammer.addedBy}
           </code>
-        </div>
-
-        <div className="mb-6">
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">
-            Listing Wallet Address:
-          </h3>
-          <div className="flex items-center gap-2">
-            <code className="text-xs bg-muted px-2 py-1 rounded font-mono flex-1 overflow-x-auto">
-              {scammer.walletAddress}
-            </code>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-7 w-7"
-              onClick={handleCopyAddress}
-            >
-              {copied ? (
-                <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
-              ) : (
-                <Copy className="h-3.5 w-3.5" />
-              )}
-            </Button>
-          </div>
         </div>
 
         <Separator className="my-6" />

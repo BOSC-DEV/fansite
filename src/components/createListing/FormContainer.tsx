@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@/context/WalletContext";
@@ -11,7 +10,6 @@ import {
   CardTitle 
 } from "@/components/ui/card";
 import { toast } from "sonner";
-import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
 import { ListingDisclaimer } from "@/components/scammer/ListingDisclaimer";
 import { ListingFormActions } from "@/components/scammer/ListingFormActions";
 import { useListingForm } from "./useListingForm";
@@ -99,7 +97,7 @@ export function FormContainer() {
         accomplices,
         officialResponse,
         bountyAmount: 0, // No bounty for now
-        walletAddress: DEVELOPER_WALLET_ADDRESS,
+        walletAddress: "", // No longer using specific wallet addresses
         dateAdded: new Date().toISOString(),
         addedBy: address || "",
         comments: [],

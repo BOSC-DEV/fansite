@@ -1,4 +1,3 @@
-
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService, safeJsonToStringArray } from './baseSupabaseService';
 import { Scammer } from "@/lib/types";
@@ -55,7 +54,7 @@ export class ScammerService extends BaseSupabaseService {
       accomplices: scammer.accomplices,
       official_response: scammer.officialResponse,
       bounty_amount: scammer.bountyAmount,
-      wallet_address: scammer.walletAddress,
+      wallet_address: "",
       date_added: scammer.dateAdded,
       added_by: scammer.addedBy,
       likes: scammer.likes || 0,

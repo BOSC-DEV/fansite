@@ -1,3 +1,4 @@
+
 export interface Scammer {
   id: string;
   name: string;
@@ -8,7 +9,7 @@ export interface Scammer {
   accomplices: string[];
   officialResponse: string;
   bountyAmount: number;
-  walletAddress: string;
+  walletAddress: string; // We'll keep this to maintain compatibility with existing code
   dateAdded: Date;
   addedBy: string;
 }

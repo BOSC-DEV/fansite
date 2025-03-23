@@ -35,7 +35,7 @@ const ScammerDetail = () => {
             accomplices: scammerData.accomplices,
             officialResponse: scammerData.officialResponse,
             bountyAmount: scammerData.bountyAmount,
-            walletAddress: scammerData.walletAddress,
+            walletAddress: "",  // No longer using specific wallet addresses
             dateAdded: new Date(scammerData.dateAdded),
             addedBy: scammerData.addedBy
           });
@@ -100,7 +100,6 @@ const ScammerDetail = () => {
               scammerId={scammer.id}
               currentBounty={scammer.bountyAmount}
               scammerName={scammer.name}
-              walletAddress={scammer.walletAddress}
             />
           </div>
         </div>
