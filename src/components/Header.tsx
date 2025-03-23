@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
@@ -7,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { ProfileButton } from "./profile/ProfileButton";
 
 export const Header = () => {
-  const { isConnected, address, balance, connectWallet, disconnectWallet, connecting } = useWallet();
+  const { isConnected, address, balance, connectWallet, connecting } = useWallet();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
@@ -22,9 +23,7 @@ export const Header = () => {
   }, []);
 
   const handleConnectClick = async () => {
-    if (isConnected) {
-      disconnectWallet();
-    } else {
+    if (!isConnected) {
       await connectWallet();
     }
   };
@@ -84,15 +83,6 @@ export const Header = () => {
                   {balance} BOSC
                 </span>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleConnectClick}
-                className="h-9 border-2 border-dashed border-western-sand/50 hover:animate-wiggle text-western-parchment bg-transparent hover:bg-western-sand/20"
-              >
-                <Wallet className="h-4 w-4 mr-2" />
-                Disconnect
-              </Button>
               
               <ProfileButton />
             </div>
@@ -160,11 +150,6 @@ export const Header = () => {
                       <span>Manage</span>
                     </Button>
                   </Link>
-                  
-                  <Button variant="outline" size="sm" onClick={handleConnectClick} className="w-full mt-2 text-western-parchment border-western-sand/50 hover:bg-western-sand/20">
-                    <Wallet className="h-4 w-4 mr-2" />
-                    Disconnect
-                  </Button>
                 </div>
               ) : (
                 <Button

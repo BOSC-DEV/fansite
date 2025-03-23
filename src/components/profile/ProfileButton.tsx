@@ -11,11 +11,12 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
-import { UserCircle2 } from "lucide-react";
+import { UserCircle2, LogOut } from "lucide-react";
 import { storageService, UserProfile } from "@/services/storage";
+import { toast } from "sonner";
 
 export function ProfileButton() {
-  const { isConnected, address } = useWallet();
+  const { isConnected, address, disconnectWallet } = useWallet();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   
   useEffect(() => {
@@ -35,6 +36,11 @@ export function ProfileButton() {
 
     fetchProfile();
   }, [isConnected, address]);
+
+  const handleDisconnect = () => {
+    disconnectWallet();
+    toast.success("Wallet disconnected successfully");
+  };
 
   if (!isConnected) {
     return null;
@@ -91,6 +97,13 @@ export function ProfileButton() {
           <Link to="/create-listing" className="cursor-pointer text-western-parchment hover:text-western-accent">
             Report a Scammer
           </Link>
+        </DropdownMenuItem>
+        
+        <DropdownMenuSeparator />
+        
+        <DropdownMenuItem onClick={handleDisconnect} className="cursor-pointer text-western-parchment hover:text-western-accent">
+          <LogOut className="h-4 w-4 mr-2" />
+          Disconnect Wallet
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
