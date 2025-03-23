@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
 import { Link, useLocation } from "react-router-dom";
-import { Wallet, Home, Award, BookOpen } from "lucide-react";
+import { Wallet, Home, Award, BookOpen, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProfileButton } from "./profile/ProfileButton";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -113,10 +113,7 @@ export const Header = () => {
           {/* Mobile Navigation Buttons */}
           {isMobile && (
             <div className="md:hidden flex items-center">
-              {isConnected && (
-                <ProfileButton />
-              )}
-              
+              {/* Mobile bottom nav bar */}
               <div className="fixed bottom-0 left-0 right-0 flex justify-around items-center bg-western-wood/90 backdrop-blur-sm shadow-lg py-3 px-2 z-50">
                 {menuItems.map(item => (
                   <Link 
@@ -134,7 +131,20 @@ export const Header = () => {
                   </Link>
                 ))}
                 
-                {!isConnected && (
+                {isConnected ? (
+                  <Link
+                    to="/profile"
+                    className={cn(
+                      "flex flex-col items-center justify-center p-2 rounded-lg transition-colors",
+                      location.pathname === "/profile" 
+                        ? "text-western-parchment bg-western-accent/30" 
+                        : "text-western-sand hover:text-western-parchment"
+                    )}
+                  >
+                    <User className="h-4 w-4" />
+                    <span className="text-xs mt-1 font-western">Profile</span>
+                  </Link>
+                ) : (
                   <Button
                     variant="ghost"
                     size="sm"
