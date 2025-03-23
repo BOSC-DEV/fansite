@@ -187,8 +187,7 @@ class ScammerService {
           disliked: interaction.disliked,
           last_updated: new Date().toISOString()
         }, {
-          onConflict: 'user_id,scammer_id', 
-          ignoreDuplicates: false
+          onConflict: 'user_id,scammer_id'
         });
 
       if (error) {

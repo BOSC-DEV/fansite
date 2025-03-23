@@ -1,3 +1,4 @@
+
 import { Scammer } from "@/lib/types";
 
 // Types for our localStorage data structures
