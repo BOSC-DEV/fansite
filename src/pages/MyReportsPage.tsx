@@ -13,6 +13,10 @@ export function MyReportsPage() {
   const { isConnected, address } = useWallet();
   const [scammers, setScammers] = useState<Scammer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const ITEMS_PER_PAGE = 9;
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,6 +40,7 @@ export function MyReportsPage() {
         }));
         
         setScammers(convertedScammers);
+        setTotalPages(Math.max(1, Math.ceil(convertedScammers.length / ITEMS_PER_PAGE)));
       } catch (error) {
         console.error("Error fetching user reports:", error);
       } finally {
@@ -45,6 +50,10 @@ export function MyReportsPage() {
 
     fetchUserReports();
   }, [isConnected, address, navigate]);
+
+  // Calculate paginated scammers
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedScammers = scammers.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   return (
     <div className="min-h-screen old-paper">
@@ -71,7 +80,12 @@ export function MyReportsPage() {
           </div>
         ) : scammers.length > 0 ? (
           <div className="max-w-4xl mx-auto">
-            <ScammerGrid scammers={scammers} />
+            <ScammerGrid 
+              paginatedScammers={paginatedScammers}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              setCurrentPage={setCurrentPage}
+            />
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-16 max-w-md mx-auto text-center">
