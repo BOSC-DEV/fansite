@@ -28,6 +28,7 @@ export const storageService = {
   incrementScammerViews: scammerService.incrementScammerViews.bind(scammerService),
   likeScammer: scammerService.likeScammer.bind(scammerService),
   dislikeScammer: scammerService.dislikeScammer.bind(scammerService),
+  updateScammerStats: scammerService.updateScammerStats.bind(scammerService),
   
   // Comment methods
   saveComment: commentService.saveComment.bind(commentService),

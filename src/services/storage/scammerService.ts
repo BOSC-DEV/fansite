@@ -196,6 +196,47 @@ export class ScammerService extends BaseSupabaseService {
         .eq('id', scammerId);
     }
   }
+
+  async updateScammerStats(scammerId: string, stats: { likes?: number; dislikes?: number; views?: number }): Promise<boolean> {
+    try {
+      console.log(`Updating stats for scammer ${scammerId}:`, stats);
+      
+      const { data: scammer, error: getError } = await this.supabase
+        .from('scammers')
+        .select('likes, dislikes, views')
+        .eq('id', scammerId)
+        .maybeSingle();
+      
+      if (getError) {
+        console.error('Error fetching scammer for stats update:', getError);
+        return false;
+      }
+      
+      if (!scammer) {
+        console.error('Scammer not found for stats update');
+        return false;
+      }
+      
+      const { error: updateError } = await this.supabase
+        .from('scammers')
+        .update({
+          likes: stats.likes !== undefined ? stats.likes : scammer.likes,
+          dislikes: stats.dislikes !== undefined ? stats.dislikes : scammer.dislikes,
+          views: stats.views !== undefined ? stats.views : scammer.views
+        })
+        .eq('id', scammerId);
+      
+      if (updateError) {
+        console.error('Error updating scammer stats:', updateError);
+        return false;
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Unexpected error updating scammer stats:', error);
+      return false;
+    }
+  }
 }
 
 export const scammerService = new ScammerService();

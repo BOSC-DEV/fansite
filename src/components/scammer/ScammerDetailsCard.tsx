@@ -1,7 +1,4 @@
 
-// This file needs to ensure the "Added by" link uses the correct path format
-// We need to ensure we use wallet addresses correctly when usernames are not available
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -17,6 +14,17 @@ import { storageService } from "@/services/storage";
 
 interface ScammerDetailsCardProps {
   scammer: Scammer;
+  bountyAmount?: number;
+  imageLoaded?: boolean;
+  setImageLoaded?: React.Dispatch<React.SetStateAction<boolean>>;
+  formatDate?: (date: Date) => string;
+  scammerStats?: {
+    likes: number;
+    dislikes: number;
+    views: number;
+  };
+  onLikeScammer?: () => void;
+  onDislikeScammer?: () => void;
 }
 
 export function ScammerDetailsCard({ scammer }: ScammerDetailsCardProps) {
