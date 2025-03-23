@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { storageService, UserProfile } from "@/services/storage/supabaseService";
+import { isSupabaseConfigured } from "@/lib/supabase";
 
 export interface ProfileFormData {
   displayName: string;
@@ -22,27 +23,33 @@ export function useProfileForm() {
   const [bioCharCount, setBioCharCount] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
+  const supabaseReady = isSupabaseConfigured();
 
   useEffect(() => {
     // Check if user already has a profile using the storageService
     const fetchProfile = async () => {
-      if (isConnected && address) {
-        const profile = await storageService.getProfile(address);
-        if (profile) {
-          setDisplayName(profile.displayName || "");
-          setProfilePicUrl(profile.profilePicUrl || "");
-          // The following fields might not exist in older profile objects
-          setXLink(profile.xLink || "");
-          setWebsiteLink(profile.websiteLink || "");
-          setBio(profile.bio || "");
-          setBioCharCount(profile.bio ? profile.bio.length : 0);
-          setHasProfile(true);
+      if (isConnected && address && supabaseReady) {
+        try {
+          const profile = await storageService.getProfile(address);
+          if (profile) {
+            setDisplayName(profile.displayName || "");
+            setProfilePicUrl(profile.profilePicUrl || "");
+            // The following fields might not exist in older profile objects
+            setXLink(profile.xLink || "");
+            setWebsiteLink(profile.websiteLink || "");
+            setBio(profile.bio || "");
+            setBioCharCount(profile.bio ? profile.bio.length : 0);
+            setHasProfile(true);
+          }
+        } catch (error) {
+          console.error("Error fetching profile:", error);
+          toast.error("Failed to load profile data");
         }
       }
     };
 
     fetchProfile();
-  }, [isConnected, address]);
+  }, [isConnected, address, supabaseReady]);
 
   const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
@@ -62,6 +69,11 @@ export function useProfileForm() {
   };
 
   const validateForm = () => {
+    if (!supabaseReady) {
+      toast.error("Supabase is not configured properly. Please check your environment variables.");
+      return false;
+    }
+
     if (!displayName.trim()) {
       toast.error("Please enter a display name");
       return false;
@@ -88,7 +100,7 @@ export function useProfileForm() {
     
     try {
       // Store profile using storageService
-      if (address) {
+      if (address && supabaseReady) {
         const profile: UserProfile = {
           displayName,
           profilePicUrl,
@@ -138,5 +150,6 @@ export function useProfileForm() {
     saveProfile,
     address,
     isConnected,
+    supabaseReady,
   };
 }

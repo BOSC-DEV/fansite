@@ -6,17 +6,21 @@ import { useWallet } from "@/context/WalletContext";
 import { ProfileLinks } from "@/components/profile/ProfileLinks";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserCircle2 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { storageService, UserProfile as ProfileType } from "@/services/storage/supabaseService";
+import { isSupabaseConfigured } from "@/lib/supabase";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 export function ProfilePage() {
   const { isConnected, address } = useWallet();
   const [profileData, setProfileData] = useState<ProfileType | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const supabaseReady = isSupabaseConfigured();
   
   useEffect(() => {
     const fetchProfile = async () => {
-      if (isConnected && address) {
+      if (isConnected && address && supabaseReady) {
         setIsLoading(true);
         try {
           const profile = await storageService.getProfile(address);
@@ -32,7 +36,7 @@ export function ProfilePage() {
     };
     
     fetchProfile();
-  }, [isConnected, address]);
+  }, [isConnected, address, supabaseReady]);
 
   return (
     <div className="min-h-screen old-paper">
@@ -40,6 +44,17 @@ export function ProfilePage() {
       <main className="container mx-auto px-4 py-8 pt-28">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl font-wanted text-western-accent text-center mb-8">Your Profile</h1>
+          
+          {!supabaseReady && (
+            <Alert variant="destructive" className="mb-8">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Configuration Error</AlertTitle>
+              <AlertDescription>
+                Supabase is not configured properly. Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY 
+                to your .env file. See .env.example for details.
+              </AlertDescription>
+            </Alert>
+          )}
           
           {isLoading ? (
             <Card className="p-4">
@@ -82,7 +97,18 @@ export function ProfilePage() {
             </div>
           ) : null}
           
-          <UserProfile />
+          {supabaseReady ? (
+            <UserProfile />
+          ) : (
+            <Card>
+              <CardHeader>
+                <CardTitle>Profile Management Unavailable</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p>Profile management is unavailable until Supabase is properly configured.</p>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </main>
     </div>
