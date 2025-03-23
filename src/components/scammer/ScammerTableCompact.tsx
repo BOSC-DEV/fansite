@@ -26,36 +26,41 @@ export const ScammerTableCompact = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {scammers.map((scammer, index) => (
-            <TableRow key={scammer.id} className="border-b border-western-wood/20 hover:bg-western-sand/10">
-              <TableCell className="font-medium py-4">
-                <div className="flex flex-wrap justify-center gap-1">
-                  {scammer.aliases && scammer.aliases.length > 0 ? (
-                    <>
-                      <Badge variant="outline" className="text-sm bg-western-sand/20 border-western-wood/30 text-western-wood px-4 py-2 font-medium">
-                        {scammer.aliases[0]}
-                      </Badge>
-                      {scammer.aliases.length > 1 && (
-                        <Badge variant="outline" className="text-sm bg-western-sand/20 border-western-wood/30 text-western-wood px-2 py-2 font-medium">
-                          +{scammer.aliases.length - 1}
+          {scammers.map((scammer) => {
+            // Ensure aliases is always an array
+            const aliases = Array.isArray(scammer.aliases) ? scammer.aliases : [];
+            
+            return (
+              <TableRow key={scammer.id} className="border-b border-western-wood/20 hover:bg-western-sand/10">
+                <TableCell className="font-medium py-4">
+                  <div className="flex flex-wrap justify-center gap-1">
+                    {aliases.length > 0 ? (
+                      <>
+                        <Badge variant="outline" className="text-sm bg-western-sand/20 border-western-wood/30 text-western-wood px-4 py-2 font-medium">
+                          {aliases[0]}
                         </Badge>
-                      )}
-                    </>
-                  ) : (
-                    <span className="text-western-wood/50 text-sm">None known</span>
-                  )}
-                </div>
-              </TableCell>
-              <TableCell className="text-center font-medium py-4">
-                <div className="flex items-center justify-center">
-                  <span className="text-western-accent font-wanted">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
-                </div>
-              </TableCell>
-              <TableCell className="text-right text-western-wood/90 text-sm py-4">
-                {formatDate(scammer.dateAdded)}
-              </TableCell>
-            </TableRow>
-          ))}
+                        {aliases.length > 1 && (
+                          <Badge variant="outline" className="text-sm bg-western-sand/20 border-western-wood/30 text-western-wood px-2 py-2 font-medium">
+                            +{aliases.length - 1}
+                          </Badge>
+                        )}
+                      </>
+                    ) : (
+                      <span className="text-western-wood/50 text-sm">None known</span>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell className="text-center font-medium py-4">
+                  <div className="flex items-center justify-center">
+                    <span className="text-western-accent font-wanted">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
+                  </div>
+                </TableCell>
+                <TableCell className="text-right text-western-wood/90 text-sm py-4">
+                  {formatDate(scammer.dateAdded)}
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>

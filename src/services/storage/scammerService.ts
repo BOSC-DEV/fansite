@@ -35,7 +35,16 @@ export class ScammerService extends BaseSupabaseService {
       // Convert from database format to client format
       return data.map(item => {
         // Ensure aliases is properly converted from JSON
-        const aliases = safeJsonToStringArray(item.aliases);
+        let aliases: string[] = [];
+        try {
+          if (item.aliases) {
+            aliases = safeJsonToStringArray(item.aliases);
+          }
+        } catch (e) {
+          console.error(`Error parsing aliases for scammer ${item.name}:`, e, item.aliases);
+          aliases = [];
+        }
+        
         console.log(`Scammer ${item.name} has aliases:`, aliases);
         
         return {

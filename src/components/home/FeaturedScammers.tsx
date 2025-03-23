@@ -4,14 +4,13 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Scammer } from "@/lib/types";
 import { ArrowRight } from "lucide-react";
-import { ScammerTable } from "@/components/scammer/ScammerTable";
+import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
 import { useWallet } from "@/context/WalletContext";
 import { scammerService } from "@/services/storage/scammerService";
 
 export const FeaturedScammers = () => {
   const [featuredScammers, setFeaturedScammers] = useState<Scammer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
   const { chainId } = useWallet();
 
   useEffect(() => {
@@ -42,6 +41,10 @@ export const FeaturedScammers = () => {
         
         setFeaturedScammers(scammers);
         console.log('Featured scammers loaded:', scammers.length);
+        // Log the aliases for debugging
+        scammers.forEach(scammer => {
+          console.log(`Scammer ${scammer.name} has aliases:`, scammer.aliases);
+        });
       } catch (error) {
         console.error("Error fetching featured scammers:", error);
         setFeaturedScammers([]);
@@ -69,10 +72,6 @@ export const FeaturedScammers = () => {
     }).format(date);
   };
 
-  // Always one page for featured scammers
-  const totalPages = 1;
-  const itemsPerPage = 5;
-
   return (
     <section className="py-16 bg-western-parchment/30">
       <div className="container mx-auto max-w-6xl px-4">
@@ -95,12 +94,8 @@ export const FeaturedScammers = () => {
               <p className="text-muted-foreground">Loading scammers...</p>
             </div>
           ) : featuredScammers.length > 0 ? (
-            <ScammerTable 
-              paginatedScammers={featuredScammers}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              itemsPerPage={itemsPerPage}
-              setCurrentPage={setCurrentPage}
+            <ScammerTableCompact 
+              scammers={featuredScammers}
               formatCurrency={formatCurrency}
               formatDate={formatDate}
             />
