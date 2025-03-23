@@ -1,123 +1,120 @@
 
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
+import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { UserCircle2, Upload } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { storageService } from "@/services/storage";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 
 interface ProfilePictureUploadProps {
   displayName: string;
   profilePicUrl: string;
   onProfilePicChange: (url: string) => void;
-  userId?: string;
+  userId: string;
 }
 
-export function ProfilePictureUpload({ 
-  displayName, 
-  profilePicUrl, 
+export function ProfilePictureUpload({
+  displayName,
+  profilePicUrl,
   onProfilePicChange,
-  userId
+  userId,
 }: ProfilePictureUploadProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) return;
-    
-    if (file.size > 1 * 1024 * 1024) {  // 1MB
-      toast.error("File size should be less than 1MB");
+
+    // Validate file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Image size exceeds 2MB limit");
       return;
     }
 
-    if (!userId) {
-      toast.error("User ID is required for uploading images");
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error("Only image files are allowed");
       return;
     }
 
     setIsUploading(true);
-    console.log("Starting upload process for user:", userId);
-    
     try {
-      // Generate a unique file name
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${userId}-${Date.now()}.${fileExt}`;
-      const filePath = `${fileName}`;
+      console.log("[ProfilePictureUpload] Uploading image file:", file.name);
       
-      console.log("Uploading file:", filePath, "to bucket: profile-images");
-      
-      // Upload the file to the 'profile-images' bucket
-      const { error: uploadError } = await supabase.storage
-        .from('profile-images')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: true // Overwrite if the file already exists
-        });
-        
-      if (uploadError) {
-        console.error('Error uploading image:', uploadError);
-        toast.error(`Upload failed: ${uploadError.message}`);
+      if (!userId) {
+        toast.error("User ID is required to upload a profile picture");
         return;
       }
       
-      // Get the public URL for the uploaded file
-      const { data: publicUrlData } = supabase.storage
-        .from('profile-images')
-        .getPublicUrl(filePath);
+      const url = await storageService.uploadProfileImage(file, userId);
       
-      console.log("Upload successful, public URL:", publicUrlData.publicUrl);
-      
-      if (publicUrlData.publicUrl) {
-        onProfilePicChange(publicUrlData.publicUrl);
-        toast.success("Image uploaded successfully");
+      if (url) {
+        console.log("[ProfilePictureUpload] Image uploaded successfully:", url);
+        onProfilePicChange(url);
+        toast.success("Profile picture uploaded successfully");
       } else {
-        toast.error("Failed to get public URL");
+        toast.error("Failed to upload profile picture");
       }
     } catch (error) {
-      console.error("Error in upload process:", error);
-      toast.error("Error uploading image");
+      console.error("[ProfilePictureUpload] Error uploading profile picture:", error);
+      toast.error("Error uploading profile picture");
     } finally {
       setIsUploading(false);
     }
   };
 
-  const triggerFileInput = () => {
-    fileInputRef.current?.click();
-  };
+  const initials = displayName
+    .split(" ")
+    .map((name) => name[0])
+    .join("")
+    .toUpperCase();
 
   return (
-    <div className="flex flex-col items-center space-y-4 mb-4">
-      <Avatar className="w-24 h-24">
-        <AvatarImage src={profilePicUrl} alt={displayName} />
-        <AvatarFallback className="bg-western-sand">
-          <UserCircle2 className="w-12 h-12 text-western-wood" />
-        </AvatarFallback>
-      </Avatar>
-      
-      <Button 
-        type="button" 
-        variant="outline" 
-        onClick={triggerFileInput}
-        disabled={isUploading}
-        className="flex items-center gap-2"
-      >
-        <Upload size={16} />
-        {isUploading ? "Uploading..." : "Upload Picture"}
-      </Button>
-      
-      <input 
-        type="file" 
+    <div className="flex flex-col items-center space-y-4">
+      <Label htmlFor="profilePic" className="text-center font-medium">
+        Profile Picture
+      </Label>
+      <div className="relative">
+        <Avatar className="w-24 h-24">
+          <AvatarImage src={profilePicUrl} alt={displayName} />
+          <AvatarFallback className="bg-western-sand text-lg">
+            {initials || <UserCircle2 className="w-12 h-12 text-western-wood" />}
+          </AvatarFallback>
+        </Avatar>
+        <Button
+          size="icon"
+          variant="outline"
+          className="absolute bottom-0 right-0 rounded-full bg-background h-8 w-8"
+          onClick={handleUploadClick}
+          disabled={isUploading}
+        >
+          {isUploading ? (
+            <div className="h-4 w-4 animate-spin rounded-full border-2 border-western-sand border-t-transparent" />
+          ) : (
+            <Upload className="h-4 w-4" />
+          )}
+        </Button>
+      </div>
+      <input
         ref={fileInputRef}
-        className="hidden"
+        id="profilePic"
+        type="file"
         accept="image/*"
+        className="hidden"
         onChange={handleFileChange}
+        disabled={isUploading}
       />
-      
-      <p className="text-xs text-muted-foreground text-center">
-        Max file size: 1MB<br />
-        Supported formats: JPEG, PNG, GIF
+      <p className="text-xs text-center text-muted-foreground max-w-[200px]">
+        Upload a profile picture (max 2MB)
       </p>
     </div>
   );
 }
+
+export default ProfilePictureUpload;

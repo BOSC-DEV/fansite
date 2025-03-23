@@ -1,9 +1,10 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase";
+import { storageService } from "@/services/storage";
 
 interface ProfileFormData {
   displayName: string;
@@ -25,6 +26,25 @@ export function useProfileFormSubmit() {
   const [hasProfile, setHasProfile] = useState(false);
   const [profileId, setProfileId] = useState<string | undefined>(undefined);
   const supabaseReady = isSupabaseConfigured();
+
+  // Check if user has a profile on mount
+  useEffect(() => {
+    const checkProfile = async () => {
+      if (isConnected && address && supabaseReady) {
+        try {
+          const exists = await storageService.hasProfile(address);
+          setHasProfile(exists);
+          if (exists) {
+            setProfileId(address);
+          }
+        } catch (error) {
+          console.error("[useProfileFormSubmit] Error checking profile:", error);
+        }
+      }
+    };
+    
+    checkProfile();
+  }, [isConnected, address, supabaseReady]);
 
   const validateForm = (
     formData: ProfileFormData, 
@@ -74,68 +94,34 @@ export function useProfileFormSubmit() {
     console.log("[useProfileFormSubmit] Starting profile save for address:", address);
     
     try {
-      // Use the wallet address as the unique ID
-      const uniqueId = address;
-      console.log("[useProfileFormSubmit] Using ID:", uniqueId);
+      // Use the wallet address as the ID
+      const profileData = {
+        id: address,
+        displayName: formData.displayName,
+        username: formData.username,
+        profilePicUrl: formData.profilePicUrl,
+        walletAddress: address,
+        createdAt: new Date().toISOString(),
+        xLink: formData.xLink || '',
+        websiteLink: formData.websiteLink || '',
+        bio: formData.bio || ''
+      };
       
-      // Direct database insert/update to eliminate potential issues with the service layer
-      if (address && supabaseReady) {
-        // Check if profile exists
-        const { data: existingProfile, error: checkError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('wallet_address', address)
-          .maybeSingle();
-        
-        if (checkError) {
-          console.error('[useProfileFormSubmit] Error checking profile existence:', checkError);
-          toast.error("Error checking if profile exists");
-          return false;
-        }
-        
-        // Convert to database format
-        const dbProfile = {
-          id: uniqueId,
-          display_name: formData.displayName,
-          username: formData.username,
-          profile_pic_url: formData.profilePicUrl,
-          wallet_address: address,
-          created_at: new Date().toISOString(),
-          x_link: formData.xLink || null,
-          website_link: formData.websiteLink || null,
-          bio: formData.bio || null
-        };
-        
-        console.log("[useProfileFormSubmit] Prepared profile data:", dbProfile);
-        
-        let result;
-        
-        if (existingProfile) {
-          console.log("[useProfileFormSubmit] Updating existing profile");
-          result = await supabase
-            .from('profiles')
-            .update(dbProfile)
-            .eq('wallet_address', address);
-        } else {
-          console.log("[useProfileFormSubmit] Creating new profile");
-          result = await supabase
-            .from('profiles')
-            .insert(dbProfile);
-        }
-        
-        if (result.error) {
-          console.error('[useProfileFormSubmit] Error saving profile:', result.error);
-          toast.error(`Failed to save profile: ${result.error.message}`);
-          return false;
-        }
-        
-        console.log("[useProfileFormSubmit] Profile saved successfully");
-        toast.success("Profile saved successfully");
-        setHasProfile(true);
-        setProfileId(uniqueId);
-        return true;
+      console.log("[useProfileFormSubmit] Prepared profile data:", profileData);
+      
+      const success = await storageService.saveProfile(profileData);
+      
+      if (!success) {
+        console.error('[useProfileFormSubmit] Error saving profile through service');
+        toast.error("Failed to save profile");
+        return false;
       }
-      return false;
+      
+      console.log("[useProfileFormSubmit] Profile saved successfully");
+      toast.success("Profile saved successfully");
+      setHasProfile(true);
+      setProfileId(address);
+      return true;
     } catch (error) {
       console.error("[useProfileFormSubmit] Error saving profile:", error);
       toast.error("Failed to save profile");
