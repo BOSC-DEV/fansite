@@ -2,7 +2,7 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 
 export class Web3Provider {
-  solana: typeof window.phantom?.solana | null = null;
+  solana: any = null; // Using 'any' first, we'll properly type this with ethereum.d.ts
   connection: Connection | null = null;
   publicKey: PublicKey | null = null;
   
