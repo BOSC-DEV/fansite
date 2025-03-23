@@ -83,14 +83,14 @@ export function ProfileButton() {
         )}
         
         <DropdownMenuItem asChild>
-          <Link to="/profile" className="cursor-pointer text-western-parchment hover:text-western-accent">
+          <Link to="/profile" className="cursor-pointer text-western-parchment hover:text-western-parchment hover:bg-western-accent/40 transition-colors">
             {profile ? "Edit Profile" : "Create Profile"}
           </Link>
         </DropdownMenuItem>
         
         {profile && profile.username && (
           <DropdownMenuItem asChild>
-            <Link to={`/${profile.username}`} className="cursor-pointer text-western-parchment hover:text-western-accent">
+            <Link to={`/${profile.username}`} className="cursor-pointer text-western-parchment hover:text-western-parchment hover:bg-western-accent/40 transition-colors">
               View Public Profile
             </Link>
           </DropdownMenuItem>
@@ -99,20 +99,20 @@ export function ProfileButton() {
         <DropdownMenuSeparator />
         
         <DropdownMenuItem asChild>
-          <Link to="/most-wanted" className="cursor-pointer text-western-parchment hover:text-western-accent">
+          <Link to="/most-wanted" className="cursor-pointer text-western-parchment hover:text-western-parchment hover:bg-western-accent/40 transition-colors">
             Most Wanted List
           </Link>
         </DropdownMenuItem>
         
         <DropdownMenuItem asChild>
-          <Link to="/create-listing" className="cursor-pointer text-western-parchment hover:text-western-accent">
+          <Link to="/create-listing" className="cursor-pointer text-western-parchment hover:text-western-parchment hover:bg-western-accent/40 transition-colors">
             Report a Scammer
           </Link>
         </DropdownMenuItem>
         
         <DropdownMenuSeparator />
         
-        <DropdownMenuItem onClick={handleDisconnect} className="cursor-pointer text-western-parchment hover:text-western-accent">
+        <DropdownMenuItem onClick={handleDisconnect} className="cursor-pointer text-western-parchment hover:text-western-parchment hover:bg-western-accent/40 transition-colors">
           <LogOut className="h-4 w-4 mr-2" />
           Disconnect Wallet
         </DropdownMenuItem>
