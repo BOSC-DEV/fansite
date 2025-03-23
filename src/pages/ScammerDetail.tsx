@@ -32,10 +32,14 @@ const ScammerDetail = () => {
       
       if (id) {
         try {
+          console.log("Attempting to load scammer with ID:", id);
+          
           // First try to load from Supabase
           const supabaseScammer = await scammerService.getScammer(id);
           
           if (supabaseScammer) {
+            console.log("Scammer found in Supabase:", supabaseScammer.name);
+            
             // Convert to Scammer type
             setScammer({
               id: supabaseScammer.id,
@@ -52,17 +56,27 @@ const ScammerDetail = () => {
               addedBy: supabaseScammer.addedBy
             });
             
+            setScammerStats({
+              likes: supabaseScammer.likes || 0,
+              dislikes: supabaseScammer.dislikes || 0,
+              views: supabaseScammer.views || 0
+            });
+            
             // Track view
             try {
               await scammerService.incrementScammerViews(id);
             } catch (error) {
-              console.error("Failed to increment view count:", error);
+              console.error("Failed to increment view count in Supabase:", error);
             }
           } else {
+            console.log("Scammer not found in Supabase, checking localStorage");
+            
             // If not found in Supabase, try localStorage
             const localScammer = storageService.getScammer(id);
             
             if (localScammer) {
+              console.log("Scammer found in localStorage:", localScammer.name);
+              
               setScammer({
                 id: localScammer.id,
                 name: localScammer.name,
@@ -77,16 +91,36 @@ const ScammerDetail = () => {
                 dateAdded: new Date(localScammer.dateAdded),
                 addedBy: localScammer.addedBy
               });
+              
+              setScammerStats({
+                likes: localScammer.likes || 0,
+                dislikes: localScammer.dislikes || 0,
+                views: localScammer.views || 0
+              });
+              
+              // Track view in localStorage
+              storageService.incrementScammerViews(id);
+              
+              // Try to save to Supabase for next time
+              try {
+                console.log("Attempting to save localStorage scammer to Supabase");
+                await scammerService.saveScammer(localScammer);
+              } catch (err) {
+                console.error("Failed to save localStorage scammer to Supabase:", err);
+              }
             } else {
               console.error("Scammer not found in either Supabase or localStorage");
             }
           }
         } catch (error) {
           console.error("Error loading scammer:", error);
+          
           // Fallback to localStorage if Supabase fails
           const localScammer = storageService.getScammer(id);
           
           if (localScammer) {
+            console.log("Fallback: Loading scammer from localStorage after Supabase error");
+            
             setScammer({
               id: localScammer.id,
               name: localScammer.name,
@@ -101,13 +135,19 @@ const ScammerDetail = () => {
               dateAdded: new Date(localScammer.dateAdded),
               addedBy: localScammer.addedBy
             });
+            
+            setScammerStats({
+              likes: localScammer.likes || 0,
+              dislikes: localScammer.dislikes || 0,
+              views: localScammer.views || 0
+            });
+            
+            // Track view in localStorage
+            storageService.incrementScammerViews(id);
           } else {
             toast.error("Failed to load scammer details");
           }
         }
-
-        // Load scammer stats
-        loadScammerStats(id);
       }
       setIsLoading(false);
     };

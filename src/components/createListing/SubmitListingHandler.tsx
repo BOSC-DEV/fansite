@@ -91,7 +91,13 @@ export function useSubmitListing() {
       
       // Try to save to Supabase if available (but don't block on it)
       try {
-        await scammerService.saveScammer(scammerListing);
+        console.log("Attempting to save scammer to Supabase...");
+        const saved = await scammerService.saveScammer(scammerListing);
+        if (saved) {
+          console.log("Successfully saved scammer to Supabase");
+        } else {
+          console.warn("Failed to save to Supabase, but saved locally");
+        }
       } catch (error) {
         console.error("Failed to save to Supabase, but saved locally:", error);
         // Continue with local storage version only

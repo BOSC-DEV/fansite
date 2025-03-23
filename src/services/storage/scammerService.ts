@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService, safeJsonToStringArray } from './baseSupabaseService';
 import { Scammer } from "@/lib/types";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface ScammerListing extends Omit<Scammer, 'dateAdded'> {
   dateAdded: string; // ISO string
@@ -12,84 +13,111 @@ export interface ScammerListing extends Omit<Scammer, 'dateAdded'> {
 
 export class ScammerService extends BaseSupabaseService {
   async getAllScammers(): Promise<ScammerListing[]> {
-    const { data, error } = await this.supabase
-      .from('scammers')
-      .select('*')
-      .order('date_added', { ascending: false });
+    try {
+      const { data, error } = await this.supabase
+        .from('scammers')
+        .select('*')
+        .order('date_added', { ascending: false });
 
-    if (error) {
-      console.error('Error fetching scammers:', error);
+      if (error) {
+        console.error('Error fetching scammers from Supabase:', error);
+        return [];
+      }
+
+      if (!data || data.length === 0) {
+        console.log('No scammers found in Supabase');
+        return [];
+      }
+
+      console.log(`Retrieved ${data.length} scammers from Supabase`);
+
+      // Convert from database format to client format
+      return data.map(item => ({
+        id: item.id,
+        name: item.name,
+        photoUrl: item.photo_url || '',
+        accusedOf: item.accused_of || '',
+        links: safeJsonToStringArray(item.links),
+        aliases: safeJsonToStringArray(item.aliases),
+        accomplices: safeJsonToStringArray(item.accomplices),
+        officialResponse: item.official_response || '',
+        bountyAmount: Number(item.bounty_amount) || 0,
+        walletAddress: item.wallet_address || '',
+        dateAdded: item.date_added,
+        addedBy: item.added_by || '',
+        likes: item.likes || 0,
+        dislikes: item.dislikes || 0,
+        views: item.views || 0
+      }));
+    } catch (error) {
+      console.error('Unexpected error fetching scammers:', error);
       return [];
     }
-
-    // Convert from database format to client format
-    return data.map(item => ({
-      id: item.id,
-      name: item.name,
-      photoUrl: item.photo_url || '',
-      accusedOf: item.accused_of || '',
-      links: safeJsonToStringArray(item.links),
-      aliases: safeJsonToStringArray(item.aliases),
-      accomplices: safeJsonToStringArray(item.accomplices),
-      officialResponse: item.official_response || '',
-      bountyAmount: Number(item.bounty_amount) || 0,
-      walletAddress: item.wallet_address || '',
-      dateAdded: item.date_added,
-      addedBy: item.added_by || '',
-      likes: item.likes || 0,
-      dislikes: item.dislikes || 0,
-      views: item.views || 0
-    }));
   }
 
   async saveScammer(scammer: ScammerListing): Promise<boolean> {
-    // Convert from client format to database format
-    const dbScammer = {
-      id: scammer.id,
-      name: scammer.name,
-      photo_url: scammer.photoUrl,
-      accused_of: scammer.accusedOf,
-      links: scammer.links,
-      aliases: scammer.aliases,
-      accomplices: scammer.accomplices,
-      official_response: scammer.officialResponse,
-      bounty_amount: scammer.bountyAmount,
-      wallet_address: "",
-      date_added: scammer.dateAdded,
-      added_by: scammer.addedBy,
-      likes: scammer.likes || 0,
-      dislikes: scammer.dislikes || 0,
-      views: scammer.views || 0
-    };
+    console.log('Attempting to save scammer to Supabase:', scammer.id, scammer.name);
     
-    // Check if scammer exists
-    const { data: existingScammer } = await this.supabase
-      .from('scammers')
-      .select('id')
-      .eq('id', scammer.id)
-      .single();
-
-    let result;
-    
-    if (existingScammer) {
-      // Update
-      result = await this.supabase
+    try {
+      // Convert from client format to database format
+      const dbScammer = {
+        id: scammer.id,
+        name: scammer.name,
+        photo_url: scammer.photoUrl,
+        accused_of: scammer.accusedOf,
+        links: scammer.links,
+        aliases: scammer.aliases,
+        accomplices: scammer.accomplices,
+        official_response: scammer.officialResponse,
+        bounty_amount: scammer.bountyAmount,
+        wallet_address: scammer.walletAddress || "",
+        date_added: scammer.dateAdded,
+        added_by: scammer.addedBy,
+        likes: scammer.likes || 0,
+        dislikes: scammer.dislikes || 0,
+        views: scammer.views || 0
+      };
+      
+      // Check if scammer exists
+      const { data: existingScammer, error: checkError } = await this.supabase
         .from('scammers')
-        .update(dbScammer)
-        .eq('id', scammer.id);
-    } else {
-      // Insert
-      result = await this.supabase
-        .from('scammers')
-        .insert(dbScammer);
-    }
+        .select('id')
+        .eq('id', scammer.id)
+        .maybeSingle();
 
-    if (result.error) {
-      console.error('Error saving scammer:', result.error);
+      if (checkError) {
+        console.error('Error checking if scammer exists:', checkError);
+        return false;
+      }
+
+      let result;
+      
+      if (existingScammer) {
+        console.log('Updating existing scammer in Supabase:', scammer.id);
+        // Update
+        result = await this.supabase
+          .from('scammers')
+          .update(dbScammer)
+          .eq('id', scammer.id);
+      } else {
+        console.log('Inserting new scammer in Supabase:', scammer.id);
+        // Insert
+        result = await this.supabase
+          .from('scammers')
+          .insert(dbScammer);
+      }
+
+      if (result.error) {
+        console.error('Error saving scammer to Supabase:', result.error);
+        return false;
+      }
+      
+      console.log('Successfully saved scammer to Supabase:', scammer.id);
+      return true;
+    } catch (error) {
+      console.error('Unexpected error saving scammer:', error);
       return false;
     }
-    
-    return true;
   }
 
   async getScammer(scammerId: string): Promise<ScammerListing | null> {
