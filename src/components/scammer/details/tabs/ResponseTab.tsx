@@ -4,10 +4,10 @@ import { AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ResponseTabProps {
-  officialResponse: string;
+  officialResponse?: string;
 }
 
-export function ResponseTab({ officialResponse }: ResponseTabProps) {
+export function ResponseTab({ officialResponse = "" }: ResponseTabProps) {
   return (
     <Card className="border border-western-wood/20 bg-western-parchment/20">
       <CardHeader className="pb-2">

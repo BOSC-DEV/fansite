@@ -4,12 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface IdentityTabProps {
-  aliases: string[];
+  aliases?: string[];
 }
 
 export function IdentityTab({ aliases = [] }: IdentityTabProps) {
-  console.log("IdentityTab rendering with aliases:", aliases);
-  
   return (
     <Card className="border border-western-wood/20 bg-western-parchment/20">
       <CardHeader className="pb-2">

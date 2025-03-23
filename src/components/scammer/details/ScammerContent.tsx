@@ -6,17 +6,17 @@ import { NetworkTab } from './tabs/NetworkTab';
 import { ResponseTab } from './tabs/ResponseTab';
 
 interface ScammerContentProps {
-  aliases: string[];
-  links: string[];
-  accomplices: string[];
-  officialResponse: string;
-  likes: number;
-  dislikes: number;
-  views: number;
-  isLiked: boolean;
-  isDisliked: boolean;
-  onLike: () => void;
-  onDislike: () => void;
+  aliases?: string[];
+  links?: string[];
+  accomplices?: string[];
+  officialResponse?: string;
+  likes?: number;
+  dislikes?: number;
+  views?: number;
+  isLiked?: boolean;
+  isDisliked?: boolean;
+  onLike?: () => void;
+  onDislike?: () => void;
 }
 
 export function ScammerContent({ 
@@ -29,28 +29,22 @@ export function ScammerContent({
   views = 0,
   isLiked = false,
   isDisliked = false,
-  onLike,
-  onDislike
+  onLike = () => {},
+  onDislike = () => {}
 }: ScammerContentProps) {
-  console.log("ScammerContent rendering with:", {
-    links,
-    aliases,
-    accomplices
-  });
-  
   return (
     <div className="w-full space-y-8">
       {/* Identity Section */}
-      <IdentityTab aliases={aliases || []} />
+      <IdentityTab aliases={aliases} />
       
       {/* Evidence Section */}
-      <EvidenceTab links={links || []} />
+      <EvidenceTab links={links} />
       
       {/* Network Section */}
-      <NetworkTab accomplices={accomplices || []} />
+      <NetworkTab accomplices={accomplices} />
       
       {/* Response Section */}
-      <ResponseTab officialResponse={officialResponse || ""} />
+      <ResponseTab officialResponse={officialResponse} />
     </div>
   );
 }
