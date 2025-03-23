@@ -11,7 +11,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
-import { UserCircle2, LogOut } from "lucide-react";
+import { UserCircle2, LogOut, FileText } from "lucide-react";
 import { storageService, UserProfile } from "@/services/storage";
 import { toast } from "sonner";
 
@@ -95,6 +95,13 @@ export function ProfileButton() {
             </Link>
           </DropdownMenuItem>
         )}
+        
+        <DropdownMenuItem asChild>
+          <Link to="/my-reports" className="cursor-pointer text-western-parchment hover:text-western-parchment hover:bg-western-accent/40 transition-colors">
+            <FileText className="h-4 w-4 mr-2" />
+            My Reports
+          </Link>
+        </DropdownMenuItem>
         
         <DropdownMenuSeparator />
         
