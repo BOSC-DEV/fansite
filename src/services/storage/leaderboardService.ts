@@ -45,7 +45,8 @@ export class LeaderboardService extends BaseSupabaseService {
         return [];
       }
 
-      console.log(`[LeaderboardService] Retrieved ${profiles.length} profiles`);
+      // Log all retrieved profiles to debug
+      console.log(`[LeaderboardService] Retrieved ${profiles.length} profiles:`, JSON.stringify(profiles, null, 2));
       
       // Get all scammers to calculate user stats
       const scammers = await scammerService.getAllScammers();
