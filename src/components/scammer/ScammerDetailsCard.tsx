@@ -12,7 +12,7 @@ interface ScammerDetailsCardProps {
   bountyAmount?: number;
   imageLoaded?: boolean;
   setImageLoaded?: React.Dispatch<React.SetStateAction<boolean>>;
-  formatDate?: (date: string) => string; // Changed from Date to string
+  formatDate?: (date: string) => string; // Type is string -> string
   scammerStats?: {
     likes: number;
     dislikes: number;

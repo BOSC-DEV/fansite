@@ -12,20 +12,24 @@ export const formatCurrency = (amount: number) => {
 
 /**
  * Format dates to a readable string
+ * Updated to accept either Date or string
  */
-export const formatDate = (date: Date) => {
+export const formatDate = (date: Date | string) => {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
   return new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
-  }).format(date);
+  }).format(dateObj);
 };
 
 /**
  * Format a time string (e.g., "2 hours ago")
+ * Updated to accept either Date or string
  */
-export const formatTimeAgo = (date: Date) => {
-  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+export const formatTimeAgo = (date: Date | string) => {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const seconds = Math.floor((new Date().getTime() - dateObj.getTime()) / 1000);
   
   let interval = seconds / 31536000;
   if (interval > 1) {
