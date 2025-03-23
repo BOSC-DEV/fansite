@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { storageService, UserProfile as ProfileType } from "@/services/storage";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, Info } from "lucide-react";
+import { AlertCircle, Info, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function ProfilePage() {
@@ -24,12 +24,18 @@ export function ProfilePage() {
       if (isConnected && address && supabaseReady) {
         setIsLoading(true);
         try {
+          console.log("[ProfilePage] Fetching profile for address:", address);
           const profile = await storageService.getProfile(address);
+          
           if (profile) {
+            console.log("[ProfilePage] Profile found:", profile);
             setProfileData(profile);
+          } else {
+            console.log("[ProfilePage] No profile found for address:", address);
+            setProfileData(null);
           }
         } catch (error) {
-          console.error("Error fetching profile:", error);
+          console.error("[ProfilePage] Error fetching profile:", error);
         } finally {
           setIsLoading(false);
         }
@@ -38,6 +44,22 @@ export function ProfilePage() {
     
     fetchProfile();
   }, [isConnected, address, supabaseReady]);
+
+  // DEBUG: Show all profiles in Supabase
+  useEffect(() => {
+    const debugFetchAllProfiles = async () => {
+      if (supabaseReady) {
+        try {
+          const allProfiles = await storageService.getAllProfiles();
+          console.log("[DEBUG] All profiles in Supabase:", allProfiles);
+        } catch (error) {
+          console.error("[DEBUG] Error fetching all profiles:", error);
+        }
+      }
+    };
+    
+    debugFetchAllProfiles();
+  }, [supabaseReady]);
 
   return (
     <div className="min-h-screen old-paper">
@@ -58,13 +80,10 @@ export function ProfilePage() {
           )}
           
           {isLoading ? (
-            <Card className="p-4">
-              <div className="animate-pulse flex items-center gap-4">
-                <div className="rounded-full bg-western-sand h-20 w-20"></div>
-                <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-western-sand rounded w-3/4"></div>
-                  <div className="h-4 bg-western-sand rounded w-1/2"></div>
-                </div>
+            <Card className="p-4 mb-8">
+              <div className="flex items-center justify-center gap-4">
+                <Loader2 className="h-5 w-5 animate-spin text-western-accent" />
+                <div>Loading profile data...</div>
               </div>
             </Card>
           ) : isConnected && profileData ? (
@@ -80,8 +99,11 @@ export function ProfilePage() {
                   
                   <div className="flex-1">
                     <h2 className="text-xl font-semibold">{profileData.displayName}</h2>
-                    <p className="text-sm text-muted-foreground truncate">
-                      {address}
+                    <p className="text-sm text-muted-foreground">
+                      @{profileData.username || "unnamed"}
+                    </p>
+                    <p className="text-xs text-muted-foreground truncate mt-1">
+                      {profileData.walletAddress}
                     </p>
                     {profileData.bio && (
                       <p className="text-sm mt-2 text-muted-foreground">

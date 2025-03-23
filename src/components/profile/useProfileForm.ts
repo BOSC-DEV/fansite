@@ -28,6 +28,7 @@ export function useProfileForm() {
   const [bioCharCount, setBioCharCount] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
+  const [isFetchingProfile, setIsFetchingProfile] = useState(false);
   const supabaseReady = isSupabaseConfigured();
 
   useEffect(() => {
@@ -49,8 +50,12 @@ export function useProfileForm() {
     const fetchProfile = async () => {
       if (isConnected && address && supabaseReady) {
         try {
+          setIsFetchingProfile(true);
+          console.log("[useProfileForm] Fetching profile for address:", address);
           const profile = await storageService.getProfile(address);
+          
           if (profile) {
+            console.log("[useProfileForm] Profile found:", profile);
             setProfileId(profile.id);
             setDisplayName(profile.displayName || "");
             setUsername(profile.username || "");
@@ -60,10 +65,15 @@ export function useProfileForm() {
             setBio(profile.bio || "");
             setBioCharCount(profile.bio ? profile.bio.length : 0);
             setHasProfile(true);
+          } else {
+            console.log("[useProfileForm] No profile found for address:", address);
+            setHasProfile(false);
           }
         } catch (error) {
-          console.error("Error fetching profile:", error);
+          console.error("[useProfileForm] Error fetching profile:", error);
           toast.error("Failed to load profile data");
+        } finally {
+          setIsFetchingProfile(false);
         }
       }
     };
@@ -99,10 +109,11 @@ export function useProfileForm() {
     
     setCheckingUsername(true);
     try {
+      console.log("[useProfileForm] Checking username availability:", usernameToCheck);
       const isAvailable = await storageService.isUsernameAvailable(usernameToCheck, address);
       setUsernameAvailable(isAvailable);
     } catch (error) {
-      console.error("Error checking username:", error);
+      console.error("[useProfileForm] Error checking username:", error);
       setUsernameAvailable(false);
     } finally {
       setCheckingUsername(false);
@@ -179,6 +190,8 @@ export function useProfileForm() {
     setIsSubmitting(true);
     
     try {
+      console.log("[useProfileForm] Saving profile for address:", address);
+      
       // Use the wallet address as the profile ID
       const uniqueId = address;
       
@@ -196,6 +209,7 @@ export function useProfileForm() {
           bio
         };
         
+        console.log("[useProfileForm] Profile to save:", profile);
         const success = await storageService.saveProfile(profile);
         if (success) {
           toast.success("Profile saved successfully");
@@ -209,7 +223,7 @@ export function useProfileForm() {
       }
       return false;
     } catch (error) {
-      console.error("Error saving profile:", error);
+      console.error("[useProfileForm] Error saving profile:", error);
       toast.error("Failed to save profile");
       return false;
     } finally {
@@ -234,6 +248,7 @@ export function useProfileForm() {
     setWebsiteLink,
     handleBioChange,
     isSubmitting,
+    isFetchingProfile,
     hasProfile,
     saveProfile,
     address,

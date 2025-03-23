@@ -17,26 +17,34 @@ export interface UserProfile {
 
 export class ProfileService extends BaseSupabaseService {
   async getProfile(walletAddress: string): Promise<UserProfile | null> {
-    console.log("getProfile service: looking up by wallet address:", walletAddress);
+    console.log("[ProfileService] Getting profile for wallet address:", walletAddress);
+    
+    if (!walletAddress) {
+      console.error("[ProfileService] Error: Attempted to get profile with empty wallet address");
+      return null;
+    }
+    
+    // Normalize wallet address to ensure consistent case
+    const normalizedWalletAddress = walletAddress.trim();
     
     // Use maybeSingle() instead of single() to avoid errors when no profile exists
     const { data, error } = await this.supabase
       .from('profiles')
       .select('*')
-      .eq('wallet_address', walletAddress)
+      .eq('wallet_address', normalizedWalletAddress)
       .maybeSingle();
 
     if (error) {
-      console.error('Error fetching profile by wallet address:', error);
+      console.error('[ProfileService] Error fetching profile by wallet address:', error);
       return null;
     }
 
     if (!data) {
-      console.log("No profile found for wallet address:", walletAddress);
+      console.log("[ProfileService] No profile found for wallet address:", normalizedWalletAddress);
       return null;
     }
 
-    console.log("Profile found by wallet address:", data);
+    console.log("[ProfileService] Profile found by wallet address:", data);
     
     // Convert snake_case to camelCase for client-side usage
     return {
@@ -53,7 +61,12 @@ export class ProfileService extends BaseSupabaseService {
   }
 
   async getProfileByUsername(username: string): Promise<UserProfile | null> {
-    console.log("getProfileByUsername service: looking up by username:", username);
+    console.log("[ProfileService] Getting profile for username:", username);
+    
+    if (!username) {
+      console.error("[ProfileService] Error: Attempted to get profile with empty username");
+      return null;
+    }
     
     const { data, error } = await this.supabase
       .from('profiles')
@@ -62,16 +75,16 @@ export class ProfileService extends BaseSupabaseService {
       .maybeSingle();
 
     if (error) {
-      console.error('Error fetching profile by username:', error);
+      console.error('[ProfileService] Error fetching profile by username:', error);
       return null;
     }
 
     if (!data) {
-      console.log("No profile found for username:", username);
+      console.log("[ProfileService] No profile found for username:", username);
       return null;
     }
 
-    console.log("Profile found by username:", data);
+    console.log("[ProfileService] Profile found by username:", data);
 
     return {
       id: data.id,
@@ -92,7 +105,7 @@ export class ProfileService extends BaseSupabaseService {
       return false;
     }
     
-    console.log("Checking username availability:", username);
+    console.log("[ProfileService] Checking username availability:", username);
     
     const { data, error } = await this.supabase
       .from('profiles')
@@ -101,7 +114,7 @@ export class ProfileService extends BaseSupabaseService {
       .maybeSingle();
     
     if (error) {
-      console.error('Error checking username availability:', error);
+      console.error('[ProfileService] Error checking username availability:', error);
       return false;
     }
     
@@ -116,9 +129,17 @@ export class ProfileService extends BaseSupabaseService {
   }
 
   async saveProfile(profile: UserProfile): Promise<boolean> {
-    console.log("Saving profile for wallet:", profile.walletAddress);
+    console.log("[ProfileService] Saving profile for wallet:", profile.walletAddress);
     
-    // Now we'll use the wallet address as the ID
+    if (!profile.walletAddress) {
+      console.error("[ProfileService] Error: Attempted to save profile with empty wallet address");
+      return false;
+    }
+    
+    // Normalize wallet address
+    profile.walletAddress = profile.walletAddress.trim();
+    
+    // Use wallet address as the ID
     const profileId = profile.walletAddress;
     
     // Convert from camelCase to snake_case for database
@@ -134,6 +155,8 @@ export class ProfileService extends BaseSupabaseService {
       bio: profile.bio || null
     };
     
+    console.log("[ProfileService] Converted profile for database:", dbProfile);
+    
     // Check if profile exists
     const { data: existingProfile, error: lookupError } = await this.supabase
       .from('profiles')
@@ -142,20 +165,20 @@ export class ProfileService extends BaseSupabaseService {
       .maybeSingle();
     
     if (lookupError) {
-      console.error('Error checking if profile exists:', lookupError);
+      console.error('[ProfileService] Error checking if profile exists:', lookupError);
     }
 
     let result;
     
     if (existingProfile) {
-      console.log("Updating existing profile");
+      console.log("[ProfileService] Updating existing profile");
       // Update
       result = await this.supabase
         .from('profiles')
         .update(dbProfile)
         .eq('wallet_address', profile.walletAddress);
     } else {
-      console.log("Creating new profile");
+      console.log("[ProfileService] Creating new profile");
       // Insert
       result = await this.supabase
         .from('profiles')
@@ -163,29 +186,70 @@ export class ProfileService extends BaseSupabaseService {
     }
 
     if (result.error) {
-      console.error('Error saving profile:', result.error);
+      console.error('[ProfileService] Error saving profile:', result.error);
       return false;
     }
     
-    console.log("Profile saved successfully");
+    console.log("[ProfileService] Profile saved successfully");
     return true;
   }
 
   async hasProfile(walletAddress: string): Promise<boolean> {
-    console.log("Checking if wallet has profile:", walletAddress);
+    console.log("[ProfileService] Checking if wallet has profile:", walletAddress);
+    
+    if (!walletAddress) {
+      console.error("[ProfileService] Error: Attempted to check profile with empty wallet address");
+      return false;
+    }
+    
+    // Normalize wallet address
+    const normalizedWalletAddress = walletAddress.trim();
     
     const { data, error } = await this.supabase
       .from('profiles')
       .select('id')
-      .eq('wallet_address', walletAddress)
+      .eq('wallet_address', normalizedWalletAddress)
       .maybeSingle();
 
     if (error) {
-      console.error('Error checking if profile exists:', error);
+      console.error('[ProfileService] Error checking if profile exists:', error);
       return false;
     }
     
     return !!data;
+  }
+  
+  async getAllProfiles(): Promise<UserProfile[]> {
+    console.log("[ProfileService] Fetching all profiles");
+    
+    const { data, error } = await this.supabase
+      .from('profiles')
+      .select('*');
+      
+    if (error) {
+      console.error('[ProfileService] Error fetching all profiles:', error);
+      return [];
+    }
+    
+    if (!data || data.length === 0) {
+      console.log("[ProfileService] No profiles found in database");
+      return [];
+    }
+    
+    console.log(`[ProfileService] Retrieved ${data.length} profiles`);
+    
+    // Convert from database format to client format
+    return data.map(item => ({
+      id: item.id,
+      displayName: item.display_name,
+      username: item.username || '',
+      profilePicUrl: item.profile_pic_url || '',
+      walletAddress: item.wallet_address,
+      createdAt: item.created_at,
+      xLink: item.x_link || '',
+      websiteLink: item.website_link || '',
+      bio: item.bio || ''
+    }));
   }
 }
 
