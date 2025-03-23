@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@/context/WalletContext";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserCircle2 } from "lucide-react";
+import { UserCircle2, Upload } from "lucide-react";
 
 export function UserProfile() {
   const { isConnected, address } = useWallet();
@@ -17,6 +17,7 @@ export function UserProfile() {
   const [profilePicUrl, setProfilePicUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     // Check if user already has a profile
@@ -30,6 +31,24 @@ export function UserProfile() {
       }
     }
   }, [isConnected, address]);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("File size should be less than 5MB");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          setProfilePicUrl(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,6 +84,10 @@ export function UserProfile() {
     }
   };
 
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
   if (!isConnected) {
     return (
       <Card className="max-w-md mx-auto">
@@ -92,18 +115,43 @@ export function UserProfile() {
                 <UserCircle2 className="w-12 h-12 text-western-wood" />
               </AvatarFallback>
             </Avatar>
+            
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={triggerFileInput}
+              className="flex items-center gap-2"
+            >
+              <Upload size={16} />
+              Upload Picture
+            </Button>
+            
+            <input 
+              type="file" 
+              ref={fileInputRef}
+              className="hidden"
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+            
+            <p className="text-xs text-muted-foreground text-center">
+              Max file size: 5MB<br />
+              Supported formats: JPEG, PNG, GIF
+            </p>
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="profilePic">Profile Picture URL</Label>
-            <Input
-              id="profilePic"
-              placeholder="https://example.com/your-image.jpg"
-              value={profilePicUrl}
-              onChange={(e) => setProfilePicUrl(e.target.value)}
-            />
-            <p className="text-xs text-muted-foreground">Enter a URL to an image (JPEG, PNG, etc.)</p>
-          </div>
+          {profilePicUrl && (
+            <div className="space-y-2">
+              <Label htmlFor="profilePic">Profile Picture URL</Label>
+              <Input
+                id="profilePic"
+                value={profilePicUrl}
+                onChange={(e) => setProfilePicUrl(e.target.value)}
+                disabled
+              />
+              <p className="text-xs text-muted-foreground">Your uploaded image or custom URL</p>
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="displayName">Display Name</Label>
