@@ -2,7 +2,6 @@
 import { useState, useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UserCircle2, Upload } from "lucide-react";
 import { toast } from "sonner";
@@ -28,7 +27,7 @@ export function ProfilePictureUpload({
     const file = event.target.files?.[0];
     if (!file) return;
     
-    if (file.size > 1 * 1024 * 1024) {  // Changed to 1MB
+    if (file.size > 1 * 1024 * 1024) {  // 1MB
       toast.error("File size should be less than 1MB");
       return;
     }
@@ -94,19 +93,6 @@ export function ProfilePictureUpload({
         Max file size: 1MB<br />
         Supported formats: JPEG, PNG, GIF
       </p>
-
-      {profilePicUrl && (
-        <div className="space-y-2 w-full">
-          <Label htmlFor="profilePic">Profile Picture URL</Label>
-          <Input
-            id="profilePic"
-            value={profilePicUrl}
-            onChange={(e) => onProfilePicChange(e.target.value)}
-            disabled
-          />
-          <p className="text-xs text-muted-foreground">Image URL (auto-filled after upload)</p>
-        </div>
-      )}
     </div>
   );
 }

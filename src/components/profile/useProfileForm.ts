@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export interface ProfileFormData {
   displayName: string;
+  username: string;
   profilePicUrl: string;
   xLink: string;
   websiteLink: string;
@@ -18,6 +19,9 @@ export function useProfileForm() {
   const { isConnected, address } = useWallet();
   const [profileId, setProfileId] = useState<string | undefined>(undefined);
   const [displayName, setDisplayName] = useState("");
+  const [username, setUsername] = useState("");
+  const [usernameAvailable, setUsernameAvailable] = useState(true);
+  const [checkingUsername, setCheckingUsername] = useState(false);
   const [profilePicUrl, setProfilePicUrl] = useState("");
   const [xLink, setXLink] = useState("");
   const [websiteLink, setWebsiteLink] = useState("");
@@ -32,6 +36,7 @@ export function useProfileForm() {
     if (!isConnected || !address) {
       setProfileId(undefined);
       setDisplayName("");
+      setUsername("");
       setProfilePicUrl("");
       setXLink("");
       setWebsiteLink("");
@@ -49,6 +54,7 @@ export function useProfileForm() {
           if (profile) {
             setProfileId(profile.id);
             setDisplayName(profile.displayName || "");
+            setUsername(profile.username || "");
             setProfilePicUrl(profile.profilePicUrl || "");
             setXLink(profile.xLink || "");
             setWebsiteLink(profile.websiteLink || "");
@@ -65,6 +71,50 @@ export function useProfileForm() {
 
     fetchProfile();
   }, [isConnected, address, supabaseReady]);
+
+  useEffect(() => {
+    // Validate username with debounce
+    if (username) {
+      const timer = setTimeout(() => {
+        checkUsernameAvailability(username);
+      }, 500);
+      return () => clearTimeout(timer);
+    } else {
+      setUsernameAvailable(true);
+    }
+  }, [username]);
+
+  const checkUsernameAvailability = async (usernameToCheck: string) => {
+    if (!usernameToCheck) return;
+    
+    if (usernameToCheck.length < 3) {
+      setUsernameAvailable(false);
+      return;
+    }
+    
+    // Only allow alphanumeric and underscore
+    if (!/^[a-zA-Z0-9_]+$/.test(usernameToCheck)) {
+      setUsernameAvailable(false);
+      return;
+    }
+    
+    setCheckingUsername(true);
+    try {
+      const isAvailable = await storageService.isUsernameAvailable(usernameToCheck, address);
+      setUsernameAvailable(isAvailable);
+    } catch (error) {
+      console.error("Error checking username:", error);
+      setUsernameAvailable(false);
+    } finally {
+      setCheckingUsername(false);
+    }
+  };
+
+  const handleUsernameChange = (value: string) => {
+    // Lowercase and replace spaces with underscores
+    const formattedValue = value.toLowerCase().replace(/\s+/g, '_');
+    setUsername(formattedValue);
+  };
 
   const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
@@ -93,6 +143,16 @@ export function useProfileForm() {
 
     if (!displayName.trim()) {
       toast.error("Please enter a display name");
+      return false;
+    }
+
+    if (!username.trim()) {
+      toast.error("Please enter a username");
+      return false;
+    }
+
+    if (!usernameAvailable) {
+      toast.error("Username is not available or invalid");
       return false;
     }
 
@@ -127,6 +187,7 @@ export function useProfileForm() {
         const profile: UserProfile = {
           id: uniqueId,
           displayName,
+          username,
           profilePicUrl,
           walletAddress: address,
           createdAt: new Date().toISOString(),
@@ -161,6 +222,7 @@ export function useProfileForm() {
   return {
     formData: {
       displayName,
+      username,
       profilePicUrl,
       xLink,
       websiteLink,
@@ -168,6 +230,7 @@ export function useProfileForm() {
       bioCharCount,
     },
     setDisplayName,
+    setUsername: handleUsernameChange,
     setProfilePicUrl,
     setXLink,
     setWebsiteLink,
@@ -179,5 +242,7 @@ export function useProfileForm() {
     isConnected,
     supabaseReady,
     profileId,
+    usernameAvailable,
+    checkingUsername,
   };
 }

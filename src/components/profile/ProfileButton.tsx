@@ -70,7 +70,10 @@ export function ProfileButton() {
               </Avatar>
               <div className="flex flex-col space-y-1 leading-none">
                 <p className="font-medium text-sm text-western-parchment">{profile.displayName}</p>
-                <p className="w-[176px] truncate text-xs text-western-sand">
+                {profile.username && (
+                  <p className="text-xs text-western-sand">@{profile.username}</p>
+                )}
+                <p className="w-[176px] truncate text-xs text-western-sand/70">
                   {address}
                 </p>
               </div>
@@ -84,6 +87,14 @@ export function ProfileButton() {
             {profile ? "Edit Profile" : "Create Profile"}
           </Link>
         </DropdownMenuItem>
+        
+        {profile && profile.username && (
+          <DropdownMenuItem asChild>
+            <Link to={`/${profile.username}`} className="cursor-pointer text-western-parchment hover:text-western-accent">
+              View Public Profile
+            </Link>
+          </DropdownMenuItem>
+        )}
         
         <DropdownMenuSeparator />
         

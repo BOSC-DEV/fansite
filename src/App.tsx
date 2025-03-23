@@ -1,4 +1,3 @@
-
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -11,11 +10,10 @@ import ScammerDetail from "./pages/ScammerDetail";
 import CreateListing from "./pages/CreateListing";
 import NotFound from "./pages/NotFound";
 import ProfilePage from "./pages/ProfilePage";
+import UserProfilePage from "./pages/UserProfilePage";
 
-// Create a client
 const queryClient = new QueryClient();
 
-// Update or create routes
 const router = createBrowserRouter([
   {
     path: "/",
@@ -36,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: "/profile",
     element: <ProfilePage />,
+  },
+  {
+    path: "/:username",
+    element: <UserProfilePage />,
   },
   {
     path: "*",

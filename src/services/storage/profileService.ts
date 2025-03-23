@@ -1,4 +1,3 @@
-
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 
@@ -6,6 +5,7 @@ import { BaseSupabaseService } from './baseSupabaseService';
 export interface UserProfile {
   id?: string;
   displayName: string;
+  username?: string;
   profilePicUrl: string;
   walletAddress: string;
   createdAt: string;
@@ -36,6 +36,7 @@ export class ProfileService extends BaseSupabaseService {
     return {
       id: data.id,
       displayName: data.display_name,
+      username: data.username || '',
       profilePicUrl: data.profile_pic_url || '',
       walletAddress: data.wallet_address,
       createdAt: data.created_at,
@@ -43,6 +44,57 @@ export class ProfileService extends BaseSupabaseService {
       websiteLink: data.website_link || '',
       bio: data.bio || ''
     };
+  }
+
+  async getProfileByUsername(username: string): Promise<UserProfile | null> {
+    const { data, error } = await this.supabase
+      .from('profiles')
+      .select('*')
+      .eq('username', username)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error fetching profile by username:', error);
+      return null;
+    }
+
+    if (!data) {
+      return null;
+    }
+
+    return {
+      id: data.id,
+      displayName: data.display_name,
+      username: data.username || '',
+      profilePicUrl: data.profile_pic_url || '',
+      walletAddress: data.wallet_address,
+      createdAt: data.created_at,
+      xLink: data.x_link || '',
+      websiteLink: data.website_link || '',
+      bio: data.bio || ''
+    };
+  }
+
+  async isUsernameAvailable(username: string, currentUserWallet?: string): Promise<boolean> {
+    const { data, error } = await this.supabase
+      .from('profiles')
+      .select('wallet_address')
+      .eq('username', username)
+      .maybeSingle();
+    
+    if (error) {
+      console.error('Error checking username availability:', error);
+      return false;
+    }
+    
+    // If no data found, username is available
+    if (!data) return true;
+    
+    // If the username belongs to the current user, it's available for them
+    if (currentUserWallet && data.wallet_address === currentUserWallet) return true;
+    
+    // Otherwise, username is taken
+    return false;
   }
 
   async saveProfile(profile: UserProfile): Promise<boolean> {
@@ -55,6 +107,7 @@ export class ProfileService extends BaseSupabaseService {
     const dbProfile = {
       id: profile.id,
       display_name: profile.displayName,
+      username: profile.username,
       profile_pic_url: profile.profilePicUrl,
       wallet_address: profile.walletAddress,
       created_at: profile.createdAt,

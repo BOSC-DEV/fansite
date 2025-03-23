@@ -14,6 +14,7 @@ export function UserProfile() {
   const {
     formData,
     setDisplayName,
+    setUsername,
     setProfilePicUrl,
     setXLink,
     setWebsiteLink,
@@ -23,7 +24,9 @@ export function UserProfile() {
     saveProfile,
     address,
     isConnected,
-    profileId
+    profileId,
+    usernameAvailable,
+    checkingUsername
   } = useProfileForm();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -67,6 +70,36 @@ export function UserProfile() {
               <div className="space-y-2">
                 <Label htmlFor="displayName">Display Name</Label>
                 <Input id="displayName" placeholder="Your Name" value={formData.displayName} onChange={e => setDisplayName(e.target.value)} required />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="username">Username</Label>
+                <div className="relative">
+                  <Input 
+                    id="username" 
+                    placeholder="your_username" 
+                    value={formData.username} 
+                    onChange={e => setUsername(e.target.value)} 
+                    className={`${!usernameAvailable && formData.username ? 'border-red-500' : ''}`}
+                    required 
+                  />
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    {checkingUsername && <div className="h-4 w-4 animate-spin rounded-full border-2 border-western-sand border-t-transparent" />}
+                    {!checkingUsername && formData.username && (
+                      usernameAvailable 
+                        ? <div className="h-4 w-4 text-green-500">✓</div> 
+                        : <div className="h-4 w-4 text-red-500">✗</div>
+                    )}
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Your profile will be accessible at bookofscams.lol/{formData.username}
+                </p>
+                {!usernameAvailable && formData.username && (
+                  <p className="text-xs text-red-500 mt-1">
+                    Username unavailable or invalid. Use only letters, numbers, and underscores.
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -122,7 +155,7 @@ export function UserProfile() {
           <Button type="button" variant="outline" onClick={() => navigate(-1)}>
             Cancel
           </Button>
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting || !usernameAvailable}>
             {isSubmitting ? "Saving..." : hasProfile ? "Update Profile" : "Create Profile"}
           </Button>
         </CardFooter>

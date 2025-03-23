@@ -75,6 +75,7 @@ export type Database = {
           display_name: string
           id: string
           profile_pic_url: string | null
+          username: string | null
           wallet_address: string
           website_link: string | null
           x_link: string | null
@@ -85,6 +86,7 @@ export type Database = {
           display_name: string
           id: string
           profile_pic_url?: string | null
+          username?: string | null
           wallet_address: string
           website_link?: string | null
           x_link?: string | null
@@ -95,6 +97,7 @@ export type Database = {
           display_name?: string
           id?: string
           profile_pic_url?: string | null
+          username?: string | null
           wallet_address?: string
           website_link?: string | null
           x_link?: string | null
