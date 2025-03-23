@@ -68,7 +68,7 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ users, isLoa
                 {getRankIcon(index)}
               </TableCell>
               <TableCell>
-                <Link to={`/${user.username}`} className="flex items-center space-x-3 hover:text-western-accent">
+                <Link to={`/${user.walletAddress}`} className="flex items-center space-x-3 hover:text-western-accent">
                   <Avatar className="h-10 w-10 border border-western-accent/20">
                     <AvatarImage src={user.profilePicUrl} alt={user.displayName} />
                     <AvatarFallback className="bg-western-wood text-western-parchment">
