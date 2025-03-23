@@ -28,6 +28,19 @@ export function useProfileForm() {
   const supabaseReady = isSupabaseConfigured();
 
   useEffect(() => {
+    // Reset states when address changes or disconnects
+    if (!isConnected || !address) {
+      setProfileId(undefined);
+      setDisplayName("");
+      setProfilePicUrl("");
+      setXLink("");
+      setWebsiteLink("");
+      setBio("");
+      setBioCharCount(0);
+      setHasProfile(false);
+      return;
+    }
+
     // Check if user already has a profile using the storageService
     const fetchProfile = async () => {
       if (isConnected && address && supabaseReady) {
@@ -37,7 +50,6 @@ export function useProfileForm() {
             setProfileId(profile.id);
             setDisplayName(profile.displayName || "");
             setProfilePicUrl(profile.profilePicUrl || "");
-            // The following fields might not exist in older profile objects
             setXLink(profile.xLink || "");
             setWebsiteLink(profile.websiteLink || "");
             setBio(profile.bio || "");
@@ -63,6 +75,8 @@ export function useProfileForm() {
   };
 
   const isValidUrl = (url: string) => {
+    if (!url) return true; // Empty URLs are considered valid (optional field)
+    
     try {
       new URL(url);
       return true;
@@ -98,14 +112,20 @@ export function useProfileForm() {
 
   const saveProfile = async () => {
     if (!validateForm()) return false;
+    if (!address) {
+      toast.error("Wallet not connected");
+      return false;
+    }
 
     setIsSubmitting(true);
     
     try {
+      const uniqueId = profileId || uuidv4();
+      
       // Store profile using storageService
       if (address && supabaseReady) {
         const profile: UserProfile = {
-          id: profileId || uuidv4(), // Use existing ID or generate a new one
+          id: uniqueId,
           displayName,
           profilePicUrl,
           walletAddress: address,
@@ -120,7 +140,7 @@ export function useProfileForm() {
           toast.success("Profile saved successfully");
           setHasProfile(true);
           if (!profileId) {
-            setProfileId(profile.id); // Save the new ID
+            setProfileId(uniqueId);
           }
           return true;
         } else {
