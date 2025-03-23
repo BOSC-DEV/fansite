@@ -39,10 +39,10 @@ export function ScammerSidebar({
 }: ScammerSidebarProps) {
   return (
     <div className="flex-shrink-0 w-full sm:w-1/3 lg:w-1/4">
-      <div className="space-y-4">
+      <div className="space-y-4 bg-western-parchment/70 rounded-lg border border-western-wood/20 p-4 shadow-sm">
         <ScammerAvatar name={name} photoUrl={photoUrl} />
         
-        <div className="flex justify-between items-start px-3">
+        <div className="flex justify-between items-center px-3 py-2 bg-western-sand/10 rounded-md">
           <ScammerInteractionButtons 
             likes={likes}
             dislikes={dislikes}

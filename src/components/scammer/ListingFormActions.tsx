@@ -21,7 +21,7 @@ export function ListingFormActions({ isSubmitting, onCancel }: ListingFormAction
   };
 
   return (
-    <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-6 mt-4 py-2">
+    <div className="flex flex-col space-y-4 sm:flex-row sm:justify-end w-full sm:space-y-0 sm:space-x-4">
       <Button 
         type="button" 
         variant="outline" 
@@ -35,7 +35,7 @@ export function ListingFormActions({ isSubmitting, onCancel }: ListingFormAction
         <Button 
           type="submit" 
           disabled={isSubmitting}
-          className="bg-western-accent hover:bg-western-accent/90 text-western-parchment font-wanted min-w-[220px]"
+          className="bg-western-accent hover:bg-western-accent/90 text-western-parchment font-wanted min-w-[180px]"
         >
           {isSubmitting ? "Creating Listing..." : "Create Listing"}
         </Button>
@@ -43,7 +43,7 @@ export function ListingFormActions({ isSubmitting, onCancel }: ListingFormAction
         <Button 
           type="button" 
           onClick={connectWallet}
-          className="bg-western-wood hover:bg-western-wood/90 text-western-parchment font-western min-w-[220px]"
+          className="bg-western-wood hover:bg-western-wood/90 text-western-parchment font-western min-w-[180px]"
         >
           Connect Wallet
         </Button>

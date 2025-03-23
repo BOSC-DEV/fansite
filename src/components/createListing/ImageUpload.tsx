@@ -82,7 +82,7 @@ export function ImageUpload({ onImageChange, currentImage }: ImageUploadProps) {
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <Input
         ref={fileInputRef}
         type="file"
@@ -93,11 +93,11 @@ export function ImageUpload({ onImageChange, currentImage }: ImageUploadProps) {
       />
 
       {previewUrl ? (
-        <div className="relative">
+        <div className="relative rounded-md overflow-hidden border border-western-wood/20">
           <img
             src={previewUrl}
             alt="Scammer preview"
-            className="rounded-md border border-western-wood/20 object-cover max-h-48 mx-auto"
+            className="object-cover max-h-48 w-full mx-auto"
           />
           <Button
             type="button"

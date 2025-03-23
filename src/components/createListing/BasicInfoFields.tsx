@@ -20,7 +20,7 @@ export function BasicInfoFields({
   setAccusedOf
 }: BasicInfoFieldsProps) {
   return (
-    <>
+    <div className="space-y-5">
       <TextField
         id="name"
         label="Name"
@@ -30,8 +30,8 @@ export function BasicInfoFields({
         required
       />
       
-      <div className="mt-4">
-        <label className="block text-sm font-medium text-western-wood mb-1">
+      <div>
+        <label className="block text-sm font-medium text-western-wood mb-2">
           Scammer Photo <span className="text-western-accent">*</span>
         </label>
         <ImageUpload onImageChange={setPhotoUrl} currentImage={photoUrl} />
@@ -45,6 +45,6 @@ export function BasicInfoFields({
         onChange={(e) => setAccusedOf(e.target.value)}
         required
       />
-    </>
+    </div>
   );
 }

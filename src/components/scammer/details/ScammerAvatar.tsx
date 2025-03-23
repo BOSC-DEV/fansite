@@ -16,8 +16,8 @@ export function ScammerAvatar({ name, photoUrl }: ScammerAvatarProps) {
   };
 
   return (
-    <div className="w-full px-4">
-      <Avatar className="h-auto w-full mx-auto rounded-lg aspect-square">
+    <div className="w-full px-4 mb-4">
+      <Avatar className="h-auto w-full mx-auto rounded-lg aspect-square border border-western-wood/20">
         {!imageError ? (
           <AvatarImage 
             src={photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`} 
