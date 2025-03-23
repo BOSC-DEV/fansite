@@ -1,3 +1,4 @@
+
 import { Scammer } from "@/lib/types";
 
 // Types for our localStorage data structures
@@ -9,6 +10,7 @@ export interface UserProfile {
   xLink?: string;
   websiteLink?: string;
   bio?: string;
+  username?: string;
 }
 
 export interface Comment {
@@ -148,7 +150,7 @@ class LocalStorageService {
     const comment = this.getComment(commentId);
     if (comment) {
       comment.likes = (comment.likes || 0) + 1;
-      this.saveComment(comment);
+      localStorage.setItem(`${STORAGE_KEYS.COMMENTS}${commentId}`, JSON.stringify(comment));
     }
   }
 
@@ -156,8 +158,19 @@ class LocalStorageService {
     const comment = this.getComment(commentId);
     if (comment) {
       comment.dislikes = (comment.dislikes || 0) + 1;
-      this.saveComment(comment);
+      localStorage.setItem(`${STORAGE_KEYS.COMMENTS}${commentId}`, JSON.stringify(comment));
     }
+  }
+
+  // IP tracking utility for view counting
+  hashIpAddress(ip: string): string {
+    let hash = 0;
+    for (let i = 0; i < ip.length; i++) {
+      const char = ip.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash.toString(16);
   }
 }
 
