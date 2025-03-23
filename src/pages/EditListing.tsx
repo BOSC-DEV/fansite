@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -86,7 +87,7 @@ const EditListing = () => {
             setAliases(scammerObj.aliases || []);
             setAccomplices(scammerObj.accomplices || []);
             setOfficialResponse(scammerObj.officialResponse);
-            setXLink(scammerObj.xLink || "");
+            setXLink(supabaseScammer.xLink || "");
           }
         } else {
           console.log("Scammer not found in Supabase, checking localStorage");
@@ -109,8 +110,7 @@ const EditListing = () => {
               bountyAmount: localScammer.bountyAmount,
               walletAddress: localScammer.walletAddress || "",
               dateAdded: new Date(localScammer.dateAdded),
-              addedBy: localScammer.addedBy,
-              xLink: localScammer.xLink || ""
+              addedBy: localScammer.addedBy
             };
             
             setScammer(scammerObj);
@@ -314,18 +314,39 @@ const EditListing = () => {
                     currentLink={currentLink}
                     setCurrentLink={setCurrentLink}
                     links={links}
-                    handleAddLink={handleAddLinkWrapper}
-                    removeLink={removeLinkWrapper}
+                    handleAddLink={() => {
+                      if (currentLink.trim()) {
+                        setLinks([...links, currentLink.trim()]);
+                        setCurrentLink("");
+                      }
+                    }}
+                    removeLink={(link) => {
+                      setLinks(links.filter(l => l !== link));
+                    }}
                     currentAlias={currentAlias}
                     setCurrentAlias={setCurrentAlias}
                     aliases={aliases}
-                    handleAddAlias={handleAddAliasWrapper}
-                    removeAlias={removeAliasWrapper}
+                    handleAddAlias={() => {
+                      if (currentAlias.trim()) {
+                        setAliases([...aliases, currentAlias.trim()]);
+                        setCurrentAlias("");
+                      }
+                    }}
+                    removeAlias={(alias) => {
+                      setAliases(aliases.filter(a => a !== alias));
+                    }}
                     currentAccomplice={currentAccomplice}
                     setCurrentAccomplice={setCurrentAccomplice}
                     accomplices={accomplices}
-                    handleAddAccomplice={handleAddAccompliceWrapper}
-                    removeAccomplice={removeAccompliceWrapper}
+                    handleAddAccomplice={() => {
+                      if (currentAccomplice.trim()) {
+                        setAccomplices([...accomplices, currentAccomplice.trim()]);
+                        setCurrentAccomplice("");
+                      }
+                    }}
+                    removeAccomplice={(accomplice) => {
+                      setAccomplices(accomplices.filter(a => a !== accomplice));
+                    }}
                     officialResponse={officialResponse}
                     setOfficialResponse={setOfficialResponse}
                     xLink={xLink}
