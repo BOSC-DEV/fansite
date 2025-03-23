@@ -21,6 +21,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Shield, CheckCircle2 } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import { storageService } from "@/services/storage";
+import { scammerService } from "@/services/storage/scammerService";
 
 // Get Cloudflare Turnstile site key from environment variables or use development key as fallback
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY || '1x00000000000000000000BB';
@@ -110,7 +111,7 @@ export function FormContainer() {
       
       // Try to save to Supabase if available (but don't block on it)
       try {
-        await storageService.scammerService.saveScammer(scammerListing);
+        await scammerService.saveScammer(scammerListing);
       } catch (error) {
         console.error("Failed to save to Supabase, but saved locally:", error);
         // Continue with local storage version only
