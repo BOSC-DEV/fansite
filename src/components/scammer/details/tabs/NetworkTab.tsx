@@ -9,15 +9,12 @@ interface NetworkTabProps {
 export function NetworkTab({ accomplices = [] }: NetworkTabProps) {
   console.log("NetworkTab rendering with accomplices:", accomplices);
   
-  // Ensure accomplices is always an array
-  const safeAccomplices = Array.isArray(accomplices) ? accomplices : [];
-  
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Known Accomplices</h3>
-      {safeAccomplices.length > 0 ? (
+      {accomplices && accomplices.length > 0 ? (
         <div className="flex flex-wrap gap-2">
-          {safeAccomplices.map((accomplice, index) => (
+          {accomplices.map((accomplice, index) => (
             <Badge key={index} variant="outline" className="bg-western-sand/10">
               {accomplice}
             </Badge>

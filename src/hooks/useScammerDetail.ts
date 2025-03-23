@@ -69,7 +69,8 @@ export function useScammerDetail(id: string | undefined) {
               bountyAmount: supabaseScammer.bountyAmount,
               walletAddress: supabaseScammer.walletAddress || "",
               dateAdded: new Date(supabaseScammer.dateAdded),
-              addedBy: supabaseScammer.addedBy
+              addedBy: supabaseScammer.addedBy,
+              xLink: supabaseScammer.xLink || ""
             });
             
             setScammerStats({
@@ -112,7 +113,8 @@ export function useScammerDetail(id: string | undefined) {
                 bountyAmount: localScammer.bountyAmount,
                 walletAddress: localScammer.walletAddress || "",
                 dateAdded: new Date(localScammer.dateAdded),
-                addedBy: localScammer.addedBy
+                addedBy: localScammer.addedBy,
+                xLink: localScammer.xLink || ""
               });
               
               setScammerStats({
@@ -156,7 +158,8 @@ export function useScammerDetail(id: string | undefined) {
               bountyAmount: localScammer.bountyAmount,
               walletAddress: localScammer.walletAddress || "",
               dateAdded: new Date(localScammer.dateAdded),
-              addedBy: localScammer.addedBy
+              addedBy: localScammer.addedBy,
+              xLink: localScammer.xLink || ""
             });
             
             setScammerStats({

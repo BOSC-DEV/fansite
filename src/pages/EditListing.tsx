@@ -70,7 +70,8 @@ const EditListing = () => {
             bountyAmount: supabaseScammer.bountyAmount,
             walletAddress: supabaseScammer.walletAddress || "",
             dateAdded: new Date(supabaseScammer.dateAdded),
-            addedBy: supabaseScammer.addedBy
+            addedBy: supabaseScammer.addedBy,
+            xLink: supabaseScammer.xLink || ""
           };
           
           setScammer(scammerObj);
@@ -88,10 +89,14 @@ const EditListing = () => {
             setXLink(supabaseScammer.xLink || "");
           }
         } else {
+          console.log("Scammer not found in Supabase, checking localStorage");
+          
+          // If not found in Supabase, try localStorage
           const localScammer = storageService.getScammer(id);
           
           if (localScammer) {
             console.log("Scammer found in localStorage:", localScammer.name);
+            
             const scammerObj: Scammer = {
               id: localScammer.id,
               name: localScammer.name,
@@ -104,7 +109,8 @@ const EditListing = () => {
               bountyAmount: localScammer.bountyAmount,
               walletAddress: localScammer.walletAddress || "",
               dateAdded: new Date(localScammer.dateAdded),
-              addedBy: localScammer.addedBy
+              addedBy: localScammer.addedBy,
+              xLink: localScammer.xLink || ""
             };
             
             setScammer(scammerObj);
