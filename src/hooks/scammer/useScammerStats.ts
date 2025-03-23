@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { storageService } from "@/services/storage/localStorageService";
 import { scammerService } from "@/services/storage/scammer/scammerService";
@@ -16,7 +16,7 @@ export function useScammerStats(scammer: Scammer | null) {
   });
 
   // Update stats when scammer data changes
-  useState(() => {
+  useEffect(() => {
     if (scammer) {
       setScammerStats({
         likes: scammer.likes || 0,
@@ -24,7 +24,7 @@ export function useScammerStats(scammer: Scammer | null) {
         views: scammer.views || 0
       });
     }
-  });
+  }, [scammer]);
 
   const handleLikeScammer = async () => {
     if (scammer?.id) {
