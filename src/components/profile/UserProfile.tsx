@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -67,26 +68,26 @@ export function UserProfile() {
                 </p>
               </div>
 
-              {/* Social Links - now merged under bio */}
+              {/* Social Links - now with icons in the same row as input fields */}
               <div className="space-y-2 pt-2 border-t">
                 <Label className="text-base font-medium">Social Links</Label>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="xLink" className="flex items-center gap-2">
-                    <Twitter size={16} className="text-muted-foreground" />
-                    X (Twitter) Profile
-                  </Label>
-                  <Input id="xLink" placeholder="https://x.com/username" value={formData.xLink} onChange={e => setXLink(e.target.value)} />
-                  <p className="text-xs text-muted-foreground"></p>
+                  <div className="flex items-center gap-2">
+                    <Twitter size={16} className="text-[#1DA1F2] mt-2" />
+                    <div className="flex-1">
+                      <Input id="xLink" placeholder="https://x.com/username" value={formData.xLink} onChange={e => setXLink(e.target.value)} />
+                    </div>
+                  </div>
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="websiteLink" className="flex items-center gap-2">
-                    <Globe size={16} className="text-muted-foreground" />
-                    Website
-                  </Label>
-                  <Input id="websiteLink" placeholder="https://example.com" value={formData.websiteLink} onChange={e => setWebsiteLink(e.target.value)} />
-                  <p className="text-xs text-muted-foreground"></p>
+                  <div className="flex items-center gap-2">
+                    <Globe size={16} className="text-muted-foreground mt-2" />
+                    <div className="flex-1">
+                      <Input id="websiteLink" placeholder="https://example.com" value={formData.websiteLink} onChange={e => setWebsiteLink(e.target.value)} />
+                    </div>
+                  </div>
                 </div>
               </div>
 
