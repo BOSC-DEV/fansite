@@ -38,8 +38,13 @@ export function MyBountiesPage() {
           dateAdded: new Date(scammer.dateAdded)
         }));
         
-        setScammers(convertedScammers);
-        setTotalPages(Math.max(1, Math.ceil(convertedScammers.length / ITEMS_PER_PAGE)));
+        // Filter for scammers with bounties funded by this user
+        // This is a placeholder - in a real implementation, this would check
+        // if the user has funded a bounty for each scammer
+        const userBounties: Scammer[] = [];
+        
+        setScammers(userBounties);
+        setTotalPages(Math.max(1, Math.ceil(userBounties.length / ITEMS_PER_PAGE)));
       } catch (error) {
         console.error("Error fetching user bounties:", error);
       } finally {
