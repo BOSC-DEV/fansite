@@ -1,3 +1,4 @@
+
 export const BOSC_TOKEN_ABI = [
   "function name() view returns (string)",
   "function symbol() view returns (string)",
@@ -43,4 +44,4 @@ export const CONTRACT_ADDRESSES = {
   }
 };
 
-export const DEVELOPER_WALLET_ADDRESS = "0x80ec8C9A7ac3b601a9628a840306e85a01809074";
+export const DEVELOPER_WALLET_ADDRESS = "0xCzjg5gBbd6pbq3MR4VhR3hiNN4HWccgLKPpnqhwcJN76";
