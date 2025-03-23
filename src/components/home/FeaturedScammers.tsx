@@ -18,13 +18,84 @@ export const FeaturedScammers = () => {
       setIsLoading(true);
       try {
         // In production, this would fetch from your contract or API
-        // const data = await getTopScammers(5);
-        // setFeaturedScammers(data);
+        // For now, use sample data for preview purposes
+        const sampleData: Scammer[] = [
+          {
+            id: "1",
+            name: "John Doe",
+            photoUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+            accusedOf: "Rug pull on DeFi project",
+            links: ["https://twitter.com/example"],
+            aliases: ["Crypto King", "DeFi Developer"],
+            accomplices: ["Jane Smith"],
+            officialResponse: "",
+            bountyAmount: 15000,
+            walletAddress: "0x1234567890abcdef1234567890abcdef12345678",
+            dateAdded: new Date("2023-10-15"),
+            addedBy: "admin"
+          },
+          {
+            id: "2",
+            name: "Alice Cooper",
+            photoUrl: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+            accusedOf: "Fake NFT collection scam",
+            links: ["https://opensea.io/example"],
+            aliases: ["NFT Queen", "Digital Artist"],
+            accomplices: [],
+            officialResponse: "I deny all allegations.",
+            bountyAmount: 8000,
+            walletAddress: "0xabcdef1234567890abcdef1234567890abcdef12",
+            dateAdded: new Date("2023-12-05"),
+            addedBy: "moderator"
+          },
+          {
+            id: "3",
+            name: "Bob Johnson",
+            photoUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
+            accusedOf: "Fake token airdrop and phishing",
+            links: ["https://etherscan.io/example"],
+            aliases: ["Airdrop Master"],
+            accomplices: ["Charlie Davis"],
+            officialResponse: "",
+            bountyAmount: 12000,
+            walletAddress: "0x7890abcdef1234567890abcdef1234567890abcd",
+            dateAdded: new Date("2024-01-25"),
+            addedBy: "admin"
+          },
+          {
+            id: "4",
+            name: "Eva Green",
+            photoUrl: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1771&q=80",
+            accusedOf: "Ponzi scheme with staking protocol",
+            links: ["https://github.com/example"],
+            aliases: ["Staking Pro", "DeFi Expert"],
+            accomplices: [],
+            officialResponse: "",
+            bountyAmount: 20000,
+            walletAddress: "0xdef1234567890abcdef1234567890abcdef123456",
+            dateAdded: new Date("2024-02-10"),
+            addedBy: "moderator"
+          },
+          {
+            id: "5",
+            name: "Frank Williams",
+            photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+            accusedOf: "Wallet drainer through malicious smart contract",
+            links: ["https://bscscan.com/example"],
+            aliases: ["Smart Contract Genius"],
+            accomplices: ["Grace Miller"],
+            officialResponse: "These accusations are unfounded.",
+            bountyAmount: 18000,
+            walletAddress: "0x567890abcdef1234567890abcdef1234567890ab",
+            dateAdded: new Date("2024-03-01"),
+            addedBy: "admin"
+          }
+        ];
         
-        // Temporarily use empty array until contract is ready
-        setFeaturedScammers([]);
+        setFeaturedScammers(sampleData);
       } catch (error) {
         console.error("Error fetching featured scammers:", error);
+        setFeaturedScammers([]);
       } finally {
         setIsLoading(false);
       }
