@@ -14,6 +14,7 @@ import ProfilePage from "./pages/ProfilePage";
 import UserProfilePage from "./pages/UserProfilePage";
 import Leaderboard from "./pages/Leaderboard";
 import MyReportsPage from "./pages/MyReportsPage";
+import MyBountiesPage from "./pages/MyBountiesPage";
 
 // Create a QueryClient instance outside the component to prevent recreation on renders
 const queryClient = new QueryClient();
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
   {
     path: "/my-reports",
     element: <MyReportsPage />,
+  },
+  {
+    path: "/my-bounties",
+    element: <MyBountiesPage />,
   },
   {
     path: "/:username",
