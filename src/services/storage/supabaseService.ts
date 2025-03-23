@@ -1,6 +1,7 @@
 
 import { supabase } from '@/lib/supabase';
 import { Scammer } from "@/lib/types";
+import { Json } from '@/integrations/supabase/types';
 
 // Types for our data structures
 export interface UserProfile {
@@ -33,6 +34,19 @@ export interface ScammerListing extends Omit<Scammer, 'dateAdded'> {
   dislikes: number;
   views: number;
 }
+
+// Helper function to safely convert JSON arrays to string arrays
+const safeJsonToStringArray = (jsonArray: Json | null): string[] => {
+  if (!jsonArray) return [];
+  
+  // If it's already an array, map each item to string
+  if (Array.isArray(jsonArray)) {
+    return jsonArray.map(item => String(item));
+  }
+  
+  // If it's a single value, return as a single-item array
+  return [String(jsonArray)];
+};
 
 class SupabaseService {
   // Profile methods
@@ -130,16 +144,16 @@ class SupabaseService {
     return data.map(item => ({
       id: item.id,
       name: item.name,
-      photoUrl: item.photo_url,
-      accusedOf: item.accused_of,
-      links: Array.isArray(item.links) ? item.links : (item.links ? [String(item.links)] : []),
-      aliases: Array.isArray(item.aliases) ? item.aliases : (item.aliases ? [String(item.aliases)] : []),
-      accomplices: Array.isArray(item.accomplices) ? item.accomplices : (item.accomplices ? [String(item.accomplices)] : []),
+      photoUrl: item.photo_url || '',
+      accusedOf: item.accused_of || '',
+      links: safeJsonToStringArray(item.links),
+      aliases: safeJsonToStringArray(item.aliases),
+      accomplices: safeJsonToStringArray(item.accomplices),
       officialResponse: item.official_response || '',
       bountyAmount: Number(item.bounty_amount) || 0,
-      walletAddress: item.wallet_address,
+      walletAddress: item.wallet_address || '',
       dateAdded: item.date_added,
-      addedBy: item.added_by,
+      addedBy: item.added_by || '',
       likes: item.likes || 0,
       dislikes: item.dislikes || 0,
       views: item.views || 0
@@ -212,16 +226,16 @@ class SupabaseService {
     return {
       id: data.id,
       name: data.name,
-      photoUrl: data.photo_url,
-      accusedOf: data.accused_of,
-      links: Array.isArray(data.links) ? data.links : (data.links ? [String(data.links)] : []),
-      aliases: Array.isArray(data.aliases) ? data.aliases : (data.aliases ? [String(data.aliases)] : []),
-      accomplices: Array.isArray(data.accomplices) ? data.accomplices : (data.accomplices ? [String(data.accomplices)] : []),
+      photoUrl: data.photo_url || '',
+      accusedOf: data.accused_of || '',
+      links: safeJsonToStringArray(data.links),
+      aliases: safeJsonToStringArray(data.aliases),
+      accomplices: safeJsonToStringArray(data.accomplices),
       officialResponse: data.official_response || '',
       bountyAmount: Number(data.bounty_amount) || 0,
-      walletAddress: data.wallet_address,
+      walletAddress: data.wallet_address || '',
       dateAdded: data.date_added,
-      addedBy: data.added_by,
+      addedBy: data.added_by || '',
       likes: data.likes || 0,
       dislikes: data.dislikes || 0,
       views: data.views || 0
@@ -285,11 +299,11 @@ class SupabaseService {
     // Convert from database format to client format
     return {
       id: data.id,
-      scammerId: data.scammer_id,
+      scammerId: data.scammer_id || '',
       content: data.content,
       author: data.author,
       authorName: data.author_name,
-      authorProfilePic: data.author_profile_pic,
+      authorProfilePic: data.author_profile_pic || '',
       createdAt: data.created_at,
       likes: data.likes || 0,
       dislikes: data.dislikes || 0
@@ -311,11 +325,11 @@ class SupabaseService {
     // Convert from database format to client format
     return data.map(item => ({
       id: item.id,
-      scammerId: item.scammer_id,
+      scammerId: item.scammer_id || '',
       content: item.content,
       author: item.author,
       authorName: item.author_name,
-      authorProfilePic: item.author_profile_pic,
+      authorProfilePic: item.author_profile_pic || '',
       createdAt: item.created_at,
       likes: item.likes || 0,
       dislikes: item.dislikes || 0
