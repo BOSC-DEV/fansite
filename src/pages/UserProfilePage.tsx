@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserCircle2, ExternalLink, Twitter, Globe } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { storageService, UserProfile } from "@/services/storage";
+import { storageService, UserProfile, ScammerListing } from "@/services/storage";
 import { Scammer } from "@/lib/types";
 import { ScammerCard } from "@/components/ScammerCard";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -63,7 +63,12 @@ export function UserProfilePage() {
             );
             
             console.log(`Found ${userScammers.length} scammers by wallet address ${usernameProfile.wallet_address}`);
-            setScammers(userScammers);
+            // Convert ScammerListing to Scammer (with date conversion)
+            const convertedScammers = userScammers.map(scammer => ({
+              ...scammer,
+              dateAdded: new Date(scammer.dateAdded)
+            }));
+            setScammers(convertedScammers);
             setIsLoading(false);
             return;
           }
@@ -96,7 +101,12 @@ export function UserProfilePage() {
             );
             
             console.log(`Found ${userScammers.length} scammers by wallet address ${walletProfile.wallet_address}`);
-            setScammers(userScammers);
+            // Convert ScammerListing to Scammer (with date conversion)
+            const convertedScammers = userScammers.map(scammer => ({
+              ...scammer,
+              dateAdded: new Date(scammer.dateAdded)
+            }));
+            setScammers(convertedScammers);
             setIsLoading(false);
             return;
           }
@@ -131,7 +141,12 @@ export function UserProfilePage() {
         );
         
         console.log(`Found ${userScammers.length} scammers by this user`);
-        setScammers(userScammers);
+        // Convert ScammerListing to Scammer (with date conversion)
+        const convertedScammers = userScammers.map(scammer => ({
+          ...scammer,
+          dateAdded: new Date(scammer.dateAdded)
+        }));
+        setScammers(convertedScammers);
       } catch (err) {
         console.error("Error fetching profile data:", err);
         setError("Failed to load profile data");
