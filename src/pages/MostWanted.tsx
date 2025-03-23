@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -27,7 +26,6 @@ const MostWanted = () => {
       try {
         const storedScammers = storageService.getAllScammers();
         
-        // Convert to Scammer type
         const scammersList: Scammer[] = storedScammers.map(s => ({
           id: s.id,
           name: s.name,
@@ -58,7 +56,6 @@ const MostWanted = () => {
   useEffect(() => {
     let result = [...scammers];
     
-    // Apply search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       result = result.filter(
@@ -69,7 +66,6 @@ const MostWanted = () => {
       );
     }
     
-    // Apply sorting
     result = [...result].sort((a, b) => {
       if (sortBy === "newest") {
         return b.dateAdded.getTime() - a.dateAdded.getTime();

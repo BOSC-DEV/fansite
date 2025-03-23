@@ -4,17 +4,17 @@ import { AlertTriangle, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface NoResultsProps {
-  searchQuery: string;
+  query: string;
 }
 
-export const NoResults = ({ searchQuery }: NoResultsProps) => {
+export const NoResults = ({ query }: NoResultsProps) => {
   return (
     <div className="text-center py-16">
       <AlertTriangle className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
       <h3 className="text-xl font-medium mb-2">No results found</h3>
       <p className="text-muted-foreground mb-6">
-        {searchQuery
-          ? `No scammers matching "${searchQuery}" were found.`
+        {query
+          ? `No scammers matching "${query}" were found.`
           : "There are no scammers in the database yet."}
       </p>
       <Button asChild>
