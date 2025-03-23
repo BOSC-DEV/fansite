@@ -2,6 +2,7 @@
 import { supabase } from '@/lib/supabase';
 import { Scammer } from "@/lib/types";
 import { Json } from '@/integrations/supabase/types';
+import { v4 as uuidv4 } from 'uuid';
 
 // Types for our data structures
 export interface UserProfile {
@@ -81,6 +82,11 @@ class SupabaseService {
   }
 
   async saveProfile(profile: UserProfile): Promise<boolean> {
+    // Ensure we have an ID for new profiles
+    if (!profile.id) {
+      profile.id = uuidv4();
+    }
+    
     // Convert from camelCase to snake_case for database
     const dbProfile = {
       id: profile.id,
@@ -98,7 +104,7 @@ class SupabaseService {
       .from('profiles')
       .select('id')
       .eq('wallet_address', profile.walletAddress)
-      .single();
+      .maybeSingle();
 
     let result;
     

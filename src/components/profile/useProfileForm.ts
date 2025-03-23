@@ -4,6 +4,7 @@ import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { storageService, UserProfile } from "@/services/storage/supabaseService";
 import { isSupabaseConfigured } from "@/lib/supabase";
+import { v4 as uuidv4 } from 'uuid';
 
 export interface ProfileFormData {
   displayName: string;
@@ -15,6 +16,7 @@ export interface ProfileFormData {
 
 export function useProfileForm() {
   const { isConnected, address } = useWallet();
+  const [profileId, setProfileId] = useState<string | undefined>(undefined);
   const [displayName, setDisplayName] = useState("");
   const [profilePicUrl, setProfilePicUrl] = useState("");
   const [xLink, setXLink] = useState("");
@@ -32,6 +34,7 @@ export function useProfileForm() {
         try {
           const profile = await storageService.getProfile(address);
           if (profile) {
+            setProfileId(profile.id);
             setDisplayName(profile.displayName || "");
             setProfilePicUrl(profile.profilePicUrl || "");
             // The following fields might not exist in older profile objects
@@ -102,6 +105,7 @@ export function useProfileForm() {
       // Store profile using storageService
       if (address && supabaseReady) {
         const profile: UserProfile = {
+          id: profileId || uuidv4(), // Use existing ID or generate a new one
           displayName,
           profilePicUrl,
           walletAddress: address,
@@ -115,6 +119,9 @@ export function useProfileForm() {
         if (success) {
           toast.success("Profile saved successfully");
           setHasProfile(true);
+          if (!profileId) {
+            setProfileId(profile.id); // Save the new ID
+          }
           return true;
         } else {
           toast.error("Failed to save profile");
