@@ -14,6 +14,19 @@ export function useListingForm() {
   const responseForm = useResponseForm();
   const { validateForm: validateFormBase } = useFormValidation();
 
+  // Create wrapper functions that handle indexes correctly
+  const removeLink = (index: number) => {
+    linksForm.removeLink(index);
+  };
+
+  const removeAlias = (index: number) => {
+    aliasesForm.removeAlias(index);
+  };
+
+  const removeAccomplice = (index: number) => {
+    accomplicesForm.removeAccomplice(index);
+  };
+
   const validateForm = (): boolean => {
     return validateFormBase({
       name: basicInfo.name,
@@ -37,7 +50,7 @@ export function useListingForm() {
     links: linksForm.links, 
     setLinks: linksForm.setLinks,
     handleAddLink: linksForm.handleAddLink,
-    removeLink: linksForm.removeLink,
+    removeLink: removeLink,
     
     // Aliases
     currentAlias: aliasesForm.currentAlias, 
@@ -45,7 +58,7 @@ export function useListingForm() {
     aliases: aliasesForm.aliases, 
     setAliases: aliasesForm.setAliases,
     handleAddAlias: aliasesForm.handleAddAlias,
-    removeAlias: aliasesForm.removeAlias,
+    removeAlias: removeAlias,
     
     // Accomplices
     currentAccomplice: accomplicesForm.currentAccomplice, 
@@ -53,7 +66,7 @@ export function useListingForm() {
     accomplices: accomplicesForm.accomplices, 
     setAccomplices: accomplicesForm.setAccomplices,
     handleAddAccomplice: accomplicesForm.handleAddAccomplice,
-    removeAccomplice: accomplicesForm.removeAccomplice,
+    removeAccomplice: removeAccomplice,
     
     // Official response
     officialResponse: responseForm.officialResponse, 

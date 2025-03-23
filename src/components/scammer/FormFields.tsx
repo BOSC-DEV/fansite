@@ -12,7 +12,7 @@ interface TagInputProps {
   currentValue: string;
   values: string[];
   setCurrentValue: (value: string) => void;
-  addValue: () => void;
+  addValue: (e: React.FormEvent) => void;
   removeValue: (value: string) => void;
 }
 
@@ -33,7 +33,7 @@ export function TagInput({
           placeholder={placeholder}
           value={currentValue}
           onChange={(e) => setCurrentValue(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addValue())}
+          onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addValue(e))}
         />
         <Button type="button" variant="outline" onClick={addValue}>
           <Plus className="h-4 w-4" />
