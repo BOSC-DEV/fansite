@@ -1,121 +1,91 @@
 
-import { ScammerBaseService } from './scammerBaseService';
 import { ScammerStats } from './scammerTypes';
+import { ScammerBaseService } from './scammerBaseService';
+import { supabase } from '@/lib/supabase';
 
 /**
- * Service for handling scammer statistics operations
+ * Service for managing scammer statistics
  */
 export class ScammerStatsService extends ScammerBaseService {
   /**
-   * Update scammer statistics
+   * Update statistics for a scammer
    */
   async updateScammerStats(scammerId: string, stats: ScammerStats): Promise<boolean> {
     try {
-      console.log("Updating stats for scammer:", scammerId, stats);
-      
-      // Get the current scammer to ensure we have valid data
-      const scammer = await this.getScammerRecord(scammerId);
-        
-      if (!scammer) {
-        console.error("Error fetching scammer for stats update");
-        return false;
-      }
-      
-      // Create the update object with required name field
-      const updatePayload = {
-        id: scammerId,
-        name: scammer.name, // Required field
-        likes: stats.likes !== undefined ? stats.likes : scammer.likes,
-        dislikes: stats.dislikes !== undefined ? stats.dislikes : scammer.dislikes,
-        views: stats.views !== undefined ? stats.views : scammer.views
-      };
-      
-      const { error } = await supabase
-        .from('scammers')
-        .upsert(updatePayload, { 
-          onConflict: 'id',
-          ignoreDuplicates: false 
-        });
-
-      if (error) {
-        console.error("Error updating scammer stats:", error);
-        return false;
-      }
-      
-      console.log("Scammer stats updated successfully");
-      return true;
+      return await this.updateScammerRecord(scammerId, stats);
     } catch (error) {
-      console.error("Error in updateScammerStats:", error);
+      console.error("Error updating scammer stats:", error);
       return false;
     }
   }
-  
+
   /**
-   * Increment view count for a scammer
+   * Increment the view count for a scammer
    */
   async incrementScammerViews(scammerId: string): Promise<boolean> {
     try {
-      console.log("Incrementing views for scammer:", scammerId);
-      
       const scammer = await this.getScammerRecord(scammerId);
-        
+      
       if (!scammer) {
-        console.error("Error fetching scammer for view increment");
+        console.error("Scammer not found for incrementing views:", scammerId);
         return false;
       }
       
       const currentViews = scammer.views || 0;
-      const newViews = currentViews + 1;
       
-      return this.updateScammerRecord(scammerId, { views: newViews });
+      const { error } = await supabase
+        .from('scammers')
+        .update({ views: currentViews + 1 })
+        .eq('id', scammerId);
+      
+      if (error) {
+        console.error("Error incrementing scammer views:", error);
+        return false;
+      }
+      
+      return true;
     } catch (error) {
       console.error("Error in incrementScammerViews:", error);
       return false;
     }
   }
-
+  
   /**
-   * Like a scammer (increment likes count)
+   * Like a scammer
    */
   async likeScammer(scammerId: string): Promise<boolean> {
     try {
-      console.log("Liking scammer:", scammerId);
-      
       const scammer = await this.getScammerRecord(scammerId);
-        
+      
       if (!scammer) {
-        console.error("Error fetching scammer for like");
+        console.error("Scammer not found for liking:", scammerId);
         return false;
       }
       
       const currentLikes = scammer.likes || 0;
-      const newLikes = currentLikes + 1;
       
-      return this.updateScammerRecord(scammerId, { likes: newLikes });
+      return await this.updateScammerStats(scammerId, { likes: currentLikes + 1 });
     } catch (error) {
       console.error("Error in likeScammer:", error);
       return false;
     }
   }
-
+  
   /**
-   * Dislike a scammer (increment dislikes count)
+   * Dislike a scammer
    */
   async dislikeScammer(scammerId: string): Promise<boolean> {
     try {
-      console.log("Disliking scammer:", scammerId);
-      
       const scammer = await this.getScammerRecord(scammerId);
-        
+      
       if (!scammer) {
-        console.error("Error fetching scammer for dislike");
+        console.error("Scammer not found for disliking:", scammerId);
         return false;
       }
       
       const currentDislikes = scammer.dislikes || 0;
-      const newDislikes = currentDislikes + 1;
       
-      return this.updateScammerRecord(scammerId, { dislikes: newDislikes });
+      return await this.updateScammerStats(scammerId, { dislikes: currentDislikes + 1 });
     } catch (error) {
       console.error("Error in dislikeScammer:", error);
       return false;
@@ -123,4 +93,5 @@ export class ScammerStatsService extends ScammerBaseService {
   }
 }
 
+// Export a singleton instance
 export const scammerStatsService = new ScammerStatsService();

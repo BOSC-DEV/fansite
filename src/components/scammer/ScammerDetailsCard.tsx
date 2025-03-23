@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Scammer } from "@/lib/types";
 import { toast } from "sonner";
-import { storageService } from "@/services/storage";
+import { storageService, profileService } from "@/services/storage";
 import { ScammerSidebar } from './details/ScammerSidebar';
 import { ScammerContent } from './details/ScammerContent';
 import { Button } from "@/components/ui/button";
@@ -42,6 +42,7 @@ export function ScammerDetailsCard({
   const [dislikes, setDislikes] = useState(scammer.dislikes || 0);
   const [views, setViews] = useState(scammer.views || 0);
   const [addedByUsername, setAddedByUsername] = useState<string | null>(null);
+  const [addedByPhotoUrl, setAddedByPhotoUrl] = useState<string | null>(null);
   const [isProfileLoading, setIsProfileLoading] = useState(true);
   const isCreator = scammer.addedBy === address;
 
@@ -54,9 +55,14 @@ export function ScammerDetailsCard({
       }
       
       try {
-        const profile = await storageService.getProfile(scammer.addedBy);
-        if (profile && profile.username) {
-          setAddedByUsername(profile.username);
+        const profile = await profileService.getProfile(scammer.addedBy);
+        if (profile) {
+          if (profile.username) {
+            setAddedByUsername(profile.username);
+          }
+          if (profile.photoURL) {
+            setAddedByPhotoUrl(profile.photoURL);
+          }
         }
       } catch (error) {
         console.error("Error fetching profile for addedBy:", error);
@@ -172,6 +178,7 @@ export function ScammerDetailsCard({
             dateAdded={scammer.dateAdded.toString()} // Convert Date to string
             addedBy={scammer.addedBy}
             addedByUsername={addedByUsername}
+            addedByPhotoUrl={addedByPhotoUrl}
             isProfileLoading={isProfileLoading}
             likes={likes}
             dislikes={dislikes}

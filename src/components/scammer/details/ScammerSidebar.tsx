@@ -10,6 +10,7 @@ interface ScammerSidebarProps {
   dateAdded: string;
   addedBy: string;
   addedByUsername: string | null;
+  addedByPhotoUrl?: string | null;
   isProfileLoading: boolean;
   likes: number;
   dislikes: number;
@@ -27,6 +28,7 @@ export function ScammerSidebar({
   dateAdded,
   addedBy,
   addedByUsername,
+  addedByPhotoUrl,
   isProfileLoading,
   likes,
   dislikes,
@@ -56,6 +58,7 @@ export function ScammerSidebar({
           dateAdded={dateAdded}
           addedBy={addedBy}
           addedByUsername={addedByUsername}
+          addedByPhotoUrl={addedByPhotoUrl}
           isProfileLoading={isProfileLoading}
           formatDate={formatDate}
         />

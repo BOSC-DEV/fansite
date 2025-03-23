@@ -2,7 +2,7 @@
 import { Scammer } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AlertCircle, ExternalLink, EyeIcon, ThumbsUp, MessageSquare } from "lucide-react";
+import { AlertCircle, ExternalLink, Eye, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useState, useMemo, useEffect } from "react";
@@ -56,7 +56,7 @@ export function ScammerCard({ scammer, className }: ScammerCardProps) {
       "overflow-hidden transition-all duration-300 hover:shadow-md h-full border-western-wood bg-western-parchment/80",
       className
     )}>
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+      <div className="relative aspect-[16/9] overflow-hidden bg-muted">
         {!imageLoaded && !imageError && (
           <div className="absolute inset-0 flex items-center justify-center bg-muted animate-pulse">
             <AlertCircle className="h-8 w-8 text-muted-foreground/50" />
@@ -73,6 +73,20 @@ export function ScammerCard({ scammer, className }: ScammerCardProps) {
           onError={handleImageError}
           loading="lazy"
         />
+        <div className="absolute top-0 right-0 p-2 flex gap-2">
+          <div className="flex items-center gap-1 bg-black/60 text-white py-1 px-2 rounded-full text-xs">
+            <ThumbsUp className="h-3 w-3" />
+            <span>{scammer.likes || 0}</span>
+          </div>
+          <div className="flex items-center gap-1 bg-black/60 text-white py-1 px-2 rounded-full text-xs">
+            <ThumbsDown className="h-3 w-3" />
+            <span>{scammer.dislikes || 0}</span>
+          </div>
+          <div className="flex items-center gap-1 bg-black/60 text-white py-1 px-2 rounded-full text-xs">
+            <Eye className="h-3 w-3" />
+            <span>{scammer.views || 0}</span>
+          </div>
+        </div>
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
           <div className="flex justify-between items-center">
             <h3 className="font-bold text-white truncate">{scammer.name}</h3>
