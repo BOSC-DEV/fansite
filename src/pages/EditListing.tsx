@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -151,6 +152,49 @@ const EditListing = () => {
     }
   };
 
+  // Helper functions for handling form items
+  const handleAddLink = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (currentLink.trim()) {
+      setLinks([...links, currentLink.trim()]);
+      setCurrentLink("");
+    }
+  };
+
+  const removeLink = (index: number) => {
+    const newLinks = [...links];
+    newLinks.splice(index, 1);
+    setLinks(newLinks);
+  };
+
+  const handleAddAlias = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (currentAlias.trim()) {
+      setAliases([...aliases, currentAlias.trim()]);
+      setCurrentAlias("");
+    }
+  };
+
+  const removeAlias = (index: number) => {
+    const newAliases = [...aliases];
+    newAliases.splice(index, 1);
+    setAliases(newAliases);
+  };
+
+  const handleAddAccomplice = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (currentAccomplice.trim()) {
+      setAccomplices([...accomplices, currentAccomplice.trim()]);
+      setCurrentAccomplice("");
+    }
+  };
+
+  const removeAccomplice = (index: number) => {
+    const newAccomplices = [...accomplices];
+    newAccomplices.splice(index, 1);
+    setAccomplices(newAccomplices);
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex flex-col old-paper">
@@ -244,48 +288,18 @@ const EditListing = () => {
                     currentLink={currentLink}
                     setCurrentLink={setCurrentLink}
                     links={links}
-                    handleAddLink={(e) => {
-                      e.preventDefault();
-                      if (currentLink.trim()) {
-                        setLinks([...links, currentLink.trim()]);
-                        setCurrentLink("");
-                      }
-                    }}
-                    removeLink={(index) => {
-                      const newLinks = [...links];
-                      newLinks.splice(index, 1);
-                      setLinks(newLinks);
-                    }}
+                    handleAddLink={handleAddLink}
+                    removeLink={removeLink}
                     currentAlias={currentAlias}
                     setCurrentAlias={setCurrentAlias}
                     aliases={aliases}
-                    handleAddAlias={(e) => {
-                      e.preventDefault();
-                      if (currentAlias.trim()) {
-                        setAliases([...aliases, currentAlias.trim()]);
-                        setCurrentAlias("");
-                      }
-                    }}
-                    removeAlias={(index) => {
-                      const newAliases = [...aliases];
-                      newAliases.splice(index, 1);
-                      setAliases(newAliases);
-                    }}
+                    handleAddAlias={handleAddAlias}
+                    removeAlias={removeAlias}
                     currentAccomplice={currentAccomplice}
                     setCurrentAccomplice={setCurrentAccomplice}
                     accomplices={accomplices}
-                    handleAddAccomplice={(e) => {
-                      e.preventDefault();
-                      if (currentAccomplice.trim()) {
-                        setAccomplices([...accomplices, currentAccomplice.trim()]);
-                        setCurrentAccomplice("");
-                      }
-                    }}
-                    removeAccomplice={(index) => {
-                      const newAccomplices = [...accomplices];
-                      newAccomplices.splice(index, 1);
-                      setAccomplices(newAccomplices);
-                    }}
+                    handleAddAccomplice={handleAddAccomplice}
+                    removeAccomplice={removeAccomplice}
                     officialResponse={officialResponse}
                     setOfficialResponse={setOfficialResponse}
                   />
