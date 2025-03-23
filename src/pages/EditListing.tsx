@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -52,7 +51,6 @@ const EditListing = () => {
       }
 
       try {
-        // Load scammer details
         const scammerData = await storageService.getScammer(id);
         
         if (!scammerData) {
@@ -60,7 +58,6 @@ const EditListing = () => {
           return;
         }
 
-        // Convert to Scammer type
         const scammerObj: Scammer = {
           id: scammerData.id,
           name: scammerData.name,
@@ -81,11 +78,9 @@ const EditListing = () => {
         
         setScammer(scammerObj);
         
-        // Check if user is authorized to edit
         if (isConnected && address === scammerObj.addedBy) {
           setIsAuthorized(true);
           
-          // Populate form with existing data
           setName(scammerObj.name);
           setPhotoUrl(scammerObj.photoUrl);
           setAccusedOf(scammerObj.accusedOf);
@@ -113,7 +108,6 @@ const EditListing = () => {
       return;
     }
     
-    // Update scammer data
     const updatedScammer = {
       ...scammer,
       name,
@@ -123,7 +117,6 @@ const EditListing = () => {
       aliases,
       accomplices,
       officialResponse,
-      // Keep original date and other stats
       dateAdded: scammer.dateAdded.toISOString(),
       likes: scammer.likes,
       dislikes: scammer.dislikes,
@@ -131,7 +124,6 @@ const EditListing = () => {
       addedBy: scammer.addedBy
     };
     
-    // Convert date to string for storage
     const scammerToSave = {
       ...updatedScammer,
       dateAdded: updatedScammer.dateAdded,
@@ -152,47 +144,37 @@ const EditListing = () => {
     }
   };
 
-  // Helper functions for handling form items
-  const handleAddLink = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAddLinkWrapper = () => {
     if (currentLink.trim()) {
       setLinks([...links, currentLink.trim()]);
       setCurrentLink("");
     }
   };
 
-  const removeLink = (index: number) => {
-    const newLinks = [...links];
-    newLinks.splice(index, 1);
-    setLinks(newLinks);
+  const removeLinkWrapper = (link: string) => {
+    setLinks(links.filter(l => l !== link));
   };
 
-  const handleAddAlias = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAddAliasWrapper = () => {
     if (currentAlias.trim()) {
       setAliases([...aliases, currentAlias.trim()]);
       setCurrentAlias("");
     }
   };
 
-  const removeAlias = (index: number) => {
-    const newAliases = [...aliases];
-    newAliases.splice(index, 1);
-    setAliases(newAliases);
+  const removeAliasWrapper = (alias: string) => {
+    setAliases(aliases.filter(a => a !== alias));
   };
 
-  const handleAddAccomplice = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAddAccompliceWrapper = () => {
     if (currentAccomplice.trim()) {
       setAccomplices([...accomplices, currentAccomplice.trim()]);
       setCurrentAccomplice("");
     }
   };
 
-  const removeAccomplice = (index: number) => {
-    const newAccomplices = [...accomplices];
-    newAccomplices.splice(index, 1);
-    setAccomplices(newAccomplices);
+  const removeAccompliceWrapper = (accomplice: string) => {
+    setAccomplices(accomplices.filter(a => a !== accomplice));
   };
 
   if (isLoading) {
@@ -288,18 +270,18 @@ const EditListing = () => {
                     currentLink={currentLink}
                     setCurrentLink={setCurrentLink}
                     links={links}
-                    handleAddLink={handleAddLink}
-                    removeLink={removeLink}
+                    handleAddLink={handleAddLinkWrapper}
+                    removeLink={removeLinkWrapper}
                     currentAlias={currentAlias}
                     setCurrentAlias={setCurrentAlias}
                     aliases={aliases}
-                    handleAddAlias={handleAddAlias}
-                    removeAlias={removeAlias}
+                    handleAddAlias={handleAddAliasWrapper}
+                    removeAlias={removeAliasWrapper}
                     currentAccomplice={currentAccomplice}
                     setCurrentAccomplice={setCurrentAccomplice}
                     accomplices={accomplices}
-                    handleAddAccomplice={handleAddAccomplice}
-                    removeAccomplice={removeAccomplice}
+                    handleAddAccomplice={handleAddAccompliceWrapper}
+                    removeAccomplice={removeAccompliceWrapper}
                     officialResponse={officialResponse}
                     setOfficialResponse={setOfficialResponse}
                   />
