@@ -1,11 +1,8 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Star, BookOpen, Shield, Flame } from "lucide-react";
-
 export const HeroSection = () => {
-  return (
-    <section className="pt-20 pb-12 md:pt-32 md:pb-24 px-3 sm:px-4 old-paper">
+  return <section className="pt-20 pb-12 md:pt-32 md:pb-24 px-3 sm:px-4 old-paper">
       <div className="container mx-auto max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
           <div className="space-y-4 md:space-y-6 md:pr-8 animate-fade-in">
@@ -40,18 +37,15 @@ export const HeroSection = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-western-leather/30 via-western-accent/20 to-western-parchment/50 opacity-70 rounded-sm"></div>
             <div className="absolute inset-0 flex items-center justify-center text-western-wood p-4 sm:p-6">
               <div className="text-center space-y-4">
-                <div className="sheriff-badge inline-block p-3 sm:p-4 bg-western-accent/80 rounded-full border-4 border-western-wood flex items-center justify-center animate-bounce-slight">
+                <div className="sheriff-badge inline-block p-3 sm:p-4 bg-western-accent/80 rounded-full border-4 border-western-wood flex items-center justify-center animate-bounce-slight py-px px-[2px]">
                   <Star className="h-8 w-8 sm:h-12 sm:w-12 text-western-parchment" />
                 </div>
-                <h2 className="font-wanted text-2xl sm:text-3xl text-western-leather uppercase tracking-wide">Wanted: Dead or Alive</h2>
-                <p className="text-western-wood/90 max-w-md font-western text-base sm:text-lg px-2">
-                  Join our posse to identify and track down the outlaws of the crypto frontier.
-                </p>
+                <h2 className="font-wanted text-2xl sm:text-3xl text-western-leather uppercase tracking-wide">WANTED: FOR CRIMES AGAINST HUMANTY</h2>
+                <p className="text-western-wood/90 max-w-md font-western text-base sm:text-lg px-2"></p>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
