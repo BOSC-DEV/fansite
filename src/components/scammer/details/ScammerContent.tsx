@@ -6,7 +6,6 @@ import { EvidenceTab } from './tabs/EvidenceTab';
 import { NetworkTab } from './tabs/NetworkTab';
 import { ResponseTab } from './tabs/ResponseTab';
 import { ScammerInteractionButtons } from './ScammerInteractionButtons';
-import { Eye } from "lucide-react";
 
 interface ScammerContentProps {
   aliases: string[];
@@ -37,42 +36,46 @@ export function ScammerContent({
 }: ScammerContentProps) {
   return (
     <div className="w-full">
+      {/* Interaction buttons moved to the top */}
+      <div className="flex justify-end mb-6">
+        <ScammerInteractionButtons
+          likes={likes}
+          dislikes={dislikes}
+          views={views}
+          isLiked={isLiked}
+          isDisliked={isDisliked}
+          onLike={onLike}
+          onDislike={onDislike}
+        />
+      </div>
+      
       <Tabs defaultValue="identity" className="w-full">
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-row flex-wrap justify-between items-center gap-4 mt-6">
-            <ScammerInteractionButtons
-              likes={likes}
-              dislikes={dislikes}
-              views={views}
-              isLiked={isLiked}
-              isDisliked={isDisliked}
-              onLike={onLike}
-              onDislike={onDislike}
-            />
+        <div className="flex flex-row gap-6">
+          {/* TabsList moved to the left side */}
+          <TabsList className="flex-col h-auto p-1 w-40">
+            <TabsTrigger value="identity" className="w-full justify-start px-4 py-3">Identity</TabsTrigger>
+            <TabsTrigger value="evidence" className="w-full justify-start px-4 py-3">Evidence</TabsTrigger>
+            <TabsTrigger value="network" className="w-full justify-start px-4 py-3">Network</TabsTrigger>
+            <TabsTrigger value="response" className="w-full justify-start px-4 py-3">Response</TabsTrigger>
+          </TabsList>
+          
+          <div className="flex-1">
+            <TabsContent value="identity">
+              <IdentityTab aliases={aliases} />
+            </TabsContent>
             
-            <TabsList className="grid grid-cols-4 w-auto">
-              <TabsTrigger value="identity">Identity</TabsTrigger>
-              <TabsTrigger value="evidence">Evidence</TabsTrigger>
-              <TabsTrigger value="network">Network</TabsTrigger>
-              <TabsTrigger value="response">Response</TabsTrigger>
-            </TabsList>
+            <TabsContent value="evidence">
+              <EvidenceTab links={links} />
+            </TabsContent>
+            
+            <TabsContent value="network">
+              <NetworkTab accomplices={accomplices} />
+            </TabsContent>
+            
+            <TabsContent value="response">
+              <ResponseTab officialResponse={officialResponse} />
+            </TabsContent>
           </div>
-          
-          <TabsContent value="identity">
-            <IdentityTab aliases={aliases} />
-          </TabsContent>
-          
-          <TabsContent value="evidence">
-            <EvidenceTab links={links} />
-          </TabsContent>
-          
-          <TabsContent value="network">
-            <NetworkTab accomplices={accomplices} />
-          </TabsContent>
-          
-          <TabsContent value="response">
-            <ResponseTab officialResponse={officialResponse} />
-          </TabsContent>
         </div>
       </Tabs>
     </div>
