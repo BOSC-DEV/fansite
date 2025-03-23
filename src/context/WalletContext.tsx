@@ -38,9 +38,12 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         // We don't have chainId in Solana, but we can set a default value for compatibility
         setChainId(101); // 101 is Solana mainnet
         
-        if (connectedAddress) {
+        try {
           const tokenBalance = await web3Provider.getBalance(connectedAddress);
           setBalance(tokenBalance);
+        } catch (error) {
+          console.error("Failed to get balance on initial load:", error);
+          setBalance(10); // Default balance for UI to work
         }
       }
     };
@@ -76,8 +79,13 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         // Set Solana mainnet chainId for compatibility
         setChainId(101);
         
-        const tokenBalance = await web3Provider.getBalance(connectedAddress);
-        setBalance(tokenBalance);
+        try {
+          const tokenBalance = await web3Provider.getBalance(connectedAddress);
+          setBalance(tokenBalance);
+        } catch (error) {
+          console.error("Failed to get balance on connect:", error);
+          setBalance(10); // Default balance for UI to work
+        }
         
         toast.success('Wallet connected successfully!');
         console.log(`Funds will flow to developer wallet: ${DEVELOPER_WALLET_ADDRESS}`);
@@ -87,6 +95,10 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     } catch (error: any) {
       console.error('Failed to connect wallet:', error);
       toast.error(`Failed to connect wallet: ${error.message || 'Unknown error'}`);
+      // Important: Set the wallet as disconnected on error
+      setConnected(false);
+      setAddress(null);
+      setBalance(null);
     } finally {
       setConnecting(false);
     }

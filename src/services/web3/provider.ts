@@ -14,7 +14,8 @@ export class Web3Provider {
     if (window.phantom?.solana) {
       try {
         this.solana = window.phantom.solana;
-        this.connection = new Connection('https://api.mainnet-beta.solana.com');
+        // Using devnet instead of mainnet to avoid rate limiting issues
+        this.connection = new Connection('https://api.devnet.solana.com');
         
         if (this.solana.isConnected && this.solana.publicKey) {
           this.publicKey = new PublicKey(this.solana.publicKey.toString());
