@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { BookOpen, List, SortDesc } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SortAndViewControlsProps {
   viewType: "grid" | "table";
@@ -16,6 +17,8 @@ export const SortAndViewControls = ({
   onViewChange,
   onSortChange
 }: SortAndViewControlsProps) => {
+  const isMobile = useIsMobile();
+  
   const toggleViewMode = () => {
     onViewChange(viewType === "table" ? "grid" : "table");
   };
@@ -25,15 +28,22 @@ export const SortAndViewControls = ({
     onSortChange(nextSort);
   };
 
+  const getSortLabel = () => {
+    if (isMobile) {
+      return sortBy === "newest" ? "Recent" : sortBy === "oldest" ? "Oldest" : "Bounty";
+    }
+    return sortBy === "newest" ? "Most Recent" : sortBy === "oldest" ? "Oldest First" : "Highest Bounty";
+  };
+
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-4 justify-between w-full">
       <Button
         variant="outline"
-        className="flex-shrink-0"
+        className="flex-shrink-0 text-sm"
         onClick={handleSortChange}
       >
         <SortDesc className="h-4 w-4 mr-2" />
-        Sort by: {sortBy === "newest" ? "Most Recent" : sortBy === "oldest" ? "Oldest First" : "Highest Bounty"}
+        Sort by: {getSortLabel()}
       </Button>
       
       <div className="flex items-center space-x-2">
