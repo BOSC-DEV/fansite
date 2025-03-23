@@ -14,18 +14,7 @@ export function useListingForm() {
   const responseForm = useResponseForm();
   const { validateForm: validateFormBase } = useFormValidation();
 
-  // Create wrapper functions that handle indexes correctly
-  const removeLink = (index: number) => {
-    linksForm.removeLink(index);
-  };
-
-  const removeAlias = (index: number) => {
-    aliasesForm.removeAlias(index);
-  };
-
-  const removeAccomplice = (index: number) => {
-    accomplicesForm.removeAccomplice(index);
-  };
+  // No need for wrapper functions now, as the hook functions already accept number indices
 
   const validateForm = (): boolean => {
     return validateFormBase({
@@ -50,7 +39,7 @@ export function useListingForm() {
     links: linksForm.links, 
     setLinks: linksForm.setLinks,
     handleAddLink: linksForm.handleAddLink,
-    removeLink: removeLink,
+    removeLink: linksForm.removeLink,
     
     // Aliases
     currentAlias: aliasesForm.currentAlias, 
@@ -58,7 +47,7 @@ export function useListingForm() {
     aliases: aliasesForm.aliases, 
     setAliases: aliasesForm.setAliases,
     handleAddAlias: aliasesForm.handleAddAlias,
-    removeAlias: removeAlias,
+    removeAlias: aliasesForm.removeAlias,
     
     // Accomplices
     currentAccomplice: accomplicesForm.currentAccomplice, 
@@ -66,7 +55,7 @@ export function useListingForm() {
     accomplices: accomplicesForm.accomplices, 
     setAccomplices: accomplicesForm.setAccomplices,
     handleAddAccomplice: accomplicesForm.handleAddAccomplice,
-    removeAccomplice: removeAccomplice,
+    removeAccomplice: accomplicesForm.removeAccomplice,
     
     // Official response
     officialResponse: responseForm.officialResponse, 

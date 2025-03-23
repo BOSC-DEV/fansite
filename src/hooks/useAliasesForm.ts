@@ -5,15 +5,19 @@ export function useAliasesForm() {
   const [currentAlias, setCurrentAlias] = useState("");
   const [aliases, setAliases] = useState<string[]>([]);
 
-  const handleAddAlias = () => {
+  const handleAddAlias = (e: React.FormEvent) => {
+    e.preventDefault();
     if (currentAlias.trim() && !aliases.includes(currentAlias.trim())) {
       setAliases([...aliases, currentAlias.trim()]);
       setCurrentAlias("");
     }
   };
 
-  const removeAlias = (alias: string) => {
-    setAliases(aliases.filter(a => a !== alias));
+  // Update to accept a numeric index instead of a string
+  const removeAlias = (index: number) => {
+    const newAliases = [...aliases];
+    newAliases.splice(index, 1);
+    setAliases(newAliases);
   };
 
   return {
