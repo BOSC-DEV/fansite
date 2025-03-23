@@ -1,5 +1,7 @@
 
 import { BaseSupabaseService } from './baseSupabaseService';
+import { scammerService } from './scammerService';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface LeaderboardUser {
   id: string;
@@ -20,9 +22,8 @@ export class LeaderboardService extends BaseSupabaseService {
     console.log("[LeaderboardService] Fetching leaderboard data");
 
     try {
-      // Instead of using leaderboard_stats, we'll get data directly from profiles
-      // ordered by creation date
-      const { data, error } = await this.supabase
+      // Get profiles ordered by creation date
+      const { data: profiles, error: profilesError } = await this.supabase
         .from('profiles')
         .select(`
           id,
@@ -34,34 +35,66 @@ export class LeaderboardService extends BaseSupabaseService {
         `)
         .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('[LeaderboardService] Error fetching leaderboard data:', error);
+      if (profilesError) {
+        console.error('[LeaderboardService] Error fetching profiles:', profilesError);
         return [];
       }
 
-      if (!data || data.length === 0) {
+      if (!profiles || profiles.length === 0) {
         console.log("[LeaderboardService] No profiles found");
         return [];
       }
 
-      console.log(`[LeaderboardService] Retrieved ${data.length} profiles`);
+      console.log(`[LeaderboardService] Retrieved ${profiles.length} profiles`);
       
-      // Convert from database format to client format
-      // For now, use placeholder values for the stats until bounty system is ready
-      return data.map(item => ({
-        id: item.id,
-        walletAddress: item.wallet_address,
-        displayName: item.display_name || 'Anonymous User',
-        username: item.username || 'user' + item.id.substring(0, 4),
-        profilePicUrl: item.profile_pic_url || '',
-        // Placeholder stats based on user id to make it look somewhat random
-        totalReports: parseInt(item.id.substring(0, 2), 16) % 10 || 1,
-        totalLikes: parseInt(item.id.substring(2, 4), 16) % 25 || 3,
-        totalViews: parseInt(item.id.substring(4, 6), 16) % 100 + 10,
-        totalComments: parseInt(item.id.substring(6, 8), 16) % 15 || 2,
-        totalBounty: parseInt(item.id.substring(8, 10), 16) % 1000 || 50,
-        createdAt: item.created_at
-      }));
+      // Get all scammers to calculate user stats
+      const scammers = await scammerService.getAllScammers();
+      console.log(`[LeaderboardService] Retrieved ${scammers.length} scammers for stats calculation`);
+      
+      // Calculate real stats for each user
+      return profiles.map(profile => {
+        // Filter scammers added by this user
+        const userScammers = scammers.filter(scammer => 
+          scammer.addedBy === profile.wallet_address
+        );
+        
+        // Calculate total reports (number of scammers reported)
+        const totalReports = userScammers.length;
+        
+        // Calculate total likes (sum of likes on all reported scammers)
+        const totalLikes = userScammers.reduce((sum, scammer) => sum + (scammer.likes || 0), 0);
+        
+        // Calculate total views (sum of views on all reported scammers)
+        const totalViews = userScammers.reduce((sum, scammer) => sum + (scammer.views || 0), 0);
+        
+        // Count comments across all scammer reports
+        let totalComments = 0;
+        
+        // Try to count comments if the comment data is available
+        try {
+          userScammers.forEach(scammer => {
+            if (scammer.comments && Array.isArray(scammer.comments)) {
+              totalComments += scammer.comments.length;
+            }
+          });
+        } catch (error) {
+          console.warn('[LeaderboardService] Error counting comments:', error);
+        }
+        
+        return {
+          id: profile.id,
+          walletAddress: profile.wallet_address,
+          displayName: profile.display_name || 'Anonymous User',
+          username: profile.username || 'user' + profile.id.substring(0, 4),
+          profilePicUrl: profile.profile_pic_url || '',
+          totalReports: totalReports,
+          totalLikes: totalLikes,
+          totalViews: totalViews,
+          totalComments: totalComments,
+          totalBounty: 0, // Keep at 0 until bounty system is ready
+          createdAt: profile.created_at
+        };
+      });
     } catch (error) {
       console.error('Unexpected error fetching leaderboard data:', error);
       return [];
