@@ -4,7 +4,6 @@ import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { storageService, UserProfile } from "@/services/storage";
 import { isSupabaseConfigured } from "@/lib/supabase";
-import { v4 as uuidv4 } from 'uuid';
 
 export interface ProfileFormData {
   displayName: string;
@@ -180,12 +179,13 @@ export function useProfileForm() {
     setIsSubmitting(true);
     
     try {
-      const uniqueId = profileId || uuidv4();
+      // Use the wallet address as the profile ID
+      const uniqueId = address;
       
       // Store profile using storageService
       if (address && supabaseReady) {
         const profile: UserProfile = {
-          id: uniqueId,
+          id: uniqueId, // Using wallet address as ID
           displayName,
           username,
           profilePicUrl,
@@ -200,9 +200,7 @@ export function useProfileForm() {
         if (success) {
           toast.success("Profile saved successfully");
           setHasProfile(true);
-          if (!profileId) {
-            setProfileId(uniqueId);
-          }
+          setProfileId(uniqueId);
           return true;
         } else {
           toast.error("Failed to save profile");

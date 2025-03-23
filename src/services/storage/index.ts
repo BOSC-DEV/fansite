@@ -18,6 +18,8 @@ export const storageService = {
   getProfile: profileService.getProfile.bind(profileService),
   saveProfile: profileService.saveProfile.bind(profileService),
   hasProfile: profileService.hasProfile.bind(profileService),
+  getProfileByUsername: profileService.getProfileByUsername.bind(profileService),
+  isUsernameAvailable: profileService.isUsernameAvailable.bind(profileService),
   
   // Scammer methods
   getAllScammers: scammerService.getAllScammers.bind(scammerService),

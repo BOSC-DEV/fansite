@@ -98,14 +98,12 @@ export class ProfileService extends BaseSupabaseService {
   }
 
   async saveProfile(profile: UserProfile): Promise<boolean> {
-    // Ensure we have an ID for new profiles
-    if (!profile.id) {
-      profile.id = uuidv4();
-    }
+    // Now we'll use the wallet address as the ID
+    const profileId = profile.walletAddress;
     
     // Convert from camelCase to snake_case for database
     const dbProfile = {
-      id: profile.id,
+      id: profileId, // Use wallet address as ID
       display_name: profile.displayName,
       username: profile.username,
       profile_pic_url: profile.profilePicUrl,
