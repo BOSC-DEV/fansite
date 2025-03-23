@@ -39,27 +39,27 @@ export function ImageUpload({ onImageChange, currentImage }: ImageUploadProps) {
 
     setIsUploading(true);
     try {
-      console.log("Starting image upload...");
+      console.log("Starting scammer image upload...");
       
       // Generate a unique ID for the image
       const uniqueId = uuidv4();
       
-      // Upload the file using the storage service
-      const imageUrl = await storageService.uploadProfileImage(file, uniqueId);
+      // Upload the file using the storage service's new scammer image method
+      const imageUrl = await storageService.uploadScammerImage(file, uniqueId);
       
       if (imageUrl) {
-        console.log("Image uploaded successfully:", imageUrl);
+        console.log("Scammer image uploaded successfully:", imageUrl);
         onImageChange(imageUrl);
         toast.success("Image uploaded successfully");
       } else {
-        console.error("Failed to upload image, using placeholder");
+        console.error("Failed to upload scammer image, using placeholder");
         // If upload fails, use a placeholder
         const placeholderUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(file.name)}&background=random`;
         onImageChange(placeholderUrl);
         toast.warning("Using placeholder image due to upload issues");
       }
     } catch (error: any) {
-      console.error("Error uploading image:", error);
+      console.error("Error uploading scammer image:", error);
       // Fallback to a generated avatar
       const placeholderUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(file.name)}&background=random`;
       onImageChange(placeholderUrl);

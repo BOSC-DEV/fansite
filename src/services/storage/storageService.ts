@@ -52,6 +52,42 @@ export class StorageService extends BaseSupabaseService {
     }
   }
 
+  // New method specifically for scammer images
+  async uploadScammerImage(file: File, scammerId: string): Promise<string | null> {
+    try {
+      console.log('Uploading scammer image for scammer:', scammerId);
+      
+      // Generate a unique file name
+      const fileExt = file.name.split('.').pop();
+      const fileName = `scammer-${scammerId}-${Date.now()}.${fileExt}`;
+      const filePath = `${fileName}`;
+      
+      // Upload the file to the 'profile-images' bucket (reusing the same bucket for now)
+      const { error: uploadError, data } = await this.supabase.storage
+        .from('profile-images')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true // Overwrite if the file already exists
+        });
+        
+      if (uploadError) {
+        console.error('Error uploading scammer image:', uploadError);
+        return null;
+      }
+      
+      // Get the public URL for the uploaded file
+      const { data: publicUrlData } = this.supabase.storage
+        .from('profile-images')
+        .getPublicUrl(filePath);
+        
+      console.log('Scammer image uploaded successfully, public URL:', publicUrlData.publicUrl);
+      return publicUrlData.publicUrl;
+    } catch (error) {
+      console.error('Error in uploadScammerImage:', error);
+      return null;
+    }
+  }
+
   // Forward profile methods
   async getProfile(walletAddress: string): Promise<UserProfile | null> {
     return profileService.getProfile(walletAddress);
