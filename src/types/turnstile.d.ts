@@ -12,6 +12,9 @@ interface TurnstileOptions {
   'error-callback'?: (error: any) => void;
   theme?: 'light' | 'dark' | 'auto';
   tabindex?: number;
+  retry?: 'auto' | 'never';
+  refresh_expired?: 'auto' | 'manual' | 'never';
+  appearance?: 'always' | 'execute' | 'interaction-only';
 }
 
 interface Window {

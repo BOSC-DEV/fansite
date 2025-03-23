@@ -31,10 +31,25 @@ export const CloudflareTurnstile: React.FC<CloudflareTurnstileProps> = ({ siteKe
     const renderTurnstile = () => {
       if (!window.turnstile || !containerRef.current) return;
       
+      // If there's an existing widget, remove it first
+      if (turnstileRef.current !== null) {
+        window.turnstile.remove(turnstileRef.current);
+      }
+      
       // Render the widget
       turnstileRef.current = window.turnstile.render(containerRef.current, {
         sitekey: siteKey,
         callback: onVerify,
+        theme: 'light',
+        'expired-callback': () => {
+          console.log('Turnstile challenge expired, refreshing');
+          if (turnstileRef.current !== null) {
+            window.turnstile.reset(turnstileRef.current);
+          }
+        },
+        'error-callback': (error: any) => {
+          console.error('Turnstile error:', error);
+        }
       });
     };
 
@@ -49,7 +64,18 @@ export const CloudflareTurnstile: React.FC<CloudflareTurnstileProps> = ({ siteKe
     }
   }, [siteKey, onVerify]);
 
-  return <div ref={containerRef} className="mt-4" />;
+  return (
+    <div className="flex flex-col items-center">
+      <div 
+        ref={containerRef} 
+        className="mx-auto my-4 flex justify-center"
+        aria-label="Cloudflare Turnstile challenge"
+      />
+      <p className="text-xs text-western-wood/70 mt-2 text-center max-w-md">
+        This site is protected by Cloudflare Turnstile to ensure you're not a robot.
+      </p>
+    </div>
+  );
 };
 
 export default CloudflareTurnstile;
