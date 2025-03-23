@@ -60,8 +60,8 @@ export function ScammerDetailsCard({
           if (profile.username) {
             setAddedByUsername(profile.username);
           }
-          if (profile.photoURL) {
-            setAddedByPhotoUrl(profile.photoURL);
+          if (profile.profilePicUrl) {
+            setAddedByPhotoUrl(profile.profilePicUrl);
           }
         }
       } catch (error) {
