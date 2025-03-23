@@ -18,7 +18,6 @@ export default function Leaderboard() {
       try {
         setIsLoading(true);
         const users = await leaderboardService.getLeaderboardUsers();
-        console.log("Leaderboard page received users:", users);
         setLeaderboardUsers(users);
       } catch (err) {
         console.error("Error fetching leaderboard data:", err);

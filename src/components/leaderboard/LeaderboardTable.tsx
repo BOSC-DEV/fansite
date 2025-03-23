@@ -1,106 +1,148 @@
 
 import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { 
+  Table, 
+  TableHeader, 
+  TableBody, 
+  TableFooter, 
+  TableHead, 
+  TableRow, 
+  TableCell 
+} from "@/components/ui/table";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Link } from "react-router-dom";
+import { formatCurrency } from "@/utils/formatters";
+import { Trophy, Award, Medal } from "lucide-react";
 import type { LeaderboardUser } from "@/services/storage/leaderboardService";
-import { CalendarDays } from "lucide-react";
-import { format } from "date-fns";
 
 interface LeaderboardTableProps {
   users: LeaderboardUser[];
   isLoading: boolean;
 }
 
-export function LeaderboardTable({ users, isLoading }: LeaderboardTableProps) {
-  console.log("LeaderboardTable rendering with users:", users);
-  
+export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ users, isLoading }) => {
   if (isLoading) {
     return <LeaderboardTableSkeleton />;
   }
 
-  if (!users || users.length === 0) {
+  if (users.length === 0) {
     return (
-      <div className="text-center p-8">
-        <p className="text-western-dark text-lg">No bounty hunters found yet. Be the first to sign up!</p>
+      <div className="p-8 text-center">
+        <p className="text-western-sand">No bounty hunters have signed up yet. Be the first!</p>
       </div>
     );
   }
 
+  const getRankIcon = (index: number) => {
+    switch (index) {
+      case 0:
+        return <Trophy className="h-6 w-6 text-yellow-400" />;
+      case 1:
+        return <Award className="h-6 w-6 text-gray-300" />;
+      case 2:
+        return <Medal className="h-6 w-6 text-amber-700" />;
+      default:
+        return <span className="font-bold text-western-parchment/70">{index + 1}</span>;
+    }
+  };
+
   return (
     <div className="overflow-x-auto">
-      <table className="w-full border-collapse">
-        <thead>
-          <tr className="border-b border-western-light">
-            <th className="py-3 px-4 text-left">Hunter</th>
-            <th className="py-3 px-4 text-left">Joined</th>
-            <th className="py-3 px-4 text-center">Reports</th>
-            <th className="py-3 px-4 text-center hidden md:table-cell">Likes</th>
-            <th className="py-3 px-4 text-center hidden md:table-cell">Views</th>
-            <th className="py-3 px-4 text-center hidden md:table-cell">Comments</th>
-            <th className="py-3 px-4 text-center">Bounty</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table>
+        <TableHeader>
+          <TableRow className="border-b border-western-accent/30">
+            <TableHead className="w-12 text-center">Rank</TableHead>
+            <TableHead className="text-left">Hunter</TableHead>
+            <TableHead className="text-center hidden md:table-cell">Reports</TableHead>
+            <TableHead className="text-center hidden md:table-cell">Likes</TableHead>
+            <TableHead className="text-center hidden md:table-cell">Views</TableHead>
+            <TableHead className="text-center hidden md:table-cell">Comments</TableHead>
+            <TableHead className="text-center">Total Bounty</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {users.map((user, index) => (
-            <tr 
-              key={user.id || index} 
-              className="border-b border-western-light hover:bg-western-sand/10 transition-colors"
-            >
-              <td className="py-3 px-4">
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-10 w-10 border border-western-light">
-                    <AvatarImage src={user.profilePicUrl || ''} alt={user.displayName} />
-                    <AvatarFallback className="bg-western-sand text-western-dark">
-                      {user.displayName?.substring(0, 2).toUpperCase() || "??"}
+            <TableRow key={user.id} className="border-b border-western-accent/20 hover:bg-western-parchment/10">
+              <TableCell className="text-center">
+                {getRankIcon(index)}
+              </TableCell>
+              <TableCell>
+                <Link to={`/${user.walletAddress}`} className="flex items-center space-x-3 hover:text-western-accent">
+                  <Avatar className="h-10 w-10 border border-western-accent/20">
+                    <AvatarImage src={user.profilePicUrl} alt={user.displayName} />
+                    <AvatarFallback className="bg-western-wood text-western-parchment">
+                      {user.displayName.substring(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-bold text-western-dark">{user.displayName}</p>
-                    <p className="text-sm text-western-dark/70">@{user.username}</p>
+                    <p className="font-medium font-western">{user.displayName}</p>
+                    <p className="text-xs text-western-parchment/70">@{user.username}</p>
                   </div>
-                </div>
-              </td>
-              <td className="py-3 px-4">
-                <div className="flex items-center">
-                  <CalendarDays className="mr-2 h-4 w-4 text-western-dark/70" />
-                  <span>{user.createdAt ? format(new Date(user.createdAt), 'MMM d, yyyy') : 'Unknown'}</span>
-                </div>
-              </td>
-              <td className="py-3 px-4 text-center">{user.totalReports}</td>
-              <td className="py-3 px-4 text-center hidden md:table-cell">{user.totalLikes}</td>
-              <td className="py-3 px-4 text-center hidden md:table-cell">{user.totalViews}</td>
-              <td className="py-3 px-4 text-center hidden md:table-cell">{user.totalComments}</td>
-              <td className="py-3 px-4 text-center">${user.totalBounty.toFixed(2)}</td>
-            </tr>
+                </Link>
+              </TableCell>
+              <TableCell className="text-center hidden md:table-cell">{user.totalReports}</TableCell>
+              <TableCell className="text-center hidden md:table-cell">{user.totalLikes}</TableCell>
+              <TableCell className="text-center hidden md:table-cell">{user.totalViews}</TableCell>
+              <TableCell className="text-center hidden md:table-cell">{user.totalComments}</TableCell>
+              <TableCell className="text-center font-bold text-western-accent">
+                {formatCurrency(user.totalBounty)} BOSC
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   );
-}
+};
 
-function LeaderboardTableSkeleton() {
+const LeaderboardTableSkeleton = () => {
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center pb-3 border-b border-western-light">
-        <Skeleton className="h-6 w-24" />
-        <Skeleton className="h-6 w-32" />
-      </div>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <div key={i} className="flex items-center space-x-4 py-3">
-          <Skeleton className="h-10 w-10 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-32" />
-            <Skeleton className="h-4 w-24" />
-          </div>
-          <div className="ml-auto flex space-x-8">
-            <Skeleton className="h-4 w-12" />
-            <Skeleton className="h-4 w-12 hidden md:block" />
-            <Skeleton className="h-4 w-12 hidden md:block" />
-            <Skeleton className="h-4 w-20" />
-          </div>
-        </div>
-      ))}
-    </div>
+    <Table>
+      <TableHeader>
+        <TableRow className="border-b border-western-accent/30">
+          <TableHead className="w-12 text-center">Rank</TableHead>
+          <TableHead className="text-left">Hunter</TableHead>
+          <TableHead className="text-center hidden md:table-cell">Reports</TableHead>
+          <TableHead className="text-center hidden md:table-cell">Likes</TableHead>
+          <TableHead className="text-center hidden md:table-cell">Views</TableHead>
+          <TableHead className="text-center hidden md:table-cell">Comments</TableHead>
+          <TableHead className="text-center">Total Bounty</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {[...Array(5)].map((_, i) => (
+          <TableRow key={i} className="border-b border-western-accent/20">
+            <TableCell className="text-center">
+              <Skeleton className="h-6 w-6 rounded-full mx-auto" />
+            </TableCell>
+            <TableCell>
+              <div className="flex items-center space-x-3">
+                <Skeleton className="h-10 w-10 rounded-full" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-3 w-16" />
+                </div>
+              </div>
+            </TableCell>
+            <TableCell className="text-center hidden md:table-cell">
+              <Skeleton className="h-4 w-8 mx-auto" />
+            </TableCell>
+            <TableCell className="text-center hidden md:table-cell">
+              <Skeleton className="h-4 w-8 mx-auto" />
+            </TableCell>
+            <TableCell className="text-center hidden md:table-cell">
+              <Skeleton className="h-4 w-10 mx-auto" />
+            </TableCell>
+            <TableCell className="text-center hidden md:table-cell">
+              <Skeleton className="h-4 w-8 mx-auto" />
+            </TableCell>
+            <TableCell className="text-center">
+              <Skeleton className="h-4 w-16 mx-auto" />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
-}
+};
