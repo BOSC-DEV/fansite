@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { PublicKey } from '@solana/web3.js';
 import { ContractService } from "./contracts";
 import { toast } from "sonner";
 
@@ -8,35 +8,22 @@ export class ScammerService extends ContractService {
   }
   
   async addScammer(name: string, accusedOf: string, photoUrl: string): Promise<string | null> {
-    if (!this.bookOfScamsContract || !this.signer) {
-      console.error("Contract or signer not initialized");
-      toast.error("Wallet connection issue. Please reconnect your wallet.");
+    if (!this.connection || !this.publicKey) {
+      console.error("Connection or wallet not initialized");
+      toast.error("Wallet connection issue. Please connect your wallet.");
       return null;
     }
     
     try {
       console.log("Adding scammer with name:", name);
-      // Add the scammer
-      const tx = await this.bookOfScamsContract.addScammer(name, accusedOf, photoUrl);
-      console.log("Transaction sent:", tx.hash);
-      const receipt = await tx.wait();
-      console.log("Transaction confirmed:", receipt);
+      // This is a placeholder for now until we have the Solana program implementation
+      // In a real implementation, we would call a Solana program
       
-      // Find the ScammerAdded event to get the scammer ID
-      const event = receipt.logs
-        .filter((log: any) => log.fragment && log.fragment.name === 'ScammerAdded')
-        .map((log: any) => {
-          const parsedLog = this.bookOfScamsContract?.interface.parseLog(log);
-          return parsedLog?.args;
-        })[0];
+      // Generate a unique ID for the scammer
+      const scammerId = Math.random().toString(36).substring(2, 15);
+      console.log("Scammer added with ID:", scammerId);
       
-      if (event && event.scammerId) {
-        console.log("Scammer added with ID:", event.scammerId);
-        return event.scammerId;
-      }
-      
-      console.error("No scammer ID found in events");
-      return null;
+      return scammerId;
     } catch (error) {
       console.error("Error adding scammer:", error);
       toast.error(`Transaction failed: ${error instanceof Error ? error.message : "Unknown error"}`);
@@ -45,23 +32,11 @@ export class ScammerService extends ContractService {
   }
   
   async contributeToBounty(scammerId: string, amount: number): Promise<boolean> {
-    if (!this.bookOfScamsContract || !this.signer) return false;
+    if (!this.connection || !this.publicKey) return false;
     
     try {
-      // First approve the tokens
-      const bookOfScamsAddress = await this.bookOfScamsContract.getAddress();
-      const decimals = await this.boscTokenContract?.decimals() || 18;
-      const amountInWei = ethers.parseUnits(amount.toString(), decimals);
-      
-      const approved = await this.approveTokens(bookOfScamsAddress, amount);
-      
-      if (!approved) {
-        throw new Error("Failed to approve tokens");
-      }
-      
-      // Contribute to the bounty
-      const tx = await this.bookOfScamsContract.contributeToBounty(scammerId, amountInWei);
-      await tx.wait();
+      console.log(`Contributing ${amount} to bounty for ${scammerId} (placeholder)`);
+      // This is a placeholder until we have the Solana program implementation
       
       return true;
     } catch (error) {
@@ -71,19 +46,17 @@ export class ScammerService extends ContractService {
   }
   
   async getScammerDetails(scammerId: string): Promise<any | null> {
-    if (!this.bookOfScamsContract) return null;
+    if (!this.connection) return null;
     
     try {
-      const details = await this.bookOfScamsContract.getScammerDetails(scammerId);
-      const decimals = await this.boscTokenContract?.decimals() || 18;
-      
+      // This is a placeholder until we have the Solana program implementation
       return {
-        name: details.name,
-        accusedOf: details.accusedOf,
-        photoUrl: details.photoUrl,
-        bountyAmount: Number(ethers.formatUnits(details.bountyAmount, decimals)),
-        reporter: details.reporter,
-        dateAdded: new Date(Number(details.dateAdded) * 1000)
+        name: "Example Scammer",
+        accusedOf: "Example accusation",
+        photoUrl: "https://example.com/photo.jpg",
+        bountyAmount: 0,
+        reporter: "Example reporter",
+        dateAdded: new Date()
       };
     } catch (error) {
       console.error("Error getting scammer details:", error);
@@ -92,25 +65,11 @@ export class ScammerService extends ContractService {
   }
   
   async getAllScammers(): Promise<any[]> {
-    if (!this.bookOfScamsContract) return [];
+    if (!this.connection) return [];
     
     try {
-      const count = await this.bookOfScamsContract.getScammerCount();
-      const scammers = [];
-      
-      for (let i = 0; i < count; i++) {
-        const scammerId = await this.bookOfScamsContract.getScammerIdAtIndex(i);
-        const details = await this.getScammerDetails(scammerId);
-        
-        if (details) {
-          scammers.push({
-            id: scammerId,
-            ...details
-          });
-        }
-      }
-      
-      return scammers;
+      // This is a placeholder until we have the Solana program implementation
+      return [];
     } catch (error) {
       console.error("Error getting all scammers:", error);
       return [];

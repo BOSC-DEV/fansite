@@ -1,8 +1,8 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { toast } from 'sonner';
 import web3Provider from '../services/web3Provider';
 import { DEVELOPER_WALLET_ADDRESS } from '../contracts/contract-abis';
-import { ethers } from 'ethers';
 
 interface WalletContextType {
   connected: boolean;
@@ -14,7 +14,7 @@ interface WalletContextType {
   isConnected: boolean;
   smartWalletAddress: string | null;
   smartWalletLoading: boolean;
-  chainId: number | null;  // Ensuring this is included
+  chainId: number | null;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -30,16 +30,14 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const checkConnection = async () => {
-      if (window.ethereum && window.ethereum.selectedAddress) {
-        const connectedAddress = window.ethereum.selectedAddress;
+      if (window.phantom?.solana && window.phantom.solana.isConnected && window.phantom.solana.publicKey) {
+        const connectedAddress = window.phantom.solana.publicKey.toString();
         setAddress(connectedAddress);
         setConnected(true);
         
-        if (window.ethereum.chainId) {
-          setChainId(Number(window.ethereum.chainId));
-        }
+        // We don't have chainId in Solana, but we can set a default value for compatibility
+        setChainId(101); // 101 is Solana mainnet
         
-        await web3Provider.connectWallet();
         if (connectedAddress) {
           const tokenBalance = await web3Provider.getBalance(connectedAddress);
           setBalance(tokenBalance);
@@ -51,17 +49,17 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    const handleChainChanged = (chainIdHex: string) => {
-      setChainId(Number(chainIdHex));
+    const handleAccountChanged = () => {
+      window.location.reload();
     };
 
-    if (window.ethereum) {
-      window.ethereum.on('chainChanged', handleChainChanged);
+    if (window.phantom?.solana) {
+      window.phantom.solana.on('accountChanged', handleAccountChanged);
     }
 
     return () => {
-      if (window.ethereum) {
-        window.ethereum.removeListener('chainChanged', handleChainChanged);
+      if (window.phantom?.solana) {
+        window.phantom.solana.removeListener('accountChanged', handleAccountChanged);
       }
     };
   }, []);
@@ -75,9 +73,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         setAddress(connectedAddress);
         setConnected(true);
         
-        if (window.ethereum && window.ethereum.chainId) {
-          setChainId(Number(window.ethereum.chainId));
-        }
+        // Set Solana mainnet chainId for compatibility
+        setChainId(101);
         
         const tokenBalance = await web3Provider.getBalance(connectedAddress);
         setBalance(tokenBalance);
@@ -95,13 +92,19 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const disconnectWallet = () => {
-    setAddress(null);
-    setConnected(false);
-    setBalance(null);
-    setSmartWalletAddress(null);
-    setChainId(null);
-    toast.success('Wallet disconnected');
+  const disconnectWallet = async () => {
+    try {
+      await web3Provider.disconnectWallet();
+      setAddress(null);
+      setConnected(false);
+      setBalance(null);
+      setSmartWalletAddress(null);
+      setChainId(null);
+      toast.success('Wallet disconnected');
+    } catch (error) {
+      console.error('Failed to disconnect wallet:', error);
+      toast.error('Failed to disconnect wallet');
+    }
   };
 
   const value = {
@@ -114,7 +117,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     isConnected: connected && !!address,
     smartWalletAddress,
     smartWalletLoading,
-    chainId,  // Ensuring this is included in the value object
+    chainId,
   };
 
   return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>;

@@ -43,7 +43,7 @@ export function ConnectWallet({
           <div className="space-y-2 max-w-md">
             <h3 className="text-xl font-semibold">Wallet Connection</h3>
             <p className="text-sm text-muted-foreground">
-              Book of Scams uses your wallet for secure transactions and identity verification.
+              Book of Scams uses your Phantom wallet for secure transactions and identity verification.
             </p>
           </div>
           
@@ -68,7 +68,7 @@ export function ConnectWallet({
           ) : (
             <span className="flex items-center">
               <Wallet className="mr-2 h-4 w-4" />
-              Connect Wallet
+              Connect Phantom Wallet
             </span>
           )}
         </Button>

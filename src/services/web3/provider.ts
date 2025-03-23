@@ -1,54 +1,84 @@
 
-import { ethers } from "ethers";
+import { Connection, PublicKey } from '@solana/web3.js';
 
 export class Web3Provider {
-  provider: ethers.BrowserProvider | null = null;
-  signer: ethers.Signer | null = null;
-  chainId: number | null = null;
+  solana: typeof window.phantom?.solana | null = null;
+  connection: Connection | null = null;
+  publicKey: PublicKey | null = null;
   
   constructor() {
     this.initProvider();
   }
   
   async initProvider() {
-    if (window.ethereum) {
+    if (window.phantom?.solana) {
       try {
-        this.provider = new ethers.BrowserProvider(window.ethereum);
-        this.chainId = Number(await window.ethereum.request({ method: 'eth_chainId' }));
+        this.solana = window.phantom.solana;
+        this.connection = new Connection('https://api.mainnet-beta.solana.com');
+        
+        if (this.solana.isConnected && this.solana.publicKey) {
+          this.publicKey = new PublicKey(this.solana.publicKey.toString());
+        }
+        
         this.setupEventListeners();
       } catch (error) {
-        console.error("Error initializing provider:", error);
+        console.error("Error initializing Phantom provider:", error);
       }
     } else {
-      console.log("MetaMask not installed");
+      console.log("Phantom wallet not installed");
     }
   }
   
   setupEventListeners() {
-    if (!window.ethereum) return;
+    if (!this.solana) return;
     
-    window.ethereum.on('chainChanged', (chainId: string) => {
-      window.location.reload();
+    this.solana.on('connect', () => {
+      if (this.solana?.publicKey) {
+        this.publicKey = new PublicKey(this.solana.publicKey.toString());
+      }
+      console.log("Connected to Phantom wallet");
     });
     
-    window.ethereum.on('accountsChanged', (accounts: string[]) => {
+    this.solana.on('disconnect', () => {
+      this.publicKey = null;
+      console.log("Disconnected from Phantom wallet");
+    });
+    
+    this.solana.on('accountChanged', () => {
       window.location.reload();
     });
   }
   
   async connectWallet(): Promise<string | null> {
-    if (!this.provider) {
+    if (!this.solana) {
       await this.initProvider();
-      if (!this.provider) return null;
+      if (!this.solana) {
+        console.error("Phantom wallet not available");
+        return null;
+      }
     }
     
     try {
-      const accounts = await this.provider.send("eth_requestAccounts", []);
-      this.signer = await this.provider.getSigner();
-      return accounts[0];
+      const response = await this.solana.connect();
+      const publicKey = response.publicKey.toString();
+      this.publicKey = new PublicKey(publicKey);
+      return publicKey;
     } catch (error) {
-      console.error("Error connecting MetaMask:", error);
+      console.error("Error connecting Phantom wallet:", error);
       return null;
+    }
+  }
+
+  async disconnectWallet(): Promise<boolean> {
+    if (!this.solana) return false;
+    
+    try {
+      await this.solana.disconnect();
+      this.publicKey = null;
+      return true;
+    } catch (error) {
+      console.error("Error disconnecting wallet:", error);
+      return false;
     }
   }
 }
