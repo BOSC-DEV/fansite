@@ -24,6 +24,140 @@ export type Database = {
         }
         Relationships: []
       }
+      comments: {
+        Row: {
+          author: string
+          author_name: string
+          author_profile_pic: string | null
+          content: string
+          created_at: string
+          dislikes: number | null
+          id: string
+          likes: number | null
+          scammer_id: string | null
+        }
+        Insert: {
+          author: string
+          author_name: string
+          author_profile_pic?: string | null
+          content: string
+          created_at?: string
+          dislikes?: number | null
+          id: string
+          likes?: number | null
+          scammer_id?: string | null
+        }
+        Update: {
+          author?: string
+          author_name?: string
+          author_profile_pic?: string | null
+          content?: string
+          created_at?: string
+          dislikes?: number | null
+          id?: string
+          likes?: number | null
+          scammer_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_scammer_id_fkey"
+            columns: ["scammer_id"]
+            isOneToOne: false
+            referencedRelation: "scammers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          bio: string | null
+          created_at: string
+          display_name: string
+          id: string
+          profile_pic_url: string | null
+          wallet_address: string
+          website_link: string | null
+          x_link: string | null
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          display_name: string
+          id: string
+          profile_pic_url?: string | null
+          wallet_address: string
+          website_link?: string | null
+          x_link?: string | null
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          display_name?: string
+          id?: string
+          profile_pic_url?: string | null
+          wallet_address?: string
+          website_link?: string | null
+          x_link?: string | null
+        }
+        Relationships: []
+      }
+      scammers: {
+        Row: {
+          accomplices: Json | null
+          accused_of: string | null
+          added_by: string | null
+          aliases: Json | null
+          bounty_amount: number | null
+          comments: Json | null
+          date_added: string
+          dislikes: number | null
+          id: string
+          likes: number | null
+          links: Json | null
+          name: string
+          official_response: string | null
+          photo_url: string | null
+          views: number | null
+          wallet_address: string | null
+        }
+        Insert: {
+          accomplices?: Json | null
+          accused_of?: string | null
+          added_by?: string | null
+          aliases?: Json | null
+          bounty_amount?: number | null
+          comments?: Json | null
+          date_added?: string
+          dislikes?: number | null
+          id: string
+          likes?: number | null
+          links?: Json | null
+          name: string
+          official_response?: string | null
+          photo_url?: string | null
+          views?: number | null
+          wallet_address?: string | null
+        }
+        Update: {
+          accomplices?: Json | null
+          accused_of?: string | null
+          added_by?: string | null
+          aliases?: Json | null
+          bounty_amount?: number | null
+          comments?: Json | null
+          date_added?: string
+          dislikes?: number | null
+          id?: string
+          likes?: number | null
+          links?: Json | null
+          name?: string
+          official_response?: string | null
+          photo_url?: string | null
+          views?: number | null
+          wallet_address?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
