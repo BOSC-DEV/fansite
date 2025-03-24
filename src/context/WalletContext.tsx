@@ -1,7 +1,6 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { toast } from 'sonner';
-import { Web3Provider } from './web3/provider';
+import { Web3Provider } from '../services/web3/provider';
 
 // Create a singleton instance of the Web3Provider
 const web3Provider = new Web3Provider();
