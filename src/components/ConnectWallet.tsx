@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useWallet } from "@/context/WalletContext";
-import { Wallet, AlertCircle } from "lucide-react";
+import { Wallet, AlertCircle, Fingerprint } from "lucide-react";
 import { toast } from "sonner";
 import { useEffect } from "react";
 
@@ -75,6 +75,13 @@ export function ConnectWallet({
             <AlertCircle className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
             <p className="text-xs text-muted-foreground text-left">
               The Book of Scams only uses wallet connection to verify your identity and process token transactions. We never have access to your private keys or funds.
+            </p>
+          </div>
+          
+          <div className="bg-muted/50 p-3 rounded-lg flex items-start gap-2 max-w-md mt-0">
+            <Fingerprint className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+            <p className="text-xs text-muted-foreground text-left">
+              A one-time signature will be requested when you first connect your wallet, and again every 24 hours for security purposes.
             </p>
           </div>
         </div>

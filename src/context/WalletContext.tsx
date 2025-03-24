@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { toast } from 'sonner';
 import { Web3Provider } from '../services/web3/provider';
@@ -33,19 +34,29 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     const checkConnection = async () => {
       console.log("Checking wallet connection status...");
       if (window.phantom?.solana && window.phantom.solana.isConnected && window.phantom.solana.publicKey) {
-        const connectedAddress = window.phantom.solana.publicKey.toString();
-        setAddress(connectedAddress);
-        setConnected(true);
-        
-        // We don't have chainId in Solana, but we can set a default value for compatibility
-        setChainId(101); // 101 is Solana mainnet
-        
+        // Even if already connected, we need to try to re-connect to trigger signature check
         try {
-          const tokenBalance = await web3Provider.getBalance(connectedAddress);
-          setBalance(tokenBalance);
+          const connectedAddress = await web3Provider.connectWallet();
+          if (connectedAddress) {
+            setAddress(connectedAddress);
+            setConnected(true);
+            // 101 is Solana mainnet
+            setChainId(101);
+            
+            try {
+              const tokenBalance = await web3Provider.getBalance(connectedAddress);
+              setBalance(tokenBalance);
+            } catch (error) {
+              console.error("Failed to get balance on initial load:", error);
+              setBalance(10); // Default balance for UI to work
+            }
+          } else {
+            console.log("Signature verification failed during initial check");
+            setAddress(null);
+            setConnected(false);
+          }
         } catch (error) {
-          console.error("Failed to get balance on initial load:", error);
-          setBalance(10); // Default balance for UI to work
+          console.error("Failed to re-connect during initial check:", error);
         }
       } else {
         console.log("No wallet connected during initial check");
