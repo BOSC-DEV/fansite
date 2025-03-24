@@ -3,10 +3,19 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
 import { Link, useLocation } from "react-router-dom";
-import { Wallet, Home, Award, BookOpen, User, Trophy } from "lucide-react";
+import { Wallet, Home, Award, BookOpen, User, Trophy, FileText, Coins, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProfileButton } from "./profile/ProfileButton";
 import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import { toast } from "sonner";
 
 export const Header = () => {
   const {
@@ -14,7 +23,8 @@ export const Header = () => {
     address,
     balance,
     connectWallet,
-    connecting
+    connecting,
+    disconnectWallet
   } = useWallet();
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
@@ -32,6 +42,11 @@ export const Header = () => {
     if (!isConnected) {
       await connectWallet();
     }
+  };
+
+  const handleDisconnect = () => {
+    disconnectWallet();
+    toast.success("Wallet disconnected successfully");
   };
 
   const formatAddress = (address: string) => {
@@ -55,6 +70,39 @@ export const Header = () => {
     label: "Report",
     icon: <BookOpen className="h-4 w-4" />
   }];
+
+  const profileMenuItems = [
+    {
+      path: "/profile",
+      label: "Edit Profile",
+      icon: <User className="h-4 w-4" />,
+      requiresAuth: true
+    },
+    {
+      path: "/my-reports",
+      label: "My Reports",
+      icon: <FileText className="h-4 w-4" />,
+      requiresAuth: true
+    },
+    {
+      path: "/my-bounties",
+      label: "My Bounties",
+      icon: <Coins className="h-4 w-4" />,
+      requiresAuth: true
+    },
+    {
+      path: "/most-wanted",
+      label: "Most Wanted List",
+      icon: <Award className="h-4 w-4" />,
+      requiresAuth: false
+    },
+    {
+      path: "/create-listing",
+      label: "Report a Scammer",
+      icon: <BookOpen className="h-4 w-4" />,
+      requiresAuth: false
+    }
+  ];
 
   return (
     <header className={cn("fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out wood-texture", 
@@ -83,6 +131,51 @@ export const Header = () => {
                 <span className="ml-2">{item.label}</span>
               </Link>
             ))}
+
+            {/* Profile Navigation Menu */}
+            {isConnected && (
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger className={cn(
+                      "flex items-center text-sm font-bold transition-colors hover:scale-110 transform duration-200 font-western bg-transparent", 
+                      location.pathname.includes("/profile") || location.pathname.includes("/my-") 
+                        ? "text-western-parchment" 
+                        : "text-western-sand hover:text-western-parchment"
+                    )}>
+                      <User className="h-4 w-4 mr-2" />
+                      Profile
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent className="wood-texture z-50">
+                      <div className="grid gap-1 p-2 w-[220px]">
+                        {profileMenuItems.filter(item => isConnected || !item.requiresAuth).map((item) => (
+                          <Link
+                            key={item.path}
+                            to={item.path}
+                            className="flex items-center p-2 text-western-parchment rounded-md hover:bg-western-accent/40 transition-colors"
+                          >
+                            {item.icon}
+                            <span className="ml-2 font-western">{item.label}</span>
+                          </Link>
+                        ))}
+                        {isConnected && (
+                          <>
+                            <div className="my-1 h-px bg-western-sand/30" />
+                            <button
+                              onClick={handleDisconnect}
+                              className="flex items-center p-2 text-western-parchment rounded-md hover:bg-western-accent/40 transition-colors"
+                            >
+                              <LogOut className="h-4 w-4 mr-2" />
+                              <span className="font-western">Disconnect Wallet</span>
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+            )}
           </div>
         </nav>
 

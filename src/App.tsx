@@ -28,6 +28,7 @@ function App() {
           <Route path="/edit-listing/:id" element={<EditListing />} />
           <Route path="/scammer/:id" element={<ScammerDetail />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/:username" element={<UserProfilePage />} />
           <Route path="/user/:walletAddress" element={<UserProfilePage />} />
           <Route path="/my-reports" element={<MyReportsPage />} />
           <Route path="/my-bounties" element={<MyBountiesPage />} />
