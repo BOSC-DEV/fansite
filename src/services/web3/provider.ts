@@ -1,6 +1,5 @@
 
 import { Connection, PublicKey } from '@solana/web3.js';
-import { encode } from '@project-serum/anchor/dist/cjs/utils/bytes/utf8';
 
 const AUTH_MESSAGE = "Book of Scams authentication signature";
 const SESSION_STORAGE_KEY = "bos-wallet-session";
@@ -96,12 +95,17 @@ export class Web3Provider {
     return isValid;
   }
   
+  // Encode a string to Uint8Array using TextEncoder (browser native)
+  private encodeMessage(message: string): Uint8Array {
+    return new TextEncoder().encode(message);
+  }
+  
   async requestSignature(): Promise<boolean> {
     if (!this.solana || !this.publicKey) return false;
     
     try {
       console.log("Requesting wallet signature for authentication...");
-      const message = encode(AUTH_MESSAGE);
+      const message = this.encodeMessage(AUTH_MESSAGE);
       await this.solana.signMessage(message);
       console.log("Signature verified successfully");
       return true;
