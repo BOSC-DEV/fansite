@@ -1,6 +1,6 @@
 
 import { BaseSupabaseService } from './baseSupabaseService';
-import { scammerService } from './scammerService';
+import { scammerService } from './scammer/scammerService';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface LeaderboardUser {
