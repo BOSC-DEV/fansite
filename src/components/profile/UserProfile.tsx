@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProfilePictureUpload } from "./ProfilePictureUpload";
-import { useProfileForm } from "./useProfileForm";
+import { useProfileForm } from "@/hooks/profile/useProfileForm";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
@@ -193,6 +193,36 @@ export function UserProfile() {
       </Card>
     </form>
   );
+  
+  function handleDisplayNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setIsFormEdited(true);
+    setDisplayName(e.target.value);
+  }
+
+  function handleUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setIsFormEdited(true);
+    setUsername(e.target.value);
+  }
+
+  function handleXLinkChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setIsFormEdited(true);
+    setXLink(e.target.value);
+  }
+
+  function handleWebsiteLinkChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setIsFormEdited(true);
+    setWebsiteLink(e.target.value);
+  }
+
+  function handleBioChangeWithEdit(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    setIsFormEdited(true);
+    handleBioChange(e);
+  }
+
+  function handleProfilePicChange(url: string) {
+    setIsFormEdited(true);
+    setProfilePicUrl(url);
+  }
 }
 
 export default UserProfile;
