@@ -3,9 +3,6 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { toast } from 'sonner';
 import { Web3Provider } from '../services/web3/provider';
 
-// Create a singleton instance of the Web3Provider
-const web3Provider = new Web3Provider();
-
 interface WalletContextType {
   connected: boolean;
   connecting: boolean;
@@ -29,6 +26,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [smartWalletAddress, setSmartWalletAddress] = useState<string | null>(null);
   const [smartWalletLoading, setSmartWalletLoading] = useState(false);
   const [chainId, setChainId] = useState<number | null>(null);
+  const [web3Provider] = useState(() => new Web3Provider());
 
   useEffect(() => {
     const checkConnection = async () => {
@@ -64,7 +62,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     };
 
     checkConnection();
-  }, []);
+  }, [web3Provider]);
 
   useEffect(() => {
     const handleAccountChanged = () => {

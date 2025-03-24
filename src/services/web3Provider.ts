@@ -1,5 +1,5 @@
 
 import { Web3Provider } from "./web3/provider";
 
-export const web3Provider = new Web3Provider();
-export default web3Provider;
+// Do not create the instance here - let the React component handle it
+export default Web3Provider;
