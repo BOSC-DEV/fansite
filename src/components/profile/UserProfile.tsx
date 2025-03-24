@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,10 @@ export function UserProfile() {
       console.log("Profile saved successfully, navigating back");
       navigate(-1);
     }
+  };
+
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value);
   };
 
   if (!isConnected) {
@@ -79,7 +84,7 @@ export function UserProfile() {
                     id="username" 
                     placeholder="your_username" 
                     value={formData.username} 
-                    onChange={e => setUsername(e.target.value)} 
+                    onChange={handleUsernameChange} 
                     className={`${!usernameAvailable && formData.username ? 'border-red-500' : ''}`}
                     required 
                   />
