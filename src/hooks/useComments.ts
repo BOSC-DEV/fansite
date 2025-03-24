@@ -80,6 +80,11 @@ export function useComments(scammerId: string) {
     }
   };
 
+  // Fix the return type of connectWallet to match expectation in components
+  const handleConnect = async (): Promise<void> => {
+    await connectWallet();
+  };
+
   return {
     comments,
     isLoading,
@@ -88,6 +93,6 @@ export function useComments(scammerId: string) {
     isSubmitting,
     handleSubmit,
     isConnected,
-    connectWallet
+    connectWallet: handleConnect
   };
 }

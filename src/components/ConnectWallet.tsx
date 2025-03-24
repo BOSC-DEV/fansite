@@ -38,6 +38,9 @@ export function ConnectWallet({
         setTimeout(() => {
           window.location.href = redirectPath;
         }, 500);
+      } else if (!connected) {
+        console.log("Failed to connect wallet");
+        toast.error("Failed to connect wallet. Please try again.");
       }
     } catch (error) {
       console.error("Error connecting wallet:", error);

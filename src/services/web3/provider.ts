@@ -11,14 +11,17 @@ export class Web3Provider {
   }
   
   async initProvider() {
+    console.log("Initializing Web3Provider...");
     if (window.phantom?.solana) {
       try {
         this.solana = window.phantom.solana;
         // Using devnet instead of mainnet to avoid rate limiting issues
         this.connection = new Connection('https://api.devnet.solana.com');
+        console.log("Solana connection established");
         
         if (this.solana.isConnected && this.solana.publicKey) {
           this.publicKey = new PublicKey(this.solana.publicKey.toString());
+          console.log("Already connected to wallet:", this.publicKey.toString());
         }
         
         this.setupEventListeners();

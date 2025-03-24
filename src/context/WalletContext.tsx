@@ -1,8 +1,10 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { toast } from 'sonner';
-import web3Provider from '../services/web3Provider';
-import { DEVELOPER_WALLET_ADDRESS } from '../contracts/contract-abis';
+import { Web3Provider } from './web3/provider';
+
+// Create a singleton instance of the Web3Provider
+const web3Provider = new Web3Provider();
 
 interface WalletContextType {
   connected: boolean;
@@ -30,6 +32,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const checkConnection = async () => {
+      console.log("Checking wallet connection status...");
       if (window.phantom?.solana && window.phantom.solana.isConnected && window.phantom.solana.publicKey) {
         const connectedAddress = window.phantom.solana.publicKey.toString();
         setAddress(connectedAddress);
@@ -45,6 +48,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
           console.error("Failed to get balance on initial load:", error);
           setBalance(10); // Default balance for UI to work
         }
+      } else {
+        console.log("No wallet connected during initial check");
       }
     };
 
@@ -71,13 +76,14 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     if (connecting) return false; // Prevent multiple connection attempts
     
     setConnecting(true);
-    console.log("Connecting wallet...");
+    console.log("Connecting wallet from WalletContext...");
     
     try {
       // Check if phantom extension is installed
       if (!window.phantom?.solana) {
         toast.error("Phantom wallet extension not found. Please install it first.");
         console.error("Phantom wallet not installed");
+        setConnecting(false);
         return false;
       }
       
@@ -99,7 +105,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         }
         
         toast.success('Wallet connected successfully!');
-        console.log(`Funds will flow to developer wallet: ${DEVELOPER_WALLET_ADDRESS}`);
+        console.log(`Wallet connected: ${connectedAddress}`);
         return true;
       } else {
         throw new Error('Failed to connect wallet');
