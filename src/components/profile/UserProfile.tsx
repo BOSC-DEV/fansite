@@ -38,8 +38,20 @@ export function UserProfile() {
     }
   };
 
+  const handleDisplayNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDisplayName(e.target.value);
+  };
+
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
+  };
+
+  const handleXLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setXLink(e.target.value);
+  };
+
+  const handleWebsiteLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setWebsiteLink(e.target.value);
   };
 
   if (!isConnected) {
@@ -74,7 +86,7 @@ export function UserProfile() {
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="displayName">Display Name</Label>
-                <Input id="displayName" placeholder="Your Name" value={formData.displayName} onChange={e => setDisplayName(e.target.value)} required />
+                <Input id="displayName" placeholder="Your Name" value={formData.displayName} onChange={handleDisplayNameChange} required />
               </div>
 
               <div className="space-y-2">
@@ -131,12 +143,12 @@ export function UserProfile() {
                 
                 <div className="space-y-2">
                   <Label htmlFor="xLink">X (Twitter) Profile</Label>
-                  <Input id="xLink" placeholder="https://x.com/username" value={formData.xLink} onChange={e => setXLink(e.target.value)} />
+                  <Input id="xLink" placeholder="https://x.com/username" value={formData.xLink} onChange={handleXLinkChange} />
                 </div>
                 
                 <div className="space-y-2">
                   <Label htmlFor="websiteLink">Website</Label>
-                  <Input id="websiteLink" placeholder="https://example.com" value={formData.websiteLink} onChange={e => setWebsiteLink(e.target.value)} />
+                  <Input id="websiteLink" placeholder="https://example.com" value={formData.websiteLink} onChange={handleWebsiteLinkChange} />
                 </div>
               </div>
 

@@ -39,6 +39,7 @@ export function useProfileUsername() {
     try {
       console.log("[useProfileUsername] Checking username availability:", usernameToCheck);
       const isAvailable = await storageService.isUsernameAvailable(usernameToCheck, address);
+      console.log("[useProfileUsername] Username availability result:", isAvailable);
       setUsernameAvailable(isAvailable);
     } catch (error) {
       console.error("[useProfileUsername] Error checking username:", error);
@@ -51,6 +52,7 @@ export function useProfileUsername() {
   const handleUsernameChange = (value: string) => {
     // Lowercase and replace spaces with underscores
     const formattedValue = value.toLowerCase().replace(/\s+/g, '_');
+    console.log("[useProfileUsername] Formatted username:", formattedValue);
     setUsername(formattedValue);
   };
 

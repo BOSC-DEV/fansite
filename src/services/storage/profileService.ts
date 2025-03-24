@@ -1,4 +1,3 @@
-
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 
@@ -106,6 +105,7 @@ export class ProfileService extends BaseSupabaseService {
     }
     
     console.log("[ProfileService] Checking username availability:", username);
+    console.log("[ProfileService] Current user wallet:", currentUserWallet);
     
     const { data, error } = await this.supabase
       .from('profiles')
@@ -119,12 +119,19 @@ export class ProfileService extends BaseSupabaseService {
     }
     
     // If no data found, username is available
-    if (!data) return true;
+    if (!data) {
+      console.log("[ProfileService] Username is available (no existing record)");
+      return true;
+    }
     
     // If the username belongs to the current user, it's available for them
-    if (currentUserWallet && data.wallet_address === currentUserWallet) return true;
+    if (currentUserWallet && data.wallet_address === currentUserWallet) {
+      console.log("[ProfileService] Username belongs to current user, so it's available for them");
+      return true;
+    }
     
     // Otherwise, username is taken
+    console.log("[ProfileService] Username is taken by another user");
     return false;
   }
 
