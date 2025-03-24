@@ -31,6 +31,9 @@ export function ScammerDetailsSection({
     : profileId 
       ? `/user/${profileId}` 
       : "#";
+      
+  // Truncate wallet address if it's too long
+  const displayName = addedByUsername || (addedBy ? `${addedBy.substring(0, 10)}...` : "Unknown");
 
   return (
     <div className="p-4 border border-western-wood/20 rounded-md bg-western-sand/10">
@@ -52,12 +55,12 @@ export function ScammerDetailsSection({
           ) : (
             <Link to={profileUrl} className="flex items-center gap-2 mt-1 hover:underline">
               <Avatar className="h-8 w-8">
-                <AvatarImage src={addedByPhotoUrl || undefined} alt={addedByUsername || addedBy} />
+                <AvatarImage src={addedByPhotoUrl || undefined} alt={displayName} />
                 <AvatarFallback className="bg-western-wood text-western-parchment text-xs">
-                  {(addedByUsername || addedBy).charAt(0).toUpperCase()}
+                  {displayName.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <span className="font-medium">{addedByUsername || addedBy}</span>
+              <span className="font-medium truncate max-w-[180px]">{displayName}</span>
             </Link>
           )}
         </div>
