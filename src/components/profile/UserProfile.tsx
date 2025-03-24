@@ -7,6 +7,8 @@ import { ProfilePictureUpload } from "./ProfilePictureUpload";
 import { useProfileForm } from "./useProfileForm";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Info } from "lucide-react";
 
 export function UserProfile() {
   const navigate = useNavigate();
@@ -83,6 +85,13 @@ export function UserProfile() {
           )}
         </CardHeader>
         <CardContent className="space-y-4">
+          <Alert variant="default" className="bg-western-parchment/30 border-western-sand mb-4">
+            <Info className="h-4 w-4 text-western-accent" />
+            <AlertDescription>
+              You'll be asked to sign a message with your wallet to verify ownership before saving changes.
+            </AlertDescription>
+          </Alert>
+          
           <ProfilePictureUpload 
             displayName={formData.displayName} 
             profilePicUrl={formData.profilePicUrl} 

@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { storageService } from "@/services/storage";
+import { requestSignature } from "@/utils/signatureUtils";
 
 interface ProfileFormData {
   displayName: string;
@@ -87,6 +88,13 @@ export function useProfileFormSubmit() {
     if (!validateForm(formData, usernameAvailable, urlValidation)) return false;
     if (!address) {
       toast.error("Wallet not connected");
+      return false;
+    }
+
+    // Request signature verification before proceeding
+    const signatureVerified = await requestSignature(address);
+    if (!signatureVerified) {
+      console.log("[useProfileFormSubmit] Signature verification failed");
       return false;
     }
 
