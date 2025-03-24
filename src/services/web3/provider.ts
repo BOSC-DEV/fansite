@@ -1,198 +1,104 @@
 
-import { Connection, PublicKey } from '@solana/web3.js';
+import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
 
-const AUTH_MESSAGE = "Book of Scams authentication signature";
-const SESSION_STORAGE_KEY = "bos-wallet-session";
+// Signature message for initial authentication
+const SIGNATURE_MESSAGE = "Sign this message to verify your identity with Book of Scams";
 
-interface SessionData {
-  walletAddress: string;
-  timestamp: number;
-}
-
+// Class to handle Solana wallet connection and operations
 export class Web3Provider {
-  solana: any = null;
-  connection: Connection | null = null;
-  publicKey: PublicKey | null = null;
-  
+  private connection: Connection;
+
   constructor() {
-    this.initProvider();
+    // Initialize Solana connection (using devnet for development)
+    this.connection = new Connection(clusterApiUrl('devnet'));
   }
-  
-  async initProvider() {
-    console.log("Initializing Web3Provider...");
-    if (window.phantom?.solana) {
-      try {
-        this.solana = window.phantom.solana;
-        // Using devnet instead of mainnet to avoid rate limiting issues
-        this.connection = new Connection('https://api.devnet.solana.com');
-        console.log("Solana connection established");
-        
-        if (this.solana.isConnected && this.solana.publicKey) {
-          this.publicKey = new PublicKey(this.solana.publicKey.toString());
-          console.log("Already connected to wallet:", this.publicKey.toString());
-        }
-        
-        this.setupEventListeners();
-      } catch (error) {
-        console.error("Error initializing Phantom provider:", error);
+
+  // Connect wallet and request signature
+  async connectWallet(): Promise<string | null> {
+    try {
+      // Check if Phantom wallet is available
+      if (!window.phantom?.solana) {
+        console.error("Phantom wallet not available");
+        return null;
       }
-    } else {
-      console.log("Phantom wallet not installed");
+
+      // Connect to wallet
+      const resp = await window.phantom.solana.connect();
+      const walletPublicKey = resp.publicKey.toString();
+      
+      // Request signature for verification
+      await this.requestSignature();
+      
+      return walletPublicKey;
+    } catch (error) {
+      console.error("Error connecting wallet:", error);
+      return null;
     }
   }
-  
-  setupEventListeners() {
-    if (!this.solana) return;
-    
-    this.solana.on('connect', () => {
-      if (this.solana?.publicKey) {
-        this.publicKey = new PublicKey(this.solana.publicKey.toString());
-      }
-      console.log("Connected to Phantom wallet");
-    });
-    
-    this.solana.on('disconnect', () => {
-      this.publicKey = null;
-      console.log("Disconnected from Phantom wallet");
-      // Clear session data on disconnect
-      this.clearSessionData();
-    });
-    
-    this.solana.on('accountChanged', () => {
-      window.location.reload();
-    });
-  }
-  
-  private getSessionData(): SessionData | null {
-    const sessionData = localStorage.getItem(SESSION_STORAGE_KEY);
-    return sessionData ? JSON.parse(sessionData) : null;
-  }
-  
-  private saveSessionData(address: string): void {
-    const sessionData: SessionData = {
-      walletAddress: address,
-      timestamp: Date.now()
-    };
-    localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(sessionData));
-  }
-  
-  private clearSessionData(): void {
-    localStorage.removeItem(SESSION_STORAGE_KEY);
-  }
-  
-  private isSessionValid(address: string): boolean {
-    const sessionData = this.getSessionData();
-    
-    if (!sessionData) return false;
-    if (sessionData.walletAddress !== address) return false;
-    
-    // Check if session is still valid (24 hours = 86400000 milliseconds)
-    const now = Date.now();
-    const sessionAge = now - sessionData.timestamp;
-    const isValid = sessionAge < 86400000;
-    
-    console.log(`Session age: ${sessionAge / 1000 / 60 / 60} hours, valid: ${isValid}`);
-    return isValid;
-  }
-  
-  // Encode a string to Uint8Array using TextEncoder (browser native)
-  private encodeMessage(message: string): Uint8Array {
-    return new TextEncoder().encode(message);
-  }
-  
+
+  // Request signature to verify ownership
   async requestSignature(): Promise<boolean> {
-    if (!this.solana || !this.publicKey) return false;
-    
     try {
-      console.log("Requesting wallet signature for authentication...");
-      const message = this.encodeMessage(AUTH_MESSAGE);
-      await this.solana.signMessage(message);
-      console.log("Signature verified successfully");
+      if (!window.phantom?.solana) {
+        console.error("Phantom wallet not available");
+        return false;
+      }
+
+      // Check if we need a new signature based on last signature time
+      const lastSignatureTime = localStorage.getItem('lastSignatureTime');
+      const currentTime = Date.now();
+      
+      // If we have a valid signature within the past 24 hours, don't request a new one
+      if (lastSignatureTime && (currentTime - parseInt(lastSignatureTime) < 24 * 60 * 60 * 1000)) {
+        console.log("Using existing signature (less than 24 hours old)");
+        return true;
+      }
+
+      // Prepare signature message using TextEncoder
+      const encoder = new TextEncoder();
+      const message = encoder.encode(SIGNATURE_MESSAGE);
+      
+      // Request signature from wallet
+      const signatureResponse = await window.phantom.solana.signMessage(message, "utf8");
+      
+      if (!signatureResponse.signature) {
+        console.error("Failed to get signature");
+        return false;
+      }
+      
+      // Store signature time
+      localStorage.setItem('lastSignatureTime', currentTime.toString());
+      
       return true;
     } catch (error) {
       console.error("Error requesting signature:", error);
       return false;
     }
   }
-  
-  async connectWallet(): Promise<string | null> {
-    console.log("Web3Provider: connectWallet called");
-    
-    if (!this.solana) {
-      console.log("No Phantom wallet detected, initializing...");
-      await this.initProvider();
-      if (!this.solana) {
-        console.error("Phantom wallet not available even after initialization");
-        return null;
-      }
-    }
-    
+
+  // Disconnect wallet
+  async disconnectWallet(): Promise<void> {
     try {
-      console.log("Attempting to connect to Phantom wallet...");
-      // Check if already connected
-      if (this.solana.isConnected && this.solana.publicKey) {
-        const pubKey = this.solana.publicKey.toString();
-        console.log("Already connected to wallet:", pubKey);
-        this.publicKey = new PublicKey(pubKey);
-        
-        // Check if we need to request a signature based on session
-        if (!this.isSessionValid(pubKey)) {
-          console.log("Session expired, requesting new signature...");
-          const signatureVerified = await this.requestSignature();
-          if (!signatureVerified) {
-            console.error("Signature verification failed");
-            return null;
-          }
-          // Save new session data
-          this.saveSessionData(pubKey);
-        } else {
-          console.log("Valid session found, skipping signature request");
-        }
-        
-        return pubKey;
+      if (window.phantom?.solana) {
+        await window.phantom.solana.disconnect();
       }
       
-      // Connect to wallet
-      const response = await this.solana.connect();
-      const publicKey = response.publicKey.toString();
-      console.log("Successfully connected to wallet:", publicKey);
-      this.publicKey = new PublicKey(publicKey);
-      
-      // Request signature on first connect
-      console.log("First connection, requesting signature...");
-      const signatureVerified = await this.requestSignature();
-      if (!signatureVerified) {
-        console.error("Signature verification failed");
-        await this.solana.disconnect();
-        return null;
-      }
-      
-      // Save session data on successful signature
-      this.saveSessionData(publicKey);
-      return publicKey;
+      // Clear signature data
+      localStorage.removeItem('lastSignatureTime');
     } catch (error) {
-      console.error("Error connecting Phantom wallet:", error);
-      return null;
+      console.error("Error disconnecting wallet:", error);
     }
   }
 
-  async disconnectWallet(): Promise<boolean> {
-    if (!this.solana) return false;
-    
-    try {
-      await this.solana.disconnect();
-      this.publicKey = null;
-      this.clearSessionData();
-      return true;
-    } catch (error) {
-      console.error("Error disconnecting wallet:", error);
-      return false;
-    }
-  }
-  
+  // Get wallet balance
   async getBalance(address: string): Promise<number> {
-    // Mock implementation - in a real app, this would query the actual balance
-    console.log("Getting balance for address:", address);
-    return 10; // Default balance for UI testing
+    try {
+      const publicKey = new PublicKey(address);
+      const balance = await this.connection.getBalance(publicKey);
+      return balance / 10 ** 9; // Convert lamports to SOL
+    } catch (error) {
+      console.error("Error getting balance:", error);
+      throw error;
+    }
   }
 }

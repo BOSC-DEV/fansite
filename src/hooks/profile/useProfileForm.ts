@@ -31,8 +31,9 @@ export function useProfileForm() {
   const [combinedHasProfile, setCombinedHasProfile] = useState(false);
   const [combinedProfileId, setCombinedProfileId] = useState<string | undefined>(undefined);
   const [previousAddress, setPreviousAddress] = useState<string | null>(null);
+  const [initialDataLoaded, setInitialDataLoaded] = useState(false);
 
-  // Fetch profile data and populate form
+  // Fetch profile data and populate form only once
   useEffect(() => {
     // Reset form data if wallet address changes
     if (previousAddress && address && previousAddress !== address) {
@@ -45,6 +46,7 @@ export function useProfileForm() {
       handleBioChange({ target: { value: "" } } as React.ChangeEvent<HTMLTextAreaElement>);
       setCombinedHasProfile(false);
       setCombinedProfileId(undefined);
+      setInitialDataLoaded(false);
     }
 
     // Update previous address for next comparison
@@ -57,9 +59,9 @@ export function useProfileForm() {
     setCombinedHasProfile(profileExists);
     setCombinedProfileId(fetchedProfileId || submissionProfileId);
 
-    // Populate form data when profile is fetched
+    // Populate form data when profile is fetched - but only once per address
     const fetchProfileData = async () => {
-      if (isConnected && address && supabaseReady && !isFetchingProfile) {
+      if (isConnected && address && supabaseReady && !isFetchingProfile && !initialDataLoaded) {
         try {
           console.log("[useProfileForm] Loading profile data for address:", address);
           const profile = await storageService.getProfile(address);
@@ -72,6 +74,7 @@ export function useProfileForm() {
             setXLink(profile.xLink || "");
             setWebsiteLink(profile.websiteLink || "");
             handleBioChange({ target: { value: profile.bio || "" } } as React.ChangeEvent<HTMLTextAreaElement>);
+            setInitialDataLoaded(true);
           } else {
             // Clear form if no profile found for this address
             console.log("[useProfileForm] No profile found for address:", address);
@@ -81,9 +84,11 @@ export function useProfileForm() {
             setXLink("");
             setWebsiteLink("");
             handleBioChange({ target: { value: "" } } as React.ChangeEvent<HTMLTextAreaElement>);
+            setInitialDataLoaded(true);
           }
         } catch (error) {
           console.error("[useProfileForm] Error fetching profile data:", error);
+          setInitialDataLoaded(true);
         }
       }
     };
@@ -104,7 +109,8 @@ export function useProfileForm() {
     setXLink, 
     setWebsiteLink, 
     handleBioChange,
-    previousAddress
+    previousAddress,
+    initialDataLoaded
   ]);
 
   const saveProfile = async () => {
@@ -119,7 +125,14 @@ export function useProfileForm() {
     };
 
     const urlValidation = validateUrls();
-    return await submitProfile(formData, usernameAvailable, urlValidation);
+    const success = await submitProfile(formData, usernameAvailable, urlValidation);
+    
+    if (success) {
+      // Mark data as loaded to prevent refetching
+      setInitialDataLoaded(true);
+    }
+    
+    return success;
   };
 
   return {

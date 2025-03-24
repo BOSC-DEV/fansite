@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,8 +28,10 @@ export function UserProfile() {
     checkingUsername
   } = useProfileForm();
 
-  // This use effect prevents losing user input when navigating
-  // Purposefully left empty to avoid unintended side effects
+  // Track if the form has been edited to prevent automatic data refreshing
+  const [isFormEdited, setIsFormEdited] = useState(false);
+
+  // This effect prevents losing user input when navigating
   useEffect(() => {}, [address]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -38,24 +40,39 @@ export function UserProfile() {
     const success = await saveProfile();
     if (success) {
       console.log("Profile saved successfully, navigating back");
+      setIsFormEdited(false); // Reset edit state after successful save
       navigate(-1);
     }
   };
 
   const handleDisplayNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsFormEdited(true);
     setDisplayName(e.target.value);
   };
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsFormEdited(true);
     setUsername(e.target.value);
   };
 
   const handleXLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsFormEdited(true);
     setXLink(e.target.value);
   };
 
   const handleWebsiteLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsFormEdited(true);
     setWebsiteLink(e.target.value);
+  };
+
+  const handleBioChangeWithEdit = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setIsFormEdited(true);
+    handleBioChange(e);
+  };
+
+  const handleProfilePicChange = (url: string) => {
+    setIsFormEdited(true);
+    setProfilePicUrl(url);
   };
 
   if (!isConnected) {
@@ -86,7 +103,7 @@ export function UserProfile() {
           <ProfilePictureUpload 
             displayName={formData.displayName} 
             profilePicUrl={formData.profilePicUrl} 
-            onProfilePicChange={setProfilePicUrl}
+            onProfilePicChange={handleProfilePicChange}
             userId={address || ""}
           />
           
@@ -134,7 +151,7 @@ export function UserProfile() {
                   id="bio" 
                   placeholder="Short bio about yourself (142 chars max)" 
                   value={formData.bio} 
-                  onChange={handleBioChange} 
+                  onChange={handleBioChangeWithEdit} 
                   maxLength={142} 
                   className="resize-none w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[80px]" 
                 />
@@ -148,17 +165,13 @@ export function UserProfile() {
 
               {/* Social Links */}
               <div className="space-y-2 pt-2 border-t">
-                <Label className="text-base font-medium">Social Links</Label>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="xLink">X (Twitter) Profile</Label>
-                  <Input id="xLink" placeholder="https://x.com/username" value={formData.xLink} onChange={handleXLinkChange} />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="websiteLink">Website</Label>
-                  <Input id="websiteLink" placeholder="https://example.com" value={formData.websiteLink} onChange={handleWebsiteLinkChange} />
-                </div>
+                <Label htmlFor="xLink">X / Twitter</Label>
+                <Input id="xLink" placeholder="https://x.com/username" value={formData.xLink} onChange={handleXLinkChange} />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="websiteLink">Website</Label>
+                <Input id="websiteLink" placeholder="https://example.com" value={formData.websiteLink} onChange={handleWebsiteLinkChange} />
               </div>
 
               <div className="space-y-2">
