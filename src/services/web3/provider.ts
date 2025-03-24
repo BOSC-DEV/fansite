@@ -58,7 +58,7 @@ export class Web3Provider {
       const encoder = new TextEncoder();
       const message = encoder.encode(SIGNATURE_MESSAGE);
       
-      // Request signature from wallet - fix the argument issue here
+      // Request signature from wallet - passing only the message parameter
       const signatureResponse = await window.phantom.solana.signMessage(message);
       
       if (!signatureResponse.signature) {
