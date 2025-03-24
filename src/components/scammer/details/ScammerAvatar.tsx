@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserCircle2 } from "lucide-react";
 
 interface ScammerAvatarProps {
   name: string;
@@ -11,24 +10,20 @@ interface ScammerAvatarProps {
 export function ScammerAvatar({ name, photoUrl }: ScammerAvatarProps) {
   const [imageError, setImageError] = useState(false);
   
-  const handleImageError = () => {
-    setImageError(true);
-  };
-
+  // Fallback URL when image fails to load
+  const fallbackImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&size=200`;
+  
   return (
-    <Avatar className="h-32 w-32 mx-auto rounded-lg">
-      {!imageError ? (
-        <AvatarImage 
-          src={photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`} 
-          alt={name} 
-          className="object-cover"
-          onError={handleImageError}
+    <div className="flex justify-center">
+      <div className="relative w-full aspect-square max-w-md rounded-md overflow-hidden border-2 border-western-wood shadow-md">
+        <img
+          src={imageError ? fallbackImageUrl : photoUrl}
+          alt={name}
+          className="w-full h-full object-cover"
+          onError={() => setImageError(true)}
+          loading="lazy"
         />
-      ) : (
-        <AvatarFallback className="rounded-lg bg-western-sand text-western-wood">
-          <UserCircle2 className="h-16 w-16" />
-        </AvatarFallback>
-      )}
-    </Avatar>
+      </div>
+    </div>
   );
 }

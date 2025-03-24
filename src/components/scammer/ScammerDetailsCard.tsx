@@ -35,7 +35,7 @@ export function ScammerDetailsCard({
   const { address } = useWallet();
   const isCreator = scammer.addedBy === address;
   
-  const { addedByUsername, addedByPhotoUrl, isProfileLoading } = useScammerProfile(scammer.addedBy);
+  const { addedByUsername, addedByPhotoUrl, isProfileLoading, profileId } = useScammerProfile(scammer.addedBy);
   const { 
     isLiked, 
     isDisliked, 
@@ -57,7 +57,7 @@ export function ScammerDetailsCard({
         />
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+        <div className="flex flex-col gap-6">
           <ScammerSidebar
             name={scammer.name}
             photoUrl={scammer.photoUrl}
@@ -66,6 +66,7 @@ export function ScammerDetailsCard({
             addedByUsername={addedByUsername}
             addedByPhotoUrl={addedByPhotoUrl}
             isProfileLoading={isProfileLoading}
+            profileId={profileId}
             likes={likes}
             dislikes={dislikes}
             views={views}
@@ -76,7 +77,7 @@ export function ScammerDetailsCard({
             formatDate={formatDate}
           />
           
-          <div className="flex-1">
+          <div className="w-full">
             <ScammerContent 
               aliases={scammer.aliases}
               links={scammer.links}

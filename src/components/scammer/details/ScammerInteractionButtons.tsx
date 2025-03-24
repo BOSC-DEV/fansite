@@ -23,36 +23,36 @@ export function ScammerInteractionButtons({
   onDislike
 }: ScammerInteractionButtonsProps) {
   return (
-    <div className="flex justify-center gap-4 mt-3">
-      <div className="flex flex-col items-center">
+    <div className="flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-full px-2 py-1">
+      <div className="flex items-center">
         <Button 
-          variant="outline"
+          variant="ghost"
           size="sm"
-          className={`h-10 w-10 rounded-full ${isLiked ? 'bg-green-100 border-green-500 text-green-700' : ''}`}
+          className={`h-8 w-8 rounded-full p-0 ${isLiked ? 'text-green-400' : 'text-white'}`}
           onClick={onLike}
         >
-          <ThumbsUp className="h-5 w-5" />
+          <ThumbsUp className="h-4 w-4" />
         </Button>
-        <span className="text-sm mt-1">{likes}</span>
+        <span className="text-xs text-white">{likes}</span>
       </div>
       
-      <div className="flex flex-col items-center">
+      <div className="flex items-center">
         <Button 
-          variant="outline"
+          variant="ghost"
           size="sm"
-          className={`h-10 w-10 rounded-full ${isDisliked ? 'bg-red-100 border-red-500 text-red-700' : ''}`}
+          className={`h-8 w-8 rounded-full p-0 ${isDisliked ? 'text-red-400' : 'text-white'}`}
           onClick={onDislike}
         >
-          <ThumbsDown className="h-5 w-5" />
+          <ThumbsDown className="h-4 w-4" />
         </Button>
-        <span className="text-sm mt-1">{dislikes}</span>
+        <span className="text-xs text-white">{dislikes}</span>
       </div>
       
-      <div className="flex flex-col items-center">
-        <div className="h-10 w-10 rounded-full border flex items-center justify-center">
-          <Eye className="h-5 w-5" />
+      <div className="flex items-center">
+        <div className="h-8 w-8 flex items-center justify-center">
+          <Eye className="h-4 w-4 text-white" />
         </div>
-        <span className="text-sm mt-1">{views}</span>
+        <span className="text-xs text-white">{views}</span>
       </div>
     </div>
   );

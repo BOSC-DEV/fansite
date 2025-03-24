@@ -12,6 +12,7 @@ interface ScammerSidebarProps {
   addedByUsername: string | null;
   addedByPhotoUrl?: string | null;
   isProfileLoading: boolean;
+  profileId: string | null;
   likes: number;
   dislikes: number;
   views: number;
@@ -30,6 +31,7 @@ export function ScammerSidebar({
   addedByUsername,
   addedByPhotoUrl,
   isProfileLoading,
+  profileId,
   likes,
   dislikes,
   views,
@@ -40,10 +42,8 @@ export function ScammerSidebar({
   formatDate
 }: ScammerSidebarProps) {
   return (
-    <div className="flex-shrink-0 w-full sm:w-1/3 lg:w-1/4">
-      <div className="space-y-3">
-        <ScammerAvatar name={name} photoUrl={photoUrl} />
-        
+    <div className="w-full relative">
+      <div className="absolute top-3 right-3 z-10">
         <ScammerInteractionButtons 
           likes={likes}
           dislikes={dislikes}
@@ -53,13 +53,18 @@ export function ScammerSidebar({
           onLike={onLike}
           onDislike={onDislike}
         />
-
+      </div>
+      
+      <div className="space-y-6">
+        <ScammerAvatar name={name} photoUrl={photoUrl} />
+        
         <ScammerDetailsSection 
           dateAdded={dateAdded}
           addedBy={addedBy}
           addedByUsername={addedByUsername}
           addedByPhotoUrl={addedByPhotoUrl}
           isProfileLoading={isProfileLoading}
+          profileId={profileId}
           formatDate={formatDate}
         />
       </div>

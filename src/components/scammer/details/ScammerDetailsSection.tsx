@@ -1,8 +1,8 @@
 
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ScammerDetailsSectionProps {
   dateAdded: string;
@@ -10,89 +10,58 @@ interface ScammerDetailsSectionProps {
   addedByUsername: string | null;
   addedByPhotoUrl?: string | null;
   isProfileLoading: boolean;
+  profileId: string | null;
   formatDate: (date: string) => string;
 }
 
-export function ScammerDetailsSection({ 
-  dateAdded, 
-  addedBy, 
-  addedByUsername, 
-  addedByPhotoUrl, 
-  isProfileLoading, 
-  formatDate 
+export function ScammerDetailsSection({
+  dateAdded,
+  addedBy,
+  addedByUsername,
+  addedByPhotoUrl,
+  isProfileLoading,
+  profileId,
+  formatDate
 }: ScammerDetailsSectionProps) {
-  const [imageError, setImageError] = useState(false);
+  const formattedDate = formatDate(dateAdded);
   
-  const handleImageError = () => {
-    setImageError(true);
-  };
+  // Determine profile URL
+  const profileUrl = addedByUsername 
+    ? `/${addedByUsername}` 
+    : profileId 
+      ? `/user/${profileId}` 
+      : "#";
 
   return (
-    <div className="pt-4 space-y-2">
-      <h3 className="text-lg font-semibold mb-2">Details</h3>
-      <dl className="space-y-2 text-sm">
-        <div className="flex flex-col space-y-1">
-          <dt className="text-muted-foreground">Added on</dt>
-          <dd>{formatDate(dateAdded)}</dd>
+    <div className="p-4 border border-western-wood/20 rounded-md bg-western-sand/10">
+      <h3 className="text-lg font-semibold mb-3">Details</h3>
+      
+      <div className="space-y-4">
+        <div>
+          <p className="text-sm text-muted-foreground">Added on</p>
+          <p className="font-medium">{formattedDate}</p>
         </div>
-        <div className="flex flex-col space-y-1">
-          <dt className="text-muted-foreground">Added by</dt>
-          <dd className="flex items-center">
-            {isProfileLoading ? (
-              <span className="text-xs bg-muted px-2 py-1 rounded font-mono animate-pulse">
-                Loading...
-              </span>
-            ) : addedByUsername ? (
-              <Link 
-                to={`/${addedByUsername}`}
-                className="flex items-center gap-2 hover:underline"
-              >
-                <Avatar className="h-6 w-6">
-                  {!imageError && addedByPhotoUrl ? (
-                    <AvatarImage 
-                      src={addedByPhotoUrl} 
-                      alt={addedByUsername}
-                      onError={handleImageError}
-                    />
-                  ) : (
-                    <AvatarFallback className="bg-western-sand text-western-wood text-xs">
-                      {addedByUsername.slice(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                  )}
-                </Avatar>
-                <span className="text-xs bg-muted px-2 py-1 rounded font-mono hover:bg-muted/80 transition-colors">
-                  {addedByUsername}
-                </span>
-              </Link>
-            ) : addedBy ? (
-              <span 
-                className="flex items-center gap-2"
-                title="User has no profile"
-              >
-                <Avatar className="h-6 w-6">
-                  <AvatarFallback className="bg-western-sand text-western-wood">
-                    <User2 className="h-3 w-3" />
-                  </AvatarFallback>
-                </Avatar>
-                <span className="text-xs bg-muted px-2 py-1 rounded font-mono">
-                  {addedBy.slice(0, 6)}...{addedBy.slice(-4)}
-                </span>
-              </span>
-            ) : (
-              <span className="flex items-center gap-2">
-                <Avatar className="h-6 w-6">
-                  <AvatarFallback className="bg-western-sand text-western-wood">
-                    <User2 className="h-3 w-3" />
-                  </AvatarFallback>
-                </Avatar>
-                <span className="text-xs bg-muted px-2 py-1 rounded font-mono">
-                  Anonymous
-                </span>
-              </span>
-            )}
-          </dd>
+        
+        <div>
+          <p className="text-sm text-muted-foreground">Added by</p>
+          {isProfileLoading ? (
+            <div className="flex items-center gap-2 mt-1">
+              <Skeleton className="h-8 w-8 rounded-full" />
+              <Skeleton className="h-4 w-24" />
+            </div>
+          ) : (
+            <Link to={profileUrl} className="flex items-center gap-2 mt-1 hover:underline">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src={addedByPhotoUrl || undefined} alt={addedByUsername || addedBy} />
+                <AvatarFallback className="bg-western-wood text-western-parchment text-xs">
+                  {(addedByUsername || addedBy).charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <span className="font-medium">{addedByUsername || addedBy}</span>
+            </Link>
+          )}
         </div>
-      </dl>
+      </div>
     </div>
   );
 }
