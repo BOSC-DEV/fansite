@@ -19,6 +19,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
+import { User } from "lucide-react";
+import { useScammerProfile } from "@/hooks/useScammerProfile";
 
 interface ScammerTableProps {
   paginatedScammers: Scammer[];
@@ -48,6 +50,12 @@ export const ScammerTable = ({
             <TableHead className="text-western-accent font-wanted">Outlaw</TableHead>
             <TableHead className="text-western-accent font-wanted">Crimes</TableHead>
             <TableHead className="text-center text-western-accent font-wanted">Aliases</TableHead>
+            <TableHead className="text-center text-western-accent font-wanted">
+              <div className="flex items-center justify-center">
+                <User className="h-4 w-4 mr-1" />
+                <span>By</span>
+              </div>
+            </TableHead>
             <TableHead className="text-center text-western-accent font-wanted">Bounty</TableHead>
             <TableHead className="text-right text-western-accent font-wanted">Posted</TableHead>
           </TableRow>
@@ -92,6 +100,9 @@ export const ScammerTable = ({
                   ) : (
                     <span className="text-western-wood/50 text-sm">-</span>
                   )}
+                </TableCell>
+                <TableCell className="text-center">
+                  <UploaderAvatar addedBy={scammer.addedBy} />
                 </TableCell>
                 <TableCell className="text-center font-medium">
                   <div className="flex items-center justify-center">
@@ -152,6 +163,28 @@ export const ScammerTable = ({
           </Pagination>
         </div>
       )}
+    </div>
+  );
+};
+
+// Helper component to display uploader's avatar with link to their profile
+const UploaderAvatar = ({ addedBy }: { addedBy: string | undefined }) => {
+  const { addedByUsername, addedByPhotoUrl, profileId } = useScammerProfile(addedBy);
+  
+  if (!addedBy) return <div className="flex justify-center">-</div>;
+  
+  const profileUrl = addedByUsername ? `/${addedByUsername}` : `/user/${profileId}`;
+  
+  return (
+    <div className="flex justify-center">
+      <Link to={profileUrl}>
+        <Avatar className="w-8 h-8 border border-western-wood hover:border-western-accent transition-all">
+          <AvatarImage src={addedByPhotoUrl || ''} alt={addedByUsername || addedBy} />
+          <AvatarFallback className="bg-western-wood text-western-parchment text-xs">
+            {(addedByUsername || addedBy).charAt(0).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+      </Link>
     </div>
   );
 };

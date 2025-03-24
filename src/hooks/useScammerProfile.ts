@@ -1,7 +1,6 @@
 
 import { useState, useEffect } from 'react';
 import { profileService } from "@/services/storage";
-import { Link } from "react-router-dom";
 
 export function useScammerProfile(addedBy: string | undefined) {
   const [addedByUsername, setAddedByUsername] = useState<string | null>(null);

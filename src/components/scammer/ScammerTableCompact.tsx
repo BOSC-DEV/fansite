@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Award, Eye, MessageSquare, ThumbsUp } from "lucide-react";
+import { Award, Eye, MessageSquare, ThumbsUp, User } from "lucide-react";
 import { Scammer } from "@/lib/types";
+import { useScammerProfile } from "@/hooks/useScammerProfile";
 
 interface ScammerTableCompactProps {
   scammers: Scammer[];
@@ -28,6 +29,12 @@ export const ScammerTableCompact = ({
               <div className="flex items-center justify-center">
                 <Award className="h-4 w-4 mr-1" />
                 <span>Bounty</span>
+              </div>
+            </TableHead>
+            <TableHead className="text-center text-western-accent font-wanted">
+              <div className="flex items-center justify-center">
+                <User className="h-4 w-4 mr-1" />
+                <span>By</span>
               </div>
             </TableHead>
             <TableHead className="text-center hidden md:table-cell text-western-accent font-wanted">
@@ -81,6 +88,9 @@ export const ScammerTableCompact = ({
                 <TableCell className="text-center font-medium">
                   <span className="text-western-accent font-wanted">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
                 </TableCell>
+                <TableCell className="text-center">
+                  <UploaderAvatar addedBy={scammer.addedBy} />
+                </TableCell>
                 <TableCell className="text-center hidden md:table-cell">
                   {scammer.likes || 0}
                 </TableCell>
@@ -95,6 +105,28 @@ export const ScammerTableCompact = ({
           })}
         </TableBody>
       </Table>
+    </div>
+  );
+};
+
+// Helper component to display uploader's avatar with link to their profile
+const UploaderAvatar = ({ addedBy }: { addedBy: string | undefined }) => {
+  const { addedByUsername, addedByPhotoUrl, profileId } = useScammerProfile(addedBy);
+  
+  if (!addedBy) return <div className="flex justify-center">-</div>;
+  
+  const profileUrl = addedByUsername ? `/${addedByUsername}` : `/user/${profileId}`;
+  
+  return (
+    <div className="flex justify-center">
+      <Link to={profileUrl}>
+        <Avatar className="w-8 h-8 border border-western-wood hover:border-western-accent transition-all">
+          <AvatarImage src={addedByPhotoUrl || ''} alt={addedByUsername || addedBy} />
+          <AvatarFallback className="bg-western-wood text-western-parchment text-xs">
+            {(addedByUsername || addedBy).charAt(0).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+      </Link>
     </div>
   );
 };
