@@ -32,8 +32,8 @@ export function ScammerDetailsSection({
       ? `/user/${profileId}` 
       : "#";
       
-  // Truncate wallet address if it's too long
-  const displayName = addedByUsername || (addedBy ? `${addedBy.substring(0, 10)}...` : "Unknown");
+  // Display name prioritizes username, only fallback to wallet address if necessary
+  const displayName = addedByUsername || "Unknown";
 
   return (
     <div className="p-4 border border-western-wood/20 rounded-md bg-western-sand/10">
