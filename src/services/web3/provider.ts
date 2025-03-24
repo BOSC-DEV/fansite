@@ -6,7 +6,7 @@ const SIGNATURE_MESSAGE = "Sign this message to verify your identity with Book o
 
 // Class to handle Solana wallet connection and operations
 export class Web3Provider {
-  private connection: Connection;
+  protected connection: Connection;
 
   constructor() {
     // Initialize Solana connection (using devnet for development)

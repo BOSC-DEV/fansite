@@ -7,8 +7,6 @@ export class ContractService extends Web3Provider {
   }
   
   async getBalance(address: string): Promise<number | null> {
-    if (!this.connection) return null;
-    
     try {
       const publicKey = new PublicKey(address);
       const balance = await this.connection.getBalance(publicKey);

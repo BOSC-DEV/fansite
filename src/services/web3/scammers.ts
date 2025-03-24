@@ -1,20 +1,24 @@
+
 import { PublicKey } from '@solana/web3.js';
 import { ContractService } from "./contracts";
 import { toast } from "sonner";
 
 export class ScammerService extends ContractService {
+  private walletPublicKey: PublicKey | null = null;
+  
   constructor() {
     super();
   }
   
   async addScammer(name: string, accusedOf: string, photoUrl: string): Promise<string | null> {
-    if (!this.connection || !this.publicKey) {
-      console.error("Connection or wallet not initialized");
+    if (!window.phantom?.solana?.publicKey) {
+      console.error("Wallet not connected");
       toast.error("Wallet connection issue. Please connect your wallet.");
       return null;
     }
     
     try {
+      this.walletPublicKey = window.phantom.solana.publicKey;
       console.log("Adding scammer with name:", name);
       // This is a placeholder for now until we have the Solana program implementation
       // In a real implementation, we would call a Solana program
@@ -32,7 +36,7 @@ export class ScammerService extends ContractService {
   }
   
   async contributeToBounty(scammerId: string, amount: number): Promise<boolean> {
-    if (!this.connection || !this.publicKey) return false;
+    if (!window.phantom?.solana?.publicKey) return false;
     
     try {
       console.log(`Contributing ${amount} to bounty for ${scammerId} (placeholder)`);
@@ -46,8 +50,6 @@ export class ScammerService extends ContractService {
   }
   
   async getScammerDetails(scammerId: string): Promise<any | null> {
-    if (!this.connection) return null;
-    
     try {
       // This is a placeholder until we have the Solana program implementation
       return {
@@ -65,8 +67,6 @@ export class ScammerService extends ContractService {
   }
   
   async getAllScammers(): Promise<any[]> {
-    if (!this.connection) return [];
-    
     try {
       // This is a placeholder until we have the Solana program implementation
       return [];
