@@ -2,6 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@/context/WalletContext";
+import { toast } from "sonner";
+import { Wallet } from "lucide-react";
 
 interface ListingFormActionsProps {
   isSubmitting: boolean;
@@ -22,9 +24,18 @@ export function ListingFormActions({ isSubmitting, onCancel }: ListingFormAction
 
   const handleConnectWallet = async () => {
     try {
-      await connectWallet();
+      console.log("Attempting to connect wallet from ListingFormActions");
+      const connected = await connectWallet();
+      
+      if (!connected) {
+        console.log("Wallet connection failed");
+        toast.error("Failed to connect wallet. Please try again.");
+      } else {
+        console.log("Wallet connected successfully");
+      }
     } catch (error) {
       console.error("Error connecting wallet:", error);
+      toast.error("Failed to connect wallet. Please try again.");
     }
   };
 
@@ -52,7 +63,7 @@ export function ListingFormActions({ isSubmitting, onCancel }: ListingFormAction
           type="button" 
           onClick={handleConnectWallet}
           disabled={connecting}
-          className="bg-western-wood hover:bg-western-wood/90 text-western-parchment font-western min-w-[220px]"
+          className="bg-western-accent hover:bg-western-accent/90 text-western-parchment font-western min-w-[220px]"
         >
           {connecting ? (
             <span className="flex items-center">
@@ -63,7 +74,10 @@ export function ListingFormActions({ isSubmitting, onCancel }: ListingFormAction
               Connecting...
             </span>
           ) : (
-            "Connect Wallet"
+            <span className="flex items-center">
+              <Wallet className="mr-2 h-4 w-4" />
+              Connect Phantom Wallet
+            </span>
           )}
         </Button>
       )}

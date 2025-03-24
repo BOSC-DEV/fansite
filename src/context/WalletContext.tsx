@@ -9,7 +9,7 @@ interface WalletContextType {
   connecting: boolean;
   address: string | null;
   balance: number | null;
-  connectWallet: () => Promise<void>;
+  connectWallet: () => Promise<boolean>;
   disconnectWallet: () => void;
   isConnected: boolean;
   smartWalletAddress: string | null;
@@ -67,9 +67,20 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const connectWallet = async () => {
+  const connectWallet = async (): Promise<boolean> => {
+    if (connecting) return false; // Prevent multiple connection attempts
+    
     setConnecting(true);
+    console.log("Connecting wallet...");
+    
     try {
+      // Check if phantom extension is installed
+      if (!window.phantom?.solana) {
+        toast.error("Phantom wallet extension not found. Please install it first.");
+        console.error("Phantom wallet not installed");
+        return false;
+      }
+      
       const connectedAddress = await web3Provider.connectWallet();
       
       if (connectedAddress) {
@@ -89,6 +100,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         
         toast.success('Wallet connected successfully!');
         console.log(`Funds will flow to developer wallet: ${DEVELOPER_WALLET_ADDRESS}`);
+        return true;
       } else {
         throw new Error('Failed to connect wallet');
       }
@@ -99,6 +111,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       setConnected(false);
       setAddress(null);
       setBalance(null);
+      return false;
     } finally {
       setConnecting(false);
     }

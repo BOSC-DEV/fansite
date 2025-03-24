@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useWallet } from "@/context/WalletContext";
 import { Wallet, AlertCircle } from "lucide-react";
+import { toast } from "sonner";
+import { useEffect } from "react";
 
 interface ConnectWalletProps {
   message?: string;
@@ -15,16 +17,31 @@ export function ConnectWallet({
   redirectPath, 
   className 
 }: ConnectWalletProps) {
-  const { connectWallet, connecting } = useWallet();
+  const { connectWallet, connecting, isConnected } = useWallet();
+  
+  useEffect(() => {
+    // If the user is already connected and there's a redirect path, redirect them
+    if (isConnected && redirectPath) {
+      window.location.href = redirectPath;
+    }
+  }, [isConnected, redirectPath]);
   
   const handleConnect = async () => {
     try {
-      await connectWallet();
-      if (redirectPath) {
-        window.location.href = redirectPath;
+      console.log("Attempting to connect wallet from ConnectWallet component");
+      const connected = await connectWallet();
+      console.log("Wallet connection result:", connected);
+      
+      if (connected && redirectPath) {
+        toast.success("Wallet connected successfully!");
+        // Short delay before redirect to ensure wallet state is updated
+        setTimeout(() => {
+          window.location.href = redirectPath;
+        }, 500);
       }
     } catch (error) {
       console.error("Error connecting wallet:", error);
+      toast.error("Failed to connect wallet. Please try again.");
     }
   };
   
@@ -60,7 +77,7 @@ export function ConnectWallet({
         </div>
       </CardContent>
       <CardFooter>
-        <Button onClick={handleConnect} className="w-full" disabled={connecting}>
+        <Button onClick={handleConnect} className="w-full bg-western-accent hover:bg-western-accent/90" disabled={connecting}>
           {connecting ? (
             <span className="flex items-center">
               <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
