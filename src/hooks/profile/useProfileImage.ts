@@ -7,7 +7,7 @@ export function useProfileImage() {
   const [isUploading, setIsUploading] = useState(false);
 
   const uploadProfileImage = async (file: File, userId: string) => {
-    if (!file || !userId) return;
+    if (!file || !userId) return null;
     
     setIsUploading(true);
     try {

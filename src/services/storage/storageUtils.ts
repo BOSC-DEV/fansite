@@ -14,6 +14,8 @@ export const uploadImage = async (
   try {
     if (!file) return null;
     
+    console.log(`[storageUtils] Uploading image to bucket: ${bucket}, folder: ${folder || 'root'}`);
+    
     // Generate a unique filename
     const fileExt = file.name.split('.').pop();
     const fileName = `${folder ? `${folder}/` : ''}${uuidv4()}.${fileExt}`;
@@ -27,7 +29,7 @@ export const uploadImage = async (
       });
       
     if (error) {
-      console.error('Error uploading file:', error);
+      console.error('[storageUtils] Error uploading file:', error);
       toast.error('Failed to upload image');
       return null;
     }
@@ -36,10 +38,11 @@ export const uploadImage = async (
     const { data: publicUrlData } = supabase.storage
       .from(bucket)
       .getPublicUrl(data?.path || '');
-      
+    
+    console.log('[storageUtils] File uploaded successfully, URL:', publicUrlData.publicUrl);
     return publicUrlData.publicUrl || null;
   } catch (err) {
-    console.error('Error in uploadImage:', err);
+    console.error('[storageUtils] Error in uploadImage:', err);
     toast.error('Failed to upload image');
     return null;
   }
