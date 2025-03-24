@@ -7,39 +7,18 @@ import { leaderboardService } from './leaderboardService';
 import { UserProfile } from './profileService';
 import { ScammerListing } from './scammer/scammerTypes';
 import { LeaderboardUser } from './leaderboardService';
-import { uploadImage } from './storageUtils';
 
 export class StorageService extends BaseSupabaseService {
   // This bucket already exists, no need to create it again
   async ensureProfileImagesBucketExists() {
-    console.log('[StorageService] Checking if profile-images bucket exists');
+    console.log('Checking if profile-images bucket exists');
     const { data } = await this.supabase.storage.getBucket('profile-images');
-    
-    if (!data) {
-      console.log('[StorageService] Creating profile-images bucket');
-      const { error } = await this.supabase.storage.createBucket('profile-images', {
-        public: true
-      });
-      
-      if (error) {
-        console.error('[StorageService] Error creating profile-images bucket:', error);
-        return false;
-      }
-      
-      console.log('[StorageService] profile-images bucket created successfully');
-    } else {
-      console.log('[StorageService] profile-images bucket already exists');
-    }
-    
-    return true;
+    return !!data;
   }
 
   async uploadProfileImage(file: File, userId: string): Promise<string | null> {
     try {
-      console.log('[StorageService] Uploading profile image for user:', userId);
-      
-      // Ensure the bucket exists
-      await this.ensureProfileImagesBucketExists();
+      console.log('Uploading profile image for user:', userId);
       
       // Generate a unique file name
       const fileExt = file.name.split('.').pop();
@@ -55,7 +34,7 @@ export class StorageService extends BaseSupabaseService {
         });
         
       if (uploadError) {
-        console.error('[StorageService] Error uploading image:', uploadError);
+        console.error('Error uploading image:', uploadError);
         return null;
       }
       
@@ -64,10 +43,10 @@ export class StorageService extends BaseSupabaseService {
         .from('profile-images')
         .getPublicUrl(filePath);
         
-      console.log('[StorageService] Image uploaded successfully, public URL:', publicUrlData.publicUrl);
+      console.log('Image uploaded successfully, public URL:', publicUrlData.publicUrl);
       return publicUrlData.publicUrl;
     } catch (error) {
-      console.error('[StorageService] Error in uploadProfileImage:', error);
+      console.error('Error in uploadProfileImage:', error);
       return null;
     }
   }

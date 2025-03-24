@@ -6,7 +6,6 @@ import { UserCircle2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { storageService } from "@/services/storage";
 import { toast } from "sonner";
-import { useProfileImage } from "@/hooks/profile/useProfileImage";
 
 interface ProfilePictureUploadProps {
   displayName: string;
@@ -46,8 +45,6 @@ export function ProfilePictureUpload({
     }
 
     setIsUploading(true);
-    setImageError(false);
-    
     try {
       console.log("[ProfilePictureUpload] Uploading image file:", file.name);
       
@@ -72,10 +69,6 @@ export function ProfilePictureUpload({
       setImageError(true);
     } finally {
       setIsUploading(false);
-      // Clear the file input so the same file can be selected again if needed
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
     }
   };
 

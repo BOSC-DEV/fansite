@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Header } from "@/components/Header";
 import { UserProfile } from "@/components/profile/UserProfile";
@@ -7,12 +6,68 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { isSupabaseConfigured } from "@/lib/supabase";
+import { storageService } from "@/services/storage";
 
 export function ProfilePage() {
   const { isConnected, address } = useWallet();
   const [isLoading, setIsLoading] = useState(false);
+  const [profileData, setProfileData] = useState(null);
+  const [previousAddress, setPreviousAddress] = useState<string | null>(null);
   const supabaseReady = isSupabaseConfigured();
   
+  useEffect(() => {
+    if (previousAddress && address !== previousAddress) {
+      console.log("[ProfilePage] Wallet address changed from", previousAddress, "to", address, "- clearing profile data");
+      setProfileData(null);
+    }
+    
+    if (address !== previousAddress) {
+      setPreviousAddress(address);
+    }
+
+    const fetchProfile = async () => {
+      if (isConnected && address && supabaseReady) {
+        setIsLoading(true);
+        try {
+          console.log("[ProfilePage] Fetching profile for address:", address);
+          const profile = await storageService.getProfile(address);
+          
+          if (profile) {
+            console.log("[ProfilePage] Profile found:", profile);
+            setProfileData(profile);
+          } else {
+            console.log("[ProfilePage] No profile found for address:", address);
+            setProfileData(null);
+          }
+        } catch (error) {
+          console.error("[ProfilePage] Error fetching profile:", error);
+          setProfileData(null);
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        setProfileData(null);
+      }
+    };
+    
+    fetchProfile();
+  }, [isConnected, address, supabaseReady]);
+
+  useEffect(() => {
+    const debugFetchAllProfiles = async () => {
+      if (supabaseReady) {
+        try {
+          const allProfiles = await storageService.getAllProfiles();
+          console.log("[DEBUG] All profiles in Supabase:", allProfiles);
+        } catch (error) {
+          console.error("[DEBUG] Error fetching all profiles:", error);
+        }
+      }
+    };
+    
+    debugFetchAllProfiles();
+  }, [supabaseReady]);
+
   return (
     <div className="min-h-screen old-paper">
       <Header />
