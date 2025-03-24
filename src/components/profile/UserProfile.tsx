@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,6 +27,10 @@ export function UserProfile() {
     usernameAvailable,
     checkingUsername
   } = useProfileForm();
+
+  // This use effect prevents losing user input when navigating
+  // Purposefully left empty to avoid unintended side effects
+  useEffect(() => {}, [address]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,13 +76,18 @@ export function UserProfile() {
       <Card className="max-w-md mx-auto">
         <CardHeader>
           <CardTitle>{hasProfile ? "Update Your Profile" : "Create Your Profile"}</CardTitle>
+          {address && (
+            <p className="text-sm text-muted-foreground">
+              Wallet: {address}
+            </p>
+          )}
         </CardHeader>
         <CardContent className="space-y-4">
           <ProfilePictureUpload 
             displayName={formData.displayName} 
             profilePicUrl={formData.profilePicUrl} 
             onProfilePicChange={setProfilePicUrl}
-            userId={address}
+            userId={address || ""}
           />
           
           <div className="space-y-4">

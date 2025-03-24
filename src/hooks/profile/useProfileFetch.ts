@@ -10,6 +10,7 @@ export function useProfileFetch() {
   const [isFetchingProfile, setIsFetchingProfile] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
   const [profileId, setProfileId] = useState<string | undefined>(undefined);
+  const [previousAddress, setPreviousAddress] = useState<string | null>(null);
   const supabaseReady = isSupabaseConfigured();
 
   useEffect(() => {
@@ -17,8 +18,19 @@ export function useProfileFetch() {
     if (!isConnected || !address) {
       setProfileId(undefined);
       setHasProfile(false);
+      setPreviousAddress(null);
       return;
     }
+
+    // Reset states if wallet address changed
+    if (previousAddress && previousAddress !== address) {
+      console.log("[useProfileFetch] Wallet address changed from", previousAddress, "to", address, "- resetting profile state");
+      setProfileId(undefined);
+      setHasProfile(false);
+    }
+
+    // Update previous address for next comparison
+    setPreviousAddress(address);
 
     // Check if user already has a profile using the storageService
     const fetchProfile = async () => {
@@ -36,11 +48,13 @@ export function useProfileFetch() {
           } else {
             console.log("[useProfileFetch] No profile found for address:", address);
             setHasProfile(false);
+            setProfileId(undefined);
             return null;
           }
         } catch (error) {
           console.error("[useProfileFetch] Error fetching profile:", error);
-          toast.error("Failed to load profile data");
+          setHasProfile(false);
+          setProfileId(undefined);
           return null;
         } finally {
           setIsFetchingProfile(false);
@@ -49,10 +63,7 @@ export function useProfileFetch() {
       return null;
     };
 
-    return () => {
-      // This serves as both the fetchProfile call and the cleanup function
-      fetchProfile();
-    };
+    fetchProfile();
   }, [isConnected, address, supabaseReady]);
 
   return {

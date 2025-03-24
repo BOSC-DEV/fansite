@@ -17,9 +17,21 @@ export function ProfilePage() {
   const { isConnected, address } = useWallet();
   const [profileData, setProfileData] = useState<ProfileType | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [previousAddress, setPreviousAddress] = useState<string | null>(null);
   const supabaseReady = isSupabaseConfigured();
   
   useEffect(() => {
+    // Reset profile data if wallet address changes
+    if (previousAddress && address !== previousAddress) {
+      console.log("[ProfilePage] Wallet address changed from", previousAddress, "to", address, "- clearing profile data");
+      setProfileData(null);
+    }
+    
+    // Update previous address for next comparison
+    if (address !== previousAddress) {
+      setPreviousAddress(address);
+    }
+
     const fetchProfile = async () => {
       if (isConnected && address && supabaseReady) {
         setIsLoading(true);
@@ -36,9 +48,12 @@ export function ProfilePage() {
           }
         } catch (error) {
           console.error("[ProfilePage] Error fetching profile:", error);
+          setProfileData(null);
         } finally {
           setIsLoading(false);
         }
+      } else {
+        setProfileData(null);
       }
     };
     
@@ -118,10 +133,10 @@ export function ProfilePage() {
                 </div>
               </Card>
             </div>
-          ) : null /* Removed the "No Profile Found" alert box */}
+          ) : null}
           
           {supabaseReady ? (
-            <UserProfile />
+            <UserProfile key={address} /> {/* Add key prop to force re-render on address change */}
           ) : (
             <Card>
               <CardHeader>
