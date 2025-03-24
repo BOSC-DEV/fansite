@@ -18,9 +18,13 @@ export function ConnectWallet({
   const { connectWallet, connecting } = useWallet();
   
   const handleConnect = async () => {
-    await connectWallet();
-    if (redirectPath) {
-      window.location.href = redirectPath;
+    try {
+      await connectWallet();
+      if (redirectPath) {
+        window.location.href = redirectPath;
+      }
+    } catch (error) {
+      console.error("Error connecting wallet:", error);
     }
   };
   
