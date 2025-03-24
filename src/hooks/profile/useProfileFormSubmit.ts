@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { storageService } from "@/services/storage";
-import { requestSignature } from "@/utils/signatureUtils";
 
 interface ProfileFormData {
   displayName: string;
@@ -24,7 +23,6 @@ interface FormValidation {
 export function useProfileFormSubmit() {
   const { isConnected, address } = useWallet();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSigningMessage, setIsSigningMessage] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
   const [profileId, setProfileId] = useState<string | undefined>(undefined);
   const supabaseReady = isSupabaseConfigured();
@@ -92,20 +90,10 @@ export function useProfileFormSubmit() {
       return false;
     }
 
-    // Request signature verification before proceeding
-    setIsSigningMessage(true);
+    setIsSubmitting(true);
+    console.log("[useProfileFormSubmit] Starting profile save for address:", address);
+    
     try {
-      const signatureVerified = await requestSignature(address);
-      setIsSigningMessage(false);
-      
-      if (!signatureVerified) {
-        console.log("[useProfileFormSubmit] Signature verification failed");
-        return false;
-      }
-      
-      setIsSubmitting(true);
-      console.log("[useProfileFormSubmit] Starting profile save for address:", address);
-      
       // Use the wallet address as the ID
       const profileData = {
         id: address,
@@ -135,18 +123,16 @@ export function useProfileFormSubmit() {
       setProfileId(address);
       return true;
     } catch (error) {
-      console.error("[useProfileFormSubmit] Error in profile save flow:", error);
+      console.error("[useProfileFormSubmit] Error saving profile:", error);
       toast.error("Failed to save profile");
       return false;
     } finally {
-      setIsSigningMessage(false);
       setIsSubmitting(false);
     }
   };
 
   return {
     isSubmitting,
-    isSigningMessage,
     hasProfile,
     profileId,
     supabaseReady,

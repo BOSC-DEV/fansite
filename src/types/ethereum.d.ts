@@ -9,10 +9,6 @@ interface Window {
       removeListener: (event: string, callback: (...args: any[]) => void) => void;
       publicKey?: { toString: () => string };
       isConnected: boolean;
-      signMessage: (message: Uint8Array, encoding: string) => Promise<{ 
-        signature: Uint8Array;
-        publicKey: { toString: () => string };
-      }>;
     };
   };
   
