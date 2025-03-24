@@ -58,8 +58,8 @@ export class Web3Provider {
       const encoder = new TextEncoder();
       const message = encoder.encode(SIGNATURE_MESSAGE);
       
-      // Request signature from wallet
-      const signatureResponse = await window.phantom.solana.signMessage(message, "utf8");
+      // Request signature from wallet - fix the argument issue here
+      const signatureResponse = await window.phantom.solana.signMessage(message);
       
       if (!signatureResponse.signature) {
         console.error("Failed to get signature");

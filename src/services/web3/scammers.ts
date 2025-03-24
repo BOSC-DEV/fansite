@@ -18,7 +18,8 @@ export class ScammerService extends ContractService {
     }
     
     try {
-      this.walletPublicKey = window.phantom.solana.publicKey;
+      // Properly convert the phantom wallet public key to a Solana PublicKey
+      this.walletPublicKey = new PublicKey(window.phantom.solana.publicKey.toString());
       console.log("Adding scammer with name:", name);
       // This is a placeholder for now until we have the Solana program implementation
       // In a real implementation, we would call a Solana program
