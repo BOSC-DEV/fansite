@@ -130,7 +130,8 @@ export function useProfileFormSubmit() {
       }
       
       console.log("[useProfileFormSubmit] Profile saved successfully");
-      toast.success("Profile saved successfully");
+      // Only show one success toast here
+      toast.success(hasProfile ? "Profile updated successfully" : "Profile created successfully");
       setHasProfile(true);
       setProfileId(address);
       return true;
