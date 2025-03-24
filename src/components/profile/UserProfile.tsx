@@ -8,7 +8,7 @@ import { useProfileForm } from "./useProfileForm";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Info } from "lucide-react";
+import { Info, AlertCircle } from "lucide-react";
 
 export function UserProfile() {
   const navigate = useNavigate();
@@ -21,6 +21,7 @@ export function UserProfile() {
     setWebsiteLink,
     handleBioChange,
     isSubmitting,
+    isSigningMessage,
     hasProfile,
     saveProfile,
     address,
@@ -182,8 +183,26 @@ export function UserProfile() {
           <Button type="button" variant="outline" onClick={() => navigate(-1)}>
             Cancel
           </Button>
-          <Button type="submit" disabled={isSubmitting || !usernameAvailable}>
-            {isSubmitting ? "Saving..." : hasProfile ? "Update Profile" : "Create Profile"}
+          <Button 
+            type="submit" 
+            disabled={isSubmitting || isSigningMessage || !usernameAvailable}
+            className="relative"
+          >
+            {isSigningMessage ? (
+              <>
+                <span className="opacity-0">Sign Message</span>
+                <span className="absolute inset-0 flex items-center justify-center gap-2">
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent"></span>
+                  <span>Waiting for signature...</span>
+                </span>
+              </>
+            ) : isSubmitting ? (
+              "Saving..."
+            ) : hasProfile ? (
+              "Update Profile"
+            ) : (
+              "Create Profile"
+            )}
           </Button>
         </CardFooter>
       </Card>

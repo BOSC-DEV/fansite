@@ -23,6 +23,11 @@ export async function requestSignature(
   
   try {
     console.log(`[SignatureUtils] Requesting signature for address: ${walletAddress}`);
+    toast.info("Please sign the message in your Phantom wallet to continue", {
+      duration: 10000,
+      id: "signature-request"
+    });
+    
     // Encode the message as bytes
     const encodedMessage = new TextEncoder().encode(message);
     
@@ -36,10 +41,12 @@ export async function requestSignature(
     
     console.log("[SignatureUtils] Signature successful:", signResult.signature);
     toast.success("Identity verified successfully");
+    toast.dismiss("signature-request");
     return true;
   } catch (error) {
     console.error("[SignatureUtils] Error requesting signature:", error);
     toast.error("Failed to verify wallet ownership");
+    toast.dismiss("signature-request");
     return false;
   }
 }
