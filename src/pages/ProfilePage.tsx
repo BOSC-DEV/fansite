@@ -136,7 +136,7 @@ export function ProfilePage() {
           ) : null}
           
           {supabaseReady ? (
-            <UserProfile key={address} /> {/* Add key prop to force re-render on address change */}
+            <UserProfile key={address} /> 
           ) : (
             <Card>
               <CardHeader>
