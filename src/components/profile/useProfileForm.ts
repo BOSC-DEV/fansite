@@ -24,7 +24,7 @@ export function useProfileForm() {
   const { username, setUsername, usernameAvailable, checkingUsername } = useProfileUsername();
   const { socialLinks, setXLink, setWebsiteLink, validateUrls } = useProfileSocialLinks();
   const { profilePicUrl, setProfilePicUrl } = useProfileImage();
-  const { isSubmitting, hasProfile: submissionHasProfile, profileId: submissionProfileId, supabaseReady, saveProfile: submitProfile } = useProfileFormSubmit();
+  const { isSubmitting, isSigningMessage, hasProfile: submissionHasProfile, profileId: submissionProfileId, supabaseReady, saveProfile: submitProfile } = useProfileFormSubmit();
   const { isFetchingProfile, hasProfile: fetchedHasProfile, profileId: fetchedProfileId } = useProfileFetch();
 
   // Combined states from different hooks
@@ -110,6 +110,7 @@ export function useProfileForm() {
     setWebsiteLink,
     handleBioChange,
     isSubmitting,
+    isSigningMessage, // Make sure to include isSigningMessage here
     hasProfile: combinedHasProfile,
     saveProfile,
     address,

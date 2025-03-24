@@ -139,7 +139,7 @@ export function useProfileForm() {
     setWebsiteLink,
     handleBioChange,
     isSubmitting,
-    isSigningMessage,
+    isSigningMessage, // Make sure to include isSigningMessage here
     hasProfile: combinedHasProfile,
     saveProfile,
     address,
