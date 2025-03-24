@@ -54,6 +54,13 @@ export function ScammerDetailsCard({
           accusedOf={scammer.accusedOf}
           isCreator={isCreator}
           scammerId={scammer.id}
+          likes={likes}
+          dislikes={dislikes}
+          views={views}
+          isLiked={isLiked}
+          isDisliked={isDisliked}
+          onLike={handleLike}
+          onDislike={handleDislike}
         />
       </CardHeader>
       <CardContent className="space-y-6">
@@ -67,13 +74,6 @@ export function ScammerDetailsCard({
             addedByPhotoUrl={addedByPhotoUrl}
             isProfileLoading={isProfileLoading}
             profileId={profileId}
-            likes={likes}
-            dislikes={dislikes}
-            views={views}
-            isLiked={isLiked}
-            isDisliked={isDisliked}
-            onLike={handleLike}
-            onDislike={handleDislike}
             formatDate={formatDate}
           />
           

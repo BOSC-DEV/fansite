@@ -15,7 +15,7 @@ export function ScammerAvatar({ name, photoUrl }: ScammerAvatarProps) {
   
   return (
     <div className="flex justify-center">
-      <div className="relative w-full aspect-square max-w-md rounded-md overflow-hidden border-2 border-western-wood shadow-md">
+      <div className="relative w-full aspect-square max-w-full rounded-md overflow-hidden border-2 border-western-wood shadow-md">
         <img
           src={imageError ? fallbackImageUrl : photoUrl}
           alt={name}
