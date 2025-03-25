@@ -16,7 +16,7 @@ interface ScammerContentProps {
 export function ScammerContent({ aliases, links, accomplices, officialResponse }: ScammerContentProps) {
   return (
     <Tabs defaultValue="identity" className="w-full">
-      <TabsList className="w-full grid grid-cols-2 lg:grid-cols-4 mb-6">
+      <TabsList className="grid grid-cols-4 mb-6">
         <TabsTrigger value="identity">Identity</TabsTrigger>
         <TabsTrigger value="evidence">Evidence</TabsTrigger>
         <TabsTrigger value="network">Network</TabsTrigger>

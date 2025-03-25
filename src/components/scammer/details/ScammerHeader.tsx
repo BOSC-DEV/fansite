@@ -18,6 +18,7 @@ interface ScammerHeaderProps {
   isDisliked: boolean;
   onLike: () => void;
   onDislike: () => void;
+  bountyAmount?: number;
 }
 
 export function ScammerHeader({ 
@@ -31,7 +32,8 @@ export function ScammerHeader({
   isLiked,
   isDisliked,
   onLike,
-  onDislike
+  onDislike,
+  bountyAmount = 0
 }: ScammerHeaderProps) {
   return (
     <div className="flex justify-between items-start">
@@ -40,6 +42,13 @@ export function ScammerHeader({
         <CardDescription className="text-western-wood/70 mt-1">
           Accused of: {accusedOf}
         </CardDescription>
+        {bountyAmount > 0 && (
+          <div className="mt-2 flex items-center">
+            <span className="text-sm text-western-accent font-medium">
+              Total Bounty: <span className="font-bold">{bountyAmount.toLocaleString()} $BOSC</span>
+            </span>
+          </div>
+        )}
       </div>
       <div className="flex flex-col items-end gap-2">
         <ScammerInteractionButtons 

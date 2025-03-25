@@ -61,6 +61,7 @@ export function ScammerDetailsCard({
           isDisliked={isDisliked}
           onLike={handleLike}
           onDislike={handleDislike}
+          bountyAmount={scammer.bountyAmount}
         />
       </CardHeader>
       <CardContent className="space-y-6">
