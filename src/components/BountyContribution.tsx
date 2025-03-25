@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { ArrowRight, Coins } from "lucide-react";
+import { ArrowRight, Coins, Copy, Check } from "lucide-react";
 import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
+import { formatWalletAddress } from "@/utils/formatters";
 import { storageService } from "@/services/storage/localStorageService";
 
 interface BountyContributionProps {
@@ -25,6 +26,7 @@ export function BountyContribution({
   const { isConnected, address } = useWallet();
   const [amount, setAmount] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Only allow numbers and decimals
@@ -32,6 +34,18 @@ export function BountyContribution({
     if (value === "" || /^\d*\.?\d*$/.test(value)) {
       setAmount(value);
     }
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(DEVELOPER_WALLET_ADDRESS)
+      .then(() => {
+        setCopied(true);
+        toast.success("Address copied to clipboard");
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch(() => {
+        toast.error("Failed to copy address");
+      });
   };
 
   const handleContribute = async () => {
@@ -104,10 +118,20 @@ export function BountyContribution({
           
           <div>
             <Label htmlFor="developer-wallet" className="text-western-wood">Developer Wallet</Label>
-            <div className="flex items-center mt-1.5 bg-western-sand/10 border border-western-wood/30 rounded-sm p-2">
-              <span className="text-xs font-mono text-western-wood/80 truncate">
-                {DEVELOPER_WALLET_ADDRESS}
-              </span>
+            <div className="flex items-center justify-between mt-1.5 bg-western-sand/10 border border-western-wood/30 rounded-sm p-2">
+              <button 
+                onClick={copyToClipboard}
+                className="flex items-center text-western-wood/80 hover:text-western-wood transition-colors"
+              >
+                <span className="font-mono text-xs">
+                  {formatWalletAddress(DEVELOPER_WALLET_ADDRESS)}
+                </span>
+                {copied ? (
+                  <Check className="ml-2 h-4 w-4 text-green-600" />
+                ) : (
+                  <Copy className="ml-2 h-4 w-4" />
+                )}
+              </button>
             </div>
           </div>
           

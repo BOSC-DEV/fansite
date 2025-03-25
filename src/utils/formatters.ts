@@ -80,5 +80,5 @@ export const truncateText = (text: string, maxLength: number) => {
 export const formatWalletAddress = (address: string) => {
   if (!address) return '';
   if (address.length <= 13) return address;
-  return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+  return `${address.substring(0, 4)}...${address.substring(address.length - 4)}`;
 };

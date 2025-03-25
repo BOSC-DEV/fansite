@@ -1,20 +1,88 @@
 
-import { AlertTriangle, Shield } from "lucide-react";
+import { useState } from "react";
+import { AlertTriangle, Shield, Copy, Check, ChevronDown, ChevronUp } from "lucide-react";
+import { toast } from "sonner";
+import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
+import { formatWalletAddress } from "@/utils/formatters";
+
 export const WarningSection = () => {
-  return <section className="py-16 bg-western-parchment/20 border-y-2 border-western-leather/30">
+  const [expanded, setExpanded] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const toggleExpanded = () => {
+    setExpanded(!expanded);
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(DEVELOPER_WALLET_ADDRESS)
+      .then(() => {
+        setCopied(true);
+        toast.success("Address copied to clipboard");
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch(() => {
+        toast.error("Failed to copy address");
+      });
+  };
+
+  return (
+    <section className="py-12 md:py-16 bg-western-parchment/20 border-y-2 border-western-leather/30">
       <div className="container mx-auto max-w-6xl px-4">
-        <div className="flex flex-col md:flex-row gap-6 items-center western-card bg-western-parchment/80 p-6 border-2 border-western-wood transform hover:-rotate-1 duration-300">
-          <div className="w-16 h-16 rounded-full bg-western-accent/10 flex items-center justify-center flex-shrink-0 border-2 border-dashed border-western-accent">
-            <Shield className="h-8 w-8 text-western-accent" />
+        <div className="flex flex-col md:flex-row gap-6 items-start western-card bg-western-parchment/80 p-4 md:p-6 border-2 border-western-wood transform hover:-rotate-1 duration-300">
+          <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-western-accent/10 flex items-center justify-center flex-shrink-0 border-2 border-dashed border-western-accent">
+            <Shield className="h-7 w-7 md:h-8 md:w-8 text-western-accent" />
           </div>
-          <div>
-            <h2 className="text-2xl font-wanted text-western-accent mb-2 tracking-wide">IMPORTANT NOTICE</h2>
-            <p className="text-western-wood leading-relaxed font-western">The Book of Scams is a community-driven platform. All listings should be supported by evidence, but users are encouraged to conduct their own research. False accusations may have legal consequences. The BOSC token is used solely for platform functionality and does not constitute investment advice.
-
-
-To support this public good, send any tokens to A6X5A7ZSvez8BK82Z5tnZJC3qarGbsxRVv8Hc3DKBiZx.</p>
+          <div className="flex-1">
+            <h2 className="text-xl md:text-2xl font-wanted text-western-accent mb-2 tracking-wide">IMPORTANT NOTICE</h2>
+            <div className={`relative overflow-hidden ${expanded ? 'max-h-none' : 'max-h-24 md:max-h-none'}`}>
+              <p className="text-western-wood leading-relaxed font-western">
+                The Book of Scams is a community-driven platform. All listings should be supported by evidence, but users are encouraged to conduct their own research. False accusations may have legal consequences. The BOSC token is used solely for platform functionality and does not constitute investment advice.
+              </p>
+              {!expanded && (
+                <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-western-parchment/80 to-transparent md:hidden"></div>
+              )}
+            </div>
+            
+            <div className="mt-3 flex flex-col space-y-2">
+              <p className="text-western-wood font-western">
+                To support this public good, send any tokens to:
+              </p>
+              <div className="flex items-center">
+                <button 
+                  onClick={copyToClipboard}
+                  className="flex items-center gap-2 bg-western-sand/20 hover:bg-western-sand/30 text-western-wood py-1.5 px-3 rounded border border-western-wood/30 transition-colors"
+                >
+                  <span className="font-mono text-sm">
+                    {formatWalletAddress(DEVELOPER_WALLET_ADDRESS)}
+                  </span>
+                  {copied ? (
+                    <Check className="h-4 w-4 text-green-600" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+              
+              <button 
+                className="md:hidden flex items-center justify-center text-western-accent font-western border border-western-accent/30 rounded-md px-3 py-1 mt-2 hover:bg-western-accent/10 transition-colors"
+                onClick={toggleExpanded}
+              >
+                {expanded ? (
+                  <>
+                    <span>Show Less</span>
+                    <ChevronUp className="ml-1 h-4 w-4" />
+                  </>
+                ) : (
+                  <>
+                    <span>Read More</span>
+                    <ChevronDown className="ml-1 h-4 w-4" />
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
