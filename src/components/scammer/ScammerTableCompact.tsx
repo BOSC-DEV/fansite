@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -29,27 +28,23 @@ export const ScammerTableCompact = ({
             <TableHead className="text-western-accent font-wanted">Accused Of</TableHead>
             <TableHead className="text-center text-western-accent font-wanted">
               <div className="flex items-center justify-center">
-                <Award className="h-4 w-4 mr-1" /> 
-                <span>Bounty</span>
+                <Award className="h-4 w-4" />
               </div>
             </TableHead>
             <TableHead className="text-center text-western-accent font-wanted">
               <div className="flex items-center justify-center">
-                <ThumbsUp className="h-4 w-4 mr-1" />
-                <span>Likes</span>
+                <ThumbsUp className="h-4 w-4" />
               </div>
             </TableHead>
             <TableHead className="text-center text-western-accent font-wanted">
               <div className="flex items-center justify-center">
-                <Eye className="h-4 w-4 mr-1" />
-                <span>Views</span>
+                <Eye className="h-4 w-4" />
               </div>
             </TableHead>
             <TableHead className="text-right text-western-accent font-wanted">Posted</TableHead>
             <TableHead className="text-center text-western-accent font-wanted">
               <div className="flex items-center justify-center">
-                <User className="h-4 w-4 mr-1" />
-                <span>By</span>
+                <User className="h-4 w-4" />
               </div>
             </TableHead>
           </TableRow>

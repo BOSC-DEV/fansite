@@ -24,8 +24,7 @@ export const ScammerTableHeader = ({ onSort, sortField, sortDirection }: Scammer
           onClick={() => onSort('bountyAmount')}
         >
           <div className="flex items-center justify-center">
-            <Award className="h-4 w-4 mr-1" />
-            <span>Bounty</span>
+            <Award className="h-4 w-4" />
             <ArrowUpDown className={`ml-1 h-4 w-4 ${sortField === 'bountyAmount' ? 'opacity-100' : 'opacity-50'}`} />
           </div>
         </TableHead>
@@ -35,8 +34,7 @@ export const ScammerTableHeader = ({ onSort, sortField, sortDirection }: Scammer
           onClick={() => onSort('likes')}
         >
           <div className="flex items-center justify-center">
-            <ThumbsUp className="h-4 w-4 mr-1" />
-            <span>Likes</span>
+            <ThumbsUp className="h-4 w-4" />
             <ArrowUpDown className={`ml-1 h-4 w-4 ${sortField === 'likes' ? 'opacity-100' : 'opacity-50'}`} />
           </div>
         </TableHead>
@@ -46,8 +44,7 @@ export const ScammerTableHeader = ({ onSort, sortField, sortDirection }: Scammer
           onClick={() => onSort('views')}
         >
           <div className="flex items-center justify-center">
-            <Eye className="h-4 w-4 mr-1" />
-            <span>Views</span>
+            <Eye className="h-4 w-4" />
             <ArrowUpDown className={`ml-1 h-4 w-4 ${sortField === 'views' ? 'opacity-100' : 'opacity-50'}`} />
           </div>
         </TableHead>
@@ -64,8 +61,7 @@ export const ScammerTableHeader = ({ onSort, sortField, sortDirection }: Scammer
         
         <TableHead className="text-center text-western-accent font-wanted">
           <div className="flex items-center justify-center">
-            <User className="h-4 w-4 mr-1" />
-            <span>By</span>
+            <User className="h-4 w-4" />
           </div>
         </TableHead>
       </TableRow>
