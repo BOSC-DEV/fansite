@@ -15,6 +15,10 @@ export function useProfileBasicInfo() {
   const [bio, setBio] = useState("");
   const [bioCharCount, setBioCharCount] = useState(0);
 
+  const handleDisplayNameChange = (newName: string) => {
+    setDisplayName(newName);
+  };
+
   const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
     if (text.length <= 142) {
@@ -29,7 +33,7 @@ export function useProfileBasicInfo() {
       bio,
       bioCharCount,
     },
-    setDisplayName,
+    setDisplayName: handleDisplayNameChange,
     handleBioChange,
     address,
     isConnected,

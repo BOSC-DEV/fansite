@@ -30,48 +30,14 @@ export function UserProfile() {
     checkingUsername
   } = useProfileForm();
 
-  // Track if the form has been edited to prevent automatic data refreshing
-  const [isFormEdited, setIsFormEdited] = useState(false);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Profile form submitted");
     const success = await saveProfile();
     if (success) {
       console.log("Profile saved successfully, navigating back");
-      setIsFormEdited(false); // Reset edit state after successful save
       navigate(-1);
     }
-  };
-
-  const handleDisplayNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsFormEdited(true);
-    setDisplayName(e.target.value);
-  };
-
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsFormEdited(true);
-    setUsername(e.target.value);
-  };
-
-  const handleXLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsFormEdited(true);
-    setXLink(e.target.value);
-  };
-
-  const handleWebsiteLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsFormEdited(true);
-    setWebsiteLink(e.target.value);
-  };
-
-  const handleBioChangeWithEdit = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setIsFormEdited(true);
-    handleBioChange(e);
-  };
-
-  const handleProfilePicChange = (url: string) => {
-    setIsFormEdited(true);
-    setProfilePicUrl(url);
   };
 
   if (!isConnected) {
@@ -102,7 +68,7 @@ export function UserProfile() {
           <ProfilePictureUpload 
             displayName={formData.displayName} 
             profilePicUrl={formData.profilePicUrl} 
-            onProfilePicChange={handleProfilePicChange}
+            onProfilePicChange={setProfilePicUrl}
             userId={address || ""}
           />
           
@@ -115,7 +81,7 @@ export function UserProfile() {
                   id="displayName" 
                   placeholder="Your Name" 
                   value={formData.displayName} 
-                  onChange={handleDisplayNameChange} 
+                  onChange={(e) => setDisplayName(e.target.value)} 
                   required 
                 />
               </div>
@@ -127,7 +93,7 @@ export function UserProfile() {
                     id="username" 
                     placeholder="your_username" 
                     value={formData.username} 
-                    onChange={handleUsernameChange} 
+                    onChange={(e) => setUsername(e.target.value)} 
                     className={`${!usernameAvailable && formData.username ? 'border-red-500' : ''}`}
                     required 
                   />
@@ -156,7 +122,7 @@ export function UserProfile() {
                   id="bio" 
                   placeholder="Short bio about yourself (142 chars max)" 
                   value={formData.bio} 
-                  onChange={handleBioChangeWithEdit} 
+                  onChange={handleBioChange} 
                   maxLength={142} 
                   className="resize-none w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[80px]" 
                 />
@@ -175,7 +141,7 @@ export function UserProfile() {
                   id="xLink" 
                   placeholder="https://x.com/username" 
                   value={formData.xLink} 
-                  onChange={handleXLinkChange} 
+                  onChange={(e) => setXLink(e.target.value)} 
                 />
               </div>
 
@@ -185,7 +151,7 @@ export function UserProfile() {
                   id="websiteLink" 
                   placeholder="https://example.com" 
                   value={formData.websiteLink} 
-                  onChange={handleWebsiteLinkChange} 
+                  onChange={(e) => setWebsiteLink(e.target.value)} 
                 />
               </div>
 

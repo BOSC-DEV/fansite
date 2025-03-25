@@ -30,7 +30,6 @@ export function useProfileForm() {
   const [combinedHasProfile, setCombinedHasProfile] = useState(false);
   const [combinedProfileId, setCombinedProfileId] = useState<string | undefined>(undefined);
   const [previousAddress, setPreviousAddress] = useState<string | null>(null);
-  const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   
   // Fetch profile data
   useEffect(() => {
