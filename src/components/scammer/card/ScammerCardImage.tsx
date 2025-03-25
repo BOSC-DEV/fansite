@@ -1,8 +1,9 @@
 
 import { useState, useEffect } from "react";
-import { AlertCircle, Eye, ThumbsUp, ThumbsDown, MessageSquare } from "lucide-react";
+import { AlertCircle, Eye, ThumbsUp, ThumbsDown, MessageSquare, Share2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface ScammerCardImageProps {
   name: string;
@@ -52,6 +53,20 @@ export function ScammerCardImage({
       // If we're not on a detail page, navigate to the detail page with a hash
       window.location.href = `/scammer/${scammerId}#comments`;
     }
+  };
+
+  const copyShareLink = () => {
+    const shareUrl = `${window.location.origin}/scammer/${scammerId}`;
+    navigator.clipboard.writeText(shareUrl)
+      .then(() => {
+        toast.success("Link copied to clipboard", {
+          description: "Share this scammer with others"
+        });
+      })
+      .catch((error) => {
+        console.error("Failed to copy link:", error);
+        toast.error("Failed to copy link");
+      });
   };
 
   // Ensure image has absolute URL for social sharing
@@ -110,6 +125,15 @@ export function ScammerCardImage({
           <MessageSquare className="h-3 w-3 mr-1" />
           <span>{comments}</span>
         </div>
+        {scammerId && (
+          <div 
+            className="flex items-center bg-black/60 text-white py-1 px-2 rounded-full text-xs cursor-pointer hover:bg-black/80"
+            onClick={copyShareLink}
+            title="Copy share link"
+          >
+            <Share2 className="h-3 w-3" />
+          </div>
+        )}
       </div>
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
         <div className="flex justify-between items-center">

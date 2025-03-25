@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { ThumbsUp, ThumbsDown, Eye, MessageSquare } from "lucide-react";
+import { ThumbsUp, ThumbsDown, Eye, MessageSquare, Share2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface ScammerInteractionButtonsProps {
   likes: number;
@@ -12,6 +13,7 @@ interface ScammerInteractionButtonsProps {
   isDisliked: boolean;
   onLike: () => void;
   onDislike: () => void;
+  scammerId: string;
 }
 
 export function ScammerInteractionButtons({ 
@@ -22,13 +24,28 @@ export function ScammerInteractionButtons({
   isLiked, 
   isDisliked,
   onLike,
-  onDislike
+  onDislike,
+  scammerId
 }: ScammerInteractionButtonsProps) {
   const scrollToComments = () => {
     const commentsSection = document.querySelector('.comments-section');
     if (commentsSection) {
       commentsSection.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const copyShareLink = () => {
+    const shareUrl = `${window.location.origin}/scammer/${scammerId}`;
+    navigator.clipboard.writeText(shareUrl)
+      .then(() => {
+        toast.success("Link copied to clipboard", {
+          description: "Share this scammer with others"
+        });
+      })
+      .catch((error) => {
+        console.error("Failed to copy link:", error);
+        toast.error("Failed to copy link");
+      });
   };
 
   return (
@@ -74,6 +91,18 @@ export function ScammerInteractionButtons({
           <MessageSquare className="h-5 w-5" />
         </Button>
         <span className="text-sm ml-1 text-western-wood/70">{comments}</span>
+      </div>
+      
+      <div className="flex items-center">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-8 w-8 rounded-full p-0 text-western-wood/60 hover:text-western-wood/80 hover:bg-western-sand/30"
+          onClick={copyShareLink}
+          title="Copy share link"
+        >
+          <Share2 className="h-5 w-5" />
+        </Button>
       </div>
     </div>
   );

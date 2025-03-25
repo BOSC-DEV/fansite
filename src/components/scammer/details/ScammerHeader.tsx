@@ -97,6 +97,7 @@ export function ScammerHeader({
           isDisliked={isDisliked}
           onLike={onLike}
           onDislike={onDislike}
+          scammerId={scammerId}
         />
         
         {isCreator && (
