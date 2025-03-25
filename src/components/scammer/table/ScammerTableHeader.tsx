@@ -1,6 +1,6 @@
 
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowUpDown, Eye, ThumbsUp, User } from "lucide-react";
+import { ArrowUpDown, Award, Eye, MessageSquare, ThumbsUp, User } from "lucide-react";
 import { ScammerSortField, SortDirection } from "@/hooks/useSortableScammers";
 
 interface ScammerTableHeaderProps {
@@ -24,6 +24,7 @@ export const ScammerTableHeader = ({ onSort, sortField, sortDirection }: Scammer
           onClick={() => onSort('bountyAmount')}
         >
           <div className="flex items-center justify-center">
+            <Award className="h-4 w-4 mr-1" />
             <span>Bounty</span>
             <ArrowUpDown className={`ml-1 h-4 w-4 ${sortField === 'bountyAmount' ? 'opacity-100' : 'opacity-50'}`} />
           </div>

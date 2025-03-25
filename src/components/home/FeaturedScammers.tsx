@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Scammer } from "@/lib/types";
-import { ArrowRight, Award, Eye, MessageSquare, ThumbsUp } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
 import { useWallet } from "@/context/WalletContext";
 import { scammerService } from "@/services/storage";
@@ -51,33 +51,11 @@ export const FeaturedScammers = ({ limit = 10 }: { limit?: number }) => {
               <p className="text-muted-foreground">Loading scammers...</p>
             </div>
           ) : limitedScammers.length > 0 ? (
-            <>
-              <ScammerTableCompact 
-                scammers={limitedScammers}
-                formatCurrency={formatCurrency}
-                formatDate={formatDate}
-              />
-              <div className="p-4 border-t border-western-wood/20 bg-western-sand/20 flex justify-end items-center text-sm text-western-wood">
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center">
-                    <Award className="h-4 w-4 mr-1 text-western-accent" />
-                    <span>Bounty</span>
-                  </div>
-                  <div className="flex items-center">
-                    <ThumbsUp className="h-4 w-4 mr-1 text-western-accent" />
-                    <span>Likes</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Eye className="h-4 w-4 mr-1 text-western-accent" />
-                    <span>Views</span>
-                  </div>
-                  <div className="flex items-center">
-                    <MessageSquare className="h-4 w-4 mr-1 text-western-accent" />
-                    <span>Comments</span>
-                  </div>
-                </div>
-              </div>
-            </>
+            <ScammerTableCompact 
+              scammers={limitedScammers}
+              formatCurrency={formatCurrency}
+              formatDate={formatDate}
+            />
           ) : (
             <div className="p-6 text-center">
               <p className="text-muted-foreground">No scammers have been reported yet.</p>

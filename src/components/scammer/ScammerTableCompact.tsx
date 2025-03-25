@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Award, Eye, LinkIcon, MessageSquare, ThumbsUp, User } from "lucide-react";
 import { Scammer } from "@/lib/types";
 import { useScammerProfile } from "@/hooks/useScammerProfile";
+import { storageService } from "@/services/storage/localStorageService";
 
 interface ScammerTableCompactProps {
   scammers: Scammer[];
@@ -28,17 +29,17 @@ export const ScammerTableCompact = ({
             <TableHead className="text-western-accent font-wanted">Accused Of</TableHead>
             <TableHead className="text-center text-western-accent font-wanted">
               <div className="flex items-center justify-center">
-                <Award className="h-4 w-4 mr-1" />
+                <Award className="h-4 w-4 mr-1" /> 
                 <span>Bounty</span>
               </div>
             </TableHead>
-            <TableHead className="text-center hidden md:table-cell text-western-accent font-wanted">
+            <TableHead className="text-center text-western-accent font-wanted">
               <div className="flex items-center justify-center">
                 <ThumbsUp className="h-4 w-4 mr-1" />
                 <span>Likes</span>
               </div>
             </TableHead>
-            <TableHead className="text-center hidden md:table-cell text-western-accent font-wanted">
+            <TableHead className="text-center text-western-accent font-wanted">
               <div className="flex items-center justify-center">
                 <Eye className="h-4 w-4 mr-1" />
                 <span>Views</span>
@@ -59,6 +60,8 @@ export const ScammerTableCompact = ({
             const aliases = Array.isArray(scammer.aliases) ? scammer.aliases : [];
             // Ensure links is always an array
             const links = Array.isArray(scammer.links) ? scammer.links : [];
+            // Get comments count
+            const commentsCount = storageService.getCommentsForScammer(scammer.id).length;
             
             return (
               <TableRow key={scammer.id} className="border-b border-western-wood/20 hover:bg-western-sand/10">
@@ -115,10 +118,10 @@ export const ScammerTableCompact = ({
                 <TableCell className="text-center font-medium">
                   <span className="text-western-accent font-wanted">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
                 </TableCell>
-                <TableCell className="text-center hidden md:table-cell">
+                <TableCell className="text-center">
                   {scammer.likes || 0}
                 </TableCell>
-                <TableCell className="text-center hidden md:table-cell">
+                <TableCell className="text-center">
                   {scammer.views || 0}
                 </TableCell>
                 <TableCell className="text-right text-western-wood/90 text-sm">

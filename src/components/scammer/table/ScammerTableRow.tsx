@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { LinkIcon } from "lucide-react";
 import { UploaderAvatar } from "./UploaderAvatar";
+import { storageService } from "@/services/storage/localStorageService";
 
 interface ScammerTableRowProps {
   scammer: Scammer;
@@ -28,6 +29,8 @@ export const ScammerTableRow = ({
   const aliases = Array.isArray(scammer.aliases) ? scammer.aliases : [];
   // Ensure links is always an array
   const links = Array.isArray(scammer.links) ? scammer.links : [];
+  // Get comments count
+  const commentsCount = storageService.getCommentsForScammer(scammer.id).length;
   
   return (
     <TableRow className="border-b border-western-wood/20 hover:bg-western-sand/10">
