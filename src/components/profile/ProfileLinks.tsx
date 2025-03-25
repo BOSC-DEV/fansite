@@ -12,16 +12,16 @@ export function ProfileLinks({ xLink, websiteLink }: ProfileLinksProps) {
   if (!xLink && !websiteLink) return null;
   
   return (
-    <div className="flex gap-2 mt-2">
+    <div className="flex gap-2">
       {xLink && (
         <Button
           variant="outline"
           size="sm"
-          className="h-9 w-9 p-0"
+          className="h-8 w-8 p-0 bg-western-sand/20 border-western-wood/20 hover:bg-western-sand/40"
           asChild
         >
           <a href={xLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
-            <Twitter size={20} className="text-muted-foreground" />
+            <Twitter size={16} className="text-western-wood" />
           </a>
         </Button>
       )}
@@ -30,11 +30,11 @@ export function ProfileLinks({ xLink, websiteLink }: ProfileLinksProps) {
         <Button
           variant="outline"
           size="sm"
-          className="h-9 w-9 p-0"
+          className="h-8 w-8 p-0 bg-western-sand/20 border-western-wood/20 hover:bg-western-sand/40"
           asChild
         >
           <a href={websiteLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
-            <Globe size={20} className="text-muted-foreground" />
+            <Globe size={16} className="text-western-wood" />
           </a>
         </Button>
       )}

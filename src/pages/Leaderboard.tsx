@@ -34,18 +34,20 @@ export default function Leaderboard() {
     <div className="min-h-screen flex flex-col bg-western-dark paper-texture">
       <Header />
       <main className="flex-1 container mx-auto max-w-6xl px-4 py-20">
-        <PageHeader
-          title="Bounty Hunter Leaderboard"
-          description="Top scam-fighting heroes ranked by join date (oldest first)"
-          actionIcon={<Trophy className="h-5 w-5 mr-1" />}
-        />
+        <div className="mt-8 mb-12">
+          <PageHeader
+            title="Leaderboards"
+            description="The leaderboard will be ordered by total bounty generated once the bounty payment system is live. In the meantime, it's organised chronologically."
+            actionIcon={<Trophy className="h-5 w-5 mr-1" />}
+          />
+        </div>
 
         {error ? (
           <div className="p-8 text-center">
             <p className="text-red-500">{error}</p>
           </div>
         ) : (
-          <div className="wanted-poster-border paper-texture p-6 rounded-sm mt-8">
+          <div className="wanted-poster-border paper-texture p-6 rounded-sm">
             <LeaderboardTable users={leaderboardUsers} isLoading={isLoading} />
           </div>
         )}

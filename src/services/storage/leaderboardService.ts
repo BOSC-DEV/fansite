@@ -15,6 +15,8 @@ export interface LeaderboardUser {
   totalComments: number;
   totalBounty: number;
   createdAt: string;
+  xLink?: string;
+  websiteLink?: string;
 }
 
 export class LeaderboardService extends BaseSupabaseService {
@@ -31,7 +33,9 @@ export class LeaderboardService extends BaseSupabaseService {
           display_name,
           username,
           profile_pic_url,
-          created_at
+          created_at,
+          x_link,
+          website_link
         `)
         .order('created_at', { ascending: true });
 
@@ -92,7 +96,9 @@ export class LeaderboardService extends BaseSupabaseService {
           totalViews: totalViews,
           totalComments: totalComments,
           totalBounty: 0, // Keep at 0 until bounty system is ready
-          createdAt: profile.created_at
+          createdAt: profile.created_at,
+          xLink: profile.x_link || undefined,
+          websiteLink: profile.website_link || undefined
         };
       });
     } catch (error) {
