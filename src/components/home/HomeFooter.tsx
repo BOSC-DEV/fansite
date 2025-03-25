@@ -47,7 +47,6 @@ export const HomeFooter = () => {
         </div>
 
         <div className="mt-4 pt-4 border-t border-western-wood/20 text-center">
-          <p className="mb-2 text-sm text-western-wood font-western">BOSC is a public good. To support it, send any token to our multi-sig</p>
           <button 
             onClick={copyToClipboard}
             className="flex items-center mx-auto bg-western-wood/10 py-1 px-3 rounded text-western-wood hover:bg-western-sand/20 transition-colors"

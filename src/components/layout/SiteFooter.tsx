@@ -48,7 +48,6 @@ export const SiteFooter = () => {
         
         <div className="border-t border-western-wood/20 pt-4 text-center">
           <div className="text-sm text-western-parchment/80 max-w-2xl mx-auto">
-            <p className="mb-2 font-wanted">BOSC is a public good. To support it, send any token to our multi-sig</p>
             <div className="flex items-center justify-center space-x-2">
               <button 
                 onClick={copyToClipboard}

@@ -44,9 +44,6 @@ export const WarningSection = () => {
             </div>
             
             <div className="mt-3 flex flex-col space-y-2">
-              <p className="text-western-wood font-western">
-                To support this public good, send any tokens to:
-              </p>
               <div className="flex items-center">
                 <button 
                   onClick={copyToClipboard}
