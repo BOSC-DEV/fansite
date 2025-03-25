@@ -47,20 +47,18 @@ export const HomeFooter = () => {
         </div>
 
         <div className="mt-4 pt-4 border-t border-western-wood/20 text-center">
-          <div className="flex items-center justify-center gap-2">
-            <span className="text-sm text-western-wood font-western">To support this public good, send tokens to:</span>
-            <button 
-              onClick={copyToClipboard}
-              className="flex items-center mx-auto bg-western-wood/10 py-1 px-3 rounded text-western-wood hover:bg-western-sand/20 transition-colors"
-            >
-              <span className="font-mono text-sm">{formatWalletAddress(DEVELOPER_WALLET_ADDRESS)}</span>
-              {copied ? (
-                <Check className="h-4 w-4 ml-2 text-green-600" />
-              ) : (
-                <Copy className="h-4 w-4 ml-2" />
-              )}
-            </button>
-          </div>
+          <button 
+            onClick={copyToClipboard}
+            className="flex items-center mx-auto bg-western-wood/10 py-2 px-4 rounded text-western-wood hover:bg-western-sand/20 transition-colors"
+          >
+            <span className="font-western mr-2">To support this public good, send tokens to:</span>
+            <span className="font-mono text-sm">{formatWalletAddress(DEVELOPER_WALLET_ADDRESS)}</span>
+            {copied ? (
+              <Check className="h-4 w-4 ml-2 text-green-600" />
+            ) : (
+              <Copy className="h-4 w-4 ml-2" />
+            )}
+          </button>
         </div>
       </div>
     </footer>

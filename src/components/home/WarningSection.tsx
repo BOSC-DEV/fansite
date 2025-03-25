@@ -36,22 +36,20 @@ export const WarningSection = () => {
             </div>
             
             <div className="mt-3 flex flex-col space-y-2">
-              <div className="flex items-center">
-                <span className="text-sm text-western-wood mr-2 font-western">To support this public good, send tokens to:</span>
-                <button 
-                  onClick={copyToClipboard}
-                  className="flex items-center gap-2 bg-western-sand/20 hover:bg-western-sand/30 text-western-wood py-1.5 px-3 rounded border border-western-wood/30 transition-colors"
-                >
-                  <span className="font-mono text-sm">
-                    {formatWalletAddress(DEVELOPER_WALLET_ADDRESS)}
-                  </span>
-                  {copied ? (
-                    <Check className="h-4 w-4 text-green-600" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </button>
-              </div>
+              <button 
+                onClick={copyToClipboard}
+                className="flex items-center gap-2 bg-western-sand/20 hover:bg-western-sand/30 text-western-wood py-2 px-4 rounded border border-western-wood/30 transition-colors max-w-fit"
+              >
+                <span className="font-western">To support this public good, send tokens to:</span>
+                <span className="font-mono text-sm">
+                  {formatWalletAddress(DEVELOPER_WALLET_ADDRESS)}
+                </span>
+                {copied ? (
+                  <Check className="h-4 w-4 text-green-600" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )}
+              </button>
             </div>
           </div>
         </div>

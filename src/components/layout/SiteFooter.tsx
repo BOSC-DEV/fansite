@@ -48,28 +48,26 @@ export const SiteFooter = () => {
         
         <div className="border-t border-western-wood/20 pt-4 text-center">
           <div className="text-sm text-western-parchment/80 max-w-2xl mx-auto">
-            <div className="flex items-center justify-center space-x-2">
-              <span className="text-sm text-western-parchment/80 font-western">To support this public good, send tokens to:</span>
-              <button 
-                onClick={copyToClipboard}
-                className="flex items-center bg-western-wood/10 py-1 px-3 rounded text-western-parchment hover:bg-western-wood/20 transition-colors"
-              >
-                <span className="font-mono">{formatWalletAddress(DEVELOPER_WALLET_ADDRESS)}</span>
-                {copied ? (
-                  <Check className="h-4 w-4 ml-2 text-green-400" />
-                ) : (
-                  <Copy className="h-4 w-4 ml-2" />
-                )}
-              </button>
+            <button 
+              onClick={copyToClipboard}
+              className="flex items-center justify-center mx-auto bg-western-wood/10 py-2 px-4 rounded text-western-parchment hover:bg-western-wood/20 transition-colors"
+            >
+              <span className="font-western mr-2">To support this public good, send tokens to:</span>
+              <span className="font-mono">{formatWalletAddress(DEVELOPER_WALLET_ADDRESS)}</span>
+              {copied ? (
+                <Check className="h-4 w-4 ml-2 text-green-400" />
+              ) : (
+                <Copy className="h-4 w-4 ml-2" />
+              )}
               <a 
                 href={`https://solscan.io/account/${DEVELOPER_WALLET_ADDRESS}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-western-sand hover:text-western-accent"
+                className="text-western-sand hover:text-western-accent ml-2"
               >
                 <ExternalLink className="h-4 w-4" />
               </a>
-            </div>
+            </button>
           </div>
         </div>
       </div>
