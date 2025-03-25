@@ -88,6 +88,7 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ users, isLoa
           <TableRow className="border-b border-western-accent/30">
             <TableHead className="w-12 text-center text-western-accent font-wanted">Rank</TableHead>
             <TableHead className="text-left text-western-accent font-wanted">Hunter</TableHead>
+            <TableHead className="text-center text-western-accent font-wanted">Socials</TableHead>
             <TableHead 
               className="text-center hidden md:table-cell text-western-accent font-wanted cursor-pointer"
               onClick={() => handleSort('totalReports')}
@@ -124,7 +125,6 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ users, isLoa
                 <ArrowUpDown className="ml-1 h-4 w-4" />
               </div>
             </TableHead>
-            <TableHead className="text-center text-western-accent font-wanted">Socials</TableHead>
             <TableHead className="text-center text-western-accent font-wanted">Total Bounty</TableHead>
           </TableRow>
         </TableHeader>
@@ -151,15 +151,15 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ users, isLoa
                     </div>
                   </Link>
                 </TableCell>
-                <TableCell className="text-center hidden md:table-cell">{user.totalReports}</TableCell>
-                <TableCell className="text-center hidden md:table-cell">{user.totalLikes}</TableCell>
-                <TableCell className="text-center hidden md:table-cell">{user.totalViews}</TableCell>
-                <TableCell className="text-center hidden md:table-cell">{user.totalComments}</TableCell>
                 <TableCell className="text-center">
                   <div className="flex justify-center">
                     <ProfileLinks xLink={user.xLink} websiteLink={user.websiteLink} />
                   </div>
                 </TableCell>
+                <TableCell className="text-center hidden md:table-cell">{user.totalReports}</TableCell>
+                <TableCell className="text-center hidden md:table-cell">{user.totalLikes}</TableCell>
+                <TableCell className="text-center hidden md:table-cell">{user.totalViews}</TableCell>
+                <TableCell className="text-center hidden md:table-cell">{user.totalComments}</TableCell>
                 <TableCell className="text-center font-bold text-western-accent">
                   {formatCurrency(user.totalBounty)} BOSC
                 </TableCell>
@@ -179,11 +179,11 @@ const LeaderboardTableSkeleton = () => {
         <TableRow className="border-b border-western-accent/30">
           <TableHead className="w-12 text-center text-western-accent font-wanted">Rank</TableHead>
           <TableHead className="text-left text-western-accent font-wanted">Hunter</TableHead>
+          <TableHead className="text-center text-western-accent font-wanted">Socials</TableHead>
           <TableHead className="text-center hidden md:table-cell text-western-accent font-wanted">Reports</TableHead>
           <TableHead className="text-center hidden md:table-cell text-western-accent font-wanted">Likes</TableHead>
           <TableHead className="text-center hidden md:table-cell text-western-accent font-wanted">Views</TableHead>
           <TableHead className="text-center hidden md:table-cell text-western-accent font-wanted">Comments</TableHead>
-          <TableHead className="text-center text-western-accent font-wanted">Socials</TableHead>
           <TableHead className="text-center text-western-accent font-wanted">Total Bounty</TableHead>
         </TableRow>
       </TableHeader>
@@ -202,6 +202,9 @@ const LeaderboardTableSkeleton = () => {
                 </div>
               </div>
             </TableCell>
+            <TableCell className="text-center">
+              <Skeleton className="h-4 w-16 mx-auto" />
+            </TableCell>
             <TableCell className="text-center hidden md:table-cell">
               <Skeleton className="h-4 w-8 mx-auto" />
             </TableCell>
@@ -217,12 +220,10 @@ const LeaderboardTableSkeleton = () => {
             <TableCell className="text-center">
               <Skeleton className="h-4 w-16 mx-auto" />
             </TableCell>
-            <TableCell className="text-center">
-              <Skeleton className="h-4 w-16 mx-auto" />
-            </TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
   );
 };
+
