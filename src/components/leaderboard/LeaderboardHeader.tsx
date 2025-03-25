@@ -15,7 +15,7 @@ export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({ onSort }) 
       <TableRow className="border-b border-western-accent/30">
         <TableHead className="w-12 text-center text-western-accent font-wanted">Rank</TableHead>
         <TableHead className="text-left text-western-accent font-wanted">Hunter</TableHead>
-        <TableHead className="text-center text-western-accent font-wanted">Socials</TableHead>
+        <TableHead className="text-center text-western-accent font-wanted">Links</TableHead>
         <TableHead 
           className="text-center hidden md:table-cell text-western-accent font-wanted cursor-pointer"
           onClick={() => onSort('totalReports')}
