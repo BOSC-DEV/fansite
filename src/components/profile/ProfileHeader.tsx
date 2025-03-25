@@ -59,7 +59,7 @@ export function ProfileHeader({ profile, scammersCount }: ProfileHeaderProps) {
             variant="outline" 
             size="sm" 
             asChild
-            className="flex items-center gap-1 bg-western-sand/40 border-western-sand/20 text-western-wood hover:bg-western-sand/60 transition-colors"
+            className="flex items-center gap-1 bg-western-sand/40 border-western-sand/20 text-western-wood hover:bg-western-wood hover:text-western-parchment transition-colors"
           >
             <Link to="/profile">
               <Pencil className="h-4 w-4" />
@@ -71,7 +71,7 @@ export function ProfileHeader({ profile, scammersCount }: ProfileHeaderProps) {
             variant="outline" 
             size="sm" 
             onClick={handleLogout}
-            className="flex items-center gap-1 bg-western-sand/40 border-western-sand/20 text-western-wood hover:bg-western-sand/60 transition-colors"
+            className="flex items-center gap-1 bg-western-sand/40 border-western-sand/20 text-western-wood hover:bg-western-wood hover:text-western-parchment transition-colors"
           >
             <LogOut className="h-4 w-4" />
             Log Out

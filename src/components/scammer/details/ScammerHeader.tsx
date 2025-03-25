@@ -105,7 +105,7 @@ export function ScammerHeader({
               variant="outline" 
               size="sm"
               asChild
-              className="bg-western-sand/30 border-western-sand/20 text-western-wood/80 hover:bg-western-sand/50 hover:text-western-wood transition-colors"
+              className="bg-western-sand/30 border-western-sand/20 text-western-wood/80 hover:bg-western-wood hover:text-western-parchment transition-colors"
             >
               <Link to={`/edit-listing/${scammerId}`}>
                 <Edit className="h-4 w-4 mr-1" />
@@ -118,7 +118,7 @@ export function ScammerHeader({
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="bg-western-sand/30 border-western-sand/20 text-western-wood/80 hover:bg-red-500/20 hover:text-red-600 hover:border-red-500/30 transition-colors"
+                  className="bg-western-sand/30 border-western-sand/20 text-western-wood/80 hover:bg-red-500 hover:text-white hover:border-red-500/30 transition-colors"
                 >
                   <Trash2 className="h-4 w-4 mr-1" />
                   Archive
