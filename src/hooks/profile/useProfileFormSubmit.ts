@@ -84,11 +84,13 @@ export function useProfileFormSubmit() {
     usernameAvailable: boolean,
     urlValidation: FormValidation
   ) => {
-    if (!validateForm(formData, usernameAvailable, urlValidation)) return false;
-    if (!address) {
-      toast.error("Wallet not connected");
+    // Security check: Only allow save if wallet is connected
+    if (!isConnected || !address) {
+      toast.error("Wallet not connected. Authentication required to save profile.");
       return false;
     }
+
+    if (!validateForm(formData, usernameAvailable, urlValidation)) return false;
 
     setIsSubmitting(true);
     console.log("[useProfileFormSubmit] Starting profile save for address:", address);
