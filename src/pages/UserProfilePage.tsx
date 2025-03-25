@@ -11,7 +11,8 @@ import { ReportsTab } from "@/components/profile/tabs/ReportsTab";
 import { InfoTab } from "@/components/profile/tabs/InfoTab";
 import { ActivityTab } from "@/components/profile/tabs/ActivityTab";
 import { CommentsTab } from "@/components/profile/tabs/CommentsTab";
-import { BookOpen, User, Heart, MessageSquare } from "lucide-react";
+import { BountiesTab } from "@/components/profile/tabs/BountiesTab";
+import { BookOpen, User, Heart, MessageSquare, Coins } from "lucide-react";
 
 export function UserProfilePage() {
   const { username } = useParams<{ username: string }>();
@@ -32,10 +33,14 @@ export function UserProfilePage() {
             
             {/* Tabs Section */}
             <Tabs defaultValue="reports" value={activeTab} onValueChange={setActiveTab} className="mb-8">
-              <TabsList className="grid grid-cols-4 w-full max-w-md mx-auto bg-western-parchment/10">
+              <TabsList className="grid grid-cols-5 w-full max-w-md mx-auto bg-western-parchment/10">
                 <TabsTrigger value="reports" className="flex items-center gap-2">
                   <BookOpen className="h-4 w-4" />
                   <span className="hidden sm:inline">Reports</span>
+                </TabsTrigger>
+                <TabsTrigger value="bounties" className="flex items-center gap-2">
+                  <Coins className="h-4 w-4" />
+                  <span className="hidden sm:inline">Bounties</span>
                 </TabsTrigger>
                 <TabsTrigger value="info" className="flex items-center gap-2">
                   <User className="h-4 w-4" />
@@ -53,6 +58,10 @@ export function UserProfilePage() {
               
               <TabsContent value="reports" className="mt-6">
                 <ReportsTab scammers={scammers} />
+              </TabsContent>
+              
+              <TabsContent value="bounties" className="mt-6">
+                <BountiesTab />
               </TabsContent>
               
               <TabsContent value="info" className="mt-6">
