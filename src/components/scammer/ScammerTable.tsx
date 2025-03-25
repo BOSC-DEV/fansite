@@ -51,14 +51,14 @@ export const ScammerTable = ({
             <TableHead className="text-western-accent font-wanted">Socials</TableHead>
             <TableHead className="text-western-accent font-wanted">Crimes</TableHead>
             <TableHead className="text-center text-western-accent font-wanted">Aliases</TableHead>
+            <TableHead className="text-center text-western-accent font-wanted">Bounty</TableHead>
+            <TableHead className="text-right text-western-accent font-wanted">Posted</TableHead>
             <TableHead className="text-center text-western-accent font-wanted">
               <div className="flex items-center justify-center">
                 <User className="h-4 w-4 mr-1" />
                 <span>By</span>
               </div>
             </TableHead>
-            <TableHead className="text-center text-western-accent font-wanted">Bounty</TableHead>
-            <TableHead className="text-right text-western-accent font-wanted">Posted</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -128,9 +128,6 @@ export const ScammerTable = ({
                     <span className="text-western-wood/50 text-sm">-</span>
                   )}
                 </TableCell>
-                <TableCell className="text-center">
-                  <UploaderAvatar addedBy={scammer.addedBy} />
-                </TableCell>
                 <TableCell className="text-center font-medium">
                   <div className="flex items-center justify-center">
                     <span className="text-western-accent font-wanted">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
@@ -138,6 +135,9 @@ export const ScammerTable = ({
                 </TableCell>
                 <TableCell className="text-right text-western-wood/90 text-sm">
                   {formatDate(scammer.dateAdded)}
+                </TableCell>
+                <TableCell className="text-center">
+                  <UploaderAvatar addedBy={scammer.addedBy} />
                 </TableCell>
               </TableRow>
             );

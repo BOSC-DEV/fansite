@@ -32,12 +32,6 @@ export const ScammerTableCompact = ({
                 <span>Bounty</span>
               </div>
             </TableHead>
-            <TableHead className="text-center text-western-accent font-wanted">
-              <div className="flex items-center justify-center">
-                <User className="h-4 w-4 mr-1" />
-                <span>By</span>
-              </div>
-            </TableHead>
             <TableHead className="text-center hidden md:table-cell text-western-accent font-wanted">
               <div className="flex items-center justify-center">
                 <ThumbsUp className="h-4 w-4 mr-1" />
@@ -51,6 +45,12 @@ export const ScammerTableCompact = ({
               </div>
             </TableHead>
             <TableHead className="text-right text-western-accent font-wanted">Posted</TableHead>
+            <TableHead className="text-center text-western-accent font-wanted">
+              <div className="flex items-center justify-center">
+                <User className="h-4 w-4 mr-1" />
+                <span>By</span>
+              </div>
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -115,9 +115,6 @@ export const ScammerTableCompact = ({
                 <TableCell className="text-center font-medium">
                   <span className="text-western-accent font-wanted">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
                 </TableCell>
-                <TableCell className="text-center">
-                  <UploaderAvatar addedBy={scammer.addedBy} />
-                </TableCell>
                 <TableCell className="text-center hidden md:table-cell">
                   {scammer.likes || 0}
                 </TableCell>
@@ -126,6 +123,9 @@ export const ScammerTableCompact = ({
                 </TableCell>
                 <TableCell className="text-right text-western-wood/90 text-sm">
                   {formatDate(scammer.dateAdded)}
+                </TableCell>
+                <TableCell className="text-center">
+                  <UploaderAvatar addedBy={scammer.addedBy} />
                 </TableCell>
               </TableRow>
             );
