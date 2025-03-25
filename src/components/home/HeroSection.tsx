@@ -10,7 +10,7 @@ export const HeroSection = () => {
           <div className="space-y-4 md:space-y-6 md:pr-8 animate-fade-in">
             <h1 className="font-wanted uppercase tracking-wide wanted-poster mx-0 my-0 py-[20px] px-0 text-western-accent">
               <span className="block text-5xl md:text-6xl lg:text-7xl">BOOK OF</span>
-              <span className="block text-6xl md:text-7xl lg:text-8xl -mt-2">SCAMS</span>
+              <span className="block text-[4.2rem] md:text-[4.9rem] lg:text-[5.6rem] -mt-2">SCAMS</span>
             </h1>
             
             <p className="sm:text-xl text-western-wood max-w-lg font-western text-xl">Book of Scams is a decentralised criminal registry bringing accountability and justice to The Wild West of crypto.</p>
