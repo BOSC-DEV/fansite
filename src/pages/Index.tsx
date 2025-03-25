@@ -7,6 +7,7 @@ import { FeaturedScammers } from "@/components/home/FeaturedScammers";
 import { HowItWorksSection } from "@/components/home/HowItWorksSection";
 import { WarningSection } from "@/components/home/WarningSection";
 import { HomeFooter } from "@/components/home/HomeFooter";
+import { Helmet } from "react-helmet-async";
 
 const Index = () => {
   const { isConnected } = useWallet();
@@ -23,6 +24,17 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col old-paper cowboy-pattern">
+      <Helmet>
+        <title>BOSC - Book of Scams</title>
+        <meta name="description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
+        <meta property="og:title" content="BOSC - Book of Scams" />
+        <meta property="og:description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
+        <meta property="og:image" content="/og-image.png" />
+        <meta property="twitter:title" content="BOSC - Book of Scams" />
+        <meta property="twitter:description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
+        <meta property="twitter:image" content="/og-image.png" />
+      </Helmet>
+      
       <div className="dust-swirl"></div>
       <div className="absolute inset-0 pointer-events-none opacity-10 bg-repeat" 
            style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%238B4513' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }}></div>

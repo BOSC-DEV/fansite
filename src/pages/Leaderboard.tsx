@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect, useCallback } from "react";
+import { Helmet } from "react-helmet-async";
 import { Header } from "@/components/Header";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -59,6 +60,15 @@ export default function Leaderboard() {
 
   return (
     <div className="min-h-screen flex flex-col bg-western-dark paper-texture">
+      <Helmet>
+        <title>BOSC Leaderboard - Book of Scams</title>
+        <meta name="description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
+        <meta property="og:title" content="BOSC Leaderboard - Book of Scams" />
+        <meta property="og:description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
+        <meta property="twitter:title" content="BOSC Leaderboard - Book of Scams" />
+        <meta property="twitter:description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
+      </Helmet>
+      
       <Header />
       <main className="flex-1 container mx-auto max-w-6xl px-4 py-20">
         <div className="mt-8 mb-12">
