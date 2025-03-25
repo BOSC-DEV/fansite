@@ -35,7 +35,8 @@ function App() {
               <Route path="/user/:walletAddress" element={<UserProfilePage />} />
               <Route path="/my-reports" element={<MyReportsPage />} />
               <Route path="/my-bounties" element={<MyBountiesPage />} />
-              <Route path="*" element={<NotFound />} />
+              <Route path="/not-found" element={<NotFound />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
             <Toaster />
             <Sonner />
