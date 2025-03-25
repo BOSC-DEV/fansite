@@ -1,6 +1,5 @@
 
 import React from "react";
-import { CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ProfileFormHeaderProps {
   hasProfile: boolean;
@@ -9,13 +8,13 @@ interface ProfileFormHeaderProps {
 
 export function ProfileFormHeader({ hasProfile, address }: ProfileFormHeaderProps) {
   return (
-    <CardHeader>
-      <CardTitle>{hasProfile ? "Update Your Profile" : "Create Your Profile"}</CardTitle>
+    <div className="px-6 pt-6 pb-2">
+      <h2 className="text-2xl font-bold mb-1">{hasProfile ? "Update Your Profile" : "Create Your Profile"}</h2>
       {address && (
         <p className="text-sm text-muted-foreground">
           Wallet: {address}
         </p>
       )}
-    </CardHeader>
+    </div>
   );
 }

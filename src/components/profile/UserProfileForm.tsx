@@ -1,6 +1,5 @@
 
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { ProfilePictureUpload } from "./ProfilePictureUpload";
 import { BasicInfoForm } from "./BasicInfoForm";
 import { SocialLinksForm } from "./SocialLinksForm";
@@ -53,11 +52,11 @@ export function UserProfileForm({
   };
 
   return (
-    <form onSubmit={onSubmit}>
-      <Card className="max-w-md mx-auto">
+    <form onSubmit={onSubmit} className="max-w-md mx-auto">
+      <div className="bg-background border border-western-sand/20 rounded-lg shadow-sm overflow-hidden">
         <ProfileFormHeader hasProfile={hasProfile} address={address} />
         
-        <CardContent className="space-y-4">
+        <div className="p-6 space-y-4">
           <ProfilePictureUpload 
             displayName={formData.displayName} 
             profilePicUrl={formData.profilePicUrl} 
@@ -89,14 +88,14 @@ export function UserProfileForm({
               onWebsiteLinkChange={setWebsiteLink}
             />
           </div>
-        </CardContent>
+        </div>
         
         <ProfileFormFooter 
           isSubmitting={isSubmitting} 
           hasProfile={hasProfile}
           usernameAvailable={usernameAvailable}
         />
-      </Card>
+      </div>
     </form>
   );
 }
