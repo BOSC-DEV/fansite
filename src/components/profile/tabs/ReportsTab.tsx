@@ -24,7 +24,10 @@ export function ReportsTab({ scammers }: ReportsTabProps) {
         <div className="text-center py-12 bg-western-parchment/5 rounded-lg">
           <p className="text-western-sand mb-4">No scammer reports yet</p>
           <Link to="/create-listing">
-            <Button variant="outline" className="border-western-wood text-western-accent hover:bg-western-sand/20">
+            <Button 
+              variant="outline" 
+              className="border-western-wood text-western-accent hover:bg-western-wood/20 hover:text-western-parchment hover:border-western-accent"
+            >
               Report a Scammer
               <ExternalLink className="ml-2 h-3 w-3" />
             </Button>

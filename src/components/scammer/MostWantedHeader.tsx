@@ -25,7 +25,7 @@ export const MostWantedHeader = () => {
           <TooltipTrigger asChild>
             <Button 
               asChild={isConnected} 
-              className="w-full sm:w-auto bg-western-sand/70 hover:bg-western-sand/90 text-western-wood flex items-center justify-center border border-western-wood/20"
+              className="w-full sm:w-auto bg-western-sand/70 hover:bg-western-wood text-western-wood hover:text-western-parchment flex items-center justify-center border border-western-wood/20"
               onClick={!isConnected ? () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               } : undefined}

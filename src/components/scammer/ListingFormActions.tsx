@@ -41,7 +41,7 @@ export function ListingFormActions({ isSubmitting, onCancel }: ListingFormAction
         type="button" 
         variant="outline" 
         onClick={handleCancel}
-        className="border-western-wood/60 text-western-wood hover:bg-western-wood/10 hover:border-western-wood/80 min-w-[120px]"
+        className="border-western-wood/60 text-western-wood hover:bg-western-wood/20 hover:border-western-wood hover:text-western-wood min-w-[120px]"
       >
         Cancel
       </Button>
@@ -50,7 +50,7 @@ export function ListingFormActions({ isSubmitting, onCancel }: ListingFormAction
         <Button 
           type="submit" 
           disabled={isSubmitting}
-          className="bg-western-accent hover:bg-western-accent/90 text-western-parchment font-wanted min-w-[220px]"
+          className="bg-western-accent hover:bg-western-wood text-western-parchment font-wanted min-w-[220px]"
         >
           {isSubmitting ? "Creating Listing..." : "Create Listing"}
         </Button>
@@ -59,7 +59,7 @@ export function ListingFormActions({ isSubmitting, onCancel }: ListingFormAction
           type="button" 
           onClick={handleConnectWallet}
           disabled={connecting}
-          className="bg-western-accent hover:bg-western-accent/90 text-western-parchment font-western min-w-[220px]"
+          className="bg-western-accent hover:bg-western-wood text-western-parchment font-western min-w-[220px]"
         >
           <Wallet className="h-4 w-4 mr-2" />
           {connecting ? "Connecting..." : "Connect Wallet"}
