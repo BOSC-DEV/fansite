@@ -1,26 +1,27 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Star, BookOpen, Shield, Flame } from "lucide-react";
+import { Star, BookOpen } from "lucide-react";
+
 export const HeroSection = () => {
   return <section className="pt-20 pb-12 md:pt-32 md:pb-24 px-3 sm:px-4 old-paper">
       <div className="container mx-auto max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
           <div className="space-y-4 md:space-y-6 md:pr-8 animate-fade-in">
-            <h1 className="sm:text-5xl md:text-6xl lg:text-7xl font-wanted text-western-accent uppercase tracking-wide wanted-poster mx-0 my-0 py-[20px] text-7xl px-0">$BOSC</h1>
+            <h1 className="sm:text-5xl md:text-6xl lg:text-7xl font-wanted text-western-accent uppercase tracking-wide wanted-poster mx-0 my-0 py-[20px] text-7xl px-0">Book of Scams</h1>
             
             <p className="sm:text-xl text-western-wood max-w-lg font-western text-xl">Book of Scams is a decentralised criminal registry bringing accountability and justice to The Wild West of crypto.</p>
             
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
-              <Button asChild size="lg" className="western-btn gap-2 hover:animate-wiggle bg-western-leather hover:bg-western-accent text-western-parchment">
+              <Button asChild size="md" className="western-btn gap-2 hover:animate-wiggle bg-western-leather hover:bg-western-accent text-western-parchment">
                 <Link to="/most-wanted">
-                  View Most Wanted
+                  Most Wanted
                   <Star className="h-4 w-4 ml-1" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="western-btn gap-2 border-2 border-dashed border-western-wood text-western-wood hover:animate-wiggle hover:bg-western-wood hover:text-western-parchment">
+              <Button asChild variant="outline" size="md" className="western-btn gap-2 border-2 border-dashed border-western-wood text-western-wood hover:animate-wiggle hover:bg-western-wood hover:text-western-parchment">
                 <Link to="/create-listing">
-                  Report a Scammer
+                  Report Scammer
                   <BookOpen className="h-4 w-4 ml-1" />
                 </Link>
               </Button>

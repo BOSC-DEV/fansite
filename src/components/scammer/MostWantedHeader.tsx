@@ -34,12 +34,12 @@ export const MostWantedHeader = () => {
               {isConnected ? (
                 <Link to="/create-listing">
                   <Plus className="mr-2 h-4 w-4" />
-                  Report a Scammer
+                  Report Scammer
                 </Link>
               ) : (
                 <>
                   <Plus className="mr-2 h-4 w-4" />
-                  Report a Scammer
+                  Report Scammer
                 </>
               )}
             </Button>
