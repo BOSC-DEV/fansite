@@ -22,7 +22,7 @@ export function EditProfileButton({ profileAddress }: EditProfileButtonProps) {
       variant="outline" 
       size="sm" 
       asChild
-      className="absolute top-4 right-4 bg-western-sand/40 border-western-sand/20 text-western-wood hover:bg-western-sand/60 hover:text-western-wood transition-colors"
+      className="bg-western-sand/40 border-western-sand/20 text-western-wood hover:bg-western-sand/60 hover:text-western-wood transition-colors"
     >
       <Link to="/profile">
         <Pencil className="h-4 w-4 mr-2" />

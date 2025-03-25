@@ -1,13 +1,13 @@
 
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserCircle2, LogOut } from "lucide-react";
+import { UserCircle2, LogOut, Pencil } from "lucide-react";
 import { UserProfile } from "@/services/storage/index";
 import { ProfileLinks } from "./ProfileLinks";
-import { EditProfileButton } from "./EditProfileButton";
 import { useWallet } from "@/context/WalletContext";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 
 interface ProfileHeaderProps {
   profile: UserProfile;
@@ -15,7 +15,11 @@ interface ProfileHeaderProps {
 }
 
 export function ProfileHeader({ profile, scammersCount }: ProfileHeaderProps) {
-  const { disconnectWallet } = useWallet();
+  const { disconnectWallet, address } = useWallet();
+  
+  // Only show buttons if the profile belongs to the current user
+  const isOwnProfile = address && profile.walletAddress && 
+    address.toLowerCase() === profile.walletAddress.toLowerCase();
 
   const handleLogout = () => {
     disconnectWallet();
@@ -49,18 +53,31 @@ export function ProfileHeader({ profile, scammersCount }: ProfileHeaderProps) {
       </div>
       
       {/* Profile actions section */}
-      <div className="absolute top-6 right-6 flex gap-2">
-        <EditProfileButton profileAddress={profile.walletAddress} />
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={handleLogout}
-          className="flex items-center gap-1 bg-western-wood/10 border-western-sand/40 text-western-parchment hover:bg-western-wood/20"
-        >
-          <LogOut className="h-4 w-4" />
-          Log Out
-        </Button>
-      </div>
+      {isOwnProfile && (
+        <div className="absolute top-6 right-6 flex gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            asChild
+            className="flex items-center gap-1 bg-western-sand/40 border-western-sand/20 text-western-wood hover:bg-western-sand/60 transition-colors"
+          >
+            <Link to="/profile">
+              <Pencil className="h-4 w-4" />
+              Edit Profile
+            </Link>
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleLogout}
+            className="flex items-center gap-1 bg-western-sand/40 border-western-sand/20 text-western-wood hover:bg-western-sand/60 transition-colors"
+          >
+            <LogOut className="h-4 w-4" />
+            Log Out
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
