@@ -14,6 +14,7 @@ interface WalletContextType {
   smartWalletAddress: string | null;
   smartWalletLoading: boolean;
   chainId: number | null;
+  requestSignature: () => Promise<boolean>;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -146,6 +147,28 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const requestSignature = async (): Promise<boolean> => {
+    try {
+      if (!isConnected || !address) {
+        toast.error("Wallet not connected. Please connect your wallet first.");
+        return false;
+      }
+      
+      const signatureVerified = await web3Provider.requestSignature();
+      
+      if (!signatureVerified) {
+        toast.error("Failed to verify wallet ownership. Please try again.");
+        return false;
+      }
+      
+      return true;
+    } catch (error) {
+      console.error("Error requesting signature:", error);
+      toast.error("Failed to verify wallet ownership. Please try again.");
+      return false;
+    }
+  };
+
   const value = {
     connected,
     connecting,
@@ -157,6 +180,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     smartWalletAddress,
     smartWalletLoading,
     chainId,
+    requestSignature,
   };
 
   return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>;
