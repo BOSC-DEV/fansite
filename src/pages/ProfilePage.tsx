@@ -1,14 +1,12 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Header } from "@/components/Header";
 import { UserProfile } from "@/components/profile/UserProfile";
 import { useWallet } from "@/context/WalletContext";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { storageService, UserProfile as ProfileType } from "@/services/storage";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, Info, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { AlertCircle, Loader2 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function ProfilePage() {
   const { isConnected, address } = useWallet();
