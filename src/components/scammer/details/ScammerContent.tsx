@@ -21,7 +21,7 @@ export function ScammerContent({ aliases, links, accomplices, officialResponse }
     <Tabs defaultValue="identity" className="w-full">
       <TabsList className="grid grid-cols-4 mb-6">
         <TabsTrigger value="identity">Identity</TabsTrigger>
-        <TabsTrigger value="socials">Socials</TabsTrigger>
+        <TabsTrigger value="socials">Links</TabsTrigger>
         <TabsTrigger value="network">Network</TabsTrigger>
         <TabsTrigger value="response">Response</TabsTrigger>
       </TabsList>
