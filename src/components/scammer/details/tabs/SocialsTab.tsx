@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ExternalLink, LinkIcon, Twitter } from "lucide-react";
+import { Globe, LinkIcon, Twitter } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface SocialsTabProps {
@@ -35,7 +35,7 @@ export function SocialsTab({ links }: SocialsTabProps) {
                 <span className="truncate max-w-[200px]">
                   {link.replace(/https?:\/\/(www\.)?/, '')}
                 </span>
-                <ExternalLink className="h-3 w-3 opacity-60" />
+                <Globe className="h-3 w-3 opacity-60" />
               </a>
             ))}
           </div>

@@ -1,10 +1,9 @@
-
 import { Link, useNavigate } from "react-router-dom";
 import { Scammer } from "@/lib/types";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { LinkIcon } from "lucide-react";
+import { LinkIcon, Globe } from "lucide-react";
 import { UploaderAvatar } from "./UploaderAvatar";
 import { storageService } from "@/services/storage/localStorageService";
 
@@ -26,11 +25,8 @@ export const ScammerTableRow = ({
   formatDate
 }: ScammerTableRowProps) => {
   const navigate = useNavigate();
-  // Ensure aliases is always an array
   const aliases = Array.isArray(scammer.aliases) ? scammer.aliases : [];
-  // Ensure links is always an array
   const links = Array.isArray(scammer.links) ? scammer.links : [];
-  // Get comments count
   const commentsCount = storageService.getCommentsForScammer(scammer.id).length;
   
   const handleRowClick = () => {
@@ -71,7 +67,7 @@ export const ScammerTableRow = ({
                 className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-western-sand/20 text-western-wood hover:bg-western-sand/40 transition-colors"
                 onClick={(e) => e.stopPropagation()} // Prevent row click when clicking on link
               >
-                <LinkIcon className="h-4 w-4" />
+                <Globe className="h-4 w-4" />
               </a>
             ))}
             {links.length > 3 && (

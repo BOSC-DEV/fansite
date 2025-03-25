@@ -1,9 +1,8 @@
-
 import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Award, Eye, LinkIcon, ThumbsUp, User } from "lucide-react";
+import { Award, Eye, LinkIcon, ThumbsUp, User, Globe } from "lucide-react";
 import { Scammer } from "@/lib/types";
 import { useScammerProfile } from "@/hooks/useScammerProfile";
 import { storageService } from "@/services/storage/localStorageService";
@@ -52,11 +51,8 @@ export const ScammerTableCompact = ({
         </TableHeader>
         <TableBody>
           {scammers.map((scammer) => {
-            // Ensure aliases is always an array with proper type handling
             const aliases = Array.isArray(scammer.aliases) ? scammer.aliases : [];
-            // Ensure links is always an array
             const links = Array.isArray(scammer.links) ? scammer.links : [];
-            // Get comments count
             const commentsCount = storageService.getCommentsForScammer(scammer.id).length;
             
             return (
@@ -96,9 +92,9 @@ export const ScammerTableCompact = ({
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center justify-center h-7 w-7 rounded-full bg-western-sand/20 text-western-wood hover:bg-western-sand/40 transition-colors"
-                          onClick={(e) => e.stopPropagation()} // Prevent row click when clicking on link
+                          onClick={(e) => e.stopPropagation()}
                         >
-                          <LinkIcon className="h-3.5 w-3.5" />
+                          <Globe className="h-3.5 w-3.5" />
                         </a>
                       ))}
                       {links.length > 2 && (
@@ -138,7 +134,6 @@ export const ScammerTableCompact = ({
   );
 };
 
-// Helper component to display uploader's avatar with link to their profile
 const UploaderAvatar = ({ addedBy }: { addedBy: string | undefined }) => {
   const { addedByUsername, addedByPhotoUrl, profileId } = useScammerProfile(addedBy);
   
@@ -150,7 +145,7 @@ const UploaderAvatar = ({ addedBy }: { addedBy: string | undefined }) => {
     <div className="flex justify-center">
       <Link 
         to={profileUrl}
-        onClick={(e) => e.stopPropagation()} // Prevent row click when clicking on avatar
+        onClick={(e) => e.stopPropagation()}
       >
         <Avatar className="w-8 h-8 border border-western-wood hover:border-western-accent transition-all">
           <AvatarImage src={addedByPhotoUrl || ''} alt={addedByUsername || addedBy} />

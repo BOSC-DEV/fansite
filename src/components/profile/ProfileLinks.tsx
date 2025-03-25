@@ -1,6 +1,6 @@
 
 import React from "react";
-import { ExternalLink, Twitter } from "lucide-react";
+import { Globe, Twitter } from "lucide-react";
 
 interface ProfileLinksProps {
   xLink: string;
@@ -37,7 +37,7 @@ export function ProfileLinks({
           rel="noreferrer"
           className="text-western-wood hover:text-western-accent transition-colors"
         >
-          <ExternalLink className="h-5 w-5" />
+          <Globe className="h-5 w-5" />
         </a>
       )}
     </div>
