@@ -1,3 +1,4 @@
+
 import { FormContainer } from "./createListing/FormContainer";
 import { useWallet } from "@/context/WalletContext";
 import { useEffect, useState } from "react";
@@ -5,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { storageService } from "@/services/storage/localStorageService";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import ConnectWallet from "@/components/ConnectWallet";
 
 export function CreateListingForm() {
   const { isConnected, address } = useWallet();
@@ -57,6 +59,17 @@ export function CreateListingForm() {
           <div className="animate-spin h-8 w-8 border-4 border-western-accent border-t-transparent rounded-full mx-auto"></div>
           <p className="mt-2 text-western-wood">Checking your profile...</p>
         </div>
+      </div>
+    );
+  }
+
+  if (!isConnected) {
+    return (
+      <div className="space-y-6">
+        <ConnectWallet 
+          message="Connect your wallet to report a scammer"
+          redirectPath="/create-listing"
+        />
       </div>
     );
   }

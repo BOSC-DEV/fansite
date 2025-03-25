@@ -24,15 +24,8 @@ export function ListingFormActions({ isSubmitting, onCancel }: ListingFormAction
 
   const handleConnectWallet = async () => {
     try {
-      console.log("Attempting to connect wallet from ListingFormActions");
-      const connected = await connectWallet();
-      
-      if (!connected) {
-        console.log("Wallet connection failed");
-        toast.error("Failed to connect wallet. Please try again.");
-      } else {
-        console.log("Wallet connected successfully");
-      }
+      await connectWallet();
+      // The success toast will be shown by the WalletContext
     } catch (error) {
       console.error("Error connecting wallet:", error);
       toast.error("Failed to connect wallet. Please try again.");
