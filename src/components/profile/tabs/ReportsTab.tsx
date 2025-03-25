@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Scammer } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
-import { ScammerCard } from "@/components/ScammerCard";
+import { ScammerCard } from "@/components/scammer/card/ScammerCard";
 
 interface ReportsTabProps {
   scammers: Scammer[];
