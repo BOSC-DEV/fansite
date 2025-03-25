@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Scammer } from "@/lib/types";
 import { ScammerSidebar } from './details/ScammerSidebar';
@@ -8,6 +8,7 @@ import { useWallet } from "@/context/WalletContext";
 import { useScammerProfile } from '@/hooks/useScammerProfile';
 import { useScammerStats } from '@/hooks/useScammerStats';
 import { ScammerHeader } from './details/ScammerHeader';
+import { storageService } from '@/services/storage/localStorageService';
 
 interface ScammerDetailsCardProps {
   scammer: Scammer;
@@ -34,6 +35,7 @@ export function ScammerDetailsCard({
 }: ScammerDetailsCardProps) {
   const { address } = useWallet();
   const isCreator = scammer.addedBy === address;
+  const [commentCount, setCommentCount] = useState(0);
   
   const { addedByUsername, addedByPhotoUrl, isProfileLoading, profileId } = useScammerProfile(scammer.addedBy);
   const { 
@@ -46,6 +48,14 @@ export function ScammerDetailsCard({
     handleDislike 
   } = useScammerStats(scammer);
 
+  // Fetch comment count
+  useEffect(() => {
+    if (scammer.id) {
+      const comments = storageService.getCommentsForScammer(scammer.id);
+      setCommentCount(comments.length);
+    }
+  }, [scammer.id]);
+
   return (
     <Card className="mb-8">
       <CardHeader>
@@ -57,6 +67,7 @@ export function ScammerDetailsCard({
           likes={likes}
           dislikes={dislikes}
           views={views}
+          comments={commentCount}
           isLiked={isLiked}
           isDisliked={isDisliked}
           onLike={handleLike}

@@ -28,6 +28,7 @@ interface ScammerHeaderProps {
   likes: number;
   dislikes: number;
   views: number;
+  comments?: number;
   isLiked: boolean;
   isDisliked: boolean;
   onLike: () => void;
@@ -43,6 +44,7 @@ export function ScammerHeader({
   likes, 
   dislikes, 
   views,
+  comments = 0,
   isLiked,
   isDisliked,
   onLike,
@@ -90,6 +92,7 @@ export function ScammerHeader({
           likes={likes}
           dislikes={dislikes}
           views={views}
+          comments={comments}
           isLiked={isLiked}
           isDisliked={isDisliked}
           onLike={onLike}

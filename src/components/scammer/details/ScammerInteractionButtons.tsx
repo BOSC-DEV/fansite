@@ -1,12 +1,13 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { ThumbsUp, ThumbsDown, Eye } from "lucide-react";
+import { ThumbsUp, ThumbsDown, Eye, MessageSquare } from "lucide-react";
 
 interface ScammerInteractionButtonsProps {
   likes: number;
   dislikes: number;
   views: number;
+  comments?: number;
   isLiked: boolean;
   isDisliked: boolean;
   onLike: () => void;
@@ -17,11 +18,19 @@ export function ScammerInteractionButtons({
   likes, 
   dislikes, 
   views, 
+  comments = 0,
   isLiked, 
   isDisliked,
   onLike,
   onDislike
 }: ScammerInteractionButtonsProps) {
+  const scrollToComments = () => {
+    const commentsSection = document.querySelector('.comments-section');
+    if (commentsSection) {
+      commentsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="flex items-center gap-2">
       <Button 
@@ -48,6 +57,16 @@ export function ScammerInteractionButtons({
         <Eye className="h-5 w-5 text-western-wood/60" />
         <span className="text-sm text-western-wood/70">{views}</span>
       </div>
+      
+      <Button
+        variant="ghost"
+        size="sm"
+        className="h-8 w-8 rounded-full p-0 text-western-wood/60 hover:text-western-wood/80 hover:bg-western-sand/30"
+        onClick={scrollToComments}
+      >
+        <MessageSquare className="h-5 w-5" />
+      </Button>
+      <span className="text-sm text-western-wood/70">{comments}</span>
     </div>
   );
 }

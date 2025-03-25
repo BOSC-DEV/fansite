@@ -9,13 +9,14 @@ declare global {
   interface Window {
     phantom?: {
       solana?: {
+        isPhantom?: boolean;
         isConnected: boolean;
         publicKey?: { toString: () => string };
         connect: () => Promise<{ publicKey: { toString: () => string } }>;
         disconnect: () => Promise<void>;
         signMessage: (message: Uint8Array) => Promise<{ signature: Uint8Array }>;
-        on: (event: string, callback: () => void) => void;
-        removeListener: (event: string, callback: () => void) => void;
+        on: (event: string, callback: (...args: any[]) => void) => void;
+        removeListener: (event: string, callback: (...args: any[]) => void) => void;
       };
     };
   }
