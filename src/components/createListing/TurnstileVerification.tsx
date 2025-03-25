@@ -35,9 +35,9 @@ export function TurnstileVerification({ onVerify, token }: TurnstileVerification
       )}
       
       {token && (
-        <div className="flex items-center gap-2 text-green-600 mt-2">
-          <CheckCircle2 className="h-4 w-4" />
-          <p className="text-sm">Verification successful</p>
+        <div className="flex items-center justify-center text-green-600 mt-2">
+          <CheckCircle2 className="h-5 w-5 mr-2" />
+          <p className="text-base">Verification successful</p>
         </div>
       )}
     </div>

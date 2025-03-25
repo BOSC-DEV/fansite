@@ -126,7 +126,7 @@ export const CloudflareTurnstile: React.FC<CloudflareTurnstileProps> = ({
       {error && (
         <p className="text-sm text-red-500 mt-1 mb-2">{error}</p>
       )}
-      <p className="text-xs text-western-wood/70 mt-2 text-center max-w-md">
+      <p className="text-base text-western-wood/70 mt-2 text-center max-w-md">
         This site is protected by Cloudflare Turnstile to ensure you're not a robot.
       </p>
     </div>
