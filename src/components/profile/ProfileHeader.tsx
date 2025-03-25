@@ -32,7 +32,8 @@ export function ProfileHeader({ profile, scammersCount }: ProfileHeaderProps) {
           
           <ProfileLinks 
             xLink={profile.xLink} 
-            websiteLink={profile.websiteLink} 
+            websiteLink={profile.websiteLink}
+            walletAddress={profile.walletAddress}
           />
         </div>
       </div>

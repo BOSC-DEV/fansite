@@ -1,44 +1,58 @@
 
 import React from "react";
-import { Globe, Twitter } from "lucide-react";
+import { Twitter, Globe, Copy } from "lucide-react";
+import { toast } from "sonner";
 
 interface ProfileLinksProps {
-  xLink: string;
-  websiteLink: string;
-  onXLinkChange?: (link: string) => void;
-  onWebsiteLinkChange?: (link: string) => void;
+  xLink?: string;
+  websiteLink?: string;
+  walletAddress?: string;
 }
 
-export function ProfileLinks({ 
-  xLink, 
-  websiteLink, 
-  onXLinkChange, 
-  onWebsiteLinkChange 
-}: ProfileLinksProps) {
-  const isReadOnly = !onXLinkChange || !onWebsiteLinkChange;
-  
+export function ProfileLinks({ xLink, websiteLink, walletAddress }: ProfileLinksProps) {
+  const copyToClipboard = (text: string) => {
+    if (!text) return;
+    navigator.clipboard.writeText(text);
+    toast.success("Wallet address copied to clipboard");
+  };
+
+  if (!xLink && !websiteLink && !walletAddress) return null;
+
   return (
-    <div className="flex gap-3">
+    <div className="flex flex-wrap gap-4 items-center mt-2">
       {xLink && (
         <a 
-          href={xLink.startsWith('http') ? xLink : `https://${xLink}`}
+          href={xLink} 
           target="_blank" 
-          rel="noreferrer"
-          className="text-western-wood hover:text-western-accent transition-colors"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 text-western-sand hover:text-western-accent transition-colors"
         >
-          <Twitter className="h-5 w-5" />
+          <Twitter size={18} />
+          <span className="text-sm">X / Twitter</span>
         </a>
       )}
       
       {websiteLink && (
         <a 
-          href={websiteLink.startsWith('http') ? websiteLink : `https://${websiteLink}`}
+          href={websiteLink} 
           target="_blank" 
-          rel="noreferrer"
-          className="text-western-wood hover:text-western-accent transition-colors"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 text-western-sand hover:text-western-accent transition-colors"
         >
-          <Globe className="h-5 w-5" />
+          <Globe size={18} />
+          <span className="text-sm">Website</span>
         </a>
+      )}
+      
+      {walletAddress && (
+        <button
+          onClick={() => copyToClipboard(walletAddress)}
+          className="flex items-center gap-2 text-western-sand hover:text-western-accent transition-colors"
+          aria-label="Copy wallet address"
+        >
+          <Copy size={18} />
+          <span className="text-sm">Copy Address</span>
+        </button>
       )}
     </div>
   );
