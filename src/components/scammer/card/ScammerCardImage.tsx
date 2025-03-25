@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { AlertCircle, Eye, ThumbsUp, ThumbsDown } from "lucide-react";
+import { AlertCircle, Eye, ThumbsUp, ThumbsDown, MessageSquare } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +10,8 @@ interface ScammerCardImageProps {
   likes: number;
   dislikes: number;
   views: number;
+  comments?: number;
+  scammerId?: string;
 }
 
 export function ScammerCardImage({ 
@@ -17,7 +19,9 @@ export function ScammerCardImage({
   photoUrl, 
   likes, 
   dislikes, 
-  views 
+  views,
+  comments = 0,
+  scammerId
 }: ScammerCardImageProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -35,6 +39,19 @@ export function ScammerCardImage({
 
   const handleImageLoad = () => {
     setImageLoaded(true);
+  };
+
+  const scrollToComments = () => {
+    // Only attempt to scroll if we're on a detail page
+    if (scammerId) {
+      const commentsSection = document.querySelector('.comments-section');
+      if (commentsSection) {
+        commentsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      // If we're not on a detail page, navigate to the detail page with a hash
+      window.location.href = `/scammer/${scammerId}#comments`;
+    }
   };
 
   // Fallback URL when image fails to load
@@ -70,6 +87,13 @@ export function ScammerCardImage({
         <div className="flex items-center gap-1 bg-black/60 text-white py-1 px-2 rounded-full text-xs">
           <Eye className="h-3 w-3" />
           <span>{views || 0}</span>
+        </div>
+        <div 
+          className="flex items-center gap-1 bg-black/60 text-white py-1 px-2 rounded-full text-xs cursor-pointer hover:bg-black/80"
+          onClick={scrollToComments}
+        >
+          <MessageSquare className="h-3 w-3" />
+          <span>{comments}</span>
         </div>
       </div>
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">

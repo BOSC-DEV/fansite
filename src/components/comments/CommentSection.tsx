@@ -30,7 +30,7 @@ export function CommentSection({ scammerId }: CommentSectionProps) {
   }, [scammerId]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 comments-section" id="comments">
       <Card>
         <CardHeader>
           <div className="flex justify-between items-center">

@@ -21,6 +21,11 @@ export function ScammerCard({ scammer, className }: ScammerCardProps) {
     formatDate(scammer.dateAdded), 
   [scammer.dateAdded]);
   
+  // Get comments count - if comments is an array, use its length, otherwise 0
+  const commentsCount = useMemo(() => 
+    Array.isArray(scammer.comments) ? scammer.comments.length : 0, 
+  [scammer.comments]);
+  
   return (
     <Card className={cn(
       "overflow-hidden transition-all duration-300 hover:shadow-md h-full border-western-wood bg-western-parchment/80",
@@ -32,6 +37,8 @@ export function ScammerCard({ scammer, className }: ScammerCardProps) {
         likes={scammer.likes || 0}
         dislikes={scammer.dislikes || 0}
         views={scammer.views || 0}
+        comments={commentsCount}
+        scammerId={scammer.id}
       />
       
       <CardContent className="p-0">
