@@ -25,7 +25,7 @@ export function ProfileFormFooter({
   };
   
   return (
-    <div className="px-6 py-4 bg-muted/20 border-t border-western-sand/10 flex justify-between">
+    <div className="px-6 py-4 bg-muted/20 border-t border-western-sand/10 flex justify-between shadow-md">
       <Button type="button" variant="outline" onClick={() => navigate(-1)}>
         Cancel
       </Button>
