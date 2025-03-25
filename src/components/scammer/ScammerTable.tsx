@@ -19,7 +19,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
-import { LinkIcon, User } from "lucide-react";
+import { Eye, LinkIcon, ThumbsUp, User } from "lucide-react";
 import { useScammerProfile } from "@/hooks/useScammerProfile";
 
 interface ScammerTableProps {
@@ -49,9 +49,21 @@ export const ScammerTable = ({
             <TableHead className="w-[60px] text-center text-western-accent font-wanted">№</TableHead>
             <TableHead className="text-western-accent font-wanted">Outlaw</TableHead>
             <TableHead className="text-western-accent font-wanted">Socials</TableHead>
-            <TableHead className="text-western-accent font-wanted">Crimes</TableHead>
+            <TableHead className="text-western-accent font-wanted">Accused Of</TableHead>
             <TableHead className="text-center text-western-accent font-wanted">Aliases</TableHead>
             <TableHead className="text-center text-western-accent font-wanted">Bounty</TableHead>
+            <TableHead className="text-center text-western-accent font-wanted">
+              <div className="flex items-center justify-center">
+                <ThumbsUp className="h-4 w-4 mr-1" />
+                <span>Likes</span>
+              </div>
+            </TableHead>
+            <TableHead className="text-center text-western-accent font-wanted">
+              <div className="flex items-center justify-center">
+                <Eye className="h-4 w-4 mr-1" />
+                <span>Views</span>
+              </div>
+            </TableHead>
             <TableHead className="text-right text-western-accent font-wanted">Posted</TableHead>
             <TableHead className="text-center text-western-accent font-wanted">
               <div className="flex items-center justify-center">
@@ -132,6 +144,12 @@ export const ScammerTable = ({
                   <div className="flex items-center justify-center">
                     <span className="text-western-accent font-wanted">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
                   </div>
+                </TableCell>
+                <TableCell className="text-center">
+                  {scammer.likes || 0}
+                </TableCell>
+                <TableCell className="text-center">
+                  {scammer.views || 0}
                 </TableCell>
                 <TableCell className="text-right text-western-wood/90 text-sm">
                   {formatDate(scammer.dateAdded)}
