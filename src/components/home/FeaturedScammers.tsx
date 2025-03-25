@@ -11,7 +11,7 @@ import { useScammers } from "@/hooks/use-scammers";
 
 export const FeaturedScammers = ({ limit = 10 }: { limit?: number }) => {
   const { isLoading, filteredScammers } = useScammers();
-  const limitedScammers = filteredScammers.slice(0, limit);
+  const limitedScammers = filteredScammers?.slice(0, limit) || [];
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -48,7 +48,11 @@ export const FeaturedScammers = ({ limit = 10 }: { limit?: number }) => {
         <div className="wanted-poster-border paper-texture rounded-sm">
           {isLoading ? (
             <div className="p-6 text-center">
-              <p className="text-muted-foreground">Loading scammers...</p>
+              <div className="animate-pulse flex flex-col items-center space-y-4">
+                <div className="h-4 bg-western-wood/20 rounded w-3/4"></div>
+                <div className="h-4 bg-western-wood/20 rounded w-1/2"></div>
+                <div className="h-4 bg-western-wood/20 rounded w-2/3"></div>
+              </div>
             </div>
           ) : limitedScammers.length > 0 ? (
             <ScammerTableCompact 
@@ -58,9 +62,11 @@ export const FeaturedScammers = ({ limit = 10 }: { limit?: number }) => {
             />
           ) : (
             <div className="p-6 text-center">
-              <p className="text-muted-foreground">No scammers have been reported yet.</p>
-              <Button asChild variant="outline" className="mt-4">
-                <Link to="/create-listing">Report a Scammer</Link>
+              <p className="text-western-wood font-western">Searching for outlaws...</p>
+              <Button asChild variant="outline" className="mt-4 western-btn">
+                <Link to="/create-listing">
+                  Report a Scammer
+                </Link>
               </Button>
             </div>
           )}

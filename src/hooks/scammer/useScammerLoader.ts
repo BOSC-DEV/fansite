@@ -17,15 +17,16 @@ export function useScammerLoader(id: string | undefined) {
   // Load scammer data
   useEffect(() => {
     const loadScammer = async () => {
-      setIsLoading(true);
-      setImageLoaded(false);
-      setNotFound(false);
-      
       if (!id) {
+        console.log("No scammer ID provided");
         setNotFound(true);
         setIsLoading(false);
         return;
       }
+      
+      setIsLoading(true);
+      setImageLoaded(false);
+      setNotFound(false);
       
       try {
         console.log("Loading scammer with ID:", id);
@@ -123,19 +124,18 @@ export function useScammerLoader(id: string | undefined) {
             // Record view
             storageService.incrementScammerViews(id);
           } else {
-            toast.error("Scammer not found");
+            console.error("Scammer not found in localStorage fallback");
             setNotFound(true);
             setScammer(null);
           }
         } catch (error) {
           console.error("Error in localStorage fallback:", error);
-          toast.error("Failed to load scammer details");
           setNotFound(true);
           setScammer(null);
         }
+      } finally {
+        setIsLoading(false);
       }
-      
-      setIsLoading(false);
     };
 
     loadScammer();
