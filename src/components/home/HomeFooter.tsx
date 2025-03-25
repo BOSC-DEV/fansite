@@ -2,18 +2,18 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Copy, Check } from "lucide-react";
+import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
 import { formatWalletAddress } from "@/utils/formatters";
 import { toast } from "sonner";
 
 export const HomeFooter = () => {
   const [copied, setCopied] = useState(false);
-  const CONTRACT_ADDRESS = "0x1234567890123456789012345678901234567890"; // Placeholder contract address
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(CONTRACT_ADDRESS)
+    navigator.clipboard.writeText("TBC")
       .then(() => {
         setCopied(true);
-        toast.success("Contract address copied to clipboard");
+        toast.success("TBC copied to clipboard");
         setTimeout(() => setCopied(false), 2000);
       })
       .catch(() => {
@@ -49,12 +49,7 @@ export const HomeFooter = () => {
         <div className="mt-4 pt-4 border-t border-western-wood/20 text-center">
           <div className="flex items-center justify-center gap-2 text-western-wood">
             <span className="font-western">Ca:</span>
-            <button 
-              className="font-western cursor-pointer hover:text-western-accent transition-colors" 
-              onClick={copyToClipboard}
-            >
-              {formatWalletAddress(CONTRACT_ADDRESS)}
-            </button>
+            <span className="font-western cursor-pointer" onClick={copyToClipboard}>TBC</span>
             {copied ? (
               <Check className="h-4 w-4 text-green-600" />
             ) : (

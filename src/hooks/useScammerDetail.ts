@@ -13,8 +13,7 @@ export function useScammerDetail(id: string | undefined) {
     scammer, 
     isLoading, 
     imageLoaded, 
-    setImageLoaded,
-    notFound
+    setImageLoaded 
   } = useScammerLoader(id);
 
   // Manage scammer stats and interactions
@@ -31,7 +30,6 @@ export function useScammerDetail(id: string | undefined) {
     setImageLoaded, 
     scammerStats,
     handleLikeScammer,
-    handleDislikeScammer,
-    notFound
+    handleDislikeScammer
   };
 }

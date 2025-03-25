@@ -1,11 +1,9 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Star, BookOpen } from "lucide-react";
-
+import { Star, BookOpen, Shield, Flame } from "lucide-react";
 export const HeroSection = () => {
-  return (
-    <section className="pt-16 pb-12 px-4">
+  return <section className="pt-20 pb-12 md:pt-32 md:pb-24 px-3 sm:px-4 old-paper">
       <div className="container mx-auto max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
           <div className="space-y-4 md:space-y-6 md:pr-8 animate-fade-in">
@@ -43,6 +41,5 @@ export const HeroSection = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };

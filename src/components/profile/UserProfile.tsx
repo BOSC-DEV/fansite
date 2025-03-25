@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { WalletConnectionState } from "./WalletConnectionState";
 import { UserProfileForm } from "./UserProfileForm";
 import { useProfileForm } from "@/hooks/profile/useProfileForm";
-import { toast } from "sonner";
 
 export function UserProfile() {
   const navigate = useNavigate();
@@ -29,12 +28,6 @@ export function UserProfile() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Profile form submitted with data:", formData);
-    
-    // Display a toast informing the user about signature request
-    toast.info("Wallet signature required - Please check your wallet to sign the message", {
-      duration: 5000,
-    });
-    
     const success = await saveProfile();
     if (success) {
       console.log("Profile saved successfully, navigating back");

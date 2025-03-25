@@ -1,7 +1,7 @@
 
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Loader2, Save } from "lucide-react";
 
 interface ProfileFormFooterProps {
   isSubmitting: boolean;
@@ -9,25 +9,20 @@ interface ProfileFormFooterProps {
   usernameAvailable: boolean;
 }
 
-export function ProfileFormFooter({ isSubmitting, hasProfile, usernameAvailable }: ProfileFormFooterProps) {
+export function ProfileFormFooter({ 
+  isSubmitting, 
+  hasProfile, 
+  usernameAvailable 
+}: ProfileFormFooterProps) {
+  const navigate = useNavigate();
+  
   return (
-    <div className="bg-background/50 border-t border-western-sand/20 p-4 flex justify-end">
-      <Button 
-        type="submit" 
-        className="western-btn gap-2 hover:animate-wiggle bg-western-leather hover:bg-western-accent text-western-parchment"
-        disabled={isSubmitting || !usernameAvailable}
-      >
-        {isSubmitting ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" />
-            <span>Waiting for signature...</span>
-          </>
-        ) : (
-          <>
-            <Save className="h-4 w-4" />
-            <span>{hasProfile ? "Update Profile" : "Create Profile"}</span>
-          </>
-        )}
+    <div className="px-6 py-4 bg-muted/20 border-t border-western-sand/10 flex justify-between">
+      <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+        Cancel
+      </Button>
+      <Button type="submit" disabled={isSubmitting || !usernameAvailable}>
+        {isSubmitting ? "Saving..." : hasProfile ? "Update Profile" : "Create Profile"}
       </Button>
     </div>
   );

@@ -21,7 +21,7 @@ interface FormValidation {
 }
 
 export function useProfileFormSubmit() {
-  const { isConnected, address, requestSignature } = useWallet();
+  const { isConnected, address } = useWallet();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
   const [profileId, setProfileId] = useState<string | undefined>(undefined);
@@ -96,24 +96,6 @@ export function useProfileFormSubmit() {
     console.log("[useProfileFormSubmit] Starting profile save for address:", address);
     
     try {
-      // Display a toast notification before requesting signature
-      toast.info("Please sign with your wallet to verify ownership and save your profile", {
-        duration: 5000,
-      });
-      
-      // Request signature to verify wallet ownership before saving profile
-      console.log("[useProfileFormSubmit] Requesting wallet signature for verification");
-      const signatureVerified = await requestSignature();
-      
-      if (!signatureVerified) {
-        console.error("[useProfileFormSubmit] Wallet signature verification failed");
-        toast.error("Failed to verify wallet ownership. Please try again.");
-        setIsSubmitting(false);
-        return false;
-      }
-      
-      console.log("[useProfileFormSubmit] Wallet signature verified successfully");
-      
       // Use the wallet address as the ID
       const profileData = {
         id: address,

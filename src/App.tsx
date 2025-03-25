@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import Index from './pages/Index';
 import MostWanted from './pages/MostWanted';
@@ -35,7 +35,6 @@ function App() {
               <Route path="/user/:walletAddress" element={<UserProfilePage />} />
               <Route path="/my-reports" element={<MyReportsPage />} />
               <Route path="/my-bounties" element={<MyBountiesPage />} />
-              <Route path="/not-found" element={<NotFound />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Toaster />
