@@ -17,7 +17,7 @@ export const LeaderboardRow = forwardRef<HTMLTableRowElement, LeaderboardRowProp
   ({ user, originalIndex }, ref) => {
     const getRankDisplay = (index: number) => {
       // Always show the rank number (for all ranks)
-      const rankNumber = <span className="font-bold text-western-parchment/70">{index + 1}</span>;
+      const rankNumber = <span className="font-bold text-western-accent">{index + 1}</span>;
       
       // For top 3, also show the corresponding icon
       if (index === 0) {
@@ -65,7 +65,7 @@ export const LeaderboardRow = forwardRef<HTMLTableRowElement, LeaderboardRowProp
             </Avatar>
             <div className="flex flex-col justify-center">
               <p className="font-medium font-western">{user.displayName}</p>
-              <p className="text-xs text-western-parchment/70">@{user.username}</p>
+              <p className="text-xs text-western-accent/80 font-medium">@{user.username}</p>
             </div>
           </Link>
         </TableCell>

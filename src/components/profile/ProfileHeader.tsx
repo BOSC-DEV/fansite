@@ -24,7 +24,7 @@ export function ProfileHeader({ profile, scammersCount }: ProfileHeaderProps) {
         
         <div className="flex-1 text-center md:text-left">
           <h1 className="text-3xl font-wanted text-western-accent">{profile.displayName}</h1>
-          <p className="text-sm text-western-sand mb-2">@{profile.username}</p>
+          <p className="text-sm text-western-accent/80 font-medium mb-2">@{profile.username}</p>
           
           {profile.bio && (
             <p className="text-sm mb-4 max-w-2xl text-western-sand/80">{profile.bio}</p>

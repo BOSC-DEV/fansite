@@ -42,7 +42,7 @@ export const ScammerTableRow = ({
       className="border-b border-western-wood/20 hover:bg-western-sand/10 cursor-pointer" 
       onClick={handleRowClick}
     >
-      <TableCell className="font-medium text-center">
+      <TableCell className="font-medium text-center text-western-accent">
         {(currentPage - 1) * itemsPerPage + index + 1}
       </TableCell>
       <TableCell>
