@@ -1,19 +1,17 @@
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { useWallet } from "@/context/WalletContext";
 import { Wallet, AlertCircle, Fingerprint } from "lucide-react";
 import { toast } from "sonner";
 import { useEffect } from "react";
 
 interface ConnectWalletProps {
-  message?: string;
   redirectPath?: string;
   className?: string;
 }
 
 export function ConnectWallet({ 
-  message = "You need to connect your wallet to access this feature", 
   redirectPath, 
   className 
 }: ConnectWalletProps) {
@@ -54,9 +52,7 @@ export function ConnectWallet({
   return (
     <Card className={className}>
       <CardHeader>
-        <CardDescription>
-          {message}
-        </CardDescription>
+        {/* Removed message here */}
       </CardHeader>
       <CardContent>
         <div className="flex flex-col items-center justify-center py-6 text-center space-y-4">

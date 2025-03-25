@@ -67,7 +67,6 @@ export function CreateListingForm() {
     return (
       <div className="space-y-6">
         <ConnectWallet 
-          message="Connect your wallet to report a scammer"
           redirectPath="/create-listing"
         />
       </div>
