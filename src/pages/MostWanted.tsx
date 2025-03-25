@@ -5,21 +5,29 @@ import { ScammerTable } from "@/components/scammer/ScammerTable";
 import { ScammerGrid } from "@/components/scammer/ScammerGrid";
 import { NoResults } from "@/components/scammer/NoResults";
 import { MostWantedHeader } from "@/components/scammer/MostWantedHeader";
-import { SearchAndFilterControls } from "@/components/search/SearchAndFilterControls";
+import { SearchBar } from "@/components/search/SearchBar";
 import { useScammers } from "@/hooks/use-scammers";
 import { usePagination } from "@/hooks/use-pagination";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { formatCurrency, formatDate } from "@/utils/formatters";
+import { useSortableScammers } from "@/hooks/useSortableScammers";
+import { Button } from "@/components/ui/button";
+import { List, Grid } from "lucide-react";
 
 const MostWanted = () => {
   const { 
     filteredScammers, 
     isLoading, 
-    searchQuery, 
-    sortBy,
-    handleSearch,
-    handleSortChange
+    searchQuery,
+    handleSearch
   } = useScammers();
+  
+  const {
+    sortedScammers,
+    handleSort,
+    sortField,
+    sortDirection
+  } = useSortableScammers(filteredScammers);
   
   const [viewType, setViewType] = useState<"grid" | "table">("table");
   const isMobile = useIsMobile();
@@ -31,11 +39,11 @@ const MostWanted = () => {
     startIndex,
     endIndex
   } = usePagination({
-    totalItems: filteredScammers.length,
+    totalItems: sortedScammers.length,
     viewType: viewType
   });
   
-  const paginatedScammers = filteredScammers.slice(startIndex, endIndex);
+  const paginatedScammers = sortedScammers.slice(startIndex, endIndex);
 
   // Auto-switch to grid view on mobile
   useEffect(() => {
@@ -56,20 +64,40 @@ const MostWanted = () => {
           <MostWantedHeader />
           
           <div className="space-y-4 md:space-y-6">
-            <SearchAndFilterControls
-              searchQuery={searchQuery}
-              handleSearch={handleSearch}
-              viewType={viewType}
-              sortBy={sortBy}
-              handleViewChange={handleViewChange}
-              handleSortChange={handleSortChange}
-            />
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="w-full md:w-1/2 lg:w-1/3">
+                <SearchBar value={searchQuery} onChange={handleSearch} placeholder="Search outlaws..." />
+              </div>
+              
+              {!isMobile && (
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className={`border-western-wood ${viewType === 'table' ? 'bg-western-wood text-western-parchment' : 'bg-western-parchment text-western-wood'}`}
+                    onClick={() => handleViewChange('table')}
+                  >
+                    <List className="h-4 w-4 mr-1" />
+                    Table
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className={`border-western-wood ${viewType === 'grid' ? 'bg-western-wood text-western-parchment' : 'bg-western-parchment text-western-wood'}`}
+                    onClick={() => handleViewChange('grid')}
+                  >
+                    <Grid className="h-4 w-4 mr-1" />
+                    Grid
+                  </Button>
+                </div>
+              )}
+            </div>
 
             {isLoading ? (
               <div className="flex justify-center items-center py-10 md:py-20">
                 <p className="text-western-wood">Loading scammers...</p>
               </div>
-            ) : filteredScammers.length === 0 ? (
+            ) : sortedScammers.length === 0 ? (
               <NoResults query={searchQuery} />
             ) : viewType === "table" && !isMobile ? (
               <div className="paper-texture border-2 border-western-wood rounded-sm">
@@ -81,6 +109,9 @@ const MostWanted = () => {
                   setCurrentPage={setCurrentPage}
                   formatCurrency={formatCurrency}
                   formatDate={formatDate}
+                  onSort={handleSort}
+                  sortField={sortField}
+                  sortDirection={sortDirection}
                 />
               </div>
             ) : (

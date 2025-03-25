@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Scammer } from "@/lib/types";
 import { scammerService } from "@/services/storage";
 import { storageService } from "@/services/storage/localStorageService";
@@ -10,7 +10,6 @@ export const useScammers = () => {
   const [filteredScammers, setFilteredScammers] = useState<Scammer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<"newest" | "oldest" | "bounty">("newest");
   const [error, setError] = useState<string | null>(null);
 
   // Load scammers from both Supabase and localStorage
@@ -35,7 +34,9 @@ export const useScammers = () => {
           bountyAmount: s.bountyAmount,
           walletAddress: s.walletAddress || '',
           dateAdded: new Date(s.dateAdded),
-          addedBy: s.addedBy || ''
+          addedBy: s.addedBy || '',
+          likes: s.likes || 0,
+          views: s.views || 0
         }));
       } catch (err) {
         console.error("Error loading from Supabase:", err);
@@ -54,7 +55,9 @@ export const useScammers = () => {
         bountyAmount: s.bountyAmount,
         walletAddress: s.walletAddress || '',
         dateAdded: new Date(s.dateAdded),
-        addedBy: s.addedBy || ''
+        addedBy: s.addedBy || '',
+        likes: s.likes || 0,
+        views: s.views || 0
       }));
 
       // Merge the scammers, preferring Supabase versions but including local-only ones
@@ -85,7 +88,7 @@ export const useScammers = () => {
     loadScammers();
   }, [loadScammers]);
 
-  // Filter and sort scammers based on search query and sort option
+  // Filter scammers based on search query
   useEffect(() => {
     let result = [...scammers];
     
@@ -99,26 +102,11 @@ export const useScammers = () => {
       );
     }
     
-    result = [...result].sort((a, b) => {
-      if (sortBy === "newest") {
-        return b.dateAdded.getTime() - a.dateAdded.getTime();
-      } else if (sortBy === "oldest") {
-        return a.dateAdded.getTime() - b.dateAdded.getTime();
-      } else if (sortBy === "bounty") {
-        return b.bountyAmount - a.bountyAmount;
-      }
-      return 0;
-    });
-    
     setFilteredScammers(result);
-  }, [scammers, searchQuery, sortBy]);
+  }, [scammers, searchQuery]);
 
   const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);
-  }, []);
-
-  const handleSortChange = useCallback((sort: "newest" | "oldest" | "bounty") => {
-    setSortBy(sort);
   }, []);
 
   const refreshScammers = useCallback(() => {
@@ -131,9 +119,7 @@ export const useScammers = () => {
     isLoading,
     error,
     searchQuery,
-    sortBy,
     handleSearch,
-    handleSortChange,
     refreshScammers
   };
 };

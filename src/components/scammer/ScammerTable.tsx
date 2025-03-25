@@ -19,8 +19,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
-import { Eye, LinkIcon, ThumbsUp, User } from "lucide-react";
+import { ArrowUpDown, Eye, LinkIcon, ThumbsUp, User } from "lucide-react";
 import { useScammerProfile } from "@/hooks/useScammerProfile";
+import { ScammerSortField, SortDirection } from "@/hooks/useSortableScammers";
 
 interface ScammerTableProps {
   paginatedScammers: Scammer[];
@@ -30,6 +31,9 @@ interface ScammerTableProps {
   setCurrentPage: (page: number) => void;
   formatCurrency: (amount: number) => string;
   formatDate: (date: Date) => string;
+  onSort: (field: ScammerSortField) => void;
+  sortField: ScammerSortField;
+  sortDirection: SortDirection;
 }
 
 export const ScammerTable = ({
@@ -39,7 +43,10 @@ export const ScammerTable = ({
   itemsPerPage,
   setCurrentPage,
   formatCurrency,
-  formatDate
+  formatDate,
+  onSort,
+  sortField,
+  sortDirection
 }: ScammerTableProps) => {
   return (
     <div className="rounded-sm border-western-wood bg-western-parchment/80 overflow-hidden">
@@ -51,20 +58,49 @@ export const ScammerTable = ({
             <TableHead className="text-western-accent font-wanted">Socials</TableHead>
             <TableHead className="text-western-accent font-wanted">Accused Of</TableHead>
             <TableHead className="text-center text-western-accent font-wanted">Aliases</TableHead>
-            <TableHead className="text-center text-western-accent font-wanted">Bounty</TableHead>
-            <TableHead className="text-center text-western-accent font-wanted">
+            
+            <TableHead 
+              className="text-center text-western-accent font-wanted cursor-pointer"
+              onClick={() => onSort('bountyAmount')}
+            >
+              <div className="flex items-center justify-center">
+                <span>Bounty</span>
+                <ArrowUpDown className={`ml-1 h-4 w-4 ${sortField === 'bountyAmount' ? 'opacity-100' : 'opacity-50'}`} />
+              </div>
+            </TableHead>
+            
+            <TableHead 
+              className="text-center text-western-accent font-wanted cursor-pointer"
+              onClick={() => onSort('likes')}
+            >
               <div className="flex items-center justify-center">
                 <ThumbsUp className="h-4 w-4 mr-1" />
                 <span>Likes</span>
+                <ArrowUpDown className={`ml-1 h-4 w-4 ${sortField === 'likes' ? 'opacity-100' : 'opacity-50'}`} />
               </div>
             </TableHead>
-            <TableHead className="text-center text-western-accent font-wanted">
+            
+            <TableHead 
+              className="text-center text-western-accent font-wanted cursor-pointer"
+              onClick={() => onSort('views')}
+            >
               <div className="flex items-center justify-center">
                 <Eye className="h-4 w-4 mr-1" />
                 <span>Views</span>
+                <ArrowUpDown className={`ml-1 h-4 w-4 ${sortField === 'views' ? 'opacity-100' : 'opacity-50'}`} />
               </div>
             </TableHead>
-            <TableHead className="text-right text-western-accent font-wanted">Posted</TableHead>
+            
+            <TableHead 
+              className="text-right text-western-accent font-wanted cursor-pointer"
+              onClick={() => onSort('dateAdded')}
+            >
+              <div className="flex items-center justify-end">
+                <span>Posted</span>
+                <ArrowUpDown className={`ml-1 h-4 w-4 ${sortField === 'dateAdded' ? 'opacity-100' : 'opacity-50'}`} />
+              </div>
+            </TableHead>
+            
             <TableHead className="text-center text-western-accent font-wanted">
               <div className="flex items-center justify-center">
                 <User className="h-4 w-4 mr-1" />
