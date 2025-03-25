@@ -1,6 +1,5 @@
 
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Shield, CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { CloudflareTurnstile } from "@/components/CloudflareTurnstile";
 import { toast } from "sonner";
 
@@ -23,13 +22,6 @@ export function TurnstileVerification({ onVerify, token }: TurnstileVerification
 
   return (
     <div className="mt-6 border-t border-western-wood/20 pt-6">
-      <Alert className="mb-4 border-western-accent/30 bg-western-accent/10">
-        <Shield className="h-4 w-4 text-western-accent" />
-        <AlertDescription className="text-western-wood">
-          Protected by Cloudflare Turnstile - Verify you're not a robot
-        </AlertDescription>
-      </Alert>
-      
       <CloudflareTurnstile 
         siteKey={TURNSTILE_SITE_KEY} 
         onVerify={handleVerify} 
