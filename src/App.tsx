@@ -36,7 +36,7 @@ function App() {
               <Route path="/my-reports" element={<MyReportsPage />} />
               <Route path="/my-bounties" element={<MyBountiesPage />} />
               <Route path="/not-found" element={<NotFound />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
             <Toaster />
             <Sonner />
