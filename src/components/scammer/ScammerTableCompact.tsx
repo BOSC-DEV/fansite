@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Award, Eye, LinkIcon, MessageSquare, ThumbsUp, User } from "lucide-react";
+import { Award, Eye, LinkIcon, ThumbsUp, User } from "lucide-react";
 import { Scammer } from "@/lib/types";
 import { useScammerProfile } from "@/hooks/useScammerProfile";
 import { storageService } from "@/services/storage/localStorageService";
@@ -64,29 +64,31 @@ export const ScammerTableCompact = ({
             const commentsCount = storageService.getCommentsForScammer(scammer.id).length;
             
             return (
-              <TableRow key={scammer.id} className="border-b border-western-wood/20 hover:bg-western-sand/10">
+              <TableRow 
+                key={scammer.id} 
+                className="border-b border-western-wood/20 hover:bg-western-sand/10 cursor-pointer"
+                onClick={() => window.location.href = `/scammer/${scammer.id}`}
+              >
                 <TableCell className="font-medium">
-                  <Link to={`/scammer/${scammer.id}`}>
-                    <div className="flex items-center space-x-3">
-                      <Avatar className="w-8 h-8 border border-western-wood">
-                        <AvatarImage src={scammer.photoUrl} alt={scammer.name} />
-                        <AvatarFallback className="bg-western-wood text-western-parchment text-xs">
-                          {scammer.name.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-medium font-western">{scammer.name}</div>
-                        {aliases.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            <Badge variant="outline" className="text-xs bg-western-sand/20 border-western-wood/30 text-western-wood">
-                              {aliases[0]}
-                              {aliases.length > 1 && ` +${aliases.length - 1}`}
-                            </Badge>
-                          </div>
-                        )}
-                      </div>
+                  <div className="flex items-center space-x-3">
+                    <Avatar className="w-8 h-8 border border-western-wood">
+                      <AvatarImage src={scammer.photoUrl} alt={scammer.name} />
+                      <AvatarFallback className="bg-western-wood text-western-parchment text-xs">
+                        {scammer.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className="font-medium font-western">{scammer.name}</div>
+                      {aliases.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          <Badge variant="outline" className="text-xs bg-western-sand/20 border-western-wood/30 text-western-wood">
+                            {aliases[0]}
+                            {aliases.length > 1 && ` +${aliases.length - 1}`}
+                          </Badge>
+                        </div>
+                      )}
                     </div>
-                  </Link>
+                  </div>
                 </TableCell>
                 <TableCell>
                   {links.length > 0 ? (
@@ -98,6 +100,7 @@ export const ScammerTableCompact = ({
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center justify-center h-7 w-7 rounded-full bg-western-sand/20 text-western-wood hover:bg-western-sand/40 transition-colors"
+                          onClick={(e) => e.stopPropagation()} // Prevent row click when clicking on link
                         >
                           <LinkIcon className="h-3.5 w-3.5" />
                         </a>
@@ -149,7 +152,10 @@ const UploaderAvatar = ({ addedBy }: { addedBy: string | undefined }) => {
   
   return (
     <div className="flex justify-center">
-      <Link to={profileUrl}>
+      <Link 
+        to={profileUrl}
+        onClick={(e) => e.stopPropagation()} // Prevent row click when clicking on avatar
+      >
         <Avatar className="w-8 h-8 border border-western-wood hover:border-western-accent transition-all">
           <AvatarImage src={addedByPhotoUrl || ''} alt={addedByUsername || addedBy} />
           <AvatarFallback className="bg-western-wood text-western-parchment text-xs">

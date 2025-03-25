@@ -1,5 +1,5 @@
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Scammer } from "@/lib/types";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,6 +25,7 @@ export const ScammerTableRow = ({
   formatCurrency,
   formatDate
 }: ScammerTableRowProps) => {
+  const navigate = useNavigate();
   // Ensure aliases is always an array
   const aliases = Array.isArray(scammer.aliases) ? scammer.aliases : [];
   // Ensure links is always an array
@@ -32,26 +33,31 @@ export const ScammerTableRow = ({
   // Get comments count
   const commentsCount = storageService.getCommentsForScammer(scammer.id).length;
   
+  const handleRowClick = () => {
+    navigate(`/scammer/${scammer.id}`);
+  };
+  
   return (
-    <TableRow className="border-b border-western-wood/20 hover:bg-western-sand/10">
+    <TableRow 
+      className="border-b border-western-wood/20 hover:bg-western-sand/10 cursor-pointer" 
+      onClick={handleRowClick}
+    >
       <TableCell className="font-medium text-center">
         {(currentPage - 1) * itemsPerPage + index + 1}
       </TableCell>
       <TableCell>
-        <Link to={`/scammer/${scammer.id}`}>
-          <div className="flex items-center space-x-3">
-            <Avatar className="border-2 border-western-wood">
-              <AvatarImage src={scammer.photoUrl} alt={scammer.name} />
-              <AvatarFallback className="bg-western-wood text-western-parchment">{scammer.name.charAt(0)}</AvatarFallback>
-            </Avatar>
-            <div>
-              <div className="font-medium font-western">{scammer.name}</div>
-              <div className="text-xs text-western-wood/70 truncate max-w-[150px] hidden md:block">
-                {scammer.walletAddress}
-              </div>
+        <div className="flex items-center space-x-3">
+          <Avatar className="border-2 border-western-wood">
+            <AvatarImage src={scammer.photoUrl} alt={scammer.name} />
+            <AvatarFallback className="bg-western-wood text-western-parchment">{scammer.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div>
+            <div className="font-medium font-western">{scammer.name}</div>
+            <div className="text-xs text-western-wood/70 truncate max-w-[150px] hidden md:block">
+              {scammer.walletAddress}
             </div>
           </div>
-        </Link>
+        </div>
       </TableCell>
       <TableCell>
         {links.length > 0 ? (
@@ -63,6 +69,7 @@ export const ScammerTableRow = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-western-sand/20 text-western-wood hover:bg-western-sand/40 transition-colors"
+                onClick={(e) => e.stopPropagation()} // Prevent row click when clicking on link
               >
                 <LinkIcon className="h-4 w-4" />
               </a>
