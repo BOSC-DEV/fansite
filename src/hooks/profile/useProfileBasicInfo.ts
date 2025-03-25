@@ -1,7 +1,6 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useWallet } from "@/context/WalletContext";
-import { storageService } from "@/services/storage";
 
 export interface BasicInfoFormData {
   displayName: string;
@@ -16,11 +15,13 @@ export function useProfileBasicInfo() {
   const [bioCharCount, setBioCharCount] = useState(0);
 
   const handleDisplayNameChange = (newName: string) => {
+    console.log("Setting display name to:", newName);
     setDisplayName(newName);
   };
 
   const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
+    console.log("Setting bio to:", text);
     if (text.length <= 142) {
       setBio(text);
       setBioCharCount(text.length);

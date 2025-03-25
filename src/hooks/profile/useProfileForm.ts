@@ -26,10 +26,12 @@ export function useProfileForm() {
   const { isSubmitting, hasProfile: submissionHasProfile, profileId: submissionProfileId, supabaseReady, saveProfile: submitProfile } = useProfileFormSubmit();
   const { isFetchingProfile, hasProfile: fetchedHasProfile, profileId: fetchedProfileId } = useProfileFetch();
 
-  // Combined states from different hooks
   const [combinedHasProfile, setCombinedHasProfile] = useState(false);
   const [combinedProfileId, setCombinedProfileId] = useState<string | undefined>(undefined);
   const [previousAddress, setPreviousAddress] = useState<string | null>(null);
+  
+  // Track if we've already populated the form data
+  const [hasPopulatedFormData, setHasPopulatedFormData] = useState(false);
   
   // Fetch profile data
   useEffect(() => {
@@ -38,9 +40,15 @@ export function useProfileForm() {
     setCombinedHasProfile(profileExists);
     setCombinedProfileId(fetchedProfileId || submissionProfileId);
 
-    // Populate form data when profile is fetched
+    // Reset populated status when address changes
+    if (address !== previousAddress) {
+      setHasPopulatedFormData(false);
+      setPreviousAddress(address);
+    }
+
+    // Populate form data when profile is fetched, but only once
     const fetchProfileData = async () => {
-      if (isConnected && address && supabaseReady && !isFetchingProfile) {
+      if (isConnected && address && supabaseReady && !isFetchingProfile && !hasPopulatedFormData) {
         try {
           console.log("[useProfileForm] Loading profile data for address:", address);
           const profile = await storageService.getProfile(address);
@@ -52,7 +60,14 @@ export function useProfileForm() {
             setProfilePicUrl(profile.profilePicUrl || "");
             setXLink(profile.xLink || "");
             setWebsiteLink(profile.websiteLink || "");
-            handleBioChange({ target: { value: profile.bio || "" } } as React.ChangeEvent<HTMLTextAreaElement>);
+            
+            // Need to create a synthetic event for the bio
+            const bioEvent = {
+              target: { value: profile.bio || "" }
+            } as React.ChangeEvent<HTMLTextAreaElement>;
+            
+            handleBioChange(bioEvent);
+            setHasPopulatedFormData(true);
           }
         } catch (error) {
           console.error("[useProfileForm] Error fetching profile data:", error);
@@ -75,10 +90,22 @@ export function useProfileForm() {
     setProfilePicUrl, 
     setXLink, 
     setWebsiteLink, 
-    handleBioChange
+    handleBioChange,
+    hasPopulatedFormData,
+    previousAddress
   ]);
 
   const saveProfile = async () => {
+    console.log("Saving profile with form data:", {
+      displayName: basicInfo.displayName,
+      username,
+      profilePicUrl,
+      xLink: socialLinks.xLink,
+      websiteLink: socialLinks.websiteLink,
+      bio: basicInfo.bio,
+      bioCharCount: basicInfo.bioCharCount,
+    });
+    
     const formData = {
       displayName: basicInfo.displayName,
       username,
