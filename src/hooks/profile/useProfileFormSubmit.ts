@@ -96,6 +96,11 @@ export function useProfileFormSubmit() {
     console.log("[useProfileFormSubmit] Starting profile save for address:", address);
     
     try {
+      // Display a toast notification before requesting signature
+      toast.info("Please sign with your wallet to verify ownership and save your profile", {
+        duration: 5000,
+      });
+      
       // Request signature to verify wallet ownership before saving profile
       console.log("[useProfileFormSubmit] Requesting wallet signature for verification");
       const signatureVerified = await requestSignature();
