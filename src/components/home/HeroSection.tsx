@@ -18,7 +18,7 @@ export const HeroSection = () => {
                   <Star className="h-4 w-4 ml-1" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="western-btn gap-2 border-2 border-dashed border-western-wood hover:animate-wiggle hover:bg-western-parchment/80">
+              <Button asChild variant="outline" size="lg" className="western-btn gap-2 border-2 border-dashed border-western-wood text-western-wood hover:animate-wiggle hover:bg-western-wood hover:text-western-parchment">
                 <Link to="/create-listing">
                   Report a Scammer
                   <BookOpen className="h-4 w-4 ml-1" />
