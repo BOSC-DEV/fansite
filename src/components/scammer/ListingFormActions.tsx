@@ -61,6 +61,7 @@ export function ListingFormActions({ isSubmitting, onCancel }: ListingFormAction
           disabled={connecting}
           className="bg-western-accent hover:bg-western-accent/90 text-western-parchment font-western min-w-[220px]"
         >
+          <Wallet className="h-4 w-4 mr-2" />
           {connecting ? "Connecting..." : "Connect Wallet"}
         </Button>
       )}
