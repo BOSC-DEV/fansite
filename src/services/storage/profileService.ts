@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 
@@ -143,8 +144,8 @@ export class ProfileService extends BaseSupabaseService {
       return false;
     }
     
-    // For wallet-based authentication, we'll skip the Supabase auth check
-    // since we're using wallet signatures for verification instead
+    // For wallet-based authentication, we're using wallet signatures for verification instead
+    // We completely removed any Supabase auth check here since we verify using wallet signatures
     
     // Normalize wallet address
     profile.walletAddress = profile.walletAddress.trim();

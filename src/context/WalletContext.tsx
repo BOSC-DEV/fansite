@@ -154,6 +154,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         return false;
       }
       
+      console.log("Requesting wallet signature for verification from WalletContext");
       const signatureVerified = await web3Provider.requestSignature();
       
       if (!signatureVerified) {
@@ -161,6 +162,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         return false;
       }
       
+      console.log("Wallet signature verified successfully from WalletContext");
       return true;
     } catch (error) {
       console.error("Error requesting signature:", error);

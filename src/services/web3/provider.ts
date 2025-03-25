@@ -66,12 +66,15 @@ export class Web3Provider {
       const lastSignatureTime = localStorage.getItem('lastSignatureTime');
       const currentTime = Date.now();
       
-      // If we have a valid signature within the past 24 hours, don't request a new one
-      if (lastSignatureTime && (currentTime - parseInt(lastSignatureTime) < 24 * 60 * 60 * 1000)) {
-        console.log("Using existing signature (less than 24 hours old)");
+      // If we have a valid signature within the past hour, don't request a new one for profile editing
+      // Changed from 24 hours to 1 hour to ensure better security for profile editing
+      if (lastSignatureTime && (currentTime - parseInt(lastSignatureTime) < 60 * 60 * 1000)) {
+        console.log("Using existing signature (less than 1 hour old)");
         return true;
       }
 
+      console.log("Requesting new signature for wallet verification");
+      
       // Prepare signature message using TextEncoder
       const encoder = new TextEncoder();
       const message = encoder.encode(SIGNATURE_MESSAGE);
@@ -86,6 +89,7 @@ export class Web3Provider {
       
       // Store signature time
       localStorage.setItem('lastSignatureTime', currentTime.toString());
+      console.log("Signature successfully obtained and stored");
       
       return true;
     } catch (error) {
