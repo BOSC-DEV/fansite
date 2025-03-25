@@ -41,7 +41,7 @@ const Index = () => {
       
       <Header />
       
-      <main className="flex-grow">
+      <main className="flex-grow mt-24 sm:mt-32">
         <HeroSection />
         <div className="relative px-0">
           <div className="torn-edge-top"></div>

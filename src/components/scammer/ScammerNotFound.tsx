@@ -16,12 +16,20 @@ export function ScammerNotFound() {
           <p className="text-western-wood font-western mb-6 sm:mb-8 px-2">
             This scammer listing doesn't exist or may have been removed.
           </p>
-          <Button asChild className="western-btn">
-            <Link to="/most-wanted" className="flex items-center">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Most Wanted
-            </Link>
-          </Button>
+          <div className="flex justify-center space-x-4">
+            <Button asChild className="western-btn">
+              <Link to="/most-wanted" className="flex items-center">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Most Wanted
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="western-btn">
+              <Link to="/" className="flex items-center">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Home
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     </div>
