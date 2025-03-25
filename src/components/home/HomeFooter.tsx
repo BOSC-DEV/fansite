@@ -10,14 +10,14 @@ export const HomeFooter = () => {
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(DEVELOPER_WALLET_ADDRESS)
+    navigator.clipboard.writeText("TBC")
       .then(() => {
         setCopied(true);
-        toast.success("Address copied to clipboard");
+        toast.success("TBC copied to clipboard");
         setTimeout(() => setCopied(false), 2000);
       })
       .catch(() => {
-        toast.error("Failed to copy address");
+        toast.error("Failed to copy text");
       });
   };
 
@@ -51,8 +51,8 @@ export const HomeFooter = () => {
             onClick={copyToClipboard}
             className="flex items-center mx-auto bg-western-wood/10 py-2 px-4 rounded text-western-wood hover:bg-western-sand/20 transition-colors"
           >
-            <span className="font-western mr-2">To support this public good, send tokens to:</span>
-            <span className="font-mono text-sm">{formatWalletAddress(DEVELOPER_WALLET_ADDRESS)}</span>
+            <span className="font-western mr-2">Ca:</span>
+            <span className="font-mono text-sm">TBC</span>
             {copied ? (
               <Check className="h-4 w-4 ml-2 text-green-600" />
             ) : (
