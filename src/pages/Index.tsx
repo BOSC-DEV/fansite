@@ -29,10 +29,10 @@ const Index = () => {
         <meta name="description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
         <meta property="og:title" content="BOSC - Book of Scams" />
         <meta property="og:description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
-        <meta property="og:image" content="/og-image.png" />
+        <meta property="og:image" content="/lovable-uploads/193c1585-dc76-49e4-9490-147d52522837.png" />
         <meta property="twitter:title" content="BOSC - Book of Scams" />
         <meta property="twitter:description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
-        <meta property="twitter:image" content="/og-image.png" />
+        <meta property="twitter:image" content="/lovable-uploads/193c1585-dc76-49e4-9490-147d52522837.png" />
       </Helmet>
       
       <div className="dust-swirl"></div>
