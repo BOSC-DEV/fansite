@@ -36,11 +36,7 @@ export function ProfileHeader({ profile, scammersCount }: ProfileHeaderProps) {
                 <span className="font-bold">{scammersCount}</span> Reports
               </div>
               
-              {profile.location && (
-                <div className="bg-western-wood/40 px-3 py-1 rounded-full text-sm">
-                  📍 {profile.location}
-                </div>
-              )}
+              {/* Remove the location check since it's not in the UserProfile type */}
             </div>
             
             {profile.bio && (
