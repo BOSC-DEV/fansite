@@ -149,7 +149,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
   const requestSignature = async (): Promise<boolean> => {
     try {
-      if (!isConnected || !address) {
+      if (!connected || !address) {
         toast.error("Wallet not connected. Please connect your wallet first.");
         return false;
       }
