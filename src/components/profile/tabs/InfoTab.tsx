@@ -21,29 +21,29 @@ export function InfoTab({ profile }: InfoTabProps) {
       <Card className="p-6">
         <div className="space-y-4">
           <div>
-            <h3 className="text-sm font-medium text-western-sand">Display Name</h3>
-            <p>{profile.displayName}</p>
+            <h3 className="text-sm font-medium text-western-wood">Display Name</h3>
+            <p className="text-western-wood">{profile.displayName}</p>
           </div>
           
           <div>
-            <h3 className="text-sm font-medium text-western-sand">Username</h3>
-            <p>@{profile.username}</p>
+            <h3 className="text-sm font-medium text-western-wood">Username</h3>
+            <p className="text-western-wood">@{profile.username}</p>
           </div>
           
           {profile.bio && (
             <div>
-              <h3 className="text-sm font-medium text-western-sand">Bio</h3>
-              <p>{profile.bio}</p>
+              <h3 className="text-sm font-medium text-western-wood">Bio</h3>
+              <p className="text-western-wood">{profile.bio}</p>
             </div>
           )}
           
           <div>
-            <h3 className="text-sm font-medium text-western-sand">Wallet Address</h3>
+            <h3 className="text-sm font-medium text-western-wood">Wallet Address</h3>
             <div className="flex items-center gap-2">
-              <p className="text-xs overflow-hidden text-ellipsis">{profile.walletAddress}</p>
+              <p className="text-xs overflow-hidden text-ellipsis text-western-wood">{profile.walletAddress}</p>
               <button 
                 onClick={() => copyToClipboard(profile.walletAddress)}
-                className="text-western-sand hover:text-western-accent transition-colors"
+                className="text-western-wood hover:text-western-accent transition-colors"
                 aria-label="Copy wallet address"
               >
                 <Copy size={16} />
@@ -52,24 +52,24 @@ export function InfoTab({ profile }: InfoTabProps) {
           </div>
           
           <div>
-            <h3 className="text-sm font-medium text-western-sand">Joined</h3>
-            <p>{new Date(profile.createdAt).toLocaleDateString()}</p>
+            <h3 className="text-sm font-medium text-western-wood">Joined</h3>
+            <p className="text-western-wood">{new Date(profile.createdAt).toLocaleDateString()}</p>
           </div>
           
           {(profile.xLink || profile.websiteLink) && (
             <div>
-              <h3 className="text-sm font-medium text-western-sand">Links</h3>
+              <h3 className="text-sm font-medium text-western-wood">Links</h3>
               <div className="flex space-x-4 mt-2">
                 {profile.xLink && (
                   <a href={profile.xLink} target="_blank" rel="noopener noreferrer" 
-                     className="text-western-sand hover:text-western-accent transition-colors flex items-center gap-2">
+                     className="text-western-wood hover:text-western-accent transition-colors flex items-center gap-2">
                     <Twitter size={16} />
                     <span>X / Twitter</span>
                   </a>
                 )}
                 {profile.websiteLink && (
                   <a href={profile.websiteLink} target="_blank" rel="noopener noreferrer"
-                     className="text-western-sand hover:text-western-accent transition-colors flex items-center gap-2">
+                     className="text-western-wood hover:text-western-accent transition-colors flex items-center gap-2">
                     <Globe size={16} />
                     <span>Website</span>
                   </a>

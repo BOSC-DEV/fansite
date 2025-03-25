@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Twitter, Globe, Copy } from "lucide-react";
 import { toast } from "sonner";
@@ -64,7 +65,7 @@ export function ProfileLinks({
           href={xLink} 
           target="_blank" 
           rel="noopener noreferrer"
-          className="flex items-center gap-2 text-western-sand hover:text-western-accent transition-colors"
+          className="flex items-center gap-2 text-western-wood hover:text-western-accent transition-colors"
         >
           <Twitter size={18} />
           <span className="text-sm">X / Twitter</span>
@@ -76,7 +77,7 @@ export function ProfileLinks({
           href={websiteLink} 
           target="_blank" 
           rel="noopener noreferrer"
-          className="flex items-center gap-2 text-western-sand hover:text-western-accent transition-colors"
+          className="flex items-center gap-2 text-western-wood hover:text-western-accent transition-colors"
         >
           <Globe size={18} />
           <span className="text-sm">Website</span>
@@ -86,7 +87,7 @@ export function ProfileLinks({
       {walletAddress && (
         <button
           onClick={() => copyToClipboard(walletAddress)}
-          className="flex items-center gap-2 text-western-sand hover:text-western-accent transition-colors"
+          className="flex items-center gap-2 text-western-wood hover:text-western-accent transition-colors"
           aria-label="Copy wallet address"
         >
           <Copy size={18} />
