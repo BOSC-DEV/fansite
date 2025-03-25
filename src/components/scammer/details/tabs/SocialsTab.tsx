@@ -10,7 +10,7 @@ interface SocialsTabProps {
 export function SocialsTab({ links }: SocialsTabProps) {
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Socials & Links</h3>
+      <h3 className="text-lg font-semibold">Links</h3>
       {links && links.length > 0 ? (
         <div className="space-y-4">
           <div className="flex flex-wrap gap-2">
@@ -49,8 +49,8 @@ export function SocialsTab({ links }: SocialsTabProps) {
         </div>
       ) : (
         <div className="text-center py-4">
-          <p className="text-sm text-muted-foreground">No social links provided</p>
-          <Badge variant="outline" className="mt-2">No social profiles available</Badge>
+          <p className="text-sm text-muted-foreground">No links provided</p>
+          <Badge variant="outline" className="mt-2">No links available</Badge>
         </div>
       )}
     </div>

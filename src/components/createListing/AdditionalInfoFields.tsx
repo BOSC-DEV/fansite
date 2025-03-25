@@ -46,7 +46,7 @@ export function AdditionalInfoFields({
   return (
     <>
       <TagInput
-        label="Links to Socials"
+        label="Links"
         placeholder="https://example.com/socials"
         currentValue={currentLink}
         values={links}
