@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader } from "@/components/ui/card";
 import { useWallet } from "@/context/WalletContext";
 import { Wallet, AlertCircle, Fingerprint } from "lucide-react";
 import { toast } from "sonner";
@@ -54,10 +54,6 @@ export function ConnectWallet({
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Wallet className="h-5 w-5" />
-          Connect Your Wallet
-        </CardTitle>
         <CardDescription>
           {message}
         </CardDescription>
@@ -74,14 +70,14 @@ export function ConnectWallet({
             </p>
           </div>
           
-          <div className="bg-muted/50 p-3 rounded-lg flex items-start gap-2 max-w-md mt-2">
+          <div className="bg-muted/50 p-3 rounded-lg flex items-start gap-2 w-full max-w-md mt-2">
             <AlertCircle className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
             <p className="text-xs text-muted-foreground text-left">
               The Book of Scams only uses wallet connection to verify your identity and process token transactions. We never have access to your private keys or funds.
             </p>
           </div>
           
-          <div className="bg-muted/50 p-3 rounded-lg flex items-start gap-2 max-w-md mt-0">
+          <div className="bg-muted/50 p-3 rounded-lg flex items-start gap-2 w-full max-w-md mt-0">
             <Fingerprint className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
             <p className="text-xs text-muted-foreground text-left">
               A one-time signature will be requested when you first connect your wallet, and again every 24 hours for security purposes.
@@ -89,8 +85,8 @@ export function ConnectWallet({
           </div>
         </div>
       </CardContent>
-      <CardFooter>
-        <Button onClick={handleConnect} className="w-full bg-western-accent hover:bg-western-accent/90" disabled={connecting}>
+      <CardFooter className="flex justify-center">
+        <Button onClick={handleConnect} className="w-full max-w-md bg-western-accent hover:bg-western-accent/90" disabled={connecting}>
           {connecting ? (
             <span className="flex items-center">
               <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
