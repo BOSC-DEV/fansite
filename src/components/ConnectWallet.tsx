@@ -1,42 +1,34 @@
-
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useWallet } from "@/context/WalletContext";
 import { Wallet, AlertCircle } from "lucide-react";
 import { useEffect } from "react";
-
 interface ConnectWalletProps {
   redirectPath?: string;
   className?: string;
 }
-
-export function ConnectWallet({ 
-  redirectPath, 
-  className 
+export function ConnectWallet({
+  redirectPath,
+  className
 }: ConnectWalletProps) {
-  const { isConnected } = useWallet();
-  
+  const {
+    isConnected
+  } = useWallet();
   useEffect(() => {
     // If the user is already connected and there's a redirect path, redirect them
     if (isConnected && redirectPath) {
       window.location.href = redirectPath;
     }
   }, [isConnected, redirectPath]);
-  
-  return (
-    <Card className={className}>
-      <CardHeader>
-        {/* Empty header */}
-      </CardHeader>
+  return <Card className={className}>
+      
       <CardContent>
-        <div className="flex flex-col items-center justify-center py-2 text-center space-y-4">
+        <div className="flex flex-col items-center justify-center py-2 text-center space-y-4 my-[20px]">
           <div className="h-16 w-16 rounded-full bg-muted/50 flex items-center justify-center mb-2">
             <Wallet className="h-8 w-8 text-muted-foreground" />
           </div>
           <div className="space-y-2 max-w-md mb-4">
-            <h3 className="text-xl font-semibold">Wallet Connection</h3>
-            <p className="text-sm text-muted-foreground">
-              Book of Scams uses your Phantom wallet for secure transactions and identity verification.
-            </p>
+            <h3 className="text-xl font-semibold">Profile Required</h3>
+            <p className="text-sm text-muted-foreground">Book of Scams uses your Phantom wallet for secure transactions and identity verification. Create a profile to post a bounty today!</p>
           </div>
           
           <div className="bg-muted/50 p-3 rounded-lg flex items-start gap-2 w-full max-w-md">
@@ -47,8 +39,6 @@ export function ConnectWallet({
           </div>
         </div>
       </CardContent>
-    </Card>
-  );
+    </Card>;
 }
-
 export default ConnectWallet;
