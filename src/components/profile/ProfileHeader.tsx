@@ -30,13 +30,6 @@ export function ProfileHeader({ profile, scammersCount }: ProfileHeaderProps) {
             <p className="text-sm mb-4 max-w-2xl text-western-sand/80">{profile.bio}</p>
           )}
           
-          <div className="flex gap-4 flex-wrap justify-center md:justify-start">
-            <div className="text-sm">
-              <span className="text-western-accent font-semibold">{scammersCount}</span>
-              <span className="text-western-sand ml-1">Scammer{scammersCount !== 1 ? 's' : ''} Reported</span>
-            </div>
-          </div>
-          
           <ProfileLinks 
             xLink={profile.xLink} 
             websiteLink={profile.websiteLink} 
