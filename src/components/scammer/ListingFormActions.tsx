@@ -22,7 +22,10 @@ export function ListingFormActions({ isSubmitting, onCancel }: ListingFormAction
     }
   };
 
-  const handleConnectWallet = async () => {
+  const handleConnectWallet = async (e: React.MouseEvent) => {
+    // Prevent default to avoid page refresh
+    e.preventDefault();
+    
     try {
       await connectWallet();
       // The success toast will be shown by the WalletContext

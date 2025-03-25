@@ -26,7 +26,10 @@ export function ConnectWallet({
     }
   }, [isConnected, redirectPath]);
   
-  const handleConnect = async () => {
+  const handleConnect = async (e: React.MouseEvent) => {
+    // Prevent default to avoid page refresh
+    e.preventDefault();
+    
     try {
       console.log("Attempting to connect wallet from ConnectWallet component");
       const connected = await connectWallet();
