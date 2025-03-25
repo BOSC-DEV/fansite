@@ -43,8 +43,19 @@ const ScammerDetail = () => {
     return <ScammerNotFound />;
   }
 
+  // Ensure we have absolute URLs for social media sharing
+  const getAbsoluteUrl = (url: string) => {
+    if (url.startsWith('http')) {
+      return url;
+    }
+    return `${window.location.origin}${url.startsWith('/') ? '' : '/'}${url}`;
+  };
+
   // Construct canonical URL
   const canonicalUrl = `https://bookofscams.lol/scammer/${scammer.id}`;
+  
+  // Ensure image URL is absolute
+  const imageUrl = getAbsoluteUrl(scammer.photoUrl);
 
   return (
     <div className="min-h-screen old-paper">
@@ -58,14 +69,18 @@ const ScammerDetail = () => {
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:title" content={`${scammer.name} - Book of Scams`} />
         <meta property="og:description" content={`${scammer.name} is accused of ${scammer.accusedOf}. Reported on Book of Scams.`} />
-        <meta property="og:image" content={scammer.photoUrl} />
+        <meta property="og:image" content={imageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         
         {/* Twitter / X */}
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content={canonicalUrl} />
-        <meta property="twitter:title" content={`${scammer.name} - Book of Scams`} />
-        <meta property="twitter:description" content={`${scammer.name} is accused of ${scammer.accusedOf}. View their profile on Book of Scams.`} />
-        <meta property="twitter:image" content={scammer.photoUrl} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@bookofscamslol" />
+        <meta name="twitter:url" content={canonicalUrl} />
+        <meta name="twitter:title" content={`${scammer.name} - Book of Scams`} />
+        <meta name="twitter:description" content={`${scammer.name} is accused of ${scammer.accusedOf}. View their profile on Book of Scams.`} />
+        <meta name="twitter:image" content={imageUrl} />
+        <meta name="twitter:image:alt" content={`Profile image of ${scammer.name}`} />
       </Helmet>
       
       <Header />

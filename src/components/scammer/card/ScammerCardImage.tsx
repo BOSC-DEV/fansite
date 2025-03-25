@@ -143,6 +143,11 @@ export function ScammerCardImage({
           </Badge>
         </div>
       </div>
+      
+      {/* Hidden metadata for Twitter crawlers */}
+      <meta property="twitter:image" content={absoluteImageUrl} />
+      <meta property="twitter:image:alt" content={`Profile image of ${name}`} />
+      <meta property="og:image" content={absoluteImageUrl} />
     </div>
   );
 }
