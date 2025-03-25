@@ -45,7 +45,7 @@ export function ListingFormActions({ isSubmitting, onCancel }: ListingFormAction
         type="button" 
         variant="outline" 
         onClick={handleCancel}
-        className="border-western-wood text-western-wood hover:bg-western-sand/20 min-w-[120px]"
+        className="border-western-wood/60 text-western-wood hover:bg-western-wood/10 hover:border-western-wood/80 min-w-[120px]"
       >
         Cancel
       </Button>
