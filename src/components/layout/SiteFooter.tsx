@@ -50,7 +50,7 @@ export const SiteFooter = () => {
           <div className="text-sm text-western-parchment/80 max-w-2xl mx-auto">
             <button 
               onClick={copyToClipboard}
-              className="flex items-center justify-center mx-auto bg-western-wood/10 py-2 px-4 rounded text-western-parchment hover:bg-western-wood/20 transition-colors"
+              className="flex items-center justify-center mx-auto bg-western-wood/10 py-2 px-4 rounded-lg text-western-parchment hover:bg-western-wood/20 transition-colors border border-western-sand/30 shadow-md transform hover:scale-105 duration-300"
             >
               <span className="font-western mr-2">Ca:</span>
               <span className="font-mono">TBC</span>

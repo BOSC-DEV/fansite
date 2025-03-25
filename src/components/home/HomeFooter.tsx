@@ -49,7 +49,7 @@ export const HomeFooter = () => {
         <div className="mt-4 pt-4 border-t border-western-wood/20 text-center">
           <button 
             onClick={copyToClipboard}
-            className="flex items-center mx-auto bg-western-wood/10 py-2 px-4 rounded text-western-wood hover:bg-western-sand/20 transition-colors"
+            className="flex items-center mx-auto bg-western-wood/10 py-2 px-4 rounded-lg text-western-wood hover:bg-western-sand/20 transition-colors border border-western-leather/30 shadow-md transform hover:-rotate-1 duration-300"
           >
             <span className="font-western mr-2">Ca:</span>
             <span className="font-mono text-sm">TBC</span>
