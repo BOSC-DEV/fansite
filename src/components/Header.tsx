@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Wallet, Home, Award, BookOpen, User, Trophy, FileText, Coins, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProfileButton } from "./profile/ProfileButton";
@@ -16,6 +16,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { toast } from "sonner";
+import { storageService } from "@/services/storage";
 
 export const Header = () => {
   const {
@@ -27,8 +28,10 @@ export const Header = () => {
     disconnectWallet
   } = useWallet();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [username, setUsername] = useState<string | null>(null);
   const location = useLocation();
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,6 +40,25 @@ export const Header = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    // Fetch username when address changes
+    const fetchProfile = async () => {
+      if (isConnected && address) {
+        try {
+          const profile = await storageService.getProfile(address);
+          setUsername(profile?.username || null);
+        } catch (error) {
+          console.error("Error fetching profile for username:", error);
+          setUsername(null);
+        }
+      } else {
+        setUsername(null);
+      }
+    };
+
+    fetchProfile();
+  }, [isConnected, address]);
 
   const handleConnectClick = async () => {
     if (!isConnected) {
@@ -47,6 +69,16 @@ export const Header = () => {
   const handleDisconnect = () => {
     disconnectWallet();
     toast.success("Wallet disconnected successfully");
+  };
+
+  const handleProfileClick = () => {
+    if (username) {
+      navigate(`/${username}`);
+    } else if (address) {
+      navigate(`/user/${address}`);
+    } else {
+      navigate("/profile");
+    }
   };
 
   const formatAddress = (address: string) => {
@@ -104,6 +136,23 @@ export const Header = () => {
     }
   ];
 
+  // Add profile view to menu items if user has a profile
+  if (username) {
+    profileMenuItems.unshift({
+      path: `/${username}`,
+      label: "View Public Profile",
+      icon: <User className="h-4 w-4" />,
+      requiresAuth: true
+    });
+  } else if (address) {
+    profileMenuItems.unshift({
+      path: `/user/${address}`,
+      label: "View Public Profile",
+      icon: <User className="h-4 w-4" />,
+      requiresAuth: true
+    });
+  }
+
   return (
     <header className={cn("fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out wood-texture", 
       isScrolled ? "py-3 shadow-md" : "py-5")}>
@@ -137,12 +186,17 @@ export const Header = () => {
               <NavigationMenu>
                 <NavigationMenuList>
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger className={cn(
-                      "flex items-center text-sm font-bold transition-colors hover:scale-110 transform duration-200 font-western bg-transparent", 
-                      location.pathname.includes("/profile") || location.pathname.includes("/my-") 
-                        ? "text-western-parchment" 
-                        : "text-western-sand hover:text-western-parchment"
-                    )}>
+                    <NavigationMenuTrigger 
+                      onClick={handleProfileClick}
+                      className={cn(
+                        "flex items-center text-sm font-bold transition-colors hover:scale-110 transform duration-200 font-western bg-transparent cursor-pointer", 
+                        location.pathname.includes("/profile") || location.pathname.includes("/my-") || 
+                        (username && location.pathname === `/${username}`) || 
+                        (address && location.pathname === `/user/${address}`)
+                          ? "text-western-parchment" 
+                          : "text-western-sand hover:text-western-parchment"
+                      )}
+                    >
                       <User className="h-4 w-4 mr-2" />
                       Profile
                     </NavigationMenuTrigger>
@@ -227,16 +281,20 @@ export const Header = () => {
                 ))}
                 
                 {isConnected ? (
-                  <Link 
-                    to="/profile" 
+                  <button 
+                    onClick={handleProfileClick}
                     className={cn(
                       "flex flex-col items-center justify-center p-2 rounded-lg transition-colors", 
-                      location.pathname === "/profile" ? "text-western-parchment bg-western-accent/30" : "text-western-sand hover:text-western-parchment"
+                      location.pathname === "/profile" || 
+                      (username && location.pathname === `/${username}`) || 
+                      (address && location.pathname === `/user/${address}`)
+                        ? "text-western-parchment bg-western-accent/30" 
+                        : "text-western-sand hover:text-western-parchment"
                     )}
                   >
                     <User className="h-4 w-4" />
                     <span className="text-xs mt-1 font-western">Profile</span>
-                  </Link>
+                  </button>
                 ) : (
                   <Button 
                     variant="ghost" 
@@ -258,6 +316,6 @@ export const Header = () => {
       </div>
     </header>
   );
-};
+}
 
 export default Header;

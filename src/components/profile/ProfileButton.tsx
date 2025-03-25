@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +18,7 @@ import { toast } from "sonner";
 export function ProfileButton() {
   const { isConnected, address, disconnectWallet } = useWallet();
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const navigate = useNavigate();
   
   useEffect(() => {
     // Fetch user profile if wallet is connected
@@ -42,6 +43,14 @@ export function ProfileButton() {
     toast.success("Wallet disconnected successfully");
   };
 
+  const handleProfileClick = () => {
+    if (profile && profile.username) {
+      navigate(`/${profile.username}`);
+    } else if (address) {
+      navigate(`/user/${address}`);
+    }
+  };
+
   if (!isConnected) {
     return null;
   }
@@ -49,7 +58,12 @@ export function ProfileButton() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative h-9 w-9 rounded-full">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="relative h-9 w-9 rounded-full"
+          onClick={handleProfileClick}
+        >
           <Avatar className="h-9 w-9 border border-western-sand/30">
             <AvatarImage src={profile?.profilePicUrl} alt={profile?.displayName || "Profile"} />
             <AvatarFallback className="bg-western-sand/20">
