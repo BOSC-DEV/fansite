@@ -15,7 +15,7 @@ export function useScammerStats(scammer: Scammer) {
     if (isLiked) {
       setIsLiked(false);
       setLikes(likes - 1);
-      toast.info("Like removed");
+      toast.info("Agreement removed");
     } else {
       if (isDisliked) {
         setIsDisliked(false);
@@ -23,7 +23,7 @@ export function useScammerStats(scammer: Scammer) {
       }
       setIsLiked(true);
       setLikes(likes + 1);
-      toast.success("Scammer liked");
+      toast.success("Agreed");
     }
 
     try {
@@ -33,7 +33,7 @@ export function useScammerStats(scammer: Scammer) {
       });
     } catch (error) {
       console.error("Error updating likes:", error);
-      toast.error("Failed to update likes");
+      toast.error("Failed to update agreement");
     }
   };
 
@@ -41,7 +41,7 @@ export function useScammerStats(scammer: Scammer) {
     if (isDisliked) {
       setIsDisliked(false);
       setDislikes(dislikes - 1);
-      toast.info("Dislike removed");
+      toast.info("Disagreement removed");
     } else {
       if (isLiked) {
         setIsLiked(false);
@@ -49,7 +49,7 @@ export function useScammerStats(scammer: Scammer) {
       }
       setIsDisliked(true);
       setDislikes(dislikes + 1);
-      toast.success("Scammer disliked");
+      toast.success("Disagreed");
     }
 
     try {
@@ -59,7 +59,7 @@ export function useScammerStats(scammer: Scammer) {
       });
     } catch (error) {
       console.error("Error updating dislikes:", error);
-      toast.error("Failed to update dislikes");
+      toast.error("Failed to update disagreement");
     }
   };
 

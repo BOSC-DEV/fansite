@@ -9,6 +9,7 @@ import { CommentSection } from "@/components/comments/CommentSection";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useScammerDetail } from "@/hooks/useScammerDetail";
+import { AgreementRatioBar } from "@/components/scammer/details/AgreementRatioBar";
 
 const ScammerDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -71,6 +72,10 @@ const ScammerDetail = () => {
             />
             
             <div className="mt-8">
+              <AgreementRatioBar 
+                likes={scammerStats.likes} 
+                dislikes={scammerStats.dislikes} 
+              />
               <CommentSection scammerId={scammer.id} />
             </div>
           </div>
