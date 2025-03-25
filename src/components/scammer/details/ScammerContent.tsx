@@ -14,6 +14,9 @@ interface ScammerContentProps {
 }
 
 export function ScammerContent({ aliases, links, accomplices, officialResponse }: ScammerContentProps) {
+  // Add console logs to debug the data
+  console.log('ScammerContent props:', { aliases, links, accomplices, officialResponse });
+  
   return (
     <Tabs defaultValue="identity" className="w-full">
       <TabsList className="grid grid-cols-4 mb-6">
