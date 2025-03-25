@@ -37,8 +37,9 @@ export function useComments(scammerId: string) {
       return;
     }
     
-    if (!address) {
+    if (!isConnected || !address) {
       toast.error("You must be connected with a wallet to comment");
+      connectWallet();
       return;
     }
     

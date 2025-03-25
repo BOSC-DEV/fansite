@@ -34,11 +34,15 @@ export function EmailVerification({ onSuccess, initialEmail = "" }: EmailVerific
 
   const handleVerification = async (values: z.infer<typeof emailSchema>) => {
     setIsSubmitting(true);
+    
     try {
+      console.log(`Attempting ${mode} with email: ${values.email}`);
       let result;
       
       if (mode === "signup") {
         result = await signUpWithEmail(values.email, values.password);
+        console.log("Signup result:", result);
+        
         if (result.error) {
           if (result.error.message.includes("already registered")) {
             toast.info("This email is already registered. Try signing in instead.");
@@ -52,6 +56,8 @@ export function EmailVerification({ onSuccess, initialEmail = "" }: EmailVerific
         }
       } else {
         result = await signInWithEmail(values.email, values.password);
+        console.log("Signin result:", result);
+        
         if (result.error) {
           toast.error(result.error.message);
         } else {
@@ -76,7 +82,10 @@ export function EmailVerification({ onSuccess, initialEmail = "" }: EmailVerific
 
     setIsSubmitting(true);
     try {
+      console.log("Resending verification email to:", email);
       const result = await sendEmailVerification(email);
+      console.log("Resend verification result:", result);
+      
       if (result.error) {
         toast.error(result.error.message);
       } else {
