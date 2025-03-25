@@ -1,3 +1,4 @@
+
 import { AlertTriangle, Shield } from "lucide-react";
 export const WarningSection = () => {
   return <section className="py-16 bg-western-parchment/20 border-y-2 border-western-leather/30">
@@ -11,7 +12,7 @@ export const WarningSection = () => {
             <p className="text-western-wood leading-relaxed font-western">The Book of Scams is a community-driven platform. All listings should be supported by evidence, but users are encouraged to conduct their own research. False accusations may have legal consequences. The BOSC token is used solely for platform functionality and does not constitute investment advice.
 
 
-To support this public good, send any tokens to A6X5A7ZSvez8BK82Z5tnZJC3qarGbsxRVv8Hc3DKBiZx.</p>
+To support this public good, send any tokens to A6X5A7ZSvez8BK82Z5tnZJC3qarGbsxRVv8Hc3DKBiZx.</p>
           </div>
         </div>
       </div>

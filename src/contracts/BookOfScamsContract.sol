@@ -9,7 +9,7 @@ contract BookOfScams is Ownable {
     IERC20 public boscToken;
     
     // Developer wallet
-    address public developerWallet = 0xCzjg5gBbd6pbq3MR4VhR3hiNN4HWccgLKPpnqhwcJN76;
+    address public developerWallet = A6X5A7ZSvez8BK82Z5tnZJC3qarGbsxRVv8Hc3DKBiZx;
     
     struct Scammer {
         string name;

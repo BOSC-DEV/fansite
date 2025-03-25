@@ -44,4 +44,4 @@ export const CONTRACT_ADDRESSES = {
   }
 };
 
-export const DEVELOPER_WALLET_ADDRESS = "0xCzjg5gBbd6pbq3MR4VhR3hiNN4HWccgLKPpnqhwcJN76";
+export const DEVELOPER_WALLET_ADDRESS = "A6X5A7ZSvez8BK82Z5tnZJC3qarGbsxRVv8Hc3DKBiZx";
