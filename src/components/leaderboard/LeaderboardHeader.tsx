@@ -3,7 +3,7 @@ import React from "react";
 import { TableHeader, TableHead, TableRow } from "@/components/ui/table";
 import { ArrowUpDown } from "lucide-react";
 
-type SortField = 'totalReports' | 'totalLikes' | 'totalViews' | 'totalComments';
+type SortField = 'totalReports' | 'totalLikes' | 'totalViews' | 'totalComments' | 'totalBounty';
 
 interface LeaderboardHeaderProps {
   onSort: (field: SortField) => void;
@@ -52,7 +52,15 @@ export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({ onSort }) 
             <ArrowUpDown className="ml-1 h-4 w-4" />
           </div>
         </TableHead>
-        <TableHead className="text-center text-western-accent font-wanted">Total Bounty</TableHead>
+        <TableHead 
+          className="text-center text-western-accent font-wanted cursor-pointer"
+          onClick={() => onSort('totalBounty')}
+        >
+          <div className="flex items-center justify-center">
+            Total Bounty
+            <ArrowUpDown className="ml-1 h-4 w-4" />
+          </div>
+        </TableHead>
       </TableRow>
     </TableHeader>
   );
