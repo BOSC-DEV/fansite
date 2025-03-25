@@ -58,7 +58,9 @@ export function ScammerInteractionButtons({
       </div>
       
       <div className="flex items-center">
-        <Eye className="h-5 w-5 text-western-wood/60" />
+        <div className="flex justify-center items-center h-8 w-8">
+          <Eye className="h-5 w-5 text-western-wood/60" />
+        </div>
         <span className="text-sm ml-1 text-western-wood/70">{views}</span>
       </div>
       
