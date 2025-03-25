@@ -19,7 +19,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
-import { User } from "lucide-react";
+import { LinkIcon, User } from "lucide-react";
 import { useScammerProfile } from "@/hooks/useScammerProfile";
 
 interface ScammerTableProps {
@@ -48,6 +48,7 @@ export const ScammerTable = ({
           <TableRow>
             <TableHead className="w-[60px] text-center text-western-accent font-wanted">№</TableHead>
             <TableHead className="text-western-accent font-wanted">Outlaw</TableHead>
+            <TableHead className="text-western-accent font-wanted">Socials</TableHead>
             <TableHead className="text-western-accent font-wanted">Crimes</TableHead>
             <TableHead className="text-center text-western-accent font-wanted">Aliases</TableHead>
             <TableHead className="text-center text-western-accent font-wanted">
@@ -64,6 +65,8 @@ export const ScammerTable = ({
           {paginatedScammers.map((scammer, index) => {
             // Ensure aliases is always an array
             const aliases = Array.isArray(scammer.aliases) ? scammer.aliases : [];
+            // Ensure links is always an array
+            const links = Array.isArray(scammer.links) ? scammer.links : [];
             
             return (
               <TableRow key={scammer.id} className="border-b border-western-wood/20 hover:bg-western-sand/10">
@@ -85,6 +88,30 @@ export const ScammerTable = ({
                       </div>
                     </div>
                   </Link>
+                </TableCell>
+                <TableCell>
+                  {links.length > 0 ? (
+                    <div className="flex items-center space-x-2">
+                      {links.slice(0, 3).map((link, index) => (
+                        <a 
+                          key={index} 
+                          href={link.startsWith('http') ? link : `https://${link}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-western-sand/20 text-western-wood hover:bg-western-sand/40 transition-colors"
+                        >
+                          <LinkIcon className="h-4 w-4" />
+                        </a>
+                      ))}
+                      {links.length > 3 && (
+                        <Badge variant="outline" className="text-sm bg-western-sand/20 border-western-wood/30 text-western-wood">
+                          +{links.length - 3} more
+                        </Badge>
+                      )}
+                    </div>
+                  ) : (
+                    <span className="text-western-wood/50 text-sm">-</span>
+                  )}
                 </TableCell>
                 <TableCell className="max-w-[200px]">
                   <p className="truncate">{scammer.accusedOf}</p>

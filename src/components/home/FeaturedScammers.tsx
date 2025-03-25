@@ -7,51 +7,11 @@ import { ArrowRight, Award, Eye, MessageSquare, ThumbsUp } from "lucide-react";
 import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
 import { useWallet } from "@/context/WalletContext";
 import { scammerService } from "@/services/storage";
+import { useScammers } from "@/hooks/use-scammers";
 
 export const FeaturedScammers = ({ limit = 10 }: { limit?: number }) => {
-  const [featuredScammers, setFeaturedScammers] = useState<Scammer[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const { chainId } = useWallet();
-
-  useEffect(() => {
-    const fetchFeaturedScammers = async () => {
-      setIsLoading(true);
-      try {
-        const supabaseScammers = await scammerService.getAllScammers();
-        
-        const scammers: Scammer[] = supabaseScammers
-          .map(s => ({
-            id: s.id,
-            name: s.name,
-            photoUrl: s.photoUrl || '',
-            accusedOf: s.accusedOf || '',
-            links: s.links || [],
-            aliases: Array.isArray(s.aliases) ? s.aliases : [],
-            accomplices: s.accomplices || [],
-            officialResponse: s.officialResponse || '',
-            bountyAmount: Number(s.bountyAmount) || 0,
-            walletAddress: s.walletAddress || '',
-            dateAdded: new Date(s.dateAdded),
-            addedBy: s.addedBy || '',
-            likes: s.likes || 0,
-            dislikes: s.dislikes || 0,
-            views: s.views || 0
-          }))
-          .sort((a, b) => b.dateAdded.getTime() - a.dateAdded.getTime())
-          .slice(0, limit);
-        
-        setFeaturedScammers(scammers);
-        console.log('Featured scammers loaded:', scammers.length);
-      } catch (error) {
-        console.error("Error fetching featured scammers:", error);
-        setFeaturedScammers([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchFeaturedScammers();
-  }, [chainId, limit]);
+  const { isLoading, filteredScammers } = useScammers();
+  const limitedScammers = filteredScammers.slice(0, limit);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -90,10 +50,10 @@ export const FeaturedScammers = ({ limit = 10 }: { limit?: number }) => {
             <div className="p-6 text-center">
               <p className="text-muted-foreground">Loading scammers...</p>
             </div>
-          ) : featuredScammers.length > 0 ? (
+          ) : limitedScammers.length > 0 ? (
             <>
               <ScammerTableCompact 
-                scammers={featuredScammers}
+                scammers={limitedScammers}
                 formatCurrency={formatCurrency}
                 formatDate={formatDate}
               />

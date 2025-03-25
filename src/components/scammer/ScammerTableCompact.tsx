@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Award, Eye, MessageSquare, ThumbsUp, User } from "lucide-react";
+import { Award, Eye, LinkIcon, MessageSquare, ThumbsUp, User } from "lucide-react";
 import { Scammer } from "@/lib/types";
 import { useScammerProfile } from "@/hooks/useScammerProfile";
 
@@ -24,6 +24,7 @@ export const ScammerTableCompact = ({
         <TableHeader className="bg-western-sand/60 border-b border-western-wood/30">
           <TableRow>
             <TableHead className="text-western-accent font-wanted">Outlaw</TableHead>
+            <TableHead className="text-western-accent font-wanted">Socials</TableHead>
             <TableHead className="text-western-accent font-wanted">Accused Of</TableHead>
             <TableHead className="text-center text-western-accent font-wanted">
               <div className="flex items-center justify-center">
@@ -56,6 +57,8 @@ export const ScammerTableCompact = ({
           {scammers.map((scammer) => {
             // Ensure aliases is always an array with proper type handling
             const aliases = Array.isArray(scammer.aliases) ? scammer.aliases : [];
+            // Ensure links is always an array
+            const links = Array.isArray(scammer.links) ? scammer.links : [];
             
             return (
               <TableRow key={scammer.id} className="border-b border-western-wood/20 hover:bg-western-sand/10">
@@ -81,6 +84,30 @@ export const ScammerTableCompact = ({
                       </div>
                     </div>
                   </Link>
+                </TableCell>
+                <TableCell>
+                  {links.length > 0 ? (
+                    <div className="flex items-center space-x-2">
+                      {links.slice(0, 2).map((link, index) => (
+                        <a 
+                          key={index} 
+                          href={link.startsWith('http') ? link : `https://${link}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center h-7 w-7 rounded-full bg-western-sand/20 text-western-wood hover:bg-western-sand/40 transition-colors"
+                        >
+                          <LinkIcon className="h-3.5 w-3.5" />
+                        </a>
+                      ))}
+                      {links.length > 2 && (
+                        <Badge variant="outline" className="text-xs bg-western-sand/20 border-western-wood/30 text-western-wood">
+                          +{links.length - 2} more
+                        </Badge>
+                      )}
+                    </div>
+                  ) : (
+                    <span className="text-western-wood/50 text-sm">-</span>
+                  )}
                 </TableCell>
                 <TableCell className="max-w-[200px]">
                   <p className="truncate text-sm">{scammer.accusedOf}</p>
