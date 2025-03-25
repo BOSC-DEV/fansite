@@ -14,7 +14,7 @@ export function ScammerNotFound() {
           <AlertTriangle className="h-12 sm:h-16 w-12 sm:w-16 mx-auto text-western-accent mb-4" />
           <h1 className="text-2xl sm:text-3xl font-wanted text-western-accent mb-4 uppercase tracking-wide">Outlaw Not Found</h1>
           <p className="text-western-wood font-western mb-6 sm:mb-8 px-2">
-            This scammer seems to have fled town or doesn't exist.
+            This scammer listing doesn't exist or may have been removed.
           </p>
           <Button asChild className="western-btn">
             <Link to="/most-wanted" className="flex items-center">
