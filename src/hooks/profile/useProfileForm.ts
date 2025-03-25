@@ -7,7 +7,6 @@ import { useProfileImage } from "@/hooks/profile/useProfileImage";
 import { useProfileFormSubmit } from "@/hooks/profile/useProfileFormSubmit";
 import { useProfileFetch } from "@/hooks/profile/useProfileFetch";
 import { storageService } from "@/services/storage";
-import { UserProfile } from "@/services/storage";
 
 export interface ProfileFormData {
   displayName: string;
@@ -32,36 +31,17 @@ export function useProfileForm() {
   const [combinedProfileId, setCombinedProfileId] = useState<string | undefined>(undefined);
   const [previousAddress, setPreviousAddress] = useState<string | null>(null);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
-
-  // Fetch profile data and populate form only once
+  
+  // Fetch profile data
   useEffect(() => {
-    // Reset form data if wallet address changes
-    if (previousAddress && address && previousAddress !== address) {
-      console.log("[useProfileForm] Wallet address changed from", previousAddress, "to", address, "- resetting form data");
-      setDisplayName("");
-      setUsername("");
-      setProfilePicUrl("");
-      setXLink("");
-      setWebsiteLink("");
-      handleBioChange({ target: { value: "" } } as React.ChangeEvent<HTMLTextAreaElement>);
-      setCombinedHasProfile(false);
-      setCombinedProfileId(undefined);
-      setInitialDataLoaded(false);
-    }
-
-    // Update previous address for next comparison
-    if (address !== previousAddress) {
-      setPreviousAddress(address);
-    }
-
     // Determine if the user has a profile based on fetch and submission results
     const profileExists = fetchedHasProfile || submissionHasProfile;
     setCombinedHasProfile(profileExists);
     setCombinedProfileId(fetchedProfileId || submissionProfileId);
 
-    // Populate form data when profile is fetched - but only once per address
+    // Populate form data when profile is fetched
     const fetchProfileData = async () => {
-      if (isConnected && address && supabaseReady && !isFetchingProfile && !initialDataLoaded) {
+      if (isConnected && address && supabaseReady && !isFetchingProfile) {
         try {
           console.log("[useProfileForm] Loading profile data for address:", address);
           const profile = await storageService.getProfile(address);
@@ -74,21 +54,9 @@ export function useProfileForm() {
             setXLink(profile.xLink || "");
             setWebsiteLink(profile.websiteLink || "");
             handleBioChange({ target: { value: profile.bio || "" } } as React.ChangeEvent<HTMLTextAreaElement>);
-            setInitialDataLoaded(true);
-          } else {
-            // Clear form if no profile found for this address
-            console.log("[useProfileForm] No profile found for address:", address);
-            setDisplayName("");
-            setUsername("");
-            setProfilePicUrl("");
-            setXLink("");
-            setWebsiteLink("");
-            handleBioChange({ target: { value: "" } } as React.ChangeEvent<HTMLTextAreaElement>);
-            setInitialDataLoaded(true);
           }
         } catch (error) {
           console.error("[useProfileForm] Error fetching profile data:", error);
-          setInitialDataLoaded(true);
         }
       }
     };
@@ -108,9 +76,7 @@ export function useProfileForm() {
     setProfilePicUrl, 
     setXLink, 
     setWebsiteLink, 
-    handleBioChange,
-    previousAddress,
-    initialDataLoaded
+    handleBioChange
   ]);
 
   const saveProfile = async () => {
@@ -125,14 +91,7 @@ export function useProfileForm() {
     };
 
     const urlValidation = validateUrls();
-    const success = await submitProfile(formData, usernameAvailable, urlValidation);
-    
-    if (success) {
-      // Mark data as loaded to prevent refetching
-      setInitialDataLoaded(true);
-    }
-    
-    return success;
+    return await submitProfile(formData, usernameAvailable, urlValidation);
   };
 
   return {

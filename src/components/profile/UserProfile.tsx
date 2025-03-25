@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProfilePictureUpload } from "./ProfilePictureUpload";
-import { useProfileForm } from "./useProfileForm";
+import { useProfileForm } from "@/hooks/profile/useProfileForm";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { BasicInfoForm } from "./BasicInfoForm";
+import { SocialLinksForm } from "./SocialLinksForm";
 
 export function UserProfile() {
   const navigate = useNavigate();
@@ -30,9 +32,6 @@ export function UserProfile() {
 
   // Track if the form has been edited to prevent automatic data refreshing
   const [isFormEdited, setIsFormEdited] = useState(false);
-
-  // This effect prevents losing user input when navigating
-  useEffect(() => {}, [address]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,7 +111,13 @@ export function UserProfile() {
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="displayName">Display Name</Label>
-                <Input id="displayName" placeholder="Your Name" value={formData.displayName} onChange={handleDisplayNameChange} required />
+                <Input 
+                  id="displayName" 
+                  placeholder="Your Name" 
+                  value={formData.displayName} 
+                  onChange={handleDisplayNameChange} 
+                  required 
+                />
               </div>
 
               <div className="space-y-2">
@@ -166,12 +171,22 @@ export function UserProfile() {
               {/* Social Links */}
               <div className="space-y-2 pt-2 border-t">
                 <Label htmlFor="xLink">X / Twitter</Label>
-                <Input id="xLink" placeholder="https://x.com/username" value={formData.xLink} onChange={handleXLinkChange} />
+                <Input 
+                  id="xLink" 
+                  placeholder="https://x.com/username" 
+                  value={formData.xLink} 
+                  onChange={handleXLinkChange} 
+                />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="websiteLink">Website</Label>
-                <Input id="websiteLink" placeholder="https://example.com" value={formData.websiteLink} onChange={handleWebsiteLinkChange} />
+                <Input 
+                  id="websiteLink" 
+                  placeholder="https://example.com" 
+                  value={formData.websiteLink} 
+                  onChange={handleWebsiteLinkChange} 
+                />
               </div>
 
               <div className="space-y-2">
