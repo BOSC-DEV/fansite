@@ -49,6 +49,7 @@ export const SiteFooter = () => {
         <div className="border-t border-western-wood/20 pt-4 text-center">
           <div className="text-sm text-western-parchment/80 max-w-2xl mx-auto">
             <div className="flex items-center justify-center space-x-2">
+              <span className="text-sm text-western-parchment/80 font-western">To support this public good, send tokens to:</span>
               <button 
                 onClick={copyToClipboard}
                 className="flex items-center bg-western-wood/10 py-1 px-3 rounded text-western-parchment hover:bg-western-wood/20 transition-colors"
