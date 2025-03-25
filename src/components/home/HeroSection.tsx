@@ -13,13 +13,13 @@ export const HeroSection = () => {
             <p className="sm:text-xl text-western-wood max-w-lg font-western text-xl">Book of Scams is a decentralised criminal registry bringing accountability and justice to The Wild West of crypto.</p>
             
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
-              <Button asChild size="md" className="western-btn gap-2 hover:animate-wiggle bg-western-leather hover:bg-western-accent text-western-parchment">
+              <Button asChild size="default" className="western-btn gap-2 hover:animate-wiggle bg-western-leather hover:bg-western-accent text-western-parchment">
                 <Link to="/most-wanted">
                   Most Wanted
                   <Star className="h-4 w-4 ml-1" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="md" className="western-btn gap-2 border-2 border-dashed border-western-wood text-western-wood hover:animate-wiggle hover:bg-western-wood hover:text-western-parchment">
+              <Button asChild variant="outline" size="default" className="western-btn gap-2 border-2 border-dashed border-western-wood text-western-wood hover:animate-wiggle hover:bg-western-wood hover:text-western-parchment">
                 <Link to="/create-listing">
                   Report Scammer
                   <BookOpen className="h-4 w-4 ml-1" />
