@@ -54,8 +54,22 @@ export function ScammerCardImage({
     }
   };
 
+  // Ensure image has absolute URL for social sharing
+  const getAbsoluteImageUrl = (url: string) => {
+    if (url.startsWith('http')) {
+      return url;
+    }
+    return `${window.location.origin}${url.startsWith('/') ? '' : '/'}${url}`;
+  };
+
   // Fallback URL when image fails to load
   const fallbackImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&size=200`;
+  
+  // The image to display
+  const displayImageUrl = imageError ? fallbackImageUrl : photoUrl;
+  
+  // Set absolute URL for use in SEO
+  const absoluteImageUrl = getAbsoluteImageUrl(displayImageUrl);
   
   return (
     <div className="relative aspect-[16/9] overflow-hidden bg-muted">
@@ -65,7 +79,7 @@ export function ScammerCardImage({
         </div>
       )}
       <img
-        src={imageError ? fallbackImageUrl : photoUrl}
+        src={displayImageUrl}
         alt={name}
         className={cn(
           "object-cover w-full h-full transition-opacity duration-300",
@@ -74,6 +88,7 @@ export function ScammerCardImage({
         onLoad={handleImageLoad}
         onError={handleImageError}
         loading="lazy"
+        data-absolute-url={absoluteImageUrl} // Store for potential SEO use
       />
       <div className="absolute top-0 right-0 p-2 flex space-x-2">
         <div className="flex items-center bg-black/60 text-white py-1 px-2 rounded-full text-xs">

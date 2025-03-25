@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useScammerDetail } from "@/hooks/useScammerDetail";
 import { AgreementRatioBar } from "@/components/scammer/details/AgreementRatioBar";
+import { Helmet } from "react-helmet-async";
 
 const ScammerDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -42,8 +43,31 @@ const ScammerDetail = () => {
     return <ScammerNotFound />;
   }
 
+  // Construct canonical URL
+  const canonicalUrl = `https://bookofscams.lol/scammer/${scammer.id}`;
+
   return (
     <div className="min-h-screen old-paper">
+      <Helmet>
+        <title>{`${scammer.name} - Book of Scams`}</title>
+        <meta name="description" content={`${scammer.name} is accused of ${scammer.accusedOf}. Reported on Book of Scams.`} />
+        <link rel="canonical" href={canonicalUrl} />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="profile" />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:title" content={`${scammer.name} - Book of Scams`} />
+        <meta property="og:description" content={`${scammer.name} is accused of ${scammer.accusedOf}. Reported on Book of Scams.`} />
+        <meta property="og:image" content={scammer.photoUrl} />
+        
+        {/* Twitter / X */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={canonicalUrl} />
+        <meta property="twitter:title" content={`${scammer.name} - Book of Scams`} />
+        <meta property="twitter:description" content={`${scammer.name} is accused of ${scammer.accusedOf}. View their profile on Book of Scams.`} />
+        <meta property="twitter:image" content={scammer.photoUrl} />
+      </Helmet>
+      
       <Header />
       <div className="container mx-auto max-w-6xl px-4 pt-28 pb-16">
         <Button
