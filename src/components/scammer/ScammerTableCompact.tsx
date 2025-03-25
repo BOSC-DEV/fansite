@@ -25,7 +25,7 @@ export const ScammerTableCompact = ({
         <TableHeader className="bg-western-sand/60 border-b border-western-wood/30">
           <TableRow>
             <TableHead className="text-western-accent font-wanted">Outlaw</TableHead>
-            <TableHead className="text-western-accent font-wanted">Socials</TableHead>
+            <TableHead className="text-western-accent font-wanted">Links</TableHead>
             <TableHead className="text-western-accent font-wanted">Accused Of</TableHead>
             <TableHead className="text-center text-western-accent font-wanted">
               <div className="flex items-center justify-center">
