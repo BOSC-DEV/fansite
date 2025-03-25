@@ -75,25 +75,25 @@ export function ScammerCardImage({
         onError={handleImageError}
         loading="lazy"
       />
-      <div className="absolute top-0 right-0 p-2 flex gap-2">
-        <div className="flex items-center gap-1 bg-black/60 text-white py-1 px-2 rounded-full text-xs">
+      <div className="absolute top-0 right-0 p-2 flex space-x-2">
+        <div className="flex items-center bg-black/60 text-white py-1 px-2 rounded-full text-xs">
           <ThumbsUp className="h-3 w-3" />
-          <span>{likes || 0}</span>
+          <span className="ml-1">{likes || 0}</span>
         </div>
-        <div className="flex items-center gap-1 bg-black/60 text-white py-1 px-2 rounded-full text-xs">
+        <div className="flex items-center bg-black/60 text-white py-1 px-2 rounded-full text-xs">
           <ThumbsDown className="h-3 w-3" />
-          <span>{dislikes || 0}</span>
+          <span className="ml-1">{dislikes || 0}</span>
         </div>
-        <div className="flex items-center gap-1 bg-black/60 text-white py-1 px-2 rounded-full text-xs">
+        <div className="flex items-center bg-black/60 text-white py-1 px-2 rounded-full text-xs">
           <Eye className="h-3 w-3" />
-          <span>{views || 0}</span>
+          <span className="ml-1">{views || 0}</span>
         </div>
         <div 
-          className="flex items-center gap-1 bg-black/60 text-white py-1 px-2 rounded-full text-xs cursor-pointer hover:bg-black/80"
+          className="flex items-center bg-black/60 text-white py-1 px-2 rounded-full text-xs cursor-pointer hover:bg-black/80"
           onClick={scrollToComments}
         >
           <MessageSquare className="h-3 w-3" />
-          <span>{comments}</span>
+          <span className="ml-1">{comments}</span>
         </div>
       </div>
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
