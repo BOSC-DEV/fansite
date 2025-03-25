@@ -33,7 +33,7 @@ const Index = () => {
         <HeroSection />
         <div className="relative px-0">
           <div className="torn-edge-top"></div>
-          <FeaturedScammers />
+          <FeaturedScammers limit={10} />
           <div className="torn-edge-bottom"></div>
         </div>
         <HowItWorksSection />

@@ -8,7 +8,7 @@ import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
 import { useWallet } from "@/context/WalletContext";
 import { scammerService } from "@/services/storage";
 
-export const FeaturedScammers = () => {
+export const FeaturedScammers = ({ limit = 10 }: { limit?: number }) => {
   const [featuredScammers, setFeaturedScammers] = useState<Scammer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { chainId } = useWallet();
@@ -38,7 +38,7 @@ export const FeaturedScammers = () => {
             views: s.views || 0
           }))
           .sort((a, b) => b.dateAdded.getTime() - a.dateAdded.getTime())
-          .slice(0, 5);
+          .slice(0, limit);
         
         setFeaturedScammers(scammers);
         console.log('Featured scammers loaded:', scammers.length);
@@ -51,7 +51,7 @@ export const FeaturedScammers = () => {
     };
 
     fetchFeaturedScammers();
-  }, [chainId]);
+  }, [chainId, limit]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
