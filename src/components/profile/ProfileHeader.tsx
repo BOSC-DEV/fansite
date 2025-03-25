@@ -17,30 +17,28 @@ export function ProfileHeader({ profile, scammersCount }: ProfileHeaderProps) {
       <EditProfileButton profileAddress={profile.walletAddress} />
       <CardContent className="pt-6">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-          <Avatar className="h-24 w-24 border-2 border-western-sand">
+          <Avatar className="h-24 w-24 border-2 border-western-sand/40">
             <AvatarImage src={profile.profilePicUrl} alt={profile.displayName} />
-            <AvatarFallback className="bg-western-sand/20">
-              <User className="h-12 w-12 text-western-parchment" />
+            <AvatarFallback className="bg-western-sand/30">
+              <User className="h-12 w-12 text-western-wood/70" />
             </AvatarFallback>
           </Avatar>
           
           <div className="flex flex-col items-center sm:items-start">
-            <h1 className="text-2xl font-bold text-western-parchment">{profile.displayName}</h1>
+            <h1 className="text-2xl font-bold text-western-wood">{profile.displayName}</h1>
             
             {profile.username && (
-              <p className="text-lg text-western-sand mb-2">@{profile.username}</p>
+              <p className="text-lg text-western-wood/70 mb-2">@{profile.username}</p>
             )}
             
             <div className="flex flex-wrap gap-3 justify-center sm:justify-start mt-1">
-              <div className="bg-western-wood/40 px-3 py-1 rounded-full text-sm">
+              <div className="bg-western-sand/30 px-3 py-1 rounded-full text-sm text-western-wood/80">
                 <span className="font-bold">{scammersCount}</span> Reports
               </div>
-              
-              {/* Remove the location check since it's not in the UserProfile type */}
             </div>
             
             {profile.bio && (
-              <p className="mt-4 text-western-parchment/90 max-w-2xl text-center sm:text-left">
+              <p className="mt-4 text-western-wood/80 max-w-2xl text-center sm:text-left">
                 {profile.bio}
               </p>
             )}

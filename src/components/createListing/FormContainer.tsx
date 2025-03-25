@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,6 +9,7 @@ import { BasicInfoFields } from "./BasicInfoFields";
 import { AdditionalInfoFields } from "./AdditionalInfoFields";
 import { TurnstileVerification } from "./TurnstileVerification";
 import { useSubmitListing } from "./SubmitListingHandler";
+
 export function FormContainer() {
   const {
     isConnected
@@ -63,10 +65,10 @@ export function FormContainer() {
     });
   };
   return <form onSubmit={handleFormSubmit}>
-      <Card className="w-full max-w-3xl mx-auto border-western-wood/60 bg-western-parchment/70">
-        <CardHeader className="border-b border-western-wood/20">
-          <CardTitle className="text-western-accent font-wanted">Wanted Poster Details</CardTitle>
-          <CardDescription className="text-western-wood">Shame scammers with their very own wanted poster. When funding bounties starts, the scammer with the most funded $BOSC will rank first, and so on. For now, it's ranked on views.</CardDescription>
+      <Card className="w-full max-w-3xl mx-auto border-western-wood/40 bg-western-parchment/80">
+        <CardHeader className="border-b border-western-wood/10">
+          <CardTitle className="text-western-wood font-wanted">Wanted Poster Details</CardTitle>
+          <CardDescription className="text-western-wood/80">Shame scammers with their very own wanted poster. When funding bounties starts, the scammer with the most funded $BOSC will rank first, and so on. For now, it's ranked on views.</CardDescription>
         </CardHeader>
         
         <CardContent className="space-y-6 pt-6">
@@ -79,7 +81,7 @@ export function FormContainer() {
           <ListingDisclaimer />
         </CardContent>
         
-        <CardFooter className="border-t border-western-wood/20 bg-western-sand/10">
+        <CardFooter className="border-t border-western-wood/10 bg-western-sand/10">
           <ListingFormActions isSubmitting={isSubmitting} />
         </CardFooter>
       </Card>

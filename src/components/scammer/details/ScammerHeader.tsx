@@ -36,8 +36,8 @@ export function ScammerHeader({
   return (
     <div className="flex justify-between items-start">
       <div>
-        <CardTitle className="text-2xl">{name}</CardTitle>
-        <CardDescription className="text-muted-foreground mt-1">
+        <CardTitle className="text-2xl text-western-wood">{name}</CardTitle>
+        <CardDescription className="text-western-wood/70 mt-1">
           Accused of: {accusedOf}
         </CardDescription>
       </div>
@@ -57,6 +57,7 @@ export function ScammerHeader({
             variant="outline" 
             size="sm"
             asChild
+            className="bg-western-sand/30 border-western-sand/20 text-western-wood/80 hover:bg-western-sand/50 hover:text-western-wood transition-colors"
           >
             <Link to={`/edit-listing/${scammerId}`}>
               <Edit className="h-4 w-4 mr-1" />
