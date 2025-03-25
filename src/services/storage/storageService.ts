@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 import { toast } from 'sonner';
@@ -123,6 +124,10 @@ export class StorageService extends BaseSupabaseService {
 
   async getAllScammers(): Promise<ScammerListing[]> {
     return scammerService.getAllScammers();
+  }
+
+  async deleteScammer(scammerId: string): Promise<boolean> {
+    return scammerService.deleteScammer(scammerId);
   }
 
   async incrementScammerViews(scammerId: string): Promise<boolean> {

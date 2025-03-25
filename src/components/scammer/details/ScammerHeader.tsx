@@ -1,10 +1,24 @@
 
 import React from 'react';
 import { Link } from "react-router-dom";
-import { Edit } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CardTitle, CardDescription } from "@/components/ui/card";
 import { ScammerInteractionButtons } from './ScammerInteractionButtons';
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useNavigate } from 'react-router-dom';
+import { storageService } from '@/services/storage';
+import { toast } from 'sonner';
 
 interface ScammerHeaderProps {
   name: string;
@@ -35,6 +49,25 @@ export function ScammerHeader({
   onDislike,
   bountyAmount = 0
 }: ScammerHeaderProps) {
+  const navigate = useNavigate();
+
+  const handleDeleteScammer = async () => {
+    try {
+      // Using the same scammer service method that's used elsewhere
+      const success = await storageService.deleteScammer(scammerId);
+      
+      if (success) {
+        toast.success("Listing deleted successfully");
+        navigate('/most-wanted'); // Redirect to most wanted page after deletion
+      } else {
+        toast.error("Failed to delete listing");
+      }
+    } catch (error) {
+      console.error("Error deleting scammer:", error);
+      toast.error("An error occurred while deleting the listing");
+    }
+  };
+
   return (
     <div className="flex justify-between items-start">
       <div>
@@ -62,17 +95,49 @@ export function ScammerHeader({
         />
         
         {isCreator && (
-          <Button 
-            variant="outline" 
-            size="sm"
-            asChild
-            className="bg-western-sand/30 border-western-sand/20 text-western-wood/80 hover:bg-western-sand/50 hover:text-western-wood transition-colors"
-          >
-            <Link to={`/edit-listing/${scammerId}`}>
-              <Edit className="h-4 w-4 mr-1" />
-              Edit Listing
-            </Link>
-          </Button>
+          <div className="flex space-x-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              asChild
+              className="bg-western-sand/30 border-western-sand/20 text-western-wood/80 hover:bg-western-sand/50 hover:text-western-wood transition-colors"
+            >
+              <Link to={`/edit-listing/${scammerId}`}>
+                <Edit className="h-4 w-4 mr-1" />
+                Edit Listing
+              </Link>
+            </Button>
+            
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="bg-western-sand/30 border-western-sand/20 text-western-wood/80 hover:bg-red-500/20 hover:text-red-600 hover:border-red-500/30 transition-colors"
+                >
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  Delete
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="bg-western-parchment border-western-wood/40">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-western-accent">Delete Listing</AlertDialogTitle>
+                  <AlertDialogDescription className="text-western-wood/80">
+                    Are you sure you want to delete this listing? This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="bg-western-sand/20 border-western-wood/20 text-western-wood hover:bg-western-sand/30">Cancel</AlertDialogCancel>
+                  <AlertDialogAction 
+                    onClick={handleDeleteScammer}
+                    className="bg-red-500/80 text-white hover:bg-red-600"
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         )}
       </div>
     </div>

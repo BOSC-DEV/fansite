@@ -62,6 +62,31 @@ export class ScammerDataService extends ScammerBaseService {
   }
 
   /**
+   * Delete a scammer by ID
+   */
+  async deleteScammer(id: string): Promise<boolean> {
+    try {
+      console.log("Deleting scammer with ID:", id);
+      
+      const { error } = await supabase
+        .from('scammers')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error("Error deleting scammer:", error);
+        return false;
+      }
+      
+      console.log("Scammer deleted successfully");
+      return true;
+    } catch (error) {
+      console.error("Error in deleteScammer:", error);
+      return false;
+    }
+  }
+
+  /**
    * Get a scammer by ID
    */
   async getScammer(id: string): Promise<ScammerListing | null> {

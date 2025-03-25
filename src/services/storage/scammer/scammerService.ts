@@ -19,6 +19,10 @@ class ScammerService {
   async getAllScammers(): Promise<ScammerListing[]> {
     return scammerDataService.getAllScammers();
   }
+  
+  async deleteScammer(id: string): Promise<boolean> {
+    return scammerDataService.deleteScammer(id);
+  }
 
   // Stats operations
   async updateScammerStats(scammerId: string, stats: ScammerStats): Promise<boolean> {
