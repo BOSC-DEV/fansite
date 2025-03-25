@@ -34,7 +34,10 @@ export const HeroSection = () => {
                 <div className="sheriff-badge inline-block p-3 sm:p-4 bg-western-accent/80 rounded-full border-4 border-western-wood flex items-center justify-center animate-bounce-slight py-px px-[2px]">
                   <Star className="h-8 w-8 sm:h-12 sm:w-12 text-western-parchment" />
                 </div>
-                <h2 className="font-wanted text-2xl sm:text-3xl text-western-leather uppercase tracking-wide py-0 my-[5px] px-0">WANTED: Scammers, Grifters & Criminals of All Creeds</h2>
+                <h2 className="font-wanted uppercase text-center">
+                  <div className="text-3xl sm:text-4xl text-western-accent font-bold tracking-wider mb-2">WANTED</div>
+                  <div className="text-xl sm:text-2xl text-western-leather tracking-wide py-0 my-[5px] px-0">Scammers, Grifters & Criminals of All Creeds</div>
+                </h2>
                 <p className="text-western-wood/90 max-w-md font-western text-base sm:text-lg px-2"></p>
               </div>
             </div>
