@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Wallet, Home, Award, BookOpen, User, Trophy, FileText, Coins, LogOut } from "lucide-react";
+import { Wallet, Home, Award, BookOpen, User, Trophy, FileText, Coins } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProfileButton } from "./profile/ProfileButton";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -34,7 +33,6 @@ export const Header = () => {
   }, []);
 
   useEffect(() => {
-    // Fetch username when address changes
     const fetchProfile = async () => {
       if (isConnected && address) {
         try {
@@ -55,21 +53,6 @@ export const Header = () => {
   const handleConnectClick = async () => {
     if (!isConnected) {
       await connectWallet();
-    }
-  };
-
-  const handleDisconnect = () => {
-    disconnectWallet();
-    toast.success("Wallet disconnected successfully");
-  };
-
-  const handleProfileClick = () => {
-    if (username) {
-      navigate(`/${username}`);
-    } else if (address) {
-      navigate(`/user/${address}`);
-    } else {
-      navigate("/profile");
     }
   };
 
@@ -95,7 +78,6 @@ export const Header = () => {
     icon: <BookOpen className="h-4 w-4" />
   }];
 
-  // Add profile to regular menu if connected
   if (isConnected) {
     menuItems.push({
       path: username ? `/${username}` : address ? `/user/${address}` : "/profile",
@@ -108,14 +90,12 @@ export const Header = () => {
     <header className={cn("fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out wood-texture", 
       isScrolled ? "py-3 shadow-md" : "py-5")}>
       <div className="container mx-auto px-4 flex items-center">
-        {/* Logo */}
         <div className="flex-shrink-0 mr-8">
           <Link to="/" className="flex items-center space-x-2 text-xl">
             <span className="font-wanted text-western-parchment"></span>
           </Link>
         </div>
         
-        {/* Desktop Navigation - Now positioned on the left */}
         <nav className="hidden md:flex flex-1 items-center">
           <div className="flex space-x-10">
             {menuItems.map(item => (
@@ -134,9 +114,7 @@ export const Header = () => {
           </div>
         </nav>
 
-        {/* Connect Wallet Button - Now with proper spacing */}
         <div className="flex items-center ml-auto">
-          {/* Desktop Wallet Info */}
           {isConnected ? (
             <div className="hidden md:flex items-center space-x-4">
               <div className="flex flex-col items-end">
@@ -162,10 +140,8 @@ export const Header = () => {
             </Button>
           )}
 
-          {/* Mobile Navigation Buttons */}
           {isMobile && (
             <div className="md:hidden flex items-center">
-              {/* Mobile bottom nav bar */}
               <div className="fixed bottom-0 left-0 right-0 flex justify-around items-center bg-western-wood/90 backdrop-blur-sm shadow-lg py-3 px-2 z-50">
                 {menuItems.map(item => (
                   <Link 

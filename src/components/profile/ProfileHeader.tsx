@@ -1,10 +1,13 @@
 
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserCircle2 } from "lucide-react";
+import { UserCircle2, LogOut } from "lucide-react";
 import { UserProfile } from "@/services/storage/index";
 import { ProfileLinks } from "./ProfileLinks";
 import { EditProfileButton } from "./EditProfileButton";
+import { useWallet } from "@/context/WalletContext";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface ProfileHeaderProps {
   profile: UserProfile;
@@ -12,6 +15,13 @@ interface ProfileHeaderProps {
 }
 
 export function ProfileHeader({ profile, scammersCount }: ProfileHeaderProps) {
+  const { disconnectWallet } = useWallet();
+
+  const handleLogout = () => {
+    disconnectWallet();
+    toast.success("Wallet disconnected successfully");
+  };
+
   return (
     <div className="relative mb-8 p-6 bg-western-parchment/5 rounded-lg border border-western-sand/20">
       <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
@@ -38,8 +48,19 @@ export function ProfileHeader({ profile, scammersCount }: ProfileHeaderProps) {
         </div>
       </div>
       
-      {/* Add profile editing button - only appears for the profile owner */}
-      <EditProfileButton profileAddress={profile.walletAddress} />
+      {/* Profile actions section */}
+      <div className="absolute top-6 right-6 flex gap-2">
+        <EditProfileButton profileAddress={profile.walletAddress} />
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={handleLogout}
+          className="flex items-center gap-1 bg-western-wood/10 border-western-sand/40 text-western-parchment hover:bg-western-wood/20"
+        >
+          <LogOut className="h-4 w-4" />
+          Log Out
+        </Button>
+      </div>
     </div>
   );
 }
