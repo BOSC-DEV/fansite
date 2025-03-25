@@ -4,6 +4,23 @@ import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
 // Signature message for initial authentication
 const SIGNATURE_MESSAGE = "Sign this message to verify your identity with Book of Scams";
 
+// Define window.phantom for TypeScript
+declare global {
+  interface Window {
+    phantom?: {
+      solana?: {
+        isConnected: boolean;
+        publicKey?: { toString: () => string };
+        connect: () => Promise<{ publicKey: { toString: () => string } }>;
+        disconnect: () => Promise<void>;
+        signMessage: (message: Uint8Array) => Promise<{ signature: Uint8Array }>;
+        on: (event: string, callback: () => void) => void;
+        removeListener: (event: string, callback: () => void) => void;
+      };
+    };
+  }
+}
+
 // Class to handle Solana wallet connection and operations
 export class Web3Provider {
   protected connection: Connection;
