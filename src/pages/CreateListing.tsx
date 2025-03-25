@@ -4,8 +4,6 @@ import { CreateListingForm } from "@/components/CreateListingForm";
 import { useWallet } from "@/context/WalletContext";
 import ConnectWallet from "@/components/ConnectWallet";
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 const CreateListing = () => {
   const { isConnected } = useWallet();
@@ -16,17 +14,7 @@ const CreateListing = () => {
 
       <main className="flex-1 pt-28 pb-16">
         <div className="container mx-auto px-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            asChild
-            className="mb-8 hover:bg-western-sand/20 text-western-wood"
-          >
-            <Link to="/most-wanted">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Most Wanted
-            </Link>
-          </Button>
+          {/* Back button removed */}
 
           {isConnected ? (
             <div className="paper-texture border-2 border-western-wood rounded-sm p-6">
