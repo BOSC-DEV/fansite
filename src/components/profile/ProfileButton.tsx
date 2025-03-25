@@ -102,14 +102,6 @@ export function ProfileButton() {
           </Link>
         </DropdownMenuItem>
         
-        {profile && profile.username && (
-          <DropdownMenuItem asChild>
-            <Link to={`/${profile.username}`} className="cursor-pointer text-western-parchment hover:text-western-parchment hover:bg-western-accent/40 transition-colors">
-              View Public Profile
-            </Link>
-          </DropdownMenuItem>
-        )}
-        
         <DropdownMenuItem asChild>
           <Link to="/my-reports" className="cursor-pointer text-western-parchment hover:text-western-parchment hover:bg-western-accent/40 transition-colors">
             <FileText className="h-4 w-4 mr-2" />

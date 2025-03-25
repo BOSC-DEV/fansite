@@ -7,14 +7,6 @@ import { Wallet, Home, Award, BookOpen, User, Trophy, FileText, Coins, LogOut } 
 import { cn } from "@/lib/utils";
 import { ProfileButton } from "./profile/ProfileButton";
 import { useIsMobile } from "@/hooks/use-mobile";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
 import { toast } from "sonner";
 import { storageService } from "@/services/storage";
 
@@ -103,53 +95,12 @@ export const Header = () => {
     icon: <BookOpen className="h-4 w-4" />
   }];
 
-  const profileMenuItems = [
-    {
-      path: "/profile",
-      label: "Edit Profile",
-      icon: <User className="h-4 w-4" />,
-      requiresAuth: true
-    },
-    {
-      path: "/my-reports",
-      label: "My Reports",
-      icon: <FileText className="h-4 w-4" />,
-      requiresAuth: true
-    },
-    {
-      path: "/my-bounties",
-      label: "My Bounties",
-      icon: <Coins className="h-4 w-4" />,
-      requiresAuth: true
-    },
-    {
-      path: "/most-wanted",
-      label: "Most Wanted List",
-      icon: <Award className="h-4 w-4" />,
-      requiresAuth: false
-    },
-    {
-      path: "/create-listing",
-      label: "Report a Scammer",
-      icon: <BookOpen className="h-4 w-4" />,
-      requiresAuth: false
-    }
-  ];
-
-  // Add profile view to menu items if user has a profile
-  if (username) {
-    profileMenuItems.unshift({
-      path: `/${username}`,
-      label: "View Public Profile",
-      icon: <User className="h-4 w-4" />,
-      requiresAuth: true
-    });
-  } else if (address) {
-    profileMenuItems.unshift({
-      path: `/user/${address}`,
-      label: "View Public Profile",
-      icon: <User className="h-4 w-4" />,
-      requiresAuth: true
+  // Add profile to regular menu if connected
+  if (isConnected) {
+    menuItems.push({
+      path: username ? `/${username}` : address ? `/user/${address}` : "/profile",
+      label: "Profile",
+      icon: <User className="h-4 w-4" />
     });
   }
 
@@ -180,56 +131,6 @@ export const Header = () => {
                 <span className="ml-2">{item.label}</span>
               </Link>
             ))}
-
-            {/* Profile Navigation Menu */}
-            {isConnected && (
-              <NavigationMenu>
-                <NavigationMenuList>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger 
-                      onClick={handleProfileClick}
-                      className={cn(
-                        "flex items-center text-sm font-bold transition-colors hover:scale-110 transform duration-200 font-western bg-transparent cursor-pointer", 
-                        location.pathname.includes("/profile") || location.pathname.includes("/my-") || 
-                        (username && location.pathname === `/${username}`) || 
-                        (address && location.pathname === `/user/${address}`)
-                          ? "text-western-parchment" 
-                          : "text-western-sand hover:text-western-parchment"
-                      )}
-                    >
-                      <User className="h-4 w-4 mr-2" />
-                      Profile
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent className="wood-texture z-50">
-                      <div className="grid gap-1 p-2 w-[220px]">
-                        {profileMenuItems.filter(item => isConnected || !item.requiresAuth).map((item) => (
-                          <Link
-                            key={item.path}
-                            to={item.path}
-                            className="flex items-center p-2 text-western-parchment rounded-md hover:bg-western-accent/40 transition-colors"
-                          >
-                            {item.icon}
-                            <span className="ml-2 font-western">{item.label}</span>
-                          </Link>
-                        ))}
-                        {isConnected && (
-                          <>
-                            <div className="my-1 h-px bg-western-sand/30" />
-                            <button
-                              onClick={handleDisconnect}
-                              className="flex items-center p-2 text-western-parchment rounded-md hover:bg-western-accent/40 transition-colors"
-                            >
-                              <LogOut className="h-4 w-4 mr-2" />
-                              <span className="font-western">Disconnect Wallet</span>
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
-            )}
           </div>
         </nav>
 
@@ -280,22 +181,7 @@ export const Header = () => {
                   </Link>
                 ))}
                 
-                {isConnected ? (
-                  <button 
-                    onClick={handleProfileClick}
-                    className={cn(
-                      "flex flex-col items-center justify-center p-2 rounded-lg transition-colors", 
-                      location.pathname === "/profile" || 
-                      (username && location.pathname === `/${username}`) || 
-                      (address && location.pathname === `/user/${address}`)
-                        ? "text-western-parchment bg-western-accent/30" 
-                        : "text-western-sand hover:text-western-parchment"
-                    )}
-                  >
-                    <User className="h-4 w-4" />
-                    <span className="text-xs mt-1 font-western">Profile</span>
-                  </button>
-                ) : (
+                {!isConnected && (
                   <Button 
                     variant="ghost" 
                     size="sm" 
