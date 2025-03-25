@@ -126,8 +126,25 @@ export class StorageService extends BaseSupabaseService {
     return scammerService.getAllScammers();
   }
 
+  // Old method (kept for backward compatibility)
   async deleteScammer(scammerId: string): Promise<boolean> {
+    console.warn("Using permanent delete - consider using softDeleteScammer instead");
     return scammerService.deleteScammer(scammerId);
+  }
+
+  // New soft delete method (archives rather than permanently deletes)
+  async softDeleteScammer(scammerId: string): Promise<boolean> {
+    return scammerService.softDeleteScammer(scammerId);
+  }
+
+  // New method to restore deleted scammers
+  async restoreScammer(scammerId: string): Promise<boolean> {
+    return scammerService.restoreScammer(scammerId);
+  }
+
+  // New method to get all deleted scammers
+  async getDeletedScammers(): Promise<ScammerListing[]> {
+    return scammerService.getDeletedScammers();
   }
 
   async incrementScammerViews(scammerId: string): Promise<boolean> {

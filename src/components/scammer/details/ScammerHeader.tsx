@@ -53,18 +53,20 @@ export function ScammerHeader({
 
   const handleDeleteScammer = async () => {
     try {
-      // Using the same scammer service method that's used elsewhere
-      const success = await storageService.deleteScammer(scammerId);
+      // Using soft delete to archive instead of permanently removing
+      const success = await storageService.softDeleteScammer(scammerId);
       
       if (success) {
-        toast.success("Listing deleted successfully");
+        toast.success("Listing archived successfully", {
+          description: "An admin can restore this listing if needed"
+        });
         navigate('/most-wanted'); // Redirect to most wanted page after deletion
       } else {
-        toast.error("Failed to delete listing");
+        toast.error("Failed to archive listing");
       }
     } catch (error) {
-      console.error("Error deleting scammer:", error);
-      toast.error("An error occurred while deleting the listing");
+      console.error("Error archiving scammer:", error);
+      toast.error("An error occurred while archiving the listing");
     }
   };
 
@@ -116,14 +118,14 @@ export function ScammerHeader({
                   className="bg-western-sand/30 border-western-sand/20 text-western-wood/80 hover:bg-red-500/20 hover:text-red-600 hover:border-red-500/30 transition-colors"
                 >
                   <Trash2 className="h-4 w-4 mr-1" />
-                  Delete
+                  Archive
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent className="bg-western-parchment border-western-wood/40">
                 <AlertDialogHeader>
-                  <AlertDialogTitle className="text-western-accent">Delete Listing</AlertDialogTitle>
+                  <AlertDialogTitle className="text-western-accent">Archive Listing</AlertDialogTitle>
                   <AlertDialogDescription className="text-western-wood/80">
-                    Are you sure you want to delete this listing? This action cannot be undone.
+                    Are you sure you want to archive this listing? The listing will be hidden but can be recovered by an administrator if needed.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -132,7 +134,7 @@ export function ScammerHeader({
                     onClick={handleDeleteScammer}
                     className="bg-red-500/80 text-white hover:bg-red-600"
                   >
-                    Delete
+                    Archive
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

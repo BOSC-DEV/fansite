@@ -42,7 +42,8 @@ export class ScammerDataService extends ScammerBaseService {
           likes: dbRecord.likes || 0,
           dislikes: dbRecord.dislikes || 0,
           views: dbRecord.views || 0,
-          comments: dbRecord.comments
+          comments: dbRecord.comments,
+          deleted_at: null // Ensure new/updated records are not marked as deleted
         }, { 
           onConflict: 'id',
           ignoreDuplicates: false 
@@ -62,11 +63,12 @@ export class ScammerDataService extends ScammerBaseService {
   }
 
   /**
-   * Delete a scammer by ID
+   * Permanently delete a scammer by ID (keeping for backwards compatibility)
    */
   async deleteScammer(id: string): Promise<boolean> {
+    console.log("Warning: Using permanent delete method. Consider using softDeleteScammer instead.");
     try {
-      console.log("Deleting scammer with ID:", id);
+      console.log("Permanently deleting scammer with ID:", id);
       
       const { error } = await supabase
         .from('scammers')
@@ -78,11 +80,94 @@ export class ScammerDataService extends ScammerBaseService {
         return false;
       }
       
-      console.log("Scammer deleted successfully");
+      console.log("Scammer permanently deleted successfully");
       return true;
     } catch (error) {
       console.error("Error in deleteScammer:", error);
       return false;
+    }
+  }
+
+  /**
+   * Soft delete a scammer by ID (mark as deleted)
+   */
+  async softDeleteScammer(id: string): Promise<boolean> {
+    try {
+      console.log("Soft deleting scammer with ID:", id);
+      
+      const { error } = await supabase
+        .from('scammers')
+        .update({ deleted_at: new Date().toISOString() })
+        .eq('id', id);
+
+      if (error) {
+        console.error("Error soft deleting scammer:", error);
+        return false;
+      }
+      
+      console.log("Scammer soft deleted successfully");
+      return true;
+    } catch (error) {
+      console.error("Error in softDeleteScammer:", error);
+      return false;
+    }
+  }
+
+  /**
+   * Restore a soft-deleted scammer
+   */
+  async restoreScammer(id: string): Promise<boolean> {
+    try {
+      console.log("Restoring deleted scammer with ID:", id);
+      
+      const { error } = await supabase
+        .from('scammers')
+        .update({ deleted_at: null })
+        .eq('id', id);
+
+      if (error) {
+        console.error("Error restoring scammer:", error);
+        return false;
+      }
+      
+      console.log("Scammer restored successfully");
+      return true;
+    } catch (error) {
+      console.error("Error in restoreScammer:", error);
+      return false;
+    }
+  }
+
+  /**
+   * Get a list of all deleted scammers
+   */
+  async getDeletedScammers(): Promise<ScammerListing[]> {
+    try {
+      console.log("Fetching deleted scammers");
+      
+      const { data, error } = await supabase
+        .from('deleted_scammers')
+        .select('*')
+        .order('deleted_at', { ascending: false });
+
+      if (error) {
+        console.error("Error fetching deleted scammers:", error);
+        return [];
+      }
+
+      if (!data || data.length === 0) {
+        console.log("No deleted scammers found");
+        return [];
+      }
+
+      const scammers = data.map(record => 
+        ScammerDataProcessor.dbRecordToListing(record as ScammerDbRecord)
+      );
+      
+      return scammers;
+    } catch (error) {
+      console.error("Error in getDeletedScammers:", error);
+      return [];
     }
   }
 
@@ -106,13 +191,14 @@ export class ScammerDataService extends ScammerBaseService {
   }
 
   /**
-   * Get all scammers
+   * Get all scammers (excluding deleted ones)
    */
   async getAllScammers(): Promise<ScammerListing[]> {
     try {
       const { data, error } = await supabase
         .from('scammers')
         .select('*')
+        .is('deleted_at', null)
         .order('date_added', { ascending: false });
 
       if (error) {

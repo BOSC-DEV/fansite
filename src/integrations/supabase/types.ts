@@ -63,6 +63,13 @@ export type Database = {
             foreignKeyName: "comments_scammer_id_fkey"
             columns: ["scammer_id"]
             isOneToOne: false
+            referencedRelation: "deleted_scammers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_scammer_id_fkey"
+            columns: ["scammer_id"]
+            isOneToOne: false
             referencedRelation: "scammers"
             referencedColumns: ["id"]
           },
@@ -175,6 +182,7 @@ export type Database = {
           bounty_amount: number | null
           comments: Json | null
           date_added: string
+          deleted_at: string | null
           dislikes: number | null
           id: string
           likes: number | null
@@ -194,6 +202,7 @@ export type Database = {
           bounty_amount?: number | null
           comments?: Json | null
           date_added?: string
+          deleted_at?: string | null
           dislikes?: number | null
           id: string
           likes?: number | null
@@ -213,6 +222,7 @@ export type Database = {
           bounty_amount?: number | null
           comments?: Json | null
           date_added?: string
+          deleted_at?: string | null
           dislikes?: number | null
           id?: string
           likes?: number | null
@@ -255,7 +265,69 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      deleted_scammers: {
+        Row: {
+          accomplices: Json | null
+          accused_of: string | null
+          added_by: string | null
+          aliases: Json | null
+          bounty_amount: number | null
+          comments: Json | null
+          date_added: string | null
+          deleted_at: string | null
+          dislikes: number | null
+          id: string | null
+          likes: number | null
+          links: Json | null
+          name: string | null
+          official_response: string | null
+          photo_url: string | null
+          views: number | null
+          wallet_address: string | null
+          x_link: string | null
+        }
+        Insert: {
+          accomplices?: Json | null
+          accused_of?: string | null
+          added_by?: string | null
+          aliases?: Json | null
+          bounty_amount?: number | null
+          comments?: Json | null
+          date_added?: string | null
+          deleted_at?: string | null
+          dislikes?: number | null
+          id?: string | null
+          likes?: number | null
+          links?: Json | null
+          name?: string | null
+          official_response?: string | null
+          photo_url?: string | null
+          views?: number | null
+          wallet_address?: string | null
+          x_link?: string | null
+        }
+        Update: {
+          accomplices?: Json | null
+          accused_of?: string | null
+          added_by?: string | null
+          aliases?: Json | null
+          bounty_amount?: number | null
+          comments?: Json | null
+          date_added?: string | null
+          deleted_at?: string | null
+          dislikes?: number | null
+          id?: string | null
+          likes?: number | null
+          links?: Json | null
+          name?: string | null
+          official_response?: string | null
+          photo_url?: string | null
+          views?: number | null
+          wallet_address?: string | null
+          x_link?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never

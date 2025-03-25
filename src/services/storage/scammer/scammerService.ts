@@ -24,6 +24,18 @@ class ScammerService {
     return scammerDataService.deleteScammer(id);
   }
 
+  async softDeleteScammer(id: string): Promise<boolean> {
+    return scammerDataService.softDeleteScammer(id);
+  }
+
+  async getDeletedScammers(): Promise<ScammerListing[]> {
+    return scammerDataService.getDeletedScammers();
+  }
+
+  async restoreScammer(id: string): Promise<boolean> {
+    return scammerDataService.restoreScammer(id);
+  }
+
   // Stats operations
   async updateScammerStats(scammerId: string, stats: ScammerStats): Promise<boolean> {
     return scammerStatsService.updateScammerStats(scammerId, stats);
