@@ -47,18 +47,15 @@ export const HomeFooter = () => {
         </div>
 
         <div className="mt-4 pt-4 border-t border-western-wood/20 text-center">
-          <button 
-            onClick={copyToClipboard}
-            className="flex items-center mx-auto bg-western-wood/10 py-2 px-4 rounded-lg text-western-wood hover:bg-western-sand/20 transition-colors border border-western-leather/30 shadow-md transform hover:-rotate-1 duration-300"
-          >
-            <span className="font-western mr-2">Ca:</span>
-            <span className="font-mono text-sm">TBC</span>
+          <div className="flex items-center justify-center gap-2 text-western-wood">
+            <span className="font-western">Ca:</span>
+            <span className="font-western cursor-pointer" onClick={copyToClipboard}>TBC</span>
             {copied ? (
-              <Check className="h-4 w-4 ml-2 text-green-600" />
+              <Check className="h-4 w-4 text-green-600" />
             ) : (
-              <Copy className="h-4 w-4 ml-2" />
+              <Copy className="h-4 w-4 cursor-pointer" onClick={copyToClipboard} />
             )}
-          </button>
+          </div>
         </div>
       </div>
     </footer>

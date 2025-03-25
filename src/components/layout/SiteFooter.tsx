@@ -48,16 +48,13 @@ export const SiteFooter = () => {
         
         <div className="border-t border-western-wood/20 pt-4 text-center">
           <div className="text-sm text-western-parchment/80 max-w-2xl mx-auto">
-            <button 
-              onClick={copyToClipboard}
-              className="flex items-center justify-center mx-auto bg-western-wood/10 py-2 px-4 rounded-lg text-western-parchment hover:bg-western-wood/20 transition-colors border border-western-sand/30 shadow-md transform hover:scale-105 duration-300"
-            >
-              <span className="font-western mr-2">Ca:</span>
-              <span className="font-mono">TBC</span>
+            <div className="flex items-center justify-center gap-2 text-western-parchment">
+              <span className="font-western">Ca:</span>
+              <span className="font-western cursor-pointer" onClick={copyToClipboard}>TBC</span>
               {copied ? (
                 <Check className="h-4 w-4 ml-2 text-green-400" />
               ) : (
-                <Copy className="h-4 w-4 ml-2" />
+                <Copy className="h-4 w-4 ml-2 cursor-pointer" onClick={copyToClipboard} />
               )}
               <a 
                 href={`https://solscan.io/account/${DEVELOPER_WALLET_ADDRESS}`}
@@ -67,7 +64,7 @@ export const SiteFooter = () => {
               >
                 <ExternalLink className="h-4 w-4" />
               </a>
-            </button>
+            </div>
           </div>
         </div>
       </div>
