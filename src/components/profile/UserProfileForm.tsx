@@ -41,8 +41,19 @@ export function UserProfileForm({
   checkingUsername,
   handleSubmit
 }: UserProfileFormProps) {
+  // Prevent default form submission on image upload
+  const onSubmit = (e: React.FormEvent) => {
+    handleSubmit(e);
+  };
+
+  // Handler for profile picture change
+  const handleProfilePicChange = (url: string) => {
+    console.log("[UserProfileForm] Profile picture changed to:", url);
+    setProfilePicUrl(url);
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={onSubmit}>
       <Card className="max-w-md mx-auto">
         <ProfileFormHeader hasProfile={hasProfile} address={address} />
         
@@ -50,7 +61,7 @@ export function UserProfileForm({
           <ProfilePictureUpload 
             displayName={formData.displayName} 
             profilePicUrl={formData.profilePicUrl} 
-            onProfilePicChange={setProfilePicUrl}
+            onProfilePicChange={handleProfilePicChange}
             userId={address || ""}
           />
           

@@ -4,8 +4,8 @@ import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserCircle2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { storageService } from "@/services/storage";
 import { toast } from "sonner";
+import { useProfileImage } from "@/hooks/profile/useProfileImage";
 
 interface ProfilePictureUploadProps {
   displayName: string;
@@ -20,55 +20,32 @@ export function ProfilePictureUpload({
   onProfilePicChange,
   userId,
 }: ProfilePictureUploadProps) {
-  const [isUploading, setIsUploading] = useState(false);
+  const { uploadProfileImage, isUploading } = useProfileImage();
   const [imageError, setImageError] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleUploadClick = () => {
+  const handleUploadClick = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent form submission
     fileInputRef.current?.click();
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault(); // Prevent form submission
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file size (max 2MB)
-    if (file.size > 2 * 1024 * 1024) {
-      toast.error("Image size exceeds 2MB limit");
+    console.log("[ProfilePictureUpload] Starting upload for file:", file.name);
+    
+    if (!userId) {
+      toast.error("User ID is required to upload a profile picture");
       return;
     }
-
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      toast.error("Only image files are allowed");
-      return;
-    }
-
-    setIsUploading(true);
-    try {
-      console.log("[ProfilePictureUpload] Uploading image file:", file.name);
-      
-      if (!userId) {
-        toast.error("User ID is required to upload a profile picture");
-        return;
-      }
-      
-      const url = await storageService.uploadProfileImage(file, userId);
-      
-      if (url) {
-        console.log("[ProfilePictureUpload] Image uploaded successfully:", url);
-        onProfilePicChange(url);
-        toast.success("Profile picture uploaded successfully");
-      } else {
-        toast.error("Failed to upload profile picture");
-        setImageError(true);
-      }
-    } catch (error) {
-      console.error("[ProfilePictureUpload] Error uploading profile picture:", error);
-      toast.error("Error uploading profile picture");
-      setImageError(true);
-    } finally {
-      setIsUploading(false);
+    
+    const url = await uploadProfileImage(file, userId);
+    
+    if (url) {
+      console.log("[ProfilePictureUpload] Upload successful, updating profile with URL:", url);
+      onProfilePicChange(url);
     }
   };
 
@@ -104,6 +81,7 @@ export function ProfilePictureUpload({
           </AvatarFallback>
         </Avatar>
         <Button
+          type="button" // Explicitly set type to button
           size="icon"
           variant="outline"
           className="absolute bottom-0 right-0 rounded-full bg-background h-8 w-8"
