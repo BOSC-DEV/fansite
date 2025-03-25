@@ -1,45 +1,61 @@
 
 import React from "react";
-import { Twitter, Globe } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ExternalLink, Twitter } from "lucide-react";
 
 interface ProfileLinksProps {
-  xLink?: string;
-  websiteLink?: string;
+  xLink: string;
+  websiteLink: string;
+  onXLinkChange?: (link: string) => void;
+  onWebsiteLinkChange?: (link: string) => void;
 }
 
-export function ProfileLinks({ xLink, websiteLink }: ProfileLinksProps) {
-  if (!xLink && !websiteLink) return null;
+export function ProfileLinks({ 
+  xLink, 
+  websiteLink, 
+  onXLinkChange, 
+  onWebsiteLinkChange 
+}: ProfileLinksProps) {
+  const isReadOnly = !onXLinkChange || !onWebsiteLinkChange;
   
   return (
-    <div className="flex gap-2">
-      {xLink && (
-        <Button
-          variant="outline"
-          size="sm"
-          className="h-8 w-8 p-0 bg-western-sand/20 border-western-wood/20 hover:bg-western-sand/40"
-          asChild
-        >
-          <a href={xLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
-            <Twitter size={16} className="text-western-wood" />
-          </a>
-        </Button>
-      )}
+    <div className="space-y-4">
+      <h3 className="text-sm font-medium">Social Links</h3>
       
-      {websiteLink && (
-        <Button
-          variant="outline"
-          size="sm"
-          className="h-8 w-8 p-0 bg-western-sand/20 border-western-wood/20 hover:bg-western-sand/40"
-          asChild
-        >
-          <a href={websiteLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
-            <Globe size={16} className="text-western-wood" />
-          </a>
-        </Button>
-      )}
+      <div className="space-y-3">
+        <div>
+          <Label htmlFor="xLink" className="flex items-center gap-1">
+            <Twitter className="h-4 w-4" /> X / Twitter
+          </Label>
+          <div className="mt-1">
+            <Input
+              id="xLink"
+              placeholder="https://x.com/yourusername"
+              value={xLink}
+              onChange={e => onXLinkChange?.(e.target.value)}
+              readOnly={isReadOnly}
+              className={isReadOnly ? "bg-muted cursor-not-allowed" : ""}
+            />
+          </div>
+        </div>
+        
+        <div>
+          <Label htmlFor="websiteLink" className="flex items-center gap-1">
+            <ExternalLink className="h-4 w-4" /> Website
+          </Label>
+          <div className="mt-1">
+            <Input
+              id="websiteLink"
+              placeholder="https://yourwebsite.com"
+              value={websiteLink}
+              onChange={e => onWebsiteLinkChange?.(e.target.value)}
+              readOnly={isReadOnly}
+              className={isReadOnly ? "bg-muted cursor-not-allowed" : ""}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
-
-export default ProfileLinks;

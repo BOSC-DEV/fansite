@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Input,
@@ -62,12 +63,14 @@ export function UserProfileForm({
 }: UserProfileFormProps) {
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
-      <ProfileFormHeader hasProfile={hasProfile} />
+      <ProfileFormHeader hasProfile={hasProfile} address={address} />
       
       <div className="p-6 space-y-6">
         <ProfilePictureUpload
-          currentUrl={formData.profilePicUrl}
-          onImageChange={setProfilePicUrl}
+          displayName={formData.displayName}
+          profilePicUrl={formData.profilePicUrl}
+          onProfilePicChange={setProfilePicUrl}
+          userId={address || ""}
         />
         
         <div className="space-y-4">
@@ -84,8 +87,8 @@ export function UserProfileForm({
             </div>
             
             <UsernameInput
-              value={formData.username}
-              onChange={setUsername}
+              username={formData.username}
+              setUsername={setUsername}
               isAvailable={usernameAvailable}
               checkingUsername={checkingUsername}
             />
@@ -131,8 +134,8 @@ export function UserProfileForm({
           <ProfileLinks
             xLink={formData.xLink}
             websiteLink={formData.websiteLink}
-            setXLink={setXLink}
-            setWebsiteLink={setWebsiteLink}
+            onXLinkChange={setXLink}
+            onWebsiteLinkChange={setWebsiteLink}
           />
         </div>
       </div>

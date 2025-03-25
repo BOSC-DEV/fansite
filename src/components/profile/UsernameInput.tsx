@@ -6,14 +6,14 @@ import { Input } from "@/components/ui/input";
 interface UsernameInputProps {
   username: string;
   setUsername: (username: string) => void;
-  usernameAvailable: boolean;
+  isAvailable: boolean;
   checkingUsername: boolean;
 }
 
 export function UsernameInput({
   username,
   setUsername,
-  usernameAvailable,
+  isAvailable,
   checkingUsername
 }: UsernameInputProps) {
   return (
@@ -25,13 +25,13 @@ export function UsernameInput({
           placeholder="your_username" 
           value={username} 
           onChange={(e) => setUsername(e.target.value)} 
-          className={`${!usernameAvailable && username ? 'border-red-500' : ''}`}
+          className={`${!isAvailable && username ? 'border-red-500' : ''}`}
           required 
         />
         <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
           {checkingUsername && <div className="h-4 w-4 animate-spin rounded-full border-2 border-western-sand border-t-transparent" />}
           {!checkingUsername && username && (
-            usernameAvailable 
+            isAvailable 
               ? <div className="h-4 w-4 text-green-500">✓</div> 
               : <div className="h-4 w-4 text-red-500">✗</div>
           )}
@@ -40,7 +40,7 @@ export function UsernameInput({
       <p className="text-xs text-muted-foreground">
         Your profile will be accessible at bookofscams.lol/{username}
       </p>
-      {!usernameAvailable && username && (
+      {!isAvailable && username && (
         <p className="text-xs text-red-500 mt-1">
           Username unavailable or invalid. Use only letters, numbers, and underscores.
         </p>

@@ -15,7 +15,7 @@ interface ProfilePictureUploadProps {
 }
 
 export function ProfilePictureUpload({
-  displayName,
+  displayName = "",  // Provide default empty string
   profilePicUrl,
   onProfilePicChange,
   userId,
@@ -56,10 +56,12 @@ export function ProfilePictureUpload({
 
   // Generate initials for avatar fallback
   const initials = displayName
-    .split(" ")
-    .map((name) => name[0])
-    .join("")
-    .toUpperCase();
+    ? displayName
+        .split(" ")
+        .map((name) => name[0])
+        .join("")
+        .toUpperCase()
+    : "";
 
   // Fallback URL when image fails to load
   const fallbackUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName || 'User')}&background=random&size=200`;
@@ -73,7 +75,7 @@ export function ProfilePictureUpload({
         <Avatar className="w-24 h-24">
           <AvatarImage 
             src={imageError ? fallbackUrl : profilePicUrl} 
-            alt={displayName} 
+            alt={displayName || "User"} 
             onError={handleImageError}
           />
           <AvatarFallback className="bg-western-sand text-lg">

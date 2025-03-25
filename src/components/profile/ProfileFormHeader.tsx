@@ -3,7 +3,7 @@ import React from "react";
 
 interface ProfileFormHeaderProps {
   hasProfile: boolean;
-  address: string | null;
+  address?: string | null; // Make address optional
 }
 
 export function ProfileFormHeader({ hasProfile, address }: ProfileFormHeaderProps) {
