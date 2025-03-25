@@ -66,7 +66,7 @@ const MostWanted = () => {
           <div className="space-y-4 md:space-y-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="w-full md:w-1/2 lg:w-1/3">
-                <SearchBar value={searchQuery} onChange={handleSearch} placeholder="Search outlaws..." />
+                <SearchBar onSearch={handleSearch} initialQuery={searchQuery} />
               </div>
               
               {!isMobile && (

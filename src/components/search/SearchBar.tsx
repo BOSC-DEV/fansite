@@ -5,7 +5,7 @@ import { FilterX, Search } from "lucide-react";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-interface SearchBarProps {
+export interface SearchBarProps {
   onSearch: (query: string) => void;
   initialQuery?: string;
 }
