@@ -7,8 +7,8 @@ export const HeroSection = () => {
   return <section className="pt-20 pb-12 md:pt-32 md:pb-24 px-3 sm:px-4 old-paper">
       <div className="container mx-auto max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
-          <div className="space-y-4 md:space-y-6 md:pr-8 animate-fade-in">
-            <h1 className="font-wanted uppercase tracking-wide wanted-poster mx-0 my-0 py-[20px] px-0 text-western-accent">
+          <div className="space-y-3 md:space-y-4 md:pr-8 animate-fade-in">
+            <h1 className="font-wanted uppercase tracking-wide wanted-poster mx-0 my-0 py-[15px] px-0 text-western-accent">
               <span className="block text-5xl md:text-6xl lg:text-7xl">BOOK OF</span>
               <span className="block text-[4.2rem] md:text-[4.9rem] lg:text-[5.6rem] -mt-2">SCAMS</span>
             </h1>
