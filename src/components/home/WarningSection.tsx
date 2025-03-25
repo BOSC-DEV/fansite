@@ -1,17 +1,12 @@
 
 import { useState } from "react";
-import { AlertTriangle, Shield, Copy, Check, ChevronDown, ChevronUp } from "lucide-react";
+import { Shield, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
 import { formatWalletAddress } from "@/utils/formatters";
 
 export const WarningSection = () => {
-  const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
-
-  const toggleExpanded = () => {
-    setExpanded(!expanded);
-  };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(DEVELOPER_WALLET_ADDRESS)
@@ -34,13 +29,10 @@ export const WarningSection = () => {
           </div>
           <div className="flex-1">
             <h2 className="text-xl md:text-2xl font-wanted text-western-accent mb-2 tracking-wide">IMPORTANT NOTICE</h2>
-            <div className={`relative overflow-hidden ${expanded ? 'max-h-none' : 'max-h-24 md:max-h-none'}`}>
+            <div>
               <p className="text-western-wood leading-relaxed font-western">
                 The Book of Scams is a community-driven platform. All listings should be supported by evidence, but users are encouraged to conduct their own research. False accusations may have legal consequences. The BOSC token is used solely for platform functionality and does not constitute investment advice.
               </p>
-              {!expanded && (
-                <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-western-parchment/80 to-transparent md:hidden"></div>
-              )}
             </div>
             
             <div className="mt-3 flex flex-col space-y-2">
@@ -59,23 +51,6 @@ export const WarningSection = () => {
                   )}
                 </button>
               </div>
-              
-              <button 
-                className="md:hidden flex items-center justify-center text-western-accent font-western border border-western-accent/30 rounded-md px-3 py-1 mt-2 hover:bg-western-accent/10 transition-colors"
-                onClick={toggleExpanded}
-              >
-                {expanded ? (
-                  <>
-                    <span>Show Less</span>
-                    <ChevronUp className="ml-1 h-4 w-4" />
-                  </>
-                ) : (
-                  <>
-                    <span>Read More</span>
-                    <ChevronDown className="ml-1 h-4 w-4" />
-                  </>
-                )}
-              </button>
             </div>
           </div>
         </div>
