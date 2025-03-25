@@ -8,5 +8,5 @@ export function ProfileFormHeader({
   address
 }: ProfileFormHeaderProps) {
   // Return an empty div instead of the header content
-  return <div className="pt-6 pb-2 px-[24px] py-0"></div>;
+  return;
 }
