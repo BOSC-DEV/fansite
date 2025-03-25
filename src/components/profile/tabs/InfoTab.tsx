@@ -2,13 +2,19 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { UserProfile } from "@/services/storage";
-import { Twitter, Globe } from "lucide-react";
+import { Twitter, Globe, Copy } from "lucide-react";
+import { toast } from "sonner";
 
 interface InfoTabProps {
   profile: UserProfile;
 }
 
 export function InfoTab({ profile }: InfoTabProps) {
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success("Wallet address copied to clipboard");
+  };
+
   return (
     <>
       <h2 className="text-xl font-bold mb-4 font-western text-western-accent">Profile Information</h2>
@@ -33,7 +39,16 @@ export function InfoTab({ profile }: InfoTabProps) {
           
           <div>
             <h3 className="text-sm font-medium text-western-sand">Wallet Address</h3>
-            <p className="text-xs overflow-hidden text-ellipsis">{profile.walletAddress}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-xs overflow-hidden text-ellipsis">{profile.walletAddress}</p>
+              <button 
+                onClick={() => copyToClipboard(profile.walletAddress)}
+                className="text-western-sand hover:text-western-accent transition-colors"
+                aria-label="Copy wallet address"
+              >
+                <Copy size={16} />
+              </button>
+            </div>
           </div>
           
           <div>
