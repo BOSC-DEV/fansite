@@ -70,7 +70,7 @@ export const LeaderboardRow = forwardRef<HTMLTableRowElement, LeaderboardRowProp
           </Link>
         </TableCell>
         <TableCell className="text-center">
-          <div className="flex justify-center">
+          <div className="flex justify-center gap-2">
             <ProfileLinks xLink={user.xLink} websiteLink={user.websiteLink} />
           </div>
         </TableCell>

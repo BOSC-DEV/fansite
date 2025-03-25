@@ -59,16 +59,16 @@ export function ProfileLinks({
   }
 
   return (
-    <div className="flex flex-wrap gap-4 items-center mt-2">
+    <div className="flex items-center gap-3 mt-2">
       {xLink && (
         <a 
           href={xLink} 
           target="_blank" 
           rel="noopener noreferrer"
-          className="flex items-center gap-2 text-western-wood hover:text-western-accent transition-colors"
+          className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-western-sand/20 text-western-wood hover:bg-western-sand/40 hover:text-western-accent transition-colors"
+          title="X / Twitter"
         >
-          <Twitter size={18} />
-          <span className="text-sm">X / Twitter</span>
+          <Twitter size={16} />
         </a>
       )}
       
@@ -77,21 +77,21 @@ export function ProfileLinks({
           href={websiteLink} 
           target="_blank" 
           rel="noopener noreferrer"
-          className="flex items-center gap-2 text-western-wood hover:text-western-accent transition-colors"
+          className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-western-sand/20 text-western-wood hover:bg-western-sand/40 hover:text-western-accent transition-colors"
+          title="Website"
         >
-          <Globe size={18} />
-          <span className="text-sm">Website</span>
+          <Globe size={16} />
         </a>
       )}
       
       {walletAddress && (
         <button
           onClick={() => copyToClipboard(walletAddress)}
-          className="flex items-center gap-2 text-western-wood hover:text-western-accent transition-colors"
+          className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-western-sand/20 text-western-wood hover:bg-western-sand/40 hover:text-western-accent transition-colors"
           aria-label="Copy wallet address"
+          title="Copy wallet address"
         >
-          <Copy size={18} />
-          <span className="text-sm">Copy Address</span>
+          <Copy size={16} />
         </button>
       )}
     </div>

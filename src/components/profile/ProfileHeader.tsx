@@ -2,7 +2,7 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserCircle2 } from "lucide-react";
-import { UserProfile } from "@/services/storage";
+import { UserProfile } from "@/services/storage/index";
 import { ProfileLinks } from "./ProfileLinks";
 import { EditProfileButton } from "./EditProfileButton";
 
