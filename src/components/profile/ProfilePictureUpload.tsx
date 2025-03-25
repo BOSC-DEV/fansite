@@ -1,6 +1,5 @@
 
 import React, { useState, useRef } from "react";
-import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserCircle2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -68,9 +67,6 @@ export function ProfilePictureUpload({
 
   return (
     <div className="flex flex-col items-center space-y-4">
-      <Label htmlFor="profilePic" className="text-center font-medium">
-        Profile Picture
-      </Label>
       <div className="relative">
         <Avatar className="w-24 h-24">
           <AvatarImage 
