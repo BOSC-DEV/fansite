@@ -1,9 +1,10 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { ThumbsUp, ThumbsDown, UserCircle2 } from "lucide-react";
+import { ThumbsUp, ThumbsDown, UserCircle2, ExternalLink } from "lucide-react";
 import { formatTimeAgo } from "@/utils/formatters";
 import { commentService } from "@/services/storage/localStorageService";
+import { Link } from "react-router-dom";
 
 export interface CommentType {
   id: string;
@@ -14,13 +15,15 @@ export interface CommentType {
   createdAt: string;
   likes: number;
   dislikes: number;
+  scammerId?: string; // Add scammerId to track which listing it belongs to
 }
 
 interface CommentProps {
   comment: CommentType;
+  showScammerLink?: boolean; // Control whether to show the scammer link
 }
 
-export function Comment({ comment }: CommentProps) {
+export function Comment({ comment, showScammerLink = false }: CommentProps) {
   // Use our safe formatTimeAgo utility instead of direct date-fns usage
   const formatDate = (dateString: string) => {
     try {
@@ -53,10 +56,19 @@ export function Comment({ comment }: CommentProps) {
               <UserCircle2 className="h-4 w-4" />
             </AvatarFallback>
           </Avatar>
-          <div>
+          <div className="flex-1">
             <p className="text-sm font-medium">{comment.authorName}</p>
             <p className="text-xs text-muted-foreground">{formatDate(comment.createdAt)}</p>
           </div>
+          {showScammerLink && comment.scammerId && (
+            <Link 
+              to={`/scammer/${comment.scammerId}`} 
+              className="flex items-center text-xs text-western-accent hover:underline"
+            >
+              <span className="mr-1">View Listing</span>
+              <ExternalLink className="h-3 w-3" />
+            </Link>
+          )}
         </div>
       </CardHeader>
       <CardContent className="pb-2 px-4">

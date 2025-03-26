@@ -88,7 +88,7 @@ export function CommentsTab() {
     <>
       <h2 className="text-xl font-bold mb-4 font-western text-western-accent">Comments</h2>
       <Card className="p-6">
-        <CommentList comments={comments} />
+        <CommentList comments={comments} showScammerLinks={true} />
       </Card>
     </>
   );
