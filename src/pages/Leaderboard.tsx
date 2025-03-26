@@ -58,7 +58,7 @@ export default function Leaderboard() {
   }, [allUsers, hasMore, isLoading, page]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-western-dark paper-texture">
+    <div className="min-h-screen flex flex-col bg-western-dark paper-texture old-paper">
       <Helmet>
         <title>BOSC Leaderboard - Book of Scams</title>
         <meta name="description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
@@ -79,7 +79,7 @@ export default function Leaderboard() {
         </div>
 
         {error ? (
-          <div className="p-8 text-center">
+          <div className="p-8 text-center wanted-poster-border paper-texture rounded-sm">
             <p className="text-red-500">{error}</p>
           </div>
         ) : (
@@ -95,4 +95,4 @@ export default function Leaderboard() {
       </main>
     </div>
   );
-}
+};

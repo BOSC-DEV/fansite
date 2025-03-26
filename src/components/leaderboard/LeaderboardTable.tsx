@@ -58,7 +58,7 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto paper-texture border-2 border-western-wood rounded-sm">
       <ScrollArea className="max-h-[80vh]">
         <Table>
           <LeaderboardHeader onSort={handleSort} />

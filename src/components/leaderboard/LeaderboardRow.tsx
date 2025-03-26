@@ -4,7 +4,7 @@ import { TableRow, TableCell } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
 import { Trophy, Award, Medal, ThumbsUp, Eye, MessageSquare, Clock } from "lucide-react";
-import { formatCurrency, formatTimeAgo } from "@/utils/formatters";
+import { formatTimeAgo } from "@/utils/formatters";
 import type { LeaderboardUser } from "@/services/storage/leaderboardService";
 import { ProfileLinks } from "@/components/profile/ProfileLinks";
 import { SolAmount } from "@/components/SolAmount";
