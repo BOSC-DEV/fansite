@@ -1,6 +1,5 @@
 
 import { Label } from "@/components/ui/label";
-import { Coins } from "lucide-react";
 
 interface BountyWalletInfoProps {
   currentBounty: number;
@@ -20,7 +19,6 @@ export function BountyWalletInfo({
       <div>
         <Label htmlFor="current-bounty" className="text-western-wood">Current Bounty</Label>
         <div className="flex items-center mt-1.5 bg-western-sand/10 border border-western-wood/30 rounded-sm p-2">
-          <Coins className="h-4 w-4 text-western-accent mr-2" />
           <span className="font-medium text-western-accent">
             {currentBounty.toLocaleString()} SOL
           </span>
@@ -29,4 +27,3 @@ export function BountyWalletInfo({
     </div>
   );
 }
-

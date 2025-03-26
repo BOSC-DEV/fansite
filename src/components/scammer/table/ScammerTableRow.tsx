@@ -1,9 +1,10 @@
+
 import { Link, useNavigate } from "react-router-dom";
 import { Scammer } from "@/lib/types";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { LinkIcon, Globe } from "lucide-react";
+import { Globe } from "lucide-react";
 import { UploaderAvatar } from "./UploaderAvatar";
 import { commentService } from "@/services/storage/localStorageService";
 
@@ -41,6 +42,13 @@ export const ScammerTableRow = ({
       <TableCell className="font-medium text-center text-western-accent">
         {(currentPage - 1) * itemsPerPage + index + 1}
       </TableCell>
+      
+      <TableCell className="text-center font-medium">
+        <div className="flex items-center justify-center">
+          <span className="text-western-accent font-wanted">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
+        </div>
+      </TableCell>
+      
       <TableCell>
         <div className="flex items-center space-x-3">
           <Avatar className="border-2 border-western-wood">
@@ -55,6 +63,7 @@ export const ScammerTableRow = ({
           </div>
         </div>
       </TableCell>
+      
       <TableCell>
         {links.length > 0 ? (
           <div className="flex items-center space-x-2">
@@ -80,9 +89,11 @@ export const ScammerTableRow = ({
           <span className="text-western-wood/50 text-sm">-</span>
         )}
       </TableCell>
+      
       <TableCell className="max-w-[200px]">
         <p className="truncate">{scammer.accusedOf}</p>
       </TableCell>
+      
       <TableCell className="text-center">
         {aliases.length > 0 ? (
           <div className="flex flex-wrap justify-center gap-1">
@@ -95,20 +106,19 @@ export const ScammerTableRow = ({
           <span className="text-western-wood/50 text-sm">-</span>
         )}
       </TableCell>
-      <TableCell className="text-center font-medium">
-        <div className="flex items-center justify-center">
-          <span className="text-western-accent font-wanted">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
-        </div>
-      </TableCell>
+      
       <TableCell className="text-center">
         {scammer.likes || 0}
       </TableCell>
+      
       <TableCell className="text-center">
         {scammer.views || 0}
       </TableCell>
+      
       <TableCell className="text-right text-western-wood/90 text-sm">
         {formatDate(scammer.dateAdded)}
       </TableCell>
+      
       <TableCell className="text-center">
         <UploaderAvatar addedBy={scammer.addedBy} />
       </TableCell>

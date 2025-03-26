@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Award, Eye, LinkIcon, ThumbsUp, User, Globe } from "lucide-react";
+import { Eye, ThumbsUp, User, Globe } from "lucide-react";
 import { Scammer } from "@/lib/types";
 import { useScammerProfile } from "@/hooks/useScammerProfile";
 import { commentService } from "@/services/storage/localStorageService";
@@ -29,7 +29,7 @@ export const ScammerTableCompact = ({
             <TableHead className="text-western-accent font-wanted">Accused Of</TableHead>
             <TableHead className="text-center text-western-accent font-wanted">
               <div className="flex items-center justify-center">
-                <Award className="h-4 w-4" />
+                Bounty
               </div>
             </TableHead>
             <TableHead className="text-center text-western-accent font-wanted">
