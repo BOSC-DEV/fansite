@@ -3,8 +3,6 @@
 
 Book of Scams is a decentralized criminal registry bringing accountability and justice to The Wild West of crypto.
 
-![Book of Scams](public/og-image.png)
-
 ## About
 
 Book of Scams allows users to:
