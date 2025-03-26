@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
-import { storageService } from "@/services/storage/localStorageService";
+import { storageService } from "@/services/storage/localStorage";
 import { ContractService } from "@/services/web3/contracts";
 import { Connection, PublicKey, LAMPORTS_PER_SOL, Transaction, SystemProgram } from "@solana/web3.js";
 import { scammerService } from "@/services/storage/scammer/scammerService";
@@ -158,6 +158,7 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
           bountyAmount: currentBounty || 0,
           walletAddress: "",
           dateAdded: new Date().toISOString(),
+          addedBy: address || "unknown",
           comments: [],
           likes: 0,
           dislikes: 0,
