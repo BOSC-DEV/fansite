@@ -26,7 +26,8 @@ export class ScammerDataProcessor {
       comments: safeJsonToStringArray(record.comments),
       likes: record.likes || 0,
       dislikes: record.dislikes || 0,
-      views: record.views || 0
+      views: record.views || 0,
+      shares: record.shares || 0
     };
   }
 
@@ -50,7 +51,8 @@ export class ScammerDataProcessor {
       comments: listing.comments,
       likes: listing.likes,
       dislikes: listing.dislikes,
-      views: listing.views
+      views: listing.views,
+      shares: listing.shares
     };
   }
 }

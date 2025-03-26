@@ -18,6 +18,7 @@ export interface ScammerListing {
   likes: number;
   dislikes: number;
   views: number;
+  shares: number;
 }
 
 /**
@@ -63,6 +64,14 @@ export class ScammerService extends LocalStorageUtils {
     }
   }
 
+  incrementScammerShares(scammerId: string): void {
+    const scammer = this.getScammer(scammerId);
+    if (scammer) {
+      scammer.shares = (scammer.shares || 0) + 1;
+      this.saveScammer(scammer);
+    }
+  }
+
   likeScammer(scammerId: string): void {
     const scammer = this.getScammer(scammerId);
     if (scammer) {
@@ -79,7 +88,7 @@ export class ScammerService extends LocalStorageUtils {
     }
   }
 
-  updateScammerStats(scammerId: string, stats: { likes?: number; dislikes?: number; views?: number }): void {
+  updateScammerStats(scammerId: string, stats: { likes?: number; dislikes?: number; views?: number; shares?: number }): void {
     const scammer = this.getScammer(scammerId);
     if (scammer) {
       if (stats.likes !== undefined) {
@@ -90,6 +99,9 @@ export class ScammerService extends LocalStorageUtils {
       }
       if (stats.views !== undefined) {
         scammer.views = stats.views;
+      }
+      if (stats.shares !== undefined) {
+        scammer.shares = stats.shares;
       }
       this.saveScammer(scammer);
     }

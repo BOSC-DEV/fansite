@@ -12,7 +12,14 @@ export class ScammerStatsService extends ScammerBaseService {
    */
   async updateScammerStats(scammerId: string, stats: ScammerStats): Promise<boolean> {
     try {
-      return await this.updateScammerRecord(scammerId, stats);
+      // Convert to DB column names
+      const dbStats: Record<string, any> = {};
+      if (stats.likes !== undefined) dbStats.likes = stats.likes;
+      if (stats.dislikes !== undefined) dbStats.dislikes = stats.dislikes;
+      if (stats.views !== undefined) dbStats.views = stats.views;
+      if (stats.shares !== undefined) dbStats.shares = stats.shares;
+      
+      return await this.updateScammerRecord(scammerId, dbStats);
     } catch (error) {
       console.error("Error updating scammer stats:", error);
       return false;

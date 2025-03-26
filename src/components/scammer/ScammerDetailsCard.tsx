@@ -20,6 +20,7 @@ interface ScammerDetailsCardProps {
     likes: number;
     dislikes: number;
     views: number;
+    shares?: number;
   };
   onLikeScammer?: () => void;
   onDislikeScammer?: () => void;
@@ -67,6 +68,7 @@ export function ScammerDetailsCard({
           likes={likes}
           dislikes={dislikes}
           views={views}
+          shares={scammer.shares || 0}
           comments={commentCount}
           isLiked={isLiked}
           isDisliked={isDisliked}

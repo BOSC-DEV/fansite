@@ -106,9 +106,14 @@ export class ScammerDeleteService extends ScammerBaseService {
         return [];
       }
 
-      const scammers = data.map(record => 
-        ScammerDataProcessor.dbRecordToListing(record as ScammerDbRecord)
-      );
+      const scammers = data.map(record => {
+        // Add shares property if it doesn't exist
+        const recordWithShares = {
+          ...record,
+          shares: record.shares || 0
+        };
+        return ScammerDataProcessor.dbRecordToListing(recordWithShares as ScammerDbRecord);
+      });
       
       return scammers;
     } catch (error) {

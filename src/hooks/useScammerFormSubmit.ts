@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { storageService } from "@/services/storage";
 import { Scammer } from "@/lib/types";
@@ -44,6 +45,7 @@ export function useScammerFormSubmit() {
         likes: scammer.likes,
         dislikes: scammer.dislikes,
         views: scammer.views,
+        shares: scammer.shares || 0,
         addedBy: scammer.addedBy,
         // Include comments property for ScammerListing compatibility
         comments: [] // Initialize as empty array since it doesn't exist in Scammer type

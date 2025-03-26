@@ -97,7 +97,8 @@ export function useSubmitListing() {
         comments: [],
         likes: 0,
         dislikes: 0,
-        views: 0
+        views: 0,
+        shares: 0
       };
       
       // Save to localStorage and try to save to Supabase

@@ -42,7 +42,8 @@ export const getOrCreateScammer = async (
         comments: [],
         likes: 0,
         dislikes: 0,
-        views: 0
+        views: 0,
+        shares: 0
       };
     } else if (!Array.isArray(scammer.comments)) {
       // Ensure comments is an array if it exists but isn't one
@@ -69,7 +70,8 @@ export const getOrCreateScammer = async (
       comments: [],
       likes: 0,
       dislikes: 0,
-      views: 0
+      views: 0,
+      shares: 0
     };
   }
 };

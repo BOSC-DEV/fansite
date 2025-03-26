@@ -46,6 +46,7 @@ export function ScammerCard({ scammer, className, rank }: ScammerCardProps) {
         likes={scammer.likes || 0}
         dislikes={scammer.dislikes || 0}
         views={scammer.views || 0}
+        shares={scammer.shares || 0}
         comments={commentsCount}
         scammerId={scammer.id}
         rank={rank}

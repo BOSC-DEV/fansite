@@ -27,7 +27,11 @@ export class ScammerBaseService {
         return null;
       }
 
-      return data as ScammerDbRecord;
+      // Add the shares property if it doesn't exist
+      return {
+        ...data,
+        shares: data.shares || 0
+      } as ScammerDbRecord;
     } catch (error) {
       console.error("Error in getScammerRecord:", error);
       return null;
