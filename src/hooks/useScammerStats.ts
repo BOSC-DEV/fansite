@@ -97,7 +97,7 @@ export function useScammerStats(scammer: Scammer) {
               .update({ 
                 liked: !isLiked, 
                 disliked: isDisliked ? false : isDisliked,
-                last_updated: new Date()
+                last_updated: new Date().toISOString()
               })
               .eq('id', data.id);
           } else {
@@ -171,7 +171,7 @@ export function useScammerStats(scammer: Scammer) {
               .update({ 
                 liked: isLiked ? false : isLiked, 
                 disliked: !isDisliked,
-                last_updated: new Date()
+                last_updated: new Date().toISOString()
               })
               .eq('id', data.id);
           } else {
