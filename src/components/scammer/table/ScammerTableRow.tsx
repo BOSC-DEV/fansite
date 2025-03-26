@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { LinkIcon, Globe } from "lucide-react";
 import { UploaderAvatar } from "./UploaderAvatar";
-import { storageService } from "@/services/storage/localStorageService";
+import { commentService } from "@/services/storage/localStorageService";
 
 interface ScammerTableRowProps {
   scammer: Scammer;
@@ -27,7 +27,7 @@ export const ScammerTableRow = ({
   const navigate = useNavigate();
   const aliases = Array.isArray(scammer.aliases) ? scammer.aliases : [];
   const links = Array.isArray(scammer.links) ? scammer.links : [];
-  const commentsCount = storageService.getCommentsForScammer(scammer.id).length;
+  const commentsCount = commentService.getCommentsForScammer(scammer.id).length;
   
   const handleRowClick = () => {
     navigate(`/scammer/${scammer.id}`);

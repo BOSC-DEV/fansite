@@ -159,7 +159,7 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
           walletAddress: "",
           dateAdded: new Date().toISOString(),
           addedBy: address || "unknown",
-          comments: [],
+          comments: [], // Ensure comments is always an array
           likes: 0,
           dislikes: 0,
           views: 0
@@ -188,7 +188,7 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
           // Make sure the scammer object has the required properties for the new service
           const scammerForNewService = {
             ...scammer,
-            comments: scammer.comments || [] // Ensure comments is always an array
+            comments: Array.isArray(scammer.comments) ? scammer.comments : []
           };
           await newScammerService.saveScammer(scammerForNewService);
         }

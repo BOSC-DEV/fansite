@@ -87,10 +87,14 @@ export function useCommentSubmit(
       console.log("Saving comment:", comment);
       
       // Try to save to Supabase first
-      const savedToSupabase = await commentService.saveComment(comment).catch(err => {
+      let savedToSupabase = false;
+      try {
+        await commentService.saveComment(comment);
+        savedToSupabase = true;
+      } catch (err) {
         console.error("Error saving comment to Supabase:", err);
-        return false;
-      });
+        savedToSupabase = false;
+      }
       
       // Always save to localStorage as backup
       commentService.saveComment(comment);
