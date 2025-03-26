@@ -30,21 +30,21 @@ export function ScammerCardContent({
   return (
     <div className="p-4 space-y-3">
       <div className="flex justify-between items-start">
-        <div>
+        <div className="w-3/5">
           <p className="text-xs text-western-wood/70">Accused of</p>
           <p className="text-sm font-medium line-clamp-2 text-western-wood">{accusedOf}</p>
         </div>
+        <div className="text-xs text-western-wood/70 text-right">
+          Added {formattedDate}
+        </div>
       </div>
       
-      <div className="flex justify-between items-center">
+      <div className="flex justify-start items-center">
         <div className="flex items-center">
           <SolAmount 
             amount={bountyAmount}
             className="text-sm font-bold text-western-accent font-wanted"
           />
-        </div>
-        <div className="text-xs text-western-wood/70">
-          Added {formattedDate}
         </div>
       </div>
       
