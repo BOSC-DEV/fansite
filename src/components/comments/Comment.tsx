@@ -1,11 +1,12 @@
 
+import { useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { ThumbsUp, ThumbsDown, UserCircle2, ExternalLink, Eye } from "lucide-react";
 import { formatTimeAgo } from "@/utils/formatters";
-import { commentService } from "@/services/storage/localStorageService";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { supabase } from "@/lib/supabase";
+import { useCommentInteractions } from "@/hooks/comments/useCommentInteractions";
 
 export interface CommentType {
   id: string;
@@ -16,7 +17,7 @@ export interface CommentType {
   createdAt: string;
   likes: number;
   dislikes: number;
-  views: number; // Added view counter
+  views: number;
   scammerId?: string;
 }
 
@@ -26,10 +27,50 @@ interface CommentProps {
 }
 
 export function Comment({ comment, showScammerLink = false }: CommentProps) {
+  const { 
+    likes, 
+    dislikes,
+    isLiked,
+    isDisliked,
+    handleLike,
+    handleDislike
+  } = useCommentInteractions({
+    commentId: comment.id,
+    initialLikes: comment.likes,
+    initialDislikes: comment.dislikes
+  });
+
   // Increment view counter when component mounts
   useEffect(() => {
-    commentService.incrementCommentViews(comment.id);
-  }, [comment.id]);
+    const incrementViews = async () => {
+      try {
+        // Get an anonymized IP hash
+        const { data } = await supabase.functions.invoke('get-client-ip-hash');
+        const ipHash = data?.ipHash || 'unknown';
+        
+        // Check if this IP has already viewed this comment
+        const localStorageKey = `comment-view-${comment.id}-${ipHash}`;
+        
+        if (localStorage.getItem(localStorageKey)) {
+          // This IP has already viewed this comment
+          return;
+        }
+        
+        // Mark this IP as having viewed this comment
+        localStorage.setItem(localStorageKey, 'true');
+        
+        // Increment the view count in the database
+        await supabase
+          .from('comments')
+          .update({ views: comment.views + 1 })
+          .eq('id', comment.id);
+      } catch (error) {
+        console.error("Error incrementing comment views:", error);
+      }
+    };
+    
+    incrementViews();
+  }, [comment.id, comment.views]);
 
   // Use our safe formatTimeAgo utility instead of direct date-fns usage
   const formatDate = (dateString: string) => {
@@ -43,14 +84,6 @@ export function Comment({ comment, showScammerLink = false }: CommentProps) {
       console.error("Error formatting date:", error, dateString);
       return 'Recently';
     }
-  };
-
-  const handleLike = () => {
-    commentService.likeComment(comment.id);
-  };
-
-  const handleDislike = () => {
-    commentService.dislikeComment(comment.id);
   };
 
   return (
@@ -85,17 +118,17 @@ export function Comment({ comment, showScammerLink = false }: CommentProps) {
         <div className="flex items-center space-x-4">
           <button 
             onClick={handleLike}
-            className="flex items-center space-x-1 text-xs hover:text-green-600 transition-colors"
+            className={`flex items-center space-x-1 text-xs transition-colors ${isLiked ? 'text-green-600' : 'hover:text-green-600'}`}
           >
             <ThumbsUp className="h-3 w-3" />
-            <span>{comment.likes || 0}</span>
+            <span>{likes || 0}</span>
           </button>
           <button 
             onClick={handleDislike}
-            className="flex items-center space-x-1 text-xs hover:text-red-600 transition-colors"
+            className={`flex items-center space-x-1 text-xs transition-colors ${isDisliked ? 'text-red-600' : 'hover:text-red-600'}`}
           >
             <ThumbsDown className="h-3 w-3" />
-            <span>{comment.dislikes || 0}</span>
+            <span>{dislikes || 0}</span>
           </button>
           <div className="flex items-center space-x-1 text-xs text-western-wood/70">
             <Eye className="h-3 w-3" />
