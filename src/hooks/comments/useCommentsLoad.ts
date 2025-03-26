@@ -27,13 +27,17 @@ export function useCommentsLoad(scammerId: string) {
       } else if (supabaseComments && supabaseComments.length > 0) {
         console.log("Comments loaded from Supabase:", supabaseComments.length);
         
-        // Ensure all comments have a valid created_at field
+        // Ensure all comments have a valid created_at field and views field
         const validatedComments = supabaseComments.map(comment => {
-          if (!comment.created_at || comment.created_at === 'Invalid Date') {
-            // Use current timestamp if the date is invalid
-            return { ...comment, created_at: new Date().toISOString() };
-          }
-          return comment;
+          // Use current timestamp if the date is invalid
+          const validatedComment = {
+            ...comment,
+            created_at: comment.created_at && comment.created_at !== 'Invalid Date' 
+              ? comment.created_at 
+              : new Date().toISOString(),
+            views: comment.views || 0 // Ensure views property exists
+          };
+          return validatedComment;
         });
         
         setComments(validatedComments);

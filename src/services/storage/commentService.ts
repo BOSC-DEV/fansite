@@ -11,6 +11,7 @@ export interface Comment {
   createdAt: string;
   likes: number;
   dislikes: number;
+  views: number; // Added view counter
 }
 
 export class CommentService extends BaseSupabaseService {
@@ -25,7 +26,8 @@ export class CommentService extends BaseSupabaseService {
       author_profile_pic: comment.authorProfilePic,
       created_at: comment.createdAt,
       likes: comment.likes || 0,
-      dislikes: comment.dislikes || 0
+      dislikes: comment.dislikes || 0,
+      views: comment.views || 0 // Added view counter
     };
     
     const result = await this.supabase
@@ -62,7 +64,8 @@ export class CommentService extends BaseSupabaseService {
       authorProfilePic: data.author_profile_pic || '',
       createdAt: data.created_at,
       likes: data.likes || 0,
-      dislikes: data.dislikes || 0
+      dislikes: data.dislikes || 0,
+      views: data.views || 0 // Added view counter
     };
   }
 
@@ -88,7 +91,8 @@ export class CommentService extends BaseSupabaseService {
       authorProfilePic: item.author_profile_pic || '',
       createdAt: item.created_at,
       likes: item.likes || 0,
-      dislikes: item.dislikes || 0
+      dislikes: item.dislikes || 0,
+      views: item.views || 0 // Added view counter
     }));
   }
 
@@ -114,7 +118,8 @@ export class CommentService extends BaseSupabaseService {
       authorProfilePic: item.author_profile_pic || '',
       createdAt: item.created_at,
       likes: item.likes || 0,
-      dislikes: item.dislikes || 0
+      dislikes: item.dislikes || 0,
+      views: item.views || 0 // Added view counter
     }));
   }
 
@@ -144,6 +149,22 @@ export class CommentService extends BaseSupabaseService {
       await this.supabase
         .from('comments')
         .update({ dislikes: (comment.dislikes || 0) + 1 })
+        .eq('id', commentId);
+    }
+  }
+
+  // Add a new method to increment the view count
+  async incrementCommentViews(commentId: string): Promise<void> {
+    const { data: comment } = await this.supabase
+      .from('comments')
+      .select('views')
+      .eq('id', commentId)
+      .single();
+
+    if (comment) {
+      await this.supabase
+        .from('comments')
+        .update({ views: (comment.views || 0) + 1 })
         .eq('id', commentId);
     }
   }

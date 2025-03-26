@@ -12,6 +12,7 @@ export interface Comment {
   createdAt: string;
   likes: number;
   dislikes: number;
+  views: number; // Added view counter
 }
 
 /**
@@ -79,6 +80,15 @@ export class CommentService extends LocalStorageUtils {
     const comment = this.getComment(commentId);
     if (comment) {
       comment.dislikes = (comment.dislikes || 0) + 1;
+      this.setItem(`${STORAGE_KEYS.COMMENTS}${commentId}`, comment);
+    }
+  }
+
+  // Add a new method to increment the view count
+  incrementCommentViews(commentId: string): void {
+    const comment = this.getComment(commentId);
+    if (comment) {
+      comment.views = (comment.views || 0) + 1;
       this.setItem(`${STORAGE_KEYS.COMMENTS}${commentId}`, comment);
     }
   }

@@ -1,10 +1,11 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { ThumbsUp, ThumbsDown, UserCircle2, ExternalLink } from "lucide-react";
+import { ThumbsUp, ThumbsDown, UserCircle2, ExternalLink, Eye } from "lucide-react";
 import { formatTimeAgo } from "@/utils/formatters";
 import { commentService } from "@/services/storage/localStorageService";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 export interface CommentType {
   id: string;
@@ -15,15 +16,21 @@ export interface CommentType {
   createdAt: string;
   likes: number;
   dislikes: number;
-  scammerId?: string; // Add scammerId to track which listing it belongs to
+  views: number; // Added view counter
+  scammerId?: string;
 }
 
 interface CommentProps {
   comment: CommentType;
-  showScammerLink?: boolean; // Control whether to show the scammer link
+  showScammerLink?: boolean;
 }
 
 export function Comment({ comment, showScammerLink = false }: CommentProps) {
+  // Increment view counter when component mounts
+  useEffect(() => {
+    commentService.incrementCommentViews(comment.id);
+  }, [comment.id]);
+
   // Use our safe formatTimeAgo utility instead of direct date-fns usage
   const formatDate = (dateString: string) => {
     try {
@@ -90,6 +97,10 @@ export function Comment({ comment, showScammerLink = false }: CommentProps) {
             <ThumbsDown className="h-3 w-3" />
             <span>{comment.dislikes || 0}</span>
           </button>
+          <div className="flex items-center space-x-1 text-xs text-western-wood/70">
+            <Eye className="h-3 w-3" />
+            <span>{comment.views || 0}</span>
+          </div>
         </div>
       </CardFooter>
     </Card>

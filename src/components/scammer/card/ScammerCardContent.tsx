@@ -38,7 +38,7 @@ export function ScammerCardContent({
       <div className="flex justify-between items-center">
         <div className="flex items-center">
           <span className="text-sm font-bold text-western-accent font-wanted">
-            {formattedBounty} $BOSC
+            {formattedBounty} SOL
           </span>
         </div>
         <div className="text-xs text-western-wood/70">

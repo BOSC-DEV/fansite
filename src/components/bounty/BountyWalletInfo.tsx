@@ -24,7 +24,7 @@ export function BountyWalletInfo({
         <div className="flex items-center mt-1.5 bg-western-sand/10 border border-western-wood/30 rounded-sm p-2">
           <Coins className="h-4 w-4 text-western-accent mr-2" />
           <span className="font-medium text-western-accent">
-            {currentBounty.toLocaleString()} $BOSC
+            {currentBounty.toLocaleString()} SOL
           </span>
         </div>
       </div>

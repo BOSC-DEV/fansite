@@ -67,6 +67,7 @@ export function CommentList({ comments, showScammerLinks = false }: CommentListP
             createdAt: comment.created_at,
             likes: comment.likes || 0,
             dislikes: comment.dislikes || 0,
+            views: comment.views || 0,
             scammerId: comment.scammer_id // Include the scammer ID
           };
           
