@@ -42,31 +42,40 @@ export function useCommentSubmit(
         profilePic: ""
       };
       
-      // First check localStorage
-      const localProfile = profileService.getProfile(address);
-      
-      if (localProfile) {
-        normalizedProfile = {
-          name: localProfile.displayName,
-          profilePic: localProfile.profilePicUrl
-        };
-      } else {
-        // Check Supabase
-        try {
-          const { data: supabaseProfile } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('wallet_address', address)
-            .single();
-            
-          if (supabaseProfile) {
+      // First check Supabase for profile
+      try {
+        const { data: supabaseProfile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('wallet_address', address)
+          .single();
+          
+        if (supabaseProfile) {
+          normalizedProfile = {
+            name: supabaseProfile.display_name || "Anonymous",
+            profilePic: supabaseProfile.profile_pic_url || ""
+          };
+        } else {
+          // Fallback to localStorage
+          const localProfile = profileService.getProfile(address);
+          
+          if (localProfile) {
             normalizedProfile = {
-              name: supabaseProfile.display_name || "Anonymous",
-              profilePic: supabaseProfile.profile_pic_url || ""
+              name: localProfile.displayName,
+              profilePic: localProfile.profilePicUrl
             };
           }
-        } catch (error) {
-          console.error("Error fetching profile from Supabase:", error);
+        }
+      } catch (error) {
+        console.error("Error fetching profile from Supabase:", error);
+        // Fallback to localStorage
+        const localProfile = profileService.getProfile(address);
+        
+        if (localProfile) {
+          normalizedProfile = {
+            name: localProfile.displayName,
+            profilePic: localProfile.profilePicUrl
+          };
         }
       }
       
@@ -74,40 +83,32 @@ export function useCommentSubmit(
       const commentId = uuidv4();
       const comment = {
         id: commentId,
-        scammerId,
+        scammer_id: scammerId,
         content: content.trim(),
         author: address,
-        authorName: normalizedProfile.name,
-        authorProfilePic: normalizedProfile.profilePic,
-        createdAt: new Date().toISOString(),
+        author_name: normalizedProfile.name,
+        author_profile_pic: normalizedProfile.profilePic,
+        created_at: new Date().toISOString(),
         likes: 0,
         dislikes: 0
       };
       
-      console.log("Saving comment:", comment);
+      console.log("Saving comment to Supabase:", comment);
       
-      // Try to save to Supabase first
-      let savedToSupabase = false;
-      try {
-        await commentService.saveComment(comment);
-        savedToSupabase = true;
-      } catch (err) {
-        console.error("Error saving comment to Supabase:", err);
-        savedToSupabase = false;
+      // Save to Supabase
+      const { error } = await supabase
+        .from('comments')
+        .insert(comment);
+      
+      if (error) {
+        console.error("Error saving comment to Supabase:", error);
+        toast.error("Failed to save comment");
+        throw error;
       }
-      
-      // Always save to localStorage as backup
-      commentService.saveComment(comment);
       
       // Optimistically update the UI immediately
       setComments(prevComments => [comment, ...prevComments]);
-      
-      if (savedToSupabase) {
-        toast.success("Comment added successfully");
-      } else {
-        toast.info("Comment saved locally, will sync to server when possible");
-      }
-      
+      toast.success("Comment added successfully");
       setContent("");
     } catch (error) {
       console.error("Error adding comment:", error);

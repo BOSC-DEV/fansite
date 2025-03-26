@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/lib/supabase";
 import { useWallet } from "@/context/WalletContext";
 import { CommentList } from "@/components/comments/CommentList";
+import { toast } from "sonner";
 
 export function CommentsTab() {
   const [comments, setComments] = useState<any[]>([]);
@@ -16,6 +17,9 @@ export function CommentsTab() {
       setIsLoading(true);
       try {
         if (address) {
+          console.log("Fetching comments for address:", address);
+          
+          // Get comments from Supabase
           const { data: userComments, error } = await supabase
             .from('comments')
             .select('*')
@@ -24,10 +28,17 @@ export function CommentsTab() {
             
           if (error) {
             console.error("Error fetching comments:", error);
+            toast.error("Error loading comments");
             throw error;
           }
           
-          setComments(userComments || []);
+          if (userComments && userComments.length > 0) {
+            console.log("Found comments in Supabase:", userComments.length);
+            setComments(userComments);
+          } else {
+            console.log("No comments found for this user");
+            setComments([]);
+          }
         }
       } catch (error) {
         console.error("Error loading user comments:", error);
