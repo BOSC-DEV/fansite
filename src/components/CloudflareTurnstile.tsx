@@ -71,8 +71,8 @@ export const CloudflareTurnstile: React.FC<CloudflareTurnstileProps> = ({
             // Show toast notification only once
             if (!notificationShown) {
               toast({
-                title: "Verification successful!",
-                description: "You have successfully verified that you're not a robot.",
+                title: "Anti-bot confirmed",
+                description: "",
                 duration: 3000,
               });
               setNotificationShown(true);
