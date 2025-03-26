@@ -124,10 +124,16 @@ export function useCommentInteractions({
         // Update comment likes count
         const { error: updateError } = await supabase
           .from('comments')
-          .update({ likes: supabase.rpc('decrement', { row_id: commentId }) })
-          .eq('id', commentId);
-          
-        if (updateError) throw updateError;
+          .select('likes')
+          .eq('id', commentId)
+          .single();
+        
+        if (!updateError) {
+          await supabase
+            .from('comments')
+            .update({ likes: Math.max(0, likes - 1) })
+            .eq('id', commentId);
+        }
         
         return;
       }
@@ -179,15 +185,21 @@ export function useCommentInteractions({
       }
       
       // Update comment like count in database
-      const { error: likeError } = await supabase
+      const { data: comment } = await supabase
         .from('comments')
-        .update({ 
-          likes: isDisliked ? likes + 1 : supabase.rpc('increment', { row_id: commentId }),
-          dislikes: isDisliked ? supabase.rpc('decrement', { row_id: commentId, column_name: 'dislikes' }) : dislikes
-        })
-        .eq('id', commentId);
+        .select('likes, dislikes')
+        .eq('id', commentId)
+        .single();
         
-      if (likeError) throw likeError;
+      if (comment) {
+        await supabase
+          .from('comments')
+          .update({ 
+            likes: isDisliked ? comment.likes + 1 : likes + 1,
+            dislikes: isDisliked ? Math.max(0, comment.dislikes - 1) : comment.dislikes
+          })
+          .eq('id', commentId);
+      }
       
     } catch (error) {
       console.error("Error handling like:", error);
@@ -247,10 +259,16 @@ export function useCommentInteractions({
         // Update comment dislikes count
         const { error: updateError } = await supabase
           .from('comments')
-          .update({ dislikes: supabase.rpc('decrement', { row_id: commentId, column_name: 'dislikes' }) })
-          .eq('id', commentId);
-          
-        if (updateError) throw updateError;
+          .select('dislikes')
+          .eq('id', commentId)
+          .single();
+        
+        if (!updateError) {
+          await supabase
+            .from('comments')
+            .update({ dislikes: Math.max(0, dislikes - 1) })
+            .eq('id', commentId);
+        }
         
         return;
       }
@@ -302,15 +320,21 @@ export function useCommentInteractions({
       }
       
       // Update comment dislike count in database
-      const { error: dislikeError } = await supabase
+      const { data: comment } = await supabase
         .from('comments')
-        .update({ 
-          dislikes: isLiked ? dislikes + 1 : supabase.rpc('increment', { row_id: commentId, column_name: 'dislikes' }),
-          likes: isLiked ? supabase.rpc('decrement', { row_id: commentId }) : likes
-        })
-        .eq('id', commentId);
+        .select('likes, dislikes')
+        .eq('id', commentId)
+        .single();
         
-      if (dislikeError) throw dislikeError;
+      if (comment) {
+        await supabase
+          .from('comments')
+          .update({ 
+            dislikes: isLiked ? comment.dislikes + 1 : dislikes + 1,
+            likes: isLiked ? Math.max(0, comment.likes - 1) : comment.likes
+          })
+          .eq('id', commentId);
+      }
       
     } catch (error) {
       console.error("Error handling dislike:", error);

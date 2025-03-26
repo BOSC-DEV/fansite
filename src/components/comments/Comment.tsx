@@ -1,12 +1,11 @@
 
-import { useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { ThumbsUp, ThumbsDown, UserCircle2, ExternalLink, Eye } from "lucide-react";
 import { formatTimeAgo } from "@/utils/formatters";
 import { Link } from "react-router-dom";
-import { supabase } from "@/lib/supabase";
 import { useCommentInteractions } from "@/hooks/comments/useCommentInteractions";
+import { useCommentsViewTracking } from "@/hooks/comments/useCommentsViewTracking";
 
 export interface CommentType {
   id: string;
@@ -40,37 +39,8 @@ export function Comment({ comment, showScammerLink = false }: CommentProps) {
     initialDislikes: comment.dislikes
   });
 
-  // Increment view counter when component mounts
-  useEffect(() => {
-    const incrementViews = async () => {
-      try {
-        // Get an anonymized IP hash
-        const { data } = await supabase.functions.invoke('get-client-ip-hash');
-        const ipHash = data?.ipHash || 'unknown';
-        
-        // Check if this IP has already viewed this comment
-        const localStorageKey = `comment-view-${comment.id}-${ipHash}`;
-        
-        if (localStorage.getItem(localStorageKey)) {
-          // This IP has already viewed this comment
-          return;
-        }
-        
-        // Mark this IP as having viewed this comment
-        localStorage.setItem(localStorageKey, 'true');
-        
-        // Increment the view count in the database
-        await supabase
-          .from('comments')
-          .update({ views: comment.views + 1 })
-          .eq('id', comment.id);
-      } catch (error) {
-        console.error("Error incrementing comment views:", error);
-      }
-    };
-    
-    incrementViews();
-  }, [comment.id, comment.views]);
+  // Use the dedicated hook for view tracking
+  useCommentsViewTracking(comment.id);
 
   // Use our safe formatTimeAgo utility instead of direct date-fns usage
   const formatDate = (dateString: string) => {

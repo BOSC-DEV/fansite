@@ -239,6 +239,41 @@ export type Database = {
         }
         Relationships: []
       }
+      user_comment_interactions: {
+        Row: {
+          comment_id: string
+          disliked: boolean | null
+          id: string
+          last_updated: string | null
+          liked: boolean | null
+          user_id: string
+        }
+        Insert: {
+          comment_id: string
+          disliked?: boolean | null
+          id?: string
+          last_updated?: string | null
+          liked?: boolean | null
+          user_id: string
+        }
+        Update: {
+          comment_id?: string
+          disliked?: boolean | null
+          id?: string
+          last_updated?: string | null
+          liked?: boolean | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_comment_interactions_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_scammer_interactions: {
         Row: {
           disliked: boolean | null
