@@ -4,7 +4,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 interface UsePaginationOptions {
   totalItems: number;
-  viewType?: "grid" | "table" | "book";
+  viewType?: "book" | "table" | "grid";
   initialPage?: number;
   customItemsPerPage?: number;
 }
