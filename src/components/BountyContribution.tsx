@@ -24,7 +24,7 @@ export function BountyContribution({
   currentBounty, 
   scammerName 
 }: BountyContributionProps) {
-  const { isConnected, address } = useWallet();
+  const { isConnected, address, connectWallet } = useWallet();
   const [amount, setAmount] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -51,9 +51,25 @@ export function BountyContribution({
   };
 
   const handleContribute = async () => {
-    if (!isConnected) {
-      toast.error("Please connect your wallet first");
-      return;
+    console.log("Current wallet connection state:", { isConnected, address });
+    
+    // Double-check wallet connection status
+    const isWalletConnected = isConnected && !!address && !!window.phantom?.solana?.isConnected;
+    
+    if (!isWalletConnected) {
+      toast.error("Please connect your wallet first", {
+        description: "Your wallet is not currently connected"
+      });
+      
+      // Try to reconnect the wallet
+      try {
+        await connectWallet();
+        toast.success("Wallet reconnected, please try again");
+        return;
+      } catch (error) {
+        console.error("Failed to reconnect wallet:", error);
+        return;
+      }
     }
 
     if (!amount || parseFloat(amount) <= 0) {
@@ -64,9 +80,9 @@ export function BountyContribution({
     setIsSubmitting(true);
 
     try {
-      // Send SOL transaction through wallet
-      if (!window.phantom?.solana) {
-        throw new Error("Phantom wallet not available");
+      // Verify wallet connection again before proceeding
+      if (!window.phantom?.solana?.isConnected) {
+        throw new Error("Phantom wallet is not connected");
       }
 
       // Convert amount from string to number
@@ -108,6 +124,9 @@ export function BountyContribution({
       setIsSubmitting(false);
     }
   };
+
+  // Add debug UI for development if needed
+  // console.log("Render state:", { isConnected, address });
 
   return (
     <Card className="border-western-wood bg-western-parchment/70">
