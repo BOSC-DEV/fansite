@@ -1,6 +1,12 @@
 
+import { Buffer } from 'buffer';
 import { PublicKey, Connection, Transaction, SystemProgram, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { Web3Provider } from "./provider";
+
+// Make Buffer available globally
+if (typeof window !== 'undefined') {
+  window.Buffer = Buffer;
+}
 
 export class ContractService extends Web3Provider {
   constructor() {
