@@ -10,6 +10,8 @@ import { useScammers } from "@/hooks/use-scammers";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScammerStatsCard } from "@/components/stats/ScammerStatsCard";
 import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
+import { formatCurrency, formatDate } from "@/utils/formatters";
+import { useSortableScammers } from "@/hooks/useSortableScammers";
 
 interface FeaturedScammersProps {
   limit?: number;
@@ -17,24 +19,17 @@ interface FeaturedScammersProps {
 
 const FeaturedScammersComponent = ({ limit = 6 }: FeaturedScammersProps) => {
   const { isLoading, filteredScammers } = useScammers();
+  
+  // Use the same sorting hook as the Most Wanted page
+  const {
+    sortedScammers,
+    handleSort,
+    sortField,
+    sortDirection
+  } = useSortableScammers(filteredScammers);
+  
   // Take only the first 'limit' scammers for performance
-  const limitedScammers = filteredScammers.slice(0, limit);
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'decimal',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
-
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    }).format(date);
-  };
+  const limitedScammers = sortedScammers.slice(0, limit);
 
   return (
     <section className="py-16 bg-western-parchment/30">
