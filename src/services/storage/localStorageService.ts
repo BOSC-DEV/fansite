@@ -1,4 +1,3 @@
-
 import { Scammer } from "@/lib/types";
 
 // Types for our localStorage data structures
@@ -142,6 +141,22 @@ class LocalStorageService {
     const scammer = this.getScammer(scammerId);
     if (scammer) {
       scammer.dislikes = (scammer.dislikes || 0) + 1;
+      this.saveScammer(scammer);
+    }
+  }
+
+  updateScammerStats(scammerId: string, stats: { likes?: number; dislikes?: number; views?: number }): void {
+    const scammer = this.getScammer(scammerId);
+    if (scammer) {
+      if (stats.likes !== undefined) {
+        scammer.likes = stats.likes;
+      }
+      if (stats.dislikes !== undefined) {
+        scammer.dislikes = stats.dislikes;
+      }
+      if (stats.views !== undefined) {
+        scammer.views = stats.views;
+      }
       this.saveScammer(scammer);
     }
   }
