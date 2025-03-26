@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ExternalLink, Copy, Check } from "lucide-react";
+import { Copy, Check } from "lucide-react";
 import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
 import { formatWalletAddress } from "@/utils/formatters";
 import { toast } from "sonner";
@@ -56,14 +56,6 @@ export const SiteFooter = () => {
               ) : (
                 <Copy className="h-4 w-4 ml-2 cursor-pointer" onClick={copyToClipboard} />
               )}
-              <a 
-                href={`https://solscan.io/account/${DEVELOPER_WALLET_ADDRESS}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-western-sand hover:text-western-accent ml-2"
-              >
-                <ExternalLink className="h-4 w-4" />
-              </a>
             </div>
           </div>
         </div>
