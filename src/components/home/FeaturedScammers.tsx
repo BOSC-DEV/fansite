@@ -44,7 +44,7 @@ const FeaturedScammersComponent = ({ limit = 3 }: FeaturedScammersProps) => {
 
   return (
     <section className="py-16 bg-western-parchment/30 w-full">
-      <div className="container mx-auto max-w-6xl px-4">
+      <div className="container mx-auto max-w-6xl px-4 w-full">
         <div className="flex justify-between items-center mb-10">
           <div>
             <h2 className="text-3xl font-wanted text-western-accent uppercase tracking-wide">Most Wanted</h2>
@@ -59,9 +59,7 @@ const FeaturedScammersComponent = ({ limit = 3 }: FeaturedScammersProps) => {
         </div>
         
         {!isLoading && filteredScammers.length > 0 && (
-          <div className="w-full max-w-full">
-            <ScammerStatsCard scammers={filteredScammers} className="mb-6" />
-          </div>
+          <ScammerStatsCard scammers={filteredScammers} className="mb-6" />
         )}
         
         <div className="paper-texture rounded-sm p-4 w-full">
