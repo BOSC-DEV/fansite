@@ -1,5 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
+import { toast } from "@/hooks/use-toast";
+import { CheckCircle2 } from "lucide-react";
 
 interface CloudflareTurnstileProps {
   siteKey: string;
@@ -16,6 +18,7 @@ export const CloudflareTurnstile: React.FC<CloudflareTurnstileProps> = ({
   const turnstileRef = useRef<number | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [notificationShown, setNotificationShown] = useState(false);
 
   // Load the Cloudflare Turnstile script
   useEffect(() => {
@@ -64,12 +67,24 @@ export const CloudflareTurnstile: React.FC<CloudflareTurnstileProps> = ({
           callback: (token: string) => {
             console.log('Turnstile verification successful');
             setError(null);
+            
+            // Show toast notification only once
+            if (!notificationShown) {
+              toast({
+                title: "Verification successful!",
+                description: "You have successfully verified that you're not a robot.",
+                duration: 3000,
+              });
+              setNotificationShown(true);
+            }
+            
             onVerify(token);
           },
           theme: theme,
           'expired-callback': () => {
             console.log('Turnstile challenge expired, refreshing');
             setError('Verification expired, please try again');
+            setNotificationShown(false);
             if (turnstileRef.current !== null) {
               window.turnstile.reset(turnstileRef.current);
             }
@@ -77,6 +92,7 @@ export const CloudflareTurnstile: React.FC<CloudflareTurnstileProps> = ({
           'error-callback': (errorCode: any) => {
             console.error('Turnstile error:', errorCode);
             setError('Verification failed, please try again');
+            setNotificationShown(false);
           }
         });
       } catch (err) {
@@ -114,7 +130,14 @@ export const CloudflareTurnstile: React.FC<CloudflareTurnstileProps> = ({
         window.turnstile.remove(turnstileRef.current);
       }
     };
-  }, [siteKey, onVerify, isLoaded, theme]);
+  }, [siteKey, onVerify, isLoaded, theme, notificationShown]);
+
+  // Reset notification shown state on unmount
+  useEffect(() => {
+    return () => {
+      setNotificationShown(false);
+    };
+  }, []);
 
   return (
     <div className="flex flex-col items-center">

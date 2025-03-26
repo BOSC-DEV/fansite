@@ -1,7 +1,7 @@
 
 import { CheckCircle2 } from "lucide-react";
 import { CloudflareTurnstile } from "@/components/CloudflareTurnstile";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 
 // Get Cloudflare Turnstile site key from environment variables or use development key as fallback
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY || '1x00000000000000000000BB';
@@ -14,10 +14,7 @@ interface TurnstileVerificationProps {
 export function TurnstileVerification({ onVerify, token }: TurnstileVerificationProps) {
   const handleVerify = (token: string) => {
     onVerify(token);
-    toast.success("Verification successful!", {
-      icon: <CheckCircle2 className="h-4 w-4" />,
-      duration: 3000
-    });
+    // Toast notification is now handled by CloudflareTurnstile component
   };
 
   return (
