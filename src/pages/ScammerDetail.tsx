@@ -115,6 +115,8 @@ const ScammerDetail = () => {
               <AgreementRatioBar 
                 likes={scammerStats.likes} 
                 dislikes={scammerStats.dislikes} 
+                onLike={handleLikeScammer}
+                onDislike={handleDislikeScammer}
               />
               <CommentSection scammerId={scammer.id} />
             </div>

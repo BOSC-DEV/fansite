@@ -26,34 +26,6 @@ export function CommentList({ comments, showScammerLinks = false }: CommentListP
 
   return (
     <div>
-      {/* Sorting controls */}
-      <div className="flex justify-end mb-4 space-x-2">
-        <Button 
-          variant={sortMethod === 'newest' ? "default" : "outline"} 
-          size="sm"
-          onClick={() => setSortMethod('newest')}
-          className="text-xs"
-        >
-          Newest <ArrowDown className="ml-1 h-3 w-3" />
-        </Button>
-        <Button 
-          variant={sortMethod === 'oldest' ? "default" : "outline"} 
-          size="sm"
-          onClick={() => setSortMethod('oldest')}
-          className="text-xs"
-        >
-          Oldest <ArrowUp className="ml-1 h-3 w-3" />
-        </Button>
-        <Button 
-          variant={sortMethod === 'mostLiked' ? "default" : "outline"} 
-          size="sm"
-          onClick={() => setSortMethod('mostLiked')}
-          className="text-xs"
-        >
-          Most Liked
-        </Button>
-      </div>
-
       {/* Comments list */}
       <div className="space-y-4">
         {sortedComments.map((comment) => {

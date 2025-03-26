@@ -3,12 +3,13 @@ import { useState, useEffect } from "react";
 import { CommentList } from "./CommentList";
 import { CommentForm } from "./CommentForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, ArrowDown, ArrowUp } from "lucide-react";
 import { storageService, Comment } from "@/services/storage/localStorageService";
 import { Badge } from "@/components/ui/badge";
 import { useComments } from "@/hooks/useComments";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface CommentSectionProps {
   scammerId: string;
@@ -16,6 +17,7 @@ interface CommentSectionProps {
 
 export function CommentSection({ scammerId }: CommentSectionProps) {
   const [error, setError] = useState<string | null>(null);
+  const [sortMethod, setSortMethod] = useState<'newest' | 'oldest' | 'mostLiked'>('newest');
   
   const { 
     comments, 
@@ -45,6 +47,18 @@ export function CommentSection({ scammerId }: CommentSectionProps) {
       setError(null);
     }
   }, [scammerId]);
+
+  // Sort comments based on current sortMethod
+  const sortedComments = [...comments].sort((a, b) => {
+    if (sortMethod === 'newest') {
+      return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
+    } else if (sortMethod === 'oldest') {
+      return new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime();
+    } else if (sortMethod === 'mostLiked') {
+      return (b.likes || 0) - (a.likes || 0);
+    }
+    return 0;
+  });
 
   return (
     <div className="space-y-6 comments-section" id="comments">
@@ -80,23 +94,58 @@ export function CommentSection({ scammerId }: CommentSectionProps) {
             </Alert>
           )}
           
-          <CommentForm 
-            scammerId={scammerId} 
-            onCommentAdded={() => {}} 
-            content={content}
-            setContent={setContent}
-            isSubmitting={isSubmitting}
-            handleSubmit={handleSubmit}
-            isConnected={isConnected}
-            connectWallet={connectWallet}
-          />
+          <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
+            {/* Sort buttons - left side */}
+            <div className="flex space-x-2">
+              <Button 
+                variant={sortMethod === 'newest' ? "default" : "outline"} 
+                size="sm"
+                onClick={() => setSortMethod('newest')}
+                className="text-xs"
+              >
+                Newest <ArrowDown className="ml-1 h-3 w-3" />
+              </Button>
+              <Button 
+                variant={sortMethod === 'oldest' ? "default" : "outline"} 
+                size="sm"
+                onClick={() => setSortMethod('oldest')}
+                className="text-xs"
+              >
+                Oldest <ArrowUp className="ml-1 h-3 w-3" />
+              </Button>
+              <Button 
+                variant={sortMethod === 'mostLiked' ? "default" : "outline"} 
+                size="sm"
+                onClick={() => setSortMethod('mostLiked')}
+                className="text-xs"
+              >
+                Most Liked
+              </Button>
+            </div>
+            
+            {/* Comment form - right side */}
+            <div className="flex-1">
+              <CommentForm 
+                scammerId={scammerId} 
+                onCommentAdded={() => {}} 
+                content={content}
+                setContent={setContent}
+                isSubmitting={isSubmitting}
+                handleSubmit={handleSubmit}
+                isConnected={isConnected}
+                connectWallet={connectWallet}
+              />
+            </div>
+          </div>
           
           {isLoading ? (
             <div className="py-4 text-center">
               <p className="text-muted-foreground">Loading comments...</p>
             </div>
           ) : comments.length > 0 ? (
-            <CommentList comments={comments} />
+            <div className="mt-6">
+              <CommentList comments={sortedComments} />
+            </div>
           ) : (
             <div className="py-6 text-center">
               <p className="text-muted-foreground">No comments yet. Be the first to comment!</p>
