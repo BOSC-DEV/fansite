@@ -33,7 +33,7 @@ export function UserProfilePage() {
             
             {/* Tabs Section */}
             <Tabs defaultValue="reports" value={activeTab} onValueChange={setActiveTab} className="mb-8">
-              <TabsList className="grid grid-cols-5 w-full max-w-md mx-auto bg-western-parchment/10">
+              <TabsList className="grid grid-cols-5 w-full max-w-md ml-0 bg-western-parchment/10">
                 <TabsTrigger value="reports" className="flex items-center gap-2">
                   <BookOpen className="h-4 w-4" />
                   <span className="hidden sm:inline">Reports</span>
