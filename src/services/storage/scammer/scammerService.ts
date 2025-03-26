@@ -2,6 +2,7 @@
 import { ScammerListing, ScammerStats } from './scammerTypes';
 import { scammerDataService } from './scammerDataService';
 import { scammerStatsService } from './scammerStatsService';
+import { scammerDeleteService } from './scammerDeleteService';
 
 /**
  * Main scammer service that composes specialized services
@@ -20,20 +21,21 @@ class ScammerService {
     return scammerDataService.getAllScammers();
   }
   
+  // Delete operations - delegated to the specialized delete service
   async deleteScammer(id: string): Promise<boolean> {
-    return scammerDataService.deleteScammer(id);
+    return scammerDeleteService.deleteScammer(id);
   }
 
   async softDeleteScammer(id: string): Promise<boolean> {
-    return scammerDataService.softDeleteScammer(id);
+    return scammerDeleteService.softDeleteScammer(id);
   }
 
   async getDeletedScammers(): Promise<ScammerListing[]> {
-    return scammerDataService.getDeletedScammers();
+    return scammerDeleteService.getDeletedScammers();
   }
 
   async restoreScammer(id: string): Promise<boolean> {
-    return scammerDataService.restoreScammer(id);
+    return scammerDeleteService.restoreScammer(id);
   }
 
   // Stats operations
