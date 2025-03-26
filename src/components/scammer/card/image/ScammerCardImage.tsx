@@ -61,24 +61,11 @@ const ScammerCardImageComponent = ({
     }
   };
   
-  // Wrapper component to conditionally render Link
-  const ImageWrapper = ({ children }: { children: React.ReactNode }) => {
-    if (scammerId) {
-      return (
-        <Link to={`/scammer/${scammerId}`} className="block relative aspect-[16/9] overflow-hidden bg-muted cursor-pointer">
-          {children}
-        </Link>
-      );
-    }
-    return (
-      <div className="relative aspect-[16/9] overflow-hidden bg-muted">
-        {children}
-      </div>
-    );
-  };
-  
   return (
-    <ImageWrapper>
+    <Link 
+      to={scammerId ? `/scammer/${scammerId}` : "#"} 
+      className="block relative aspect-[16/9] overflow-hidden bg-muted cursor-pointer"
+    >
       <ScammerImageLoader 
         name={name} 
         photoUrl={photoUrl} 
@@ -98,7 +85,7 @@ const ScammerCardImageComponent = ({
         name={name} 
         rank={rank} 
       />
-    </ImageWrapper>
+    </Link>
   );
 };
 

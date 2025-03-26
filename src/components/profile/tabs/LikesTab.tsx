@@ -40,6 +40,7 @@ export function LikesTab({ address }: LikesTabProps) {
         }
 
         if (!interactions || interactions.length === 0) {
+          setLikedScammers([]);
           setIsLoading(false);
           return;
         }
@@ -63,6 +64,7 @@ export function LikesTab({ address }: LikesTabProps) {
       } catch (error) {
         console.error("Error in fetchLikedScammers:", error);
         toast.error("Failed to load liked scammers");
+        setLikedScammers([]);
       } finally {
         setIsLoading(false);
       }

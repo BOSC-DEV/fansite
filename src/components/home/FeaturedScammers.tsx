@@ -8,6 +8,7 @@ import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
 import { useWallet } from "@/context/WalletContext";
 import { scammerService } from "@/services/storage";
 import { useScammers } from "@/hooks/use-scammers";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface FeaturedScammersProps {
   limit?: number;
@@ -52,8 +53,12 @@ const FeaturedScammersComponent = ({ limit = 10 }: FeaturedScammersProps) => {
         
         <div className="wanted-poster-border paper-texture rounded-sm">
           {isLoading ? (
-            <div className="p-6 text-center">
-              <p className="text-muted-foreground">Loading scammers...</p>
+            <div className="p-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <Skeleton className="h-32 w-full" />
+                <Skeleton className="h-32 w-full" />
+                <Skeleton className="h-32 w-full" />
+              </div>
             </div>
           ) : limitedScammers.length > 0 ? (
             <ScammerTableCompact 

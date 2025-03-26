@@ -15,6 +15,12 @@ interface ScammerCardProps {
 }
 
 export function ScammerCard({ scammer, className, rank }: ScammerCardProps) {
+  // Handle potential invalid scammer data
+  if (!scammer || !scammer.id) {
+    console.error("Invalid scammer data:", scammer);
+    return null;
+  }
+
   const formattedBounty = useMemo(() => 
     formatCurrency(scammer.bountyAmount), 
   [scammer.bountyAmount]);

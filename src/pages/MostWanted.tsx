@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { ScammerTable } from "@/components/scammer/ScammerTable";
@@ -92,9 +93,13 @@ const MostWanted = () => {
             </div>
 
             {isLoading ? (
-              <div className="flex justify-center items-center py-10 md:py-20">
-                <p className="text-western-wood">Loading scammers...</p>
-              </div>
+              <ScammerGrid
+                paginatedScammers={[]}
+                currentPage={1}
+                totalPages={1}
+                setCurrentPage={() => {}}
+                isLoading={true}
+              />
             ) : sortedScammers.length === 0 ? (
               <NoResults query={searchQuery} />
             ) : viewType === "table" && !isMobile ? (

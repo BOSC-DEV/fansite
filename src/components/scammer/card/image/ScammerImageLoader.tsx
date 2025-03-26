@@ -22,6 +22,7 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
   const handleImageError = () => {
     console.log(`Image failed to load for scammer: ${name}`);
     setImageError(true);
+    setImageLoaded(true); // Mark as loaded even on error so we display the fallback
     onImageLoaded(true, true);
   };
 
@@ -30,14 +31,16 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
     onImageLoaded(true, false);
   };
 
-  // Fallback URL when image fails to load
-  const fallbackImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&size=200`;
+  // Fallback URL when image fails to load - ensure name is properly encoded
+  const fallbackImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Unknown')}&background=random&size=200`;
   
   // The image to display
   const displayImageUrl = imageError ? fallbackImageUrl : photoUrl;
 
   // Ensure image has absolute URL for social sharing
   const getAbsoluteImageUrl = (url: string) => {
+    if (!url) return fallbackImageUrl;
+    
     if (url.startsWith('http')) {
       return url;
     }
@@ -53,7 +56,7 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
   
   return (
     <>
-      {!imageLoaded && !imageError && (
+      {!imageLoaded && (
         <div className="absolute inset-0 flex items-center justify-center bg-muted animate-pulse">
           <AlertCircle className="h-8 w-8 text-muted-foreground/50" />
         </div>
@@ -61,7 +64,7 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
       
       <img
         src={displayImageUrl}
-        alt={name}
+        alt={name || "Scammer"}
         className={cn(
           "object-cover w-full h-full transition-opacity duration-300",
           imageLoaded ? "opacity-100" : "opacity-0"
