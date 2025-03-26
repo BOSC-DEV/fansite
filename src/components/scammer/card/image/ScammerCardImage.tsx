@@ -64,7 +64,7 @@ const ScammerCardImageComponent = ({
   return (
     <Link 
       to={scammerId ? `/scammer/${scammerId}` : "#"} 
-      className="block relative aspect-[16/9] overflow-hidden bg-muted cursor-pointer"
+      className="block relative aspect-square overflow-hidden bg-muted cursor-pointer"
     >
       <ScammerImageLoader 
         name={name} 

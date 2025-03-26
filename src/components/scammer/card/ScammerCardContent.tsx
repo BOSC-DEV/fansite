@@ -63,7 +63,11 @@ export function ScammerCardContent({
       
       <div className="pt-2">
         <Link to={`/scammer/${id}`}>
-          <Button variant="outline" size="sm" className="w-full border-western-wood text-western-accent hover:bg-western-sand/20">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full border-western-wood text-western-accent hover:bg-western-wood hover:text-western-parchment transition-colors"
+          >
             View Details
             <ExternalLink className="ml-2 h-3 w-3" />
           </Button>

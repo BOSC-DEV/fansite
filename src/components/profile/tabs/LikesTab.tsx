@@ -79,9 +79,18 @@ export function LikesTab({ address }: LikesTabProps) {
         <h2 className="text-xl font-bold mb-4 font-western text-western-accent">Likes</h2>
         <Card className="p-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Skeleton className="h-64 w-full rounded-lg" />
-            <Skeleton className="h-64 w-full rounded-lg" />
-            <Skeleton className="h-64 w-full rounded-lg" />
+            {[1, 2, 3].map((_, index) => (
+              <Card key={index} className="overflow-hidden border-western-wood bg-western-parchment/80">
+                <div className="aspect-square relative">
+                  <Skeleton className="w-full h-full absolute inset-0" />
+                </div>
+                <div className="p-4 space-y-2">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-2/3" />
+                  <Skeleton className="h-8 w-full mt-4" />
+                </div>
+              </Card>
+            ))}
           </div>
         </Card>
       </>

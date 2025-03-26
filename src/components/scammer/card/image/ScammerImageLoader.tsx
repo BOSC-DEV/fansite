@@ -32,7 +32,7 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
   };
 
   // Fallback URL when image fails to load - ensure name is properly encoded
-  const fallbackImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Unknown')}&background=random&size=200`;
+  const fallbackImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Unknown')}&background=random&size=400`;
   
   // The image to display
   const displayImageUrl = imageError ? fallbackImageUrl : photoUrl;
