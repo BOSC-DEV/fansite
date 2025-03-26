@@ -34,15 +34,11 @@ export const HeroSection = () => {
           <div className="relative h-[250px] sm:h-[300px] md:h-[400px] animate-fade-in rounded-sm overflow-hidden border-4 border-western-wood transform -rotate-1 shadow-lg wanted-poster-bg mx-auto w-full max-w-[320px] sm:max-w-none">
             <div className="absolute inset-0 bg-gradient-to-br from-western-leather/30 via-western-accent/20 to-western-parchment/50 opacity-70 rounded-sm"></div>
             <div className="absolute inset-0 flex items-center justify-center text-western-wood p-4 sm:p-6">
-              <div className="text-center space-y-4">
-                <div className="sheriff-badge inline-block p-3 sm:p-4 bg-western-accent/80 rounded-full border-4 border-western-wood flex items-center justify-center animate-bounce-slight py-px px-[2px]">
-                  <Star className="h-8 w-8 sm:h-12 sm:w-12 text-western-parchment" />
-                </div>
+              <div className="text-center space-y-8">
                 <h2 className="font-wanted uppercase text-center">
-                  <div className="text-4xl sm:text-5xl text-western-accent font-bold tracking-wider mb-2">WANTED:</div>
-                  <div className="text-xl sm:text-2xl text-western-leather tracking-wide py-0 my-[5px] px-0">Scammers, Grifters & Criminals of All Creeds</div>
+                  <div className="text-5xl sm:text-6xl text-western-accent font-bold tracking-wider mb-4">WANTED:</div>
+                  <div className="text-2xl sm:text-3xl text-western-leather tracking-wide py-0 my-2 px-0">Scammers, Grifters & Criminals of All Creeds</div>
                 </h2>
-                <p className="text-western-wood/90 max-w-md font-western text-base sm:text-lg px-2"></p>
               </div>
             </div>
           </div>

@@ -1,89 +1,102 @@
 
-import { useState, useEffect } from 'react';
-import { checkPreviousInteraction } from './utils/commentInteractionUtils';
-import { useWallet } from "@/context/WalletContext";
-import { useLikeComment } from './useLikeComment';
-import { useDislikeComment } from './useDislikeComment';
-import { useHasProfile } from './useHasProfile';
+import { useCallback, useState } from 'react';
+import { storageService } from '@/services/storage';
+import { useWallet } from '@/context/WalletContext';
+import { supabase } from '@/lib/supabase';
+import { toast } from 'sonner';
 
-interface UseCommentInteractionsProps {
-  commentId: string;
-  initialLikes: number;
-  initialDislikes: number;
-}
+export function useCommentInteractions(commentId: string, initialLikes: number, initialDislikes: number, initialIsLiked: boolean, initialIsDisliked: boolean) {
+  const { walletAddress } = useWallet();
+  const [isLiked, setIsLiked] = useState<boolean>(initialIsLiked);
+  const [isDisliked, setIsDisliked] = useState<boolean>(initialIsDisliked);
+  const [likes, setLikes] = useState<number>(initialLikes);
+  const [dislikes, setDislikes] = useState<number>(initialDislikes);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-export function useCommentInteractions({
-  commentId,
-  initialLikes,
-  initialDislikes
-}: UseCommentInteractionsProps) {
-  const [isInteracting, setIsInteracting] = useState(false);
-  const [likes, setLikes] = useState(initialLikes || 0);
-  const [dislikes, setDislikes] = useState(initialDislikes || 0);
-  const [isLiked, setIsLiked] = useState(false);
-  const [isDisliked, setIsDisliked] = useState(false);
-  const { isConnected, address, connectWallet } = useWallet();
-  
-  // Check if user has a profile
-  const { profileChecked, hasProfile } = useHasProfile(address);
-
-  // Like handler
-  const { handleLike, isProcessing: isLiking } = useLikeComment({
-    commentId,
-    userId: address,
-    isLiked,
-    isDisliked,
-    setIsLiked,
-    setIsDisliked,
-    setLikes,
-    setDislikes,
-    isConnected,
-    profileChecked,
-    hasProfile,
-    connectWallet
-  });
-
-  // Dislike handler
-  const { handleDislike, isProcessing: isDisliking } = useDislikeComment({
-    commentId,
-    userId: address,
-    isLiked,
-    isDisliked,
-    setIsLiked,
-    setIsDisliked,
-    setLikes,
-    setDislikes,
-    isConnected,
-    profileChecked,
-    hasProfile,
-    connectWallet
-  });
-
-  // Check if user has already liked or disliked this comment
-  useEffect(() => {
-    if (address && commentId) {
-      const fetchPreviousInteraction = async () => {
-        const { isLiked: liked, isDisliked: disliked } = await checkPreviousInteraction(commentId, address);
-        setIsLiked(liked);
-        setIsDisliked(disliked);
-      };
-
-      fetchPreviousInteraction();
+  // Helper to check if user is logged in
+  const checkUserLoggedIn = useCallback((): boolean => {
+    if (!walletAddress) {
+      toast.error('Please connect your wallet to interact with comments');
+      return false;
     }
-  }, [commentId, address]);
+    return true;
+  }, [walletAddress]);
 
-  // Update isInteracting when either like or dislike operation is in progress
-  useEffect(() => {
-    setIsInteracting(isLiking || isDisliking);
-  }, [isLiking, isDisliking]);
+  const handleLike = useCallback(async (): Promise<void> => {
+    if (!checkUserLoggedIn() || isSubmitting) return;
+    setIsSubmitting(true);
+
+    try {
+      // If already liked, unlike
+      if (isLiked) {
+        await storageService.removeCommentInteraction(commentId, walletAddress!, 'like');
+        setLikes(prev => Math.max(0, prev - 1));
+        setIsLiked(false);
+      } 
+      // If disliked, remove dislike and add like
+      else if (isDisliked) {
+        await storageService.removeCommentInteraction(commentId, walletAddress!, 'dislike');
+        await storageService.addCommentInteraction(commentId, walletAddress!, 'like');
+        setDislikes(prev => Math.max(0, prev - 1));
+        setLikes(prev => prev + 1);
+        setIsDisliked(false);
+        setIsLiked(true);
+      }
+      // Add like
+      else {
+        await storageService.addCommentInteraction(commentId, walletAddress!, 'like');
+        setLikes(prev => prev + 1);
+        setIsLiked(true);
+      }
+    } catch (error) {
+      console.error('Error handling like:', error);
+      toast.error('Failed to process your interaction');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [commentId, walletAddress, isLiked, isDisliked, isSubmitting, checkUserLoggedIn]);
+
+  const handleDislike = useCallback(async (): Promise<void> => {
+    if (!checkUserLoggedIn() || isSubmitting) return;
+    setIsSubmitting(true);
+
+    try {
+      // If already disliked, remove dislike
+      if (isDisliked) {
+        await storageService.removeCommentInteraction(commentId, walletAddress!, 'dislike');
+        setDislikes(prev => Math.max(0, prev - 1));
+        setIsDisliked(false);
+      } 
+      // If liked, remove like and add dislike
+      else if (isLiked) {
+        await storageService.removeCommentInteraction(commentId, walletAddress!, 'like');
+        await storageService.addCommentInteraction(commentId, walletAddress!, 'dislike');
+        setLikes(prev => Math.max(0, prev - 1));
+        setDislikes(prev => prev + 1);
+        setIsLiked(false);
+        setIsDisliked(true);
+      }
+      // Add dislike
+      else {
+        await storageService.addCommentInteraction(commentId, walletAddress!, 'dislike');
+        setDislikes(prev => prev + 1);
+        setIsDisliked(true);
+      }
+    } catch (error) {
+      console.error('Error handling dislike:', error);
+      toast.error('Failed to process your interaction');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [commentId, walletAddress, isLiked, isDisliked, isSubmitting, checkUserLoggedIn]);
 
   return {
     likes,
     dislikes,
     isLiked,
     isDisliked,
-    isInteracting,
     handleLike,
-    handleDislike
+    handleDislike,
+    isSubmitting
   };
 }
