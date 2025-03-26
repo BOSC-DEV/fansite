@@ -8,11 +8,13 @@ interface ViewsButtonProps {
 }
 
 export function ViewsButton({ count }: ViewsButtonProps) {
+  // Added aria-label for better accessibility
   return (
     <InteractionButton
       icon={Eye}
       count={count}
       title="Number of views"
+      aria-label={`${count} views`}
     />
   );
 }
