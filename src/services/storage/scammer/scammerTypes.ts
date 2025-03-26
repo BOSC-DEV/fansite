@@ -18,7 +18,7 @@ export interface ScammerListing {
   walletAddress: string;
   dateAdded: string; // ISO string
   addedBy: string;
-  comments?: string[]; // Array of comment IDs
+  comments: string[]; // Now required to match localStorage version
   likes: number;
   dislikes: number;
   views: number;

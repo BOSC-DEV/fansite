@@ -6,5 +6,6 @@ export { commentService } from './localStorage/commentService';
 export { scammerService } from './localStorage/scammerService';
 
 // For backward compatibility
-export { scammerService as storageService } from './localStorage/scammerService';
-export default scammerService;
+import { scammerService as localScammerService } from './localStorage/scammerService';
+export { localScammerService as storageService };
+export default localScammerService;

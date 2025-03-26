@@ -180,7 +180,10 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
       scammer.bountyAmount = newBounty;
       
       // Save the updated scammer to localStorage service
-      await scammerService.saveScammer(scammer);
+      await scammerService.saveScammer({
+        ...scammer,
+        comments: Array.isArray(scammer.comments) ? scammer.comments : []
+      });
       
       // Try to save to the new scammerService too if it exists
       try {
