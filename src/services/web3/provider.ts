@@ -9,8 +9,8 @@ export class Web3Provider {
   protected connection: Connection;
 
   constructor() {
-    // Use a public RPC endpoint that doesn't require authentication
-    this.connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+    // Use one of the more reliable public RPC endpoints
+    this.connection = new Connection("https://solana-mainnet.rpc.extrnode.com", "confirmed");
   }
 
   // Connect wallet and request signature

@@ -4,13 +4,12 @@ import {
   PublicKey, 
   LAMPORTS_PER_SOL, 
   Transaction, 
-  SystemProgram,
-  clusterApiUrl
+  SystemProgram
 } from "@solana/web3.js";
 import { toast } from "sonner";
 
-// Use a reliable public RPC endpoint
-const SOLANA_RPC_URL = "https://api.mainnet-beta.solana.com";
+// Use a more reliable public RPC endpoint
+const SOLANA_RPC_URL = "https://solana-mainnet.rpc.extrnode.com";
 
 /**
  * Handles the SOL transfer with proper error handling

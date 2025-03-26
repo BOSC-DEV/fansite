@@ -16,6 +16,12 @@ export function useWalletActions(walletState: ReturnType<typeof useWalletState>)
   const connectWallet = async (): Promise<boolean> => {
     if (walletState.connecting) return false; // Prevent multiple connection attempts
     
+    // If already connected, don't try to connect again
+    if (walletState.connected && walletState.address) {
+      console.log("Wallet already connected:", walletState.address);
+      return true;
+    }
+    
     setConnecting(true);
     console.log("Connecting wallet from WalletContext...");
     
@@ -49,7 +55,11 @@ export function useWalletActions(walletState: ReturnType<typeof useWalletState>)
           setBalance(0); // Set to 0 when we can't fetch balance
         }
         
-        toast.success('Wallet connected successfully!');
+        // Only show success toast if this was a new connection
+        if (!walletState.connected) {
+          toast.success('Wallet connected successfully!');
+        }
+        
         console.log(`Wallet connected: ${connectedAddress}`);
         return true;
       } else {

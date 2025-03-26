@@ -40,15 +40,16 @@ export function useBountyContribution(
       console.log("Current wallet connection state:", { isConnected, address });
       
       // Validate wallet connection
-      const walletReady = await checkWallet();
-      if (!walletReady) {
-        // Try to reconnect the wallet if not ready
+      if (!isConnected) {
+        toast.error("Please connect your wallet first");
         try {
           await connectWallet();
-          const reconnected = window.phantom?.solana?.isConnected || false;
-          if (!reconnected) return;
+          // Check again after connection attempt
+          if (!window.phantom?.solana?.isConnected) {
+            return;
+          }
         } catch (error) {
-          console.error("Failed to reconnect wallet:", error);
+          console.error("Failed to connect wallet:", error);
           return;
         }
       }
