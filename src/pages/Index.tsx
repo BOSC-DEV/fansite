@@ -22,26 +22,34 @@ const Index = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Make sure image URLs are absolute for Twitter cards
+  const imageUrl = "https://bookofscams.lol/lovable-uploads/193c1585-dc76-49e4-9490-147d52522837.png";
+  const siteUrl = "https://bookofscams.lol/";
+
   return (
     <div className="min-h-screen flex flex-col old-paper cowboy-pattern">
       <Helmet>
         <title>BOSC - Book of Scams</title>
         <meta name="description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
+        <link rel="canonical" href={siteUrl} />
         
         {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={siteUrl} />
         <meta property="og:title" content="BOSC - Book of Scams" />
         <meta property="og:description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
-        <meta property="og:image" content="/lovable-uploads/193c1585-dc76-49e4-9490-147d52522837.png" />
-        <meta property="og:url" content="https://bookofscams.lol/" />
-        <meta property="og:type" content="website" />
+        <meta property="og:image" content={imageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@bookofscamslol" />
         <meta name="twitter:creator" content="@bookofscamslol" />
+        <meta name="twitter:url" content={siteUrl} />
         <meta name="twitter:title" content="BOSC - Book of Scams" />
         <meta name="twitter:description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
-        <meta name="twitter:image" content="https://bookofscams.lol/lovable-uploads/193c1585-dc76-49e4-9490-147d52522837.png" />
+        <meta name="twitter:image" content={imageUrl} />
         <meta name="twitter:image:alt" content="Book of Scams - BOSC" />
       </Helmet>
       

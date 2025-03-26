@@ -76,6 +76,7 @@ const ScammerDetail = () => {
         {/* Twitter / X */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@bookofscamslol" />
+        <meta name="twitter:creator" content="@bookofscamslol" />
         <meta name="twitter:url" content={canonicalUrl} />
         <meta name="twitter:title" content={`${scammer.name} - Book of Scams`} />
         <meta name="twitter:description" content={`${scammer.name} is accused of ${scammer.accusedOf}. View their profile on Book of Scams.`} />

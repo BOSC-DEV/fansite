@@ -41,7 +41,11 @@ export function ScammerImageLoader({ name, photoUrl, onImageLoaded }: ScammerIma
     if (url.startsWith('http')) {
       return url;
     }
-    return `${window.location.origin}${url.startsWith('/') ? '' : '/'}${url}`;
+    
+    // Create absolute URL from relative URL
+    const origin = window.location.origin;
+    const path = url.startsWith('/') ? url : `/${url}`;
+    return `${origin}${path}`;
   };
   
   // Set absolute URL for use in SEO
@@ -67,11 +71,6 @@ export function ScammerImageLoader({ name, photoUrl, onImageLoaded }: ScammerIma
         loading="lazy"
         data-absolute-url={absoluteImageUrl} // Store for potential SEO use
       />
-      
-      {/* Hidden metadata for Twitter crawlers */}
-      <meta property="twitter:image" content={absoluteImageUrl} />
-      <meta property="twitter:image:alt" content={`Profile image of ${name}`} />
-      <meta property="og:image" content={absoluteImageUrl} />
     </>
   );
 }
