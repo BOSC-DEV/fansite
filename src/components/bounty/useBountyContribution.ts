@@ -3,13 +3,15 @@ import { useState } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
-import { scammerService as localScammerService } from "@/services/storage/localStorage/scammerService";
-import { scammerService } from "@/services/storage/scammer/scammerService";
-import { Connection, PublicKey, LAMPORTS_PER_SOL, Transaction, SystemProgram } from "@solana/web3.js";
-import { ScammerListing as LocalScammerListing } from "@/services/storage/localStorage/scammerService";
-import { ScammerListing as SupabaseScammerListing } from "@/services/storage/scammer/scammerTypes";
+import { checkWallet, copyAddressToClipboard } from "./utils/walletUtils";
+import { transferSol } from "./utils/transactionUtils";
+import { getOrCreateScammer, updateScammerBounty } from "./utils/scammerUtils";
 
-export function useBountyContribution(scammerId: string, scammerName: string, currentBounty: number) {
+export function useBountyContribution(
+  scammerId: string, 
+  scammerName: string, 
+  currentBounty: number
+) {
   const { isConnected, address, connectWallet } = useWallet();
   const [amount, setAmount] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,118 +26,13 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(DEVELOPER_WALLET_ADDRESS)
-      .then(() => {
-        setCopied(true);
-        toast.success("Address copied to clipboard");
-        setTimeout(() => setCopied(false), 2000);
-      })
-      .catch(() => {
-        toast.error("Failed to copy address");
-      });
-  };
-
-  // Check if Solana is available and connected
-  const checkWallet = async () => {
-    if (!window.phantom?.solana) {
-      toast.error("Phantom wallet not installed", {
-        description: "Please install Phantom wallet extension"
-      });
-      return false;
-    }
-    
-    // Double-check wallet connection status
-    const isWalletConnected = isConnected && !!address && window.phantom?.solana?.isConnected;
-    
-    if (!isWalletConnected) {
-      toast.error("Please connect your wallet first", {
-        description: "Your wallet is not currently connected"
-      });
-      
-      // Try to reconnect the wallet
-      try {
-        await connectWallet();
-        return window.phantom?.solana?.isConnected || false;
-      } catch (error) {
-        console.error("Failed to reconnect wallet:", error);
-        return false;
-      }
-    }
-    
-    return true;
-  };
-
-  // Handle the actual SOL transfer with improved error handling
-  const transferSol = async (receiverAddress: string, solAmount: number) => {
-    try {
-      // Ensure we have a valid receiver address
-      const toPublicKey = new PublicKey(receiverAddress);
-      
-      if (!window.phantom?.solana?.publicKey) {
-        throw new Error("Wallet public key not available");
-      }
-      
-      // Convert the phantom wallet publicKey to a proper Solana PublicKey object
-      const fromPublicKey = new PublicKey(window.phantom.solana.publicKey.toString());
-      
-      // Create a connection to Solana - using mainnet-beta instead of devnet
-      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
-      
-      // Check balance before transfer
-      const balance = await connection.getBalance(fromPublicKey);
-      const requiredLamports = solAmount * LAMPORTS_PER_SOL;
-      
-      if (balance < requiredLamports) {
-        throw new Error(`Insufficient balance. You need at least ${solAmount} SOL.`);
-      }
-      
-      // Create a transaction
-      const transaction = new Transaction().add(
-        SystemProgram.transfer({
-          fromPubkey: fromPublicKey,
-          toPubkey: toPublicKey,
-          lamports: requiredLamports
-        })
-      );
-      
-      // Get the latest blockhash with more specific commitment
-      const { blockhash } = await connection.getLatestBlockhash('finalized');
-      transaction.recentBlockhash = blockhash;
-      transaction.feePayer = fromPublicKey;
-      
-      console.log("Sending transaction with params:", {
-        fromAddress: fromPublicKey.toString(),
-        toAddress: toPublicKey.toString(),
-        amount: solAmount,
-        lamports: requiredLamports
-      });
-      
-      // Request signature from the user with proper error handling
-      try {
-        const { signature } = await window.phantom.solana.signAndSendTransaction(transaction);
-        console.log("Transaction sent with signature:", signature);
-        
-        // Wait for transaction confirmation with a simpler approach
-        const status = await connection.confirmTransaction(signature, 'confirmed');
-        
-        if (status.value.err) {
-          console.error("Transaction confirmed but failed:", status.value.err);
-          throw new Error(`Transaction error: ${status.value.err}`);
+    copyAddressToClipboard(DEVELOPER_WALLET_ADDRESS)
+      .then((success) => {
+        if (success) {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
         }
-        
-        console.log("Transaction confirmed successfully:", signature);
-        return { success: true, signature };
-      } catch (signError: any) {
-        // Handle user rejection or signing errors
-        if (signError.code === 4001) {
-          throw new Error("Transaction rejected by user");
-        }
-        throw signError;
-      }
-    } catch (error) {
-      console.error("Error during SOL transfer:", error);
-      throw error;
-    }
+      });
   };
 
   const handleContribute = async () => {
@@ -144,7 +41,15 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
     // Validate wallet connection
     const walletReady = await checkWallet();
     if (!walletReady) {
-      return;
+      // Try to reconnect the wallet if not ready
+      try {
+        await connectWallet();
+        const reconnected = window.phantom?.solana?.isConnected || false;
+        if (!reconnected) return;
+      } catch (error) {
+        console.error("Failed to reconnect wallet:", error);
+        return;
+      }
     }
 
     // Validate amount
@@ -164,40 +69,8 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
       // Convert amount from string to number
       const solAmount = parseFloat(amount);
       
-      // Try to get the scammer from the Supabase service first
-      let scammer: SupabaseScammerListing | LocalScammerListing | null = 
-        await scammerService.getScammer(scammerId);
-      
-      // If not found in Supabase, try the localStorage service
-      if (!scammer) {
-        scammer = await localScammerService.getScammer(scammerId);
-      }
-      
-      // If still not found, create a basic record
-      if (!scammer) {
-        console.log("Creating new scammer record for bounty contribution");
-        scammer = {
-          id: scammerId,
-          name: scammerName,
-          photoUrl: "",
-          accusedOf: "",
-          links: [],
-          aliases: [],
-          accomplices: [],
-          officialResponse: "",
-          bountyAmount: currentBounty || 0,
-          walletAddress: "",
-          dateAdded: new Date().toISOString(),
-          addedBy: address || "unknown",
-          comments: [], // Ensure comments is always an array
-          likes: 0,
-          dislikes: 0,
-          views: 0
-        };
-      } else if (!Array.isArray(scammer.comments)) {
-        // Ensure comments is an array if it exists but isn't one
-        scammer.comments = [];
-      }
+      // Get or create scammer record
+      const scammer = await getOrCreateScammer(scammerId, scammerName, currentBounty, address);
       
       console.log("Found/created scammer:", scammer.name, "with ID:", scammerId);
       
@@ -212,31 +85,8 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
       
       toast.success("Transaction confirmed!");
       
-      // Update the bounty amount - increment by the amount in SOL tokens
-      const newBounty = (scammer.bountyAmount || 0) + solAmount;
-      scammer.bountyAmount = newBounty;
-      
-      // Save to both storage services to ensure consistency
-      
-      // Save to localStorage service first
-      await localScammerService.saveScammer({
-        ...scammer,
-        comments: Array.isArray(scammer.comments) ? scammer.comments : []
-      });
-      
-      // Try to save to Supabase service if it exists
-      try {
-        if (typeof scammerService.saveScammer === 'function') {
-          // Create a version of the scammer object compatible with Supabase service
-          const scammerForSupabase: SupabaseScammerListing = {
-            ...scammer,
-            comments: Array.isArray(scammer.comments) ? scammer.comments : []
-          };
-          await scammerService.saveScammer(scammerForSupabase);
-        }
-      } catch (err) {
-        console.log("Note: Could not save to Supabase service, but localStorage succeeded");
-      }
+      // Update the scammer record with new bounty amount
+      await updateScammerBounty(scammer, solAmount);
       
       toast.success(`Successfully contributed ${amount} SOL to the bounty!`);
       
