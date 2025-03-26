@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -5,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Award, Eye, LinkIcon, ThumbsUp, User, Globe } from "lucide-react";
 import { Scammer } from "@/lib/types";
 import { useScammerProfile } from "@/hooks/useScammerProfile";
-import { storageService } from "@/services/storage/localStorageService";
+import { commentService } from "@/services/storage/localStorageService";
 
 interface ScammerTableCompactProps {
   scammers: Scammer[];
@@ -53,7 +54,7 @@ export const ScammerTableCompact = ({
           {scammers.map((scammer) => {
             const aliases = Array.isArray(scammer.aliases) ? scammer.aliases : [];
             const links = Array.isArray(scammer.links) ? scammer.links : [];
-            const commentsCount = storageService.getCommentsForScammer(scammer.id).length;
+            const commentsCount = commentService.getCommentsForScammer(scammer.id).length;
             
             return (
               <TableRow 

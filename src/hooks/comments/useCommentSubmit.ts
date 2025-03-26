@@ -3,8 +3,7 @@ import { useState } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
-import { Comment, storageService } from "@/services/storage/localStorageService";
-import { commentService } from "@/services/storage/commentService";
+import { commentService, profileService } from "@/services/storage/localStorageService";
 import { supabase } from "@/lib/supabase";
 
 interface NormalizedProfile {
@@ -14,7 +13,7 @@ interface NormalizedProfile {
 
 export function useCommentSubmit(
   scammerId: string,
-  setComments: React.Dispatch<React.SetStateAction<Comment[]>>
+  setComments: React.Dispatch<React.SetStateAction<any[]>>
 ) {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,7 +43,7 @@ export function useCommentSubmit(
       };
       
       // First check localStorage
-      const localProfile = storageService.getProfile(address);
+      const localProfile = profileService.getProfile(address);
       
       if (localProfile) {
         normalizedProfile = {
@@ -94,7 +93,7 @@ export function useCommentSubmit(
       });
       
       // Always save to localStorage as backup
-      storageService.saveComment(comment);
+      commentService.saveComment(comment);
       
       // Optimistically update the UI immediately
       setComments(prevComments => [comment, ...prevComments]);

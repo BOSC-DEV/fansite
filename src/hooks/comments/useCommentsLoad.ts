@@ -1,11 +1,10 @@
 
 import { useState, useCallback } from "react";
-import { Comment, storageService } from "@/services/storage/localStorageService";
-import { commentService } from "@/services/storage/commentService";
+import { commentService } from "@/services/storage/localStorageService";
 import { toast } from "sonner";
 
 export function useCommentsLoad(scammerId: string) {
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
   // Load comments function
@@ -23,14 +22,14 @@ export function useCommentsLoad(scammerId: string) {
       } else {
         console.log("No comments found in Supabase, trying localStorage");
         // Fallback to localStorage
-        const loadedComments = storageService.getCommentsForScammer(scammerId);
+        const loadedComments = commentService.getCommentsForScammer(scammerId);
         console.log("Comments loaded from localStorage:", loadedComments.length);
         setComments(loadedComments);
       }
     } catch (error) {
       console.error("Error fetching comments:", error);
       // Fallback to localStorage on error
-      const loadedComments = storageService.getCommentsForScammer(scammerId);
+      const loadedComments = commentService.getCommentsForScammer(scammerId);
       setComments(loadedComments);
       toast.error("Failed to load comments from server, showing local data");
     } finally {

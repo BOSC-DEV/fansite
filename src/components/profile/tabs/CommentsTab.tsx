@@ -1,8 +1,6 @@
-
 import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { storageService } from "@/services/storage/localStorageService";
-import { commentService } from "@/services/storage/commentService";
+import { commentService } from "@/services/storage/localStorageService";
 import { CommentList } from "@/components/comments/CommentList";
 import { useWallet } from "@/context/WalletContext";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -23,7 +21,7 @@ export function CommentsTab() {
             setComments(userComments);
           } else {
             // Fallback to localStorage
-            const localComments = storageService.getCommentsByAuthor(address);
+            const localComments = commentService.getCommentsByAuthor(address);
             setComments(localComments);
           }
         }
@@ -31,7 +29,7 @@ export function CommentsTab() {
         console.error("Error loading user comments:", error);
         // Fallback to localStorage on error
         if (address) {
-          const localComments = storageService.getCommentsByAuthor(address);
+          const localComments = commentService.getCommentsByAuthor(address);
           setComments(localComments);
         }
       } finally {

@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { storageService } from "@/services/storage/localStorageService";
+import { profileService } from "@/services/storage/localStorageService";
 import { supabase } from "@/lib/supabase";
 
 export function useProfileCheck(address: string | null) {
@@ -24,7 +24,7 @@ export function useProfileCheck(address: string | null) {
         } catch (error) {
           console.error("Error checking profile:", error);
           // Fallback to localStorage
-          const profile = storageService.getProfile(address);
+          const profile = profileService.getProfile(address);
           setHasProfile(!!profile);
           setProfileChecked(true);
         }

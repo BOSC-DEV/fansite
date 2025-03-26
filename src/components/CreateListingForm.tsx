@@ -3,7 +3,7 @@ import { FormContainer } from "./createListing/FormContainer";
 import { useWallet } from "@/context/WalletContext";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { storageService } from "@/services/storage/localStorageService";
+import { profileService } from "@/services/storage/localStorageService";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import ConnectWallet from "@/components/ConnectWallet";
@@ -29,7 +29,7 @@ export function CreateListingForm() {
           if (error) {
             console.error("Error checking profile:", error);
             // Fallback to localStorage check if Supabase fails
-            const hasLocalProfile = storageService.hasProfile(address);
+            const hasLocalProfile = profileService.hasProfile(address);
             if (!hasLocalProfile) {
               toast.info("You need to create a profile before reporting a scammer");
               navigate("/profile");

@@ -3,10 +3,10 @@ import { useState } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
-import { storageService } from "@/services/storage/localStorage";
+import { scammerService } from "@/services/storage/localStorageService";
 import { ContractService } from "@/services/web3/contracts";
 import { Connection, PublicKey, LAMPORTS_PER_SOL, Transaction, SystemProgram } from "@solana/web3.js";
-import { scammerService } from "@/services/storage/scammer/scammerService";
+import { scammerService as newScammerService } from "@/services/storage/scammer/scammerService";
 
 export function useBountyContribution(scammerId: string, scammerName: string, currentBounty: number) {
   const { isConnected, address, connectWallet } = useWallet();
@@ -136,11 +136,11 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
       const solAmount = parseFloat(amount);
       
       // Try to get the scammer from both services in case one fails
-      let scammer = await scammerService.getScammer(scammerId);
+      let scammer = await newScammerService.getScammer(scammerId);
       
-      // If not found in scammerService, try the localStorage service
+      // If not found in new scammerService, try the localStorage service
       if (!scammer) {
-        scammer = await storageService.getScammer(scammerId);
+        scammer = await scammerService.getScammer(scammerId);
       }
       
       // If still not found, create a basic record
@@ -179,16 +179,21 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
       const newBounty = (scammer.bountyAmount || 0) + solAmount;
       scammer.bountyAmount = newBounty;
       
-      // Save the updated scammer to both services for redundancy
-      await storageService.saveScammer(scammer);
+      // Save the updated scammer to localStorage service
+      await scammerService.saveScammer(scammer);
       
-      // Try to save to the scammerService too if it exists
+      // Try to save to the new scammerService too if it exists
       try {
-        if (typeof scammerService.saveScammer === 'function') {
-          await scammerService.saveScammer(scammer);
+        if (typeof newScammerService.saveScammer === 'function') {
+          // Make sure the scammer object has the required properties for the new service
+          const scammerForNewService = {
+            ...scammer,
+            comments: scammer.comments || [] // Ensure comments is always an array
+          };
+          await newScammerService.saveScammer(scammerForNewService);
         }
       } catch (err) {
-        console.log("Note: Could not save to scammerService, but localStorage succeeded");
+        console.log("Note: Could not save to newScammerService, but localStorage succeeded");
       }
       
       toast.success(`Successfully contributed ${amount} SOL to the bounty!`);

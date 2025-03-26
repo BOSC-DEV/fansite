@@ -8,7 +8,7 @@ import { useWallet } from "@/context/wallet";
 import { useScammerProfile } from '@/hooks/useScammerProfile';
 import { useScammerStats } from '@/hooks/useScammerStats';
 import { ScammerHeader } from './details/ScammerHeader';
-import { storageService } from '@/services/storage/localStorageService';
+import { commentService } from '@/services/storage/localStorageService';
 
 interface ScammerDetailsCardProps {
   scammer: Scammer;
@@ -51,7 +51,7 @@ export function ScammerDetailsCard({
   // Fetch comment count
   useEffect(() => {
     if (scammer.id) {
-      const comments = storageService.getCommentsForScammer(scammer.id);
+      const comments = commentService.getCommentsForScammer(scammer.id);
       setCommentCount(comments.length);
     }
   }, [scammer.id]);

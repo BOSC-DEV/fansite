@@ -1,9 +1,8 @@
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { ThumbsUp, ThumbsDown, UserCircle2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { storageService } from "@/services/storage/localStorageService";
+import { commentService } from "@/services/storage/localStorageService";
 
 export interface CommentType {
   id: string;
@@ -27,11 +26,11 @@ export function Comment({ comment }: CommentProps) {
   };
 
   const handleLike = () => {
-    storageService.likeComment(comment.id);
+    commentService.likeComment(comment.id);
   };
 
   const handleDislike = () => {
-    storageService.dislikeComment(comment.id);
+    commentService.dislikeComment(comment.id);
   };
 
   return (

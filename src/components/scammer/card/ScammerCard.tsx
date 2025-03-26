@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { formatCurrency, formatDate } from "@/utils/formatters";
 import { ScammerCardImage } from "./image/ScammerCardImage";
 import { ScammerCardContent } from "./ScammerCardContent";
-import { storageService } from "@/services/storage/localStorageService";
+import { commentService } from "@/services/storage/localStorageService";
 
 interface ScammerCardProps {
   scammer: Scammer;
@@ -23,9 +23,9 @@ export function ScammerCard({ scammer, className, rank }: ScammerCardProps) {
     formatDate(scammer.dateAdded), 
   [scammer.dateAdded]);
   
-  // Get comments count from storage service
+  // Get comments count from comment service
   const commentsCount = useMemo(() => {
-    const scammerComments = storageService.getCommentsForScammer(scammer.id);
+    const scammerComments = commentService.getCommentsForScammer(scammer.id);
     return scammerComments.length;
   }, [scammer.id]);
   
