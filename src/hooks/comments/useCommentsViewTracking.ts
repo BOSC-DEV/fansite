@@ -22,18 +22,23 @@ export function useCommentsViewTracking(commentId: string) {
         localStorage.setItem(localStorageKey, 'true');
         
         // Increment the view count in the database
-        const { data: comment } = await supabase
+        const { data: comment, error } = await supabase
           .from('comments')
           .select('views')
           .eq('id', commentId)
           .single();
         
-        if (comment) {
-          await supabase
-            .from('comments')
-            .update({ views: (comment.views || 0) + 1 })
-            .eq('id', commentId);
+        if (error) {
+          console.error("Error fetching comment view count:", error);
+          return;
         }
+        
+        const currentViews = comment?.views || 0;
+        
+        await supabase
+          .from('comments')
+          .update({ views: currentViews + 1 })
+          .eq('id', commentId);
       } catch (error) {
         console.error("Error tracking comment view:", error);
       }

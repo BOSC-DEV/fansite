@@ -89,6 +89,7 @@ export function Comment({ comment, showScammerLink = false }: CommentProps) {
           <button 
             onClick={handleLike}
             className={`flex items-center space-x-1 text-xs transition-colors ${isLiked ? 'text-green-600' : 'hover:text-green-600'}`}
+            aria-label="Like comment"
           >
             <ThumbsUp className="h-3 w-3" />
             <span>{likes || 0}</span>
@@ -96,6 +97,7 @@ export function Comment({ comment, showScammerLink = false }: CommentProps) {
           <button 
             onClick={handleDislike}
             className={`flex items-center space-x-1 text-xs transition-colors ${isDisliked ? 'text-red-600' : 'hover:text-red-600'}`}
+            aria-label="Dislike comment"
           >
             <ThumbsDown className="h-3 w-3" />
             <span>{dislikes || 0}</span>

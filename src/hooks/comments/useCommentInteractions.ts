@@ -43,7 +43,7 @@ export function useCommentInteractions({
           }
 
           if (data) {
-            console.log("Found previous comment interaction:", data);
+            console.log("Found previous interaction:", data);
             setIsLiked(data.liked);
             setIsDisliked(data.disliked);
           }
@@ -113,25 +113,24 @@ export function useCommentInteractions({
         setIsLiked(false);
         
         // Update the database
-        const { error } = await supabase
+        await supabase
           .from('user_comment_interactions')
           .update({ liked: false })
           .eq('comment_id', commentId)
           .eq('user_id', address);
-          
-        if (error) throw error;
         
         // Update comment likes count
-        const { error: updateError } = await supabase
+        const { data: comment, error } = await supabase
           .from('comments')
           .select('likes')
           .eq('id', commentId)
           .single();
         
-        if (!updateError) {
+        if (!error && comment) {
+          const currentLikes = comment.likes || 0;
           await supabase
             .from('comments')
-            .update({ likes: Math.max(0, likes - 1) })
+            .update({ likes: Math.max(0, currentLikes - 1) })
             .eq('id', commentId);
         }
         
@@ -158,7 +157,7 @@ export function useCommentInteractions({
         
       if (existingInteraction) {
         // Update existing interaction
-        const { error } = await supabase
+        await supabase
           .from('user_comment_interactions')
           .update({ 
             liked: true,
@@ -167,11 +166,9 @@ export function useCommentInteractions({
           })
           .eq('comment_id', commentId)
           .eq('user_id', address);
-          
-        if (error) throw error;
       } else {
         // Create new interaction
-        const { error } = await supabase
+        await supabase
           .from('user_comment_interactions')
           .insert({
             comment_id: commentId,
@@ -180,23 +177,24 @@ export function useCommentInteractions({
             disliked: false,
             last_updated: new Date().toISOString()
           });
-          
-        if (error) throw error;
       }
       
       // Update comment like count in database
-      const { data: comment } = await supabase
+      const { data: comment, error } = await supabase
         .from('comments')
         .select('likes, dislikes')
         .eq('id', commentId)
         .single();
         
-      if (comment) {
+      if (!error && comment) {
+        const newLikes = isDisliked ? (comment.likes || 0) + 1 : (comment.likes || 0) + 1;
+        const newDislikes = isDisliked ? Math.max(0, (comment.dislikes || 0) - 1) : (comment.dislikes || 0);
+        
         await supabase
           .from('comments')
           .update({ 
-            likes: isDisliked ? comment.likes + 1 : likes + 1,
-            dislikes: isDisliked ? Math.max(0, comment.dislikes - 1) : comment.dislikes
+            likes: newLikes,
+            dislikes: newDislikes
           })
           .eq('id', commentId);
       }
@@ -248,25 +246,24 @@ export function useCommentInteractions({
         setIsDisliked(false);
         
         // Update the database
-        const { error } = await supabase
+        await supabase
           .from('user_comment_interactions')
           .update({ disliked: false })
           .eq('comment_id', commentId)
           .eq('user_id', address);
-          
-        if (error) throw error;
         
         // Update comment dislikes count
-        const { error: updateError } = await supabase
+        const { data: comment, error } = await supabase
           .from('comments')
           .select('dislikes')
           .eq('id', commentId)
           .single();
         
-        if (!updateError) {
+        if (!error && comment) {
+          const currentDislikes = comment.dislikes || 0;
           await supabase
             .from('comments')
-            .update({ dislikes: Math.max(0, dislikes - 1) })
+            .update({ dislikes: Math.max(0, currentDislikes - 1) })
             .eq('id', commentId);
         }
         
@@ -293,7 +290,7 @@ export function useCommentInteractions({
         
       if (existingInteraction) {
         // Update existing interaction
-        const { error } = await supabase
+        await supabase
           .from('user_comment_interactions')
           .update({ 
             liked: false,
@@ -302,11 +299,9 @@ export function useCommentInteractions({
           })
           .eq('comment_id', commentId)
           .eq('user_id', address);
-          
-        if (error) throw error;
       } else {
         // Create new interaction
-        const { error } = await supabase
+        await supabase
           .from('user_comment_interactions')
           .insert({
             comment_id: commentId,
@@ -315,23 +310,24 @@ export function useCommentInteractions({
             disliked: true,
             last_updated: new Date().toISOString()
           });
-          
-        if (error) throw error;
       }
       
       // Update comment dislike count in database
-      const { data: comment } = await supabase
+      const { data: comment, error } = await supabase
         .from('comments')
         .select('likes, dislikes')
         .eq('id', commentId)
         .single();
         
-      if (comment) {
+      if (!error && comment) {
+        const newLikes = isLiked ? Math.max(0, (comment.likes || 0) - 1) : (comment.likes || 0);
+        const newDislikes = isLiked ? (comment.dislikes || 0) + 1 : (comment.dislikes || 0) + 1;
+        
         await supabase
           .from('comments')
           .update({ 
-            dislikes: isLiked ? comment.dislikes + 1 : dislikes + 1,
-            likes: isLiked ? Math.max(0, comment.likes - 1) : comment.likes
+            likes: newLikes,
+            dislikes: newDislikes
           })
           .eq('id', commentId);
       }
