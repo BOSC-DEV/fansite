@@ -32,7 +32,7 @@ export function useCommentInteractions(commentId: string, initialLikes: number, 
         await supabase
           .from('user_comment_interactions')
           .delete()
-          .match({ comment_id: commentId, user_address: address, interaction_type: 'like' });
+          .match({ comment_id: commentId, user_id: address, interaction_type: 'like' });
           
         setLikes(prev => Math.max(0, prev - 1));
         setIsLiked(false);
@@ -43,15 +43,16 @@ export function useCommentInteractions(commentId: string, initialLikes: number, 
         await supabase
           .from('user_comment_interactions')
           .delete()
-          .match({ comment_id: commentId, user_address: address, interaction_type: 'dislike' });
+          .match({ comment_id: commentId, user_id: address, interaction_type: 'dislike' });
           
         // Add like
         await supabase
           .from('user_comment_interactions')
           .insert({ 
             comment_id: commentId, 
-            user_address: address, 
-            interaction_type: 'like' 
+            user_id: address, 
+            liked: true,
+            disliked: false
           });
           
         setDislikes(prev => Math.max(0, prev - 1));
@@ -65,8 +66,9 @@ export function useCommentInteractions(commentId: string, initialLikes: number, 
           .from('user_comment_interactions')
           .insert({ 
             comment_id: commentId, 
-            user_address: address, 
-            interaction_type: 'like' 
+            user_id: address, 
+            liked: true,
+            disliked: false
           });
           
         setLikes(prev => prev + 1);
@@ -90,7 +92,7 @@ export function useCommentInteractions(commentId: string, initialLikes: number, 
         await supabase
           .from('user_comment_interactions')
           .delete()
-          .match({ comment_id: commentId, user_address: address, interaction_type: 'dislike' });
+          .match({ comment_id: commentId, user_id: address, interaction_type: 'dislike' });
           
         setDislikes(prev => Math.max(0, prev - 1));
         setIsDisliked(false);
@@ -101,15 +103,16 @@ export function useCommentInteractions(commentId: string, initialLikes: number, 
         await supabase
           .from('user_comment_interactions')
           .delete()
-          .match({ comment_id: commentId, user_address: address, interaction_type: 'like' });
+          .match({ comment_id: commentId, user_id: address, interaction_type: 'like' });
           
         // Add dislike
         await supabase
           .from('user_comment_interactions')
           .insert({ 
             comment_id: commentId, 
-            user_address: address, 
-            interaction_type: 'dislike' 
+            user_id: address, 
+            liked: false,
+            disliked: true
           });
           
         setLikes(prev => Math.max(0, prev - 1));
@@ -123,8 +126,9 @@ export function useCommentInteractions(commentId: string, initialLikes: number, 
           .from('user_comment_interactions')
           .insert({ 
             comment_id: commentId, 
-            user_address: address, 
-            interaction_type: 'dislike' 
+            user_id: address, 
+            liked: false,
+            disliked: true
           });
           
         setDislikes(prev => prev + 1);
