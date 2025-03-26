@@ -1,6 +1,5 @@
 
 import { useCallback, useState } from 'react';
-import { storageService } from '@/services/storage';
 import { useWallet } from '@/context/WalletContext';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
@@ -29,9 +28,9 @@ export function useCommentInteractions(commentId: string, initialLikes: number, 
     try {
       // If already liked, unlike
       if (isLiked) {
-        // Use the Supabase client directly since storageService doesn't have the method
+        // Use the correct table name: user_comment_interactions
         await supabase
-          .from('comment_interactions')
+          .from('user_comment_interactions')
           .delete()
           .match({ comment_id: commentId, user_address: address, interaction_type: 'like' });
           
@@ -42,14 +41,18 @@ export function useCommentInteractions(commentId: string, initialLikes: number, 
       else if (isDisliked) {
         // Remove dislike
         await supabase
-          .from('comment_interactions')
+          .from('user_comment_interactions')
           .delete()
           .match({ comment_id: commentId, user_address: address, interaction_type: 'dislike' });
           
         // Add like
         await supabase
-          .from('comment_interactions')
-          .insert({ comment_id: commentId, user_address: address, interaction_type: 'like' });
+          .from('user_comment_interactions')
+          .insert({ 
+            comment_id: commentId, 
+            user_address: address, 
+            interaction_type: 'like' 
+          });
           
         setDislikes(prev => Math.max(0, prev - 1));
         setLikes(prev => prev + 1);
@@ -59,8 +62,12 @@ export function useCommentInteractions(commentId: string, initialLikes: number, 
       // Add like
       else {
         await supabase
-          .from('comment_interactions')
-          .insert({ comment_id: commentId, user_address: address, interaction_type: 'like' });
+          .from('user_comment_interactions')
+          .insert({ 
+            comment_id: commentId, 
+            user_address: address, 
+            interaction_type: 'like' 
+          });
           
         setLikes(prev => prev + 1);
         setIsLiked(true);
@@ -81,7 +88,7 @@ export function useCommentInteractions(commentId: string, initialLikes: number, 
       // If already disliked, remove dislike
       if (isDisliked) {
         await supabase
-          .from('comment_interactions')
+          .from('user_comment_interactions')
           .delete()
           .match({ comment_id: commentId, user_address: address, interaction_type: 'dislike' });
           
@@ -92,14 +99,18 @@ export function useCommentInteractions(commentId: string, initialLikes: number, 
       else if (isLiked) {
         // Remove like
         await supabase
-          .from('comment_interactions')
+          .from('user_comment_interactions')
           .delete()
           .match({ comment_id: commentId, user_address: address, interaction_type: 'like' });
           
         // Add dislike
         await supabase
-          .from('comment_interactions')
-          .insert({ comment_id: commentId, user_address: address, interaction_type: 'dislike' });
+          .from('user_comment_interactions')
+          .insert({ 
+            comment_id: commentId, 
+            user_address: address, 
+            interaction_type: 'dislike' 
+          });
           
         setLikes(prev => Math.max(0, prev - 1));
         setDislikes(prev => prev + 1);
@@ -109,8 +120,12 @@ export function useCommentInteractions(commentId: string, initialLikes: number, 
       // Add dislike
       else {
         await supabase
-          .from('comment_interactions')
-          .insert({ comment_id: commentId, user_address: address, interaction_type: 'dislike' });
+          .from('user_comment_interactions')
+          .insert({ 
+            comment_id: commentId, 
+            user_address: address, 
+            interaction_type: 'dislike' 
+          });
           
         setDislikes(prev => prev + 1);
         setIsDisliked(true);
