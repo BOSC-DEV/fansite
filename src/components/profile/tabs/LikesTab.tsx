@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase";
 import { ScammerCard } from "@/components/scammer/card/ScammerCard";
 import { Scammer } from "@/lib/types";
 import { storageService } from "@/services/storage";
+import { toast } from "sonner";
 
 interface LikesTabProps {
   address?: string;
@@ -33,6 +34,7 @@ export function LikesTab({ address }: LikesTabProps) {
 
         if (error) {
           console.error("Error fetching liked scammers:", error);
+          toast.error("Failed to load liked scammers");
           setIsLoading(false);
           return;
         }
@@ -60,6 +62,7 @@ export function LikesTab({ address }: LikesTabProps) {
         setLikedScammers(convertedScammers);
       } catch (error) {
         console.error("Error in fetchLikedScammers:", error);
+        toast.error("Failed to load liked scammers");
       } finally {
         setIsLoading(false);
       }
@@ -73,7 +76,7 @@ export function LikesTab({ address }: LikesTabProps) {
       <>
         <h2 className="text-xl font-bold mb-4 font-western text-western-accent">Likes</h2>
         <Card className="p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <Skeleton className="h-64 w-full rounded-lg" />
             <Skeleton className="h-64 w-full rounded-lg" />
             <Skeleton className="h-64 w-full rounded-lg" />
@@ -98,11 +101,12 @@ export function LikesTab({ address }: LikesTabProps) {
     <>
       <h2 className="text-xl font-bold mb-4 font-western text-western-accent">Likes</h2>
       <Card className="p-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {likedScammers.map(scammer => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {likedScammers.map((scammer, index) => (
             <ScammerCard 
               key={scammer.id}
               scammer={scammer}
+              rank={index + 1}
             />
           ))}
         </div>
