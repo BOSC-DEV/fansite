@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +6,7 @@ import { Eye, ThumbsUp, User, Globe } from "lucide-react";
 import { Scammer } from "@/lib/types";
 import { useScammerProfile } from "@/hooks/useScammerProfile";
 import { commentService } from "@/services/storage/localStorageService";
+import { SolAmount } from "@/components/SolAmount";
 
 interface ScammerTableCompactProps {
   scammers: Scammer[];
@@ -84,7 +84,7 @@ export const ScammerTableCompact = ({
                   </div>
                 </TableCell>
                 <TableCell className="text-center font-medium">
-                  <span className="text-western-accent font-wanted">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
+                  <SolAmount amount={scammer.bountyAmount} className="text-western-accent font-wanted" />
                 </TableCell>
                 <TableCell>
                   {links.length > 0 ? (

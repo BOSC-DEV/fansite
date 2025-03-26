@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { Scammer } from "@/lib/types";
 import { Award, Users, TrendingUp, BarChart } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SolAmount } from "@/components/SolAmount";
 
 interface ScammerStatsCardProps {
   scammers: Scammer[];
@@ -62,7 +63,9 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
             </div>
             <div>
               <p className="text-sm font-medium text-western-wood/70">Highest Bounty</p>
-              <h4 className="text-2xl font-bold text-western-accent">{formatCurrency(stats.highestBounty)} $BOSC</h4>
+              <h4 className="text-2xl font-bold text-western-accent">
+                <SolAmount amount={stats.highestBounty} />
+              </h4>
               <p className="text-xs text-western-wood/70 truncate">
                 {stats.highestBountyScammer?.name}
               </p>
@@ -75,7 +78,9 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
             </div>
             <div>
               <p className="text-sm font-medium text-western-wood/70">Total Bounties</p>
-              <h4 className="text-2xl font-bold text-western-accent">{formatCurrency(stats.totalBounty)} $BOSC</h4>
+              <h4 className="text-2xl font-bold text-western-accent">
+                <SolAmount amount={stats.totalBounty} />
+              </h4>
             </div>
           </div>
 

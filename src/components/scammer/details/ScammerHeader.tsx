@@ -19,6 +19,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { storageService } from '@/services/storage';
 import { toast } from 'sonner';
+import { SolAmount } from '@/components/SolAmount';
 
 interface ScammerHeaderProps {
   name: string;
@@ -84,7 +85,7 @@ export function ScammerHeader({
         {bountyAmount > 0 && (
           <div className="mt-2 flex items-center">
             <span className="text-sm text-western-accent font-medium">
-              Total Bounty: <span className="font-bold">{bountyAmount.toLocaleString()} SOL</span>
+              Total Bounty: <SolAmount amount={bountyAmount} className="font-bold" />
             </span>
           </div>
         )}
