@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { ScammerTable } from "@/components/scammer/ScammerTable";
@@ -45,7 +44,6 @@ const MostWanted = () => {
   
   const paginatedScammers = sortedScammers.slice(startIndex, endIndex);
 
-  // Auto-switch to grid view on mobile
   useEffect(() => {
     if (isMobile && viewType === "table") {
       setViewType("grid");

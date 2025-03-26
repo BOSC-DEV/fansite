@@ -1,9 +1,7 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
 import { Header } from "@/components/Header";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { SiteFooter } from "@/components/layout/SiteFooter";
 import { LeaderboardTable } from "@/components/leaderboard/LeaderboardTable";
 import { Trophy } from "lucide-react";
 import { leaderboardService } from "@/services/storage/leaderboardService";
@@ -94,7 +92,6 @@ export default function Leaderboard() {
           </div>
         )}
       </main>
-      <SiteFooter />
     </div>
   );
 }
