@@ -98,6 +98,39 @@ export class ScammerStatsService extends ScammerBaseService {
   }
   
   /**
+   * Increment the share count for a scammer
+   */
+  async incrementScammerShares(scammerId: string): Promise<boolean> {
+    try {
+      const scammer = await this.getScammerRecord(scammerId);
+      
+      if (!scammer) {
+        console.error("Scammer not found for incrementing shares:", scammerId);
+        return false;
+      }
+      
+      // Get current shares count (default to 0 if not set)
+      const currentShares = scammer.shares || 0;
+      
+      // Update the shares count
+      const { error } = await supabase
+        .from('scammers')
+        .update({ shares: currentShares + 1 })
+        .eq('id', scammerId);
+      
+      if (error) {
+        console.error("Error incrementing scammer shares:", error);
+        return false;
+      }
+      
+      return true;
+    } catch (error) {
+      console.error("Error in incrementScammerShares:", error);
+      return false;
+    }
+  }
+  
+  /**
    * Like a scammer
    */
   async likeScammer(scammerId: string): Promise<boolean> {

@@ -11,6 +11,7 @@ export interface ScammerInteractionButtonsProps {
   likes: number;
   dislikes: number;
   views: number;
+  shares: number;
   comments?: number;
   isLiked: boolean;
   isDisliked: boolean;
@@ -23,6 +24,7 @@ export function ScammerInteractionButtons({
   likes,
   dislikes,
   views,
+  shares,
   comments = 0,
   isLiked,
   isDisliked,
@@ -47,7 +49,7 @@ export function ScammerInteractionButtons({
 
       <CommentsButton count={comments} />
       
-      <ShareButton scammerId={scammerId} />
+      <ShareButton scammerId={scammerId} count={shares} />
     </div>
   );
 }

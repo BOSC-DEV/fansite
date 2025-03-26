@@ -12,6 +12,7 @@ interface ScammerCardImageProps {
   likes: number;
   dislikes: number;
   views: number;
+  shares: number;
   comments?: number;
   scammerId?: string;
   rank?: number;
@@ -23,6 +24,7 @@ const ScammerCardImageComponent = ({
   likes, 
   dislikes, 
   views,
+  shares,
   comments = 0,
   scammerId,
   rank
@@ -77,6 +79,7 @@ const ScammerCardImageComponent = ({
         likes={likes}
         dislikes={dislikes}
         views={views}
+        shares={shares}
         comments={comments}
         onScrollToComments={scrollToComments}
       />

@@ -22,12 +22,14 @@ export interface ScammerListing {
   likes: number;
   dislikes: number;
   views: number;
+  shares: number;
 }
 
 export interface ScammerStats {
   likes?: number;
   dislikes?: number;
   views?: number;
+  shares?: number;
 }
 
 export interface ScammerDbRecord {
@@ -46,5 +48,6 @@ export interface ScammerDbRecord {
   likes: number | null;
   dislikes: number | null;
   views: number | null;
+  shares: number | null;
   comments: Json | null;
 }

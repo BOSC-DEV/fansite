@@ -3,13 +3,13 @@ import { Eye, ThumbsUp, ThumbsDown, MessageSquare } from "lucide-react";
 import { InteractionButton } from "./InteractionButton";
 import { useInteractions } from "@/hooks/useInteractions";
 import { ShareButton } from "./ShareButton";
-import { CommentsButton } from "./CommentsButton";
 
 interface InteractionsBarProps {
   scammerId?: string;
   likes: number;
   dislikes: number;
   views: number;
+  shares: number;
   comments: number;
   onScrollToComments?: () => void;
 }
@@ -19,6 +19,7 @@ export function InteractionsBar({
   likes,
   dislikes,
   views,
+  shares,
   comments,
   onScrollToComments
 }: InteractionsBarProps) {
@@ -76,7 +77,7 @@ export function InteractionsBar({
       />
       
       {scammerId && (
-        <ShareButton scammerId={scammerId} />
+        <ShareButton scammerId={scammerId} count={shares} />
       )}
     </div>
   );

@@ -1,4 +1,3 @@
-
 import { ScammerListing, ScammerStats } from './scammerTypes';
 import { scammerDataService } from './scammerDataService';
 import { scammerStatsService } from './scammerStatsService';
@@ -45,6 +44,10 @@ class ScammerService {
   
   async incrementScammerViews(scammerId: string): Promise<boolean> {
     return scammerStatsService.incrementScammerViews(scammerId);
+  }
+  
+  async incrementScammerShares(scammerId: string): Promise<boolean> {
+    return scammerStatsService.incrementScammerShares(scammerId);
   }
 
   async likeScammer(scammerId: string): Promise<boolean> {
