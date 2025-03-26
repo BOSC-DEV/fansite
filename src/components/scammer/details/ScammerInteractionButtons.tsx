@@ -1,11 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { ThumbsUp, ThumbsDown } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, Eye, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useWallet } from '@/context/WalletContext';
 import { toast } from 'sonner';
 import { supabase } from '@/lib/supabase';
 import { profileService } from '@/services/storage/profileService';
+import { Link } from 'react-router-dom';
 
 export interface ScammerInteractionButtonsProps {
   scammerId: string;
@@ -24,7 +25,7 @@ export function ScammerInteractionButtons({
   likes,
   dislikes,
   views,
-  comments,
+  comments = 0,
   isLiked,
   isDisliked,
   onLike,
@@ -142,6 +143,13 @@ export function ScammerInteractionButtons({
     }
   };
 
+  const scrollToComments = () => {
+    const commentsSection = document.querySelector('.comments-section');
+    if (commentsSection) {
+      commentsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="flex items-center gap-4">
       <Button
@@ -163,6 +171,27 @@ export function ScammerInteractionButtons({
         <ThumbsDown className="h-4 w-4" />
         <span>{dislikes || 0}</span>
       </Button>
+
+      <Button
+        variant="outline"
+        size="sm"
+        className="flex items-center gap-2"
+        disabled
+      >
+        <Eye className="h-4 w-4" />
+        <span>{views || 0}</span>
+      </Button>
+
+      <Button
+        variant="outline"
+        size="sm"
+        className="flex items-center gap-2"
+        onClick={scrollToComments}
+      >
+        <MessageSquare className="h-4 w-4" />
+        <span>{comments || 0}</span>
+      </Button>
     </div>
   );
 }
+

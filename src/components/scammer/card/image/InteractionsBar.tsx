@@ -1,5 +1,5 @@
 
-import { Eye, ThumbsUp, ThumbsDown } from "lucide-react";
+import { Eye, ThumbsUp, ThumbsDown, MessageSquare } from "lucide-react";
 import { InteractionButton } from "./InteractionButton";
 import { useInteractions } from "@/hooks/useInteractions";
 import { ShareButton } from "./ShareButton";
@@ -68,9 +68,11 @@ export function InteractionsBar({
         count={views} 
       />
       
-      <CommentsButton 
+      <InteractionButton 
+        icon={MessageSquare} 
         count={comments} 
-        onScrollToComments={scrollToComments}
+        onClick={scrollToComments}
+        title="View comments"
       />
       
       {scammerId && (
