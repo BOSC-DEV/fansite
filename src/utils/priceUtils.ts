@@ -16,7 +16,7 @@ export const fetchSolanaPrice = async (): Promise<number> => {
     return data.solana.usd;
   } catch (error) {
     console.error("Error fetching Solana price:", error);
-    return 0;
+    throw error; // Let React Query handle the error
   }
 };
 
@@ -27,6 +27,7 @@ export const useSolanaPrice = () => {
     queryFn: fetchSolanaPrice,
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
     refetchOnWindowFocus: false,
+    retry: 2, // Retry twice if the request fails
   });
 };
 
