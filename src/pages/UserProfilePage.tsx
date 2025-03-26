@@ -19,6 +19,10 @@ export function UserProfilePage() {
   const { profile, scammers, isLoading, error } = useUserProfile(username);
   const [activeTab, setActiveTab] = useState("reports");
   
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+  };
+  
   return (
     <div className="min-h-screen old-paper">
       <Header />
@@ -32,7 +36,7 @@ export function UserProfilePage() {
             <ProfileHeader profile={profile} scammersCount={scammers.length} />
             
             {/* Tabs Section */}
-            <Tabs defaultValue="reports" value={activeTab} onValueChange={setActiveTab} className="mb-8">
+            <Tabs value={activeTab} onValueChange={handleTabChange} className="mb-8">
               <TabsList className="grid grid-cols-5 w-full max-w-md ml-0 bg-western-parchment/10">
                 <TabsTrigger value="reports" className="flex items-center gap-2">
                   <BookOpen className="h-4 w-4" />
