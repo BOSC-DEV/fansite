@@ -59,13 +59,13 @@ export function CommentForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 w-full">
       <Textarea
         placeholder="Share your thoughts about this scammer..."
         value={content}
         onChange={(e) => setContent(e.target.value)}
         rows={3}
-        className="resize-none"
+        className="resize-none w-full"
         disabled={isSubmitting}
       />
       <div className="flex justify-end">

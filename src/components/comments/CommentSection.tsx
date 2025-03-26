@@ -94,8 +94,23 @@ export function CommentSection({ scammerId }: CommentSectionProps) {
             </Alert>
           )}
           
-          <div className="flex items-center gap-4">
-            {/* Sort buttons - moved to left */}
+          {/* Full width comment input */}
+          <div className="w-full">
+            <CommentForm 
+              scammerId={scammerId} 
+              onCommentAdded={() => {}} 
+              content={content}
+              setContent={setContent}
+              isSubmitting={isSubmitting}
+              handleSubmit={handleSubmit}
+              isConnected={isConnected}
+              connectWallet={connectWallet}
+            />
+          </div>
+          
+          {/* Sort buttons and Post button on same line */}
+          <div className="flex justify-between items-center">
+            {/* Sort buttons - left side */}
             <div className="flex space-x-2">
               <Button 
                 variant={sortMethod === 'newest' ? "default" : "outline"} 
@@ -123,19 +138,7 @@ export function CommentSection({ scammerId }: CommentSectionProps) {
               </Button>
             </div>
             
-            {/* Comment form - right side */}
-            <div className="flex-1">
-              <CommentForm 
-                scammerId={scammerId} 
-                onCommentAdded={() => {}} 
-                content={content}
-                setContent={setContent}
-                isSubmitting={isSubmitting}
-                handleSubmit={handleSubmit}
-                isConnected={isConnected}
-                connectWallet={connectWallet}
-              />
-            </div>
+            {/* Post button will now be handled in CommentForm.tsx */}
           </div>
           
           {isLoading ? (
