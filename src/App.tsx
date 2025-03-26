@@ -15,7 +15,7 @@ import UserProfilePage from './pages/UserProfilePage';
 import Leaderboard from './pages/Leaderboard';
 import MyReportsPage from './pages/MyReportsPage';
 import MyBountiesPage from './pages/MyBountiesPage';
-import { WalletProvider } from './context/WalletContext';
+import { WalletProvider } from './context/wallet';
 import { SiteFooter } from './components/layout/SiteFooter';
 
 function App() {
