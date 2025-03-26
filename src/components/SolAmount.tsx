@@ -17,8 +17,8 @@ export function SolAmount({ amount, className }: SolAmountProps) {
   if (!isLoading && !isError && solPrice) {
     const usdAmount = amount * solPrice;
     usdValue = `$${usdAmount.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     })} USD`;
   } else if (isError) {
     usdValue = "Price unavailable";
