@@ -14,7 +14,8 @@ export function useWalletEvents() {
 
     return () => {
       if (window.phantom?.solana) {
-        window.phantom.solana.removeListener('accountChanged', handleAccountChanged);
+        // Using off instead of removeListener as specified in Phantom documentation
+        window.phantom.solana.off('accountChanged', handleAccountChanged);
       }
     };
   }, []);

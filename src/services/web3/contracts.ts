@@ -17,7 +17,9 @@ export class ContractService {
         return null;
       }
       
-      const balance = await this.connection.getBalance(window.phantom.solana.publicKey);
+      // Convert the string public key to a Solana PublicKey object
+      const publicKey = new PublicKey(window.phantom.solana.publicKey.toString());
+      const balance = await this.connection.getBalance(publicKey);
       return balance / LAMPORTS_PER_SOL;
     } catch (error) {
       console.error("Error getting balance:", error);
@@ -33,13 +35,15 @@ export class ContractService {
       }
       
       console.log("Balance too low, requesting airdrop on devnet");
+      // Convert the string public key to a Solana PublicKey object
+      const publicKey = new PublicKey(window.phantom.solana.publicKey.toString());
       const signature = await this.connection.requestAirdrop(
-        window.phantom.solana.publicKey,
+        publicKey,
         2 * LAMPORTS_PER_SOL
       );
       
       await this.connection.confirmTransaction(signature);
-      console.log("Airdrop successful for", window.phantom.solana.publicKey.toString());
+      console.log("Airdrop successful for", publicKey.toString());
       return true;
     } catch (error) {
       console.error("Error requesting airdrop:", error);
@@ -69,10 +73,12 @@ export class ContractService {
       
       // Create the transaction
       const toPublicKey = new PublicKey(receiverAddress);
+      // Convert the phantom wallet publicKey to a proper Solana PublicKey object
+      const fromPublicKey = new PublicKey(window.phantom.solana.publicKey.toString());
       
       const transaction = new Transaction().add(
         SystemProgram.transfer({
-          fromPubkey: window.phantom.solana.publicKey,
+          fromPubkey: fromPublicKey,
           toPubkey: toPublicKey,
           lamports: solAmount * LAMPORTS_PER_SOL
         })
@@ -81,7 +87,7 @@ export class ContractService {
       // Set the recent blockhash and fee payer
       const { blockhash } = await this.connection.getLatestBlockhash();
       transaction.recentBlockhash = blockhash;
-      transaction.feePayer = window.phantom.solana.publicKey;
+      transaction.feePayer = fromPublicKey;
       
       // Sign and send the transaction
       const { signature } = await window.phantom.solana.signAndSendTransaction(transaction);

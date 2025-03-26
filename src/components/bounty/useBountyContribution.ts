@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useWallet } from "@/context/wallet";
+import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
 import { storageService } from "@/services/storage/localStorageService";
@@ -70,13 +70,20 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
       // Ensure we have a valid receiver address
       const toPublicKey = new PublicKey(receiverAddress);
       
+      if (!window.phantom?.solana?.publicKey) {
+        throw new Error("Wallet public key not available");
+      }
+      
+      // Convert the phantom wallet publicKey to a proper Solana PublicKey object
+      const fromPublicKey = new PublicKey(window.phantom.solana.publicKey.toString());
+      
       // Request the user to send a transaction
       const connection = new Connection("https://api.devnet.solana.com", "confirmed");
       
       // Create a transaction
       const transaction = new Transaction().add(
         SystemProgram.transfer({
-          fromPubkey: window.phantom.solana.publicKey,
+          fromPubkey: fromPublicKey,
           toPubkey: toPublicKey,
           lamports: solAmount * LAMPORTS_PER_SOL
         })
@@ -85,7 +92,7 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
       // Get the latest blockhash
       const { blockhash } = await connection.getLatestBlockhash();
       transaction.recentBlockhash = blockhash;
-      transaction.feePayer = window.phantom.solana.publicKey;
+      transaction.feePayer = fromPublicKey;
       
       // Request signature from the user
       const { signature } = await window.phantom.solana.signAndSendTransaction(transaction);
