@@ -5,6 +5,7 @@ import { BountyWalletInfo } from "./bounty/BountyWalletInfo";
 import { BountyAmountInput } from "./bounty/BountyAmountInput";
 import { BountyFooter } from "./bounty/BountyFooter";
 import { useBountyContribution } from "./bounty/useBountyContribution";
+import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
 
 interface BountyContributionProps {
   scammerId: string;
@@ -34,7 +35,7 @@ export function BountyContribution({
       <CardContent className="pt-6">
         <BountyWalletInfo 
           currentBounty={currentBounty}
-          developerWalletAddress="TBC"
+          developerWalletAddress={DEVELOPER_WALLET_ADDRESS}
           copied={copied}
           onCopyClick={copyToClipboard}
         />

@@ -2,6 +2,7 @@
 import { Label } from "@/components/ui/label";
 import { Coins, Copy, Check } from "lucide-react";
 import { formatWalletAddress } from "@/utils/formatters";
+import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
 
 interface BountyWalletInfoProps {
   currentBounty: number;
@@ -29,14 +30,14 @@ export function BountyWalletInfo({
       </div>
       
       <div>
-        <Label htmlFor="developer-wallet" className="text-western-wood">Contract Address</Label>
+        <Label htmlFor="developer-wallet" className="text-western-wood">Developer Wallet</Label>
         <div className="flex items-center justify-between mt-1.5 bg-western-sand/10 border border-western-wood/30 rounded-sm p-2">
           <button 
             onClick={onCopyClick}
             className="flex items-center text-western-wood/80 hover:text-western-wood transition-colors"
           >
             <span className="font-mono text-xs">
-              TBC
+              {formatWalletAddress(DEVELOPER_WALLET_ADDRESS)}
             </span>
             {copied ? (
               <Check className="ml-2 h-4 w-4 text-green-600" />
