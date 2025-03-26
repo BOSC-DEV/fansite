@@ -45,26 +45,26 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
   };
 
   return (
-    <Card className={cn("mb-8 border-western-wood bg-western-parchment/80", className)}>
-      <CardContent className="p-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="flex items-center gap-4">
+    <Card className={cn("mb-8 border-western-wood bg-western-parchment/80 w-full", className)}>
+      <CardContent className="p-4 sm:p-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-6">
+          <div className="flex items-center gap-3 sm:gap-4">
             <div className="rounded-md bg-western-sand/30 p-2 text-western-accent">
               <Users className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm font-medium text-western-wood/70">Total Scammers</p>
-              <h4 className="text-2xl font-bold text-western-wood">{stats.totalScammers}</h4>
+              <p className="text-xs sm:text-sm font-medium text-western-wood/70">Total Scammers</p>
+              <h4 className="text-xl sm:text-2xl font-bold text-western-wood">{stats.totalScammers}</h4>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <div className="rounded-md bg-western-sand/30 p-2 text-western-accent">
               <Award className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm font-medium text-western-wood/70">Highest Bounty</p>
-              <h4 className="text-2xl font-bold text-western-accent">
+              <p className="text-xs sm:text-sm font-medium text-western-wood/70">Highest Bounty</p>
+              <h4 className="text-xl sm:text-2xl font-bold text-western-accent">
                 <SolAmount amount={stats.highestBounty} />
               </h4>
               <p className="text-xs text-western-wood/70 truncate">
@@ -73,26 +73,26 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <div className="rounded-md bg-western-sand/30 p-2 text-western-accent">
               <TrendingUp className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm font-medium text-western-wood/70">Total Bounties</p>
-              <h4 className="text-2xl font-bold text-western-accent">
+              <p className="text-xs sm:text-sm font-medium text-western-wood/70">Total Bounties</p>
+              <h4 className="text-xl sm:text-2xl font-bold text-western-accent">
                 <SolAmount amount={stats.totalBounty} />
               </h4>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <div className="rounded-md bg-western-sand/30 p-2 text-western-accent">
               <BarChart className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm font-medium text-western-wood/70">Recently Added</p>
+              <p className="text-xs sm:text-sm font-medium text-western-wood/70">Recently Added</p>
               <Link to={`/scammer/${stats.recentScammer?.id}`} className="hover:text-western-accent transition-colors">
-                <h4 className="text-base font-bold truncate text-western-wood hover:underline">
+                <h4 className="text-sm sm:text-base font-bold truncate text-western-wood hover:underline">
                   {stats.recentScammer?.name}
                 </h4>
               </Link>

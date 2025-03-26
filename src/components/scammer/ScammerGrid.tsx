@@ -22,7 +22,7 @@ export const ScammerGrid = ({
 }: ScammerGridProps) => {
   if (isLoading) {
     return (
-      <div>
+      <div className="w-full">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
           {[1, 2, 3, 4, 5, 6].map((_, index) => (
             <Card key={index} className="overflow-hidden border-western-wood bg-western-parchment/80 w-full">
@@ -60,7 +60,7 @@ export const ScammerGrid = ({
       </div>
       
       {totalPages > 1 && (
-        <div className="mt-6">
+        <div className="mt-6 w-full">
           <Pagination 
             currentPage={currentPage}
             totalPages={totalPages}
