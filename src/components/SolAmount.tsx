@@ -37,7 +37,7 @@ export function SolAmount({ amount, className }: SolAmountProps) {
         </TooltipTrigger>
         <TooltipContent>
           <p>{usdValue}</p>
-          <p className="text-xs text-muted-foreground">CoinGecko market rate</p>
+          <p className="text-xs text-muted-foreground">Estimated Value</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
