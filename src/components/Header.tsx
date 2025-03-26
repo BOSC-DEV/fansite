@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
@@ -122,7 +123,7 @@ export const Header = () => {
                   {formatAddress(address || "")}
                 </span>
                 <span className="text-xs font-bold text-western-sand">
-                  {balance} BOSC
+                  {balance !== null ? `${balance} BOSC` : '0 BOSC'}
                 </span>
               </div>
               <ProfileButton />

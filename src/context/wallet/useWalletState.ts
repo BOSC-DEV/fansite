@@ -37,7 +37,7 @@ export function useWalletState() {
               .then(balance => setBalance(balance))
               .catch(error => {
                 console.error("Failed to get balance on restore:", error);
-                setBalance(10); // Default balance
+                setBalance(0); // Set to 0 when we can't fetch balance
               });
           }
         } else {
@@ -74,7 +74,7 @@ export function useWalletState() {
               setBalance(tokenBalance);
             } catch (error) {
               console.error("Failed to get balance on initial load:", error);
-              setBalance(10); // Default balance for UI to work
+              setBalance(0); // Set to 0 when we can't fetch balance
             }
           } else {
             console.log("Signature verification failed during initial check");

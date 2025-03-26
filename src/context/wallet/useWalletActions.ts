@@ -46,7 +46,7 @@ export function useWalletActions(walletState: ReturnType<typeof useWalletState>)
           setBalance(tokenBalance);
         } catch (error) {
           console.error("Failed to get balance on connect:", error);
-          setBalance(10); // Default balance for UI to work
+          setBalance(0); // Set to 0 when we can't fetch balance
         }
         
         toast.success('Wallet connected successfully!');
