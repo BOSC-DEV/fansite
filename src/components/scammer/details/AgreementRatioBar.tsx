@@ -89,20 +89,22 @@ export function AgreementRatioBar({ likes, dislikes, onLike, onDislike }: Agreem
   
   return (
     <div className="relative bg-western-parchment/50 border border-western-wood/20 rounded-md p-4 mb-6">
-      {/* Entire container divided into two clickable halves */}
-      <div className="absolute inset-0 flex">
-        <div 
-          className="w-1/2 cursor-pointer rounded-l-md"
-          onClick={() => handleInteraction('like')}
-        ></div>
-        <div 
-          className="w-1/2 cursor-pointer rounded-r-md"
-          onClick={() => handleInteraction('dislike')}
-        ></div>
-      </div>
+      {/* Left half (green) for likes */}
+      <div 
+        className="absolute top-0 left-0 bottom-0 w-1/2 cursor-pointer z-10 rounded-l-md hover:bg-green-100/20 transition-colors"
+        onClick={() => handleInteraction('like')}
+        aria-label="Agree"
+      ></div>
       
-      {/* Actual visible content (sits on top of clickable areas) */}
-      <div className="relative z-10 pointer-events-none">
+      {/* Right half (red) for dislikes */}
+      <div 
+        className="absolute top-0 right-0 bottom-0 w-1/2 cursor-pointer z-10 rounded-r-md hover:bg-red-100/20 transition-colors"
+        onClick={() => handleInteraction('dislike')}
+        aria-label="Disagree"
+      ></div>
+      
+      {/* Actual visible content (sits on top of clickable areas but doesn't block clicks) */}
+      <div className="relative z-0 pointer-events-none">
         {/* Header with Like/Dislike counts */}
         <div className="flex justify-between items-center mb-2">
           <div className="flex items-center">
@@ -135,7 +137,7 @@ export function AgreementRatioBar({ likes, dislikes, onLike, onDislike }: Agreem
       </div>
       
       {/* Visual hover indicators */}
-      <div className="absolute inset-0 flex opacity-0 hover:opacity-10 transition-opacity">
+      <div className="absolute inset-0 flex opacity-0 hover:opacity-10 transition-opacity pointer-events-none">
         <div className="w-1/2 bg-green-600 rounded-l-md"></div>
         <div className="w-1/2 bg-red-600 rounded-r-md"></div>
       </div>
