@@ -34,7 +34,17 @@ export function CommentsTab() {
           
           if (userComments && userComments.length > 0) {
             console.log("Found comments in Supabase:", userComments.length);
-            setComments(userComments);
+            
+            // Ensure all comments have a valid created_at field
+            const validatedComments = userComments.map(comment => {
+              if (!comment.created_at || comment.created_at === 'Invalid Date') {
+                // Use current timestamp if the date is invalid
+                return { ...comment, created_at: new Date().toISOString() };
+              }
+              return comment;
+            });
+            
+            setComments(validatedComments);
           } else {
             console.log("No comments found for this user");
             setComments([]);

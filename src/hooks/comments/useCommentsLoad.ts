@@ -26,7 +26,17 @@ export function useCommentsLoad(scammerId: string) {
         setComments([]);
       } else if (supabaseComments && supabaseComments.length > 0) {
         console.log("Comments loaded from Supabase:", supabaseComments.length);
-        setComments(supabaseComments);
+        
+        // Ensure all comments have a valid created_at field
+        const validatedComments = supabaseComments.map(comment => {
+          if (!comment.created_at || comment.created_at === 'Invalid Date') {
+            // Use current timestamp if the date is invalid
+            return { ...comment, created_at: new Date().toISOString() };
+          }
+          return comment;
+        });
+        
+        setComments(validatedComments);
       } else {
         console.log("No comments found for this scammer");
         setComments([]);

@@ -1,7 +1,8 @@
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { ThumbsUp, ThumbsDown, UserCircle2 } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
+import { formatTimeAgo } from "@/utils/formatters";
 import { commentService } from "@/services/storage/localStorageService";
 
 export interface CommentType {
@@ -20,9 +21,18 @@ interface CommentProps {
 }
 
 export function Comment({ comment }: CommentProps) {
+  // Use our safe formatTimeAgo utility instead of direct date-fns usage
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return formatDistanceToNow(date, { addSuffix: true });
+    try {
+      // Handle potential invalid date strings
+      if (!dateString || dateString === 'Invalid Date') {
+        return 'Recently';
+      }
+      return formatTimeAgo(dateString);
+    } catch (error) {
+      console.error("Error formatting date:", error, dateString);
+      return 'Recently';
+    }
   };
 
   const handleLike = () => {
