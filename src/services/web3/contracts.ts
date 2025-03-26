@@ -66,7 +66,15 @@ export class ContractService extends Web3Provider {
       transaction.recentBlockhash = blockhash;
       transaction.feePayer = new PublicKey(window.phantom.solana.publicKey.toString());
 
-      // Sign and send the transaction
+      // Sign and send the transaction using Phantom wallet
+      // We explicitly check for the signTransaction method before calling it
+      if (!window.phantom.solana.signTransaction) {
+        return {
+          success: false,
+          message: "Wallet doesn't support transaction signing"
+        };
+      }
+      
       const signedTransaction = await window.phantom.solana.signTransaction(transaction);
       const signature = await this.connection.sendRawTransaction(signedTransaction.serialize());
 
