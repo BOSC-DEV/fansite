@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, Twitter, Mail } from "lucide-react";
 import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
 import { formatWalletAddress } from "@/utils/formatters";
 import { toast } from "sonner";
@@ -58,6 +58,27 @@ export const SiteFooter = () => {
               ) : (
                 <Copy className="h-4 w-4 ml-2 cursor-pointer" onClick={copyToClipboard} />
               )}
+            </div>
+            
+            {/* Social links */}
+            <div className="flex items-center justify-center gap-6 mt-4">
+              <a 
+                href="https://x.com/bookofscamslol" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-western-parchment hover:text-western-sand transition-colors"
+              >
+                <Twitter className="h-4 w-4" />
+                <span className="font-western text-sm">@bookofscamslol</span>
+              </a>
+              
+              <a 
+                href="mailto:dev@bookofscamslol" 
+                className="flex items-center gap-2 text-western-parchment hover:text-western-sand transition-colors"
+              >
+                <Mail className="h-4 w-4" />
+                <span className="font-western text-sm">dev@bookofscamslol</span>
+              </a>
             </div>
           </div>
         </div>
