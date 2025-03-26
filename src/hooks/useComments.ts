@@ -116,16 +116,30 @@ export function useComments(scammerId: string) {
     setIsSubmitting(true);
     
     try {
-      // Get user profile
-      const profile = storageService.getProfile(address) || 
-        await supabase.from('profiles').select('*').eq('wallet_address', address).single()
-          .then(({data}) => data);
+      // Get user profile - could be either our UserProfile type or Supabase response
+      const localProfile = storageService.getProfile(address);
+      let supabaseProfile = null;
       
-      if (!profile) {
+      if (!localProfile) {
+        const { data } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('wallet_address', address)
+          .single();
+        supabaseProfile = data;
+      }
+      
+      if (!localProfile && !supabaseProfile) {
         toast.error("Cannot find your profile");
         setIsSubmitting(false);
         return;
       }
+      
+      // Normalize the profile data to handle both formats
+      const normalizedProfile = {
+        name: localProfile ? localProfile.displayName : (supabaseProfile?.display_name || ""),
+        profilePic: localProfile ? localProfile.profilePicUrl : (supabaseProfile?.profile_pic_url || "")
+      };
       
       // Create a new comment
       const commentId = uuidv4();
@@ -134,8 +148,8 @@ export function useComments(scammerId: string) {
         scammerId,
         content: content.trim(),
         author: address,
-        authorName: profile.displayName || profile.display_name,
-        authorProfilePic: profile.profilePicUrl || profile.profile_pic_url || "",
+        authorName: normalizedProfile.name,
+        authorProfilePic: normalizedProfile.profilePic,
         createdAt: new Date().toISOString(),
         likes: 0,
         dislikes: 0
