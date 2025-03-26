@@ -1,6 +1,6 @@
 
 import { Buffer } from 'buffer';
-import { PublicKey, Connection, Transaction, SystemProgram, LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { PublicKey, Connection, Transaction, SystemProgram, LAMPORTS_PER_SOL, SendTransactionError } from '@solana/web3.js';
 import { Web3Provider } from "./provider";
 
 // Make Buffer available globally
@@ -30,6 +30,20 @@ export class ContractService extends Web3Provider {
     return true;
   }
 
+  async requestAirdrop(address: string): Promise<boolean> {
+    try {
+      const publicKey = new PublicKey(address);
+      // Request 1 SOL airdrop for testing on devnet
+      const signature = await this.connection.requestAirdrop(publicKey, LAMPORTS_PER_SOL);
+      await this.connection.confirmTransaction(signature);
+      console.log(`Airdrop successful for ${address}`);
+      return true;
+    } catch (error) {
+      console.error("Error requesting airdrop:", error);
+      return false;
+    }
+  }
+
   async sendSolTransaction(recipientAddress: string, amount: number): Promise<{success: boolean, message?: string, signature?: string}> {
     try {
       if (!window.phantom?.solana?.publicKey) {
@@ -55,13 +69,33 @@ export class ContractService extends Web3Provider {
         };
       }
 
+      // Get current sender balance
+      const senderKey = new PublicKey(window.phantom.solana.publicKey.toString());
+      const senderBalance = await this.connection.getBalance(senderKey);
+      
+      // If balance is too low, try to request an airdrop on devnet
+      if (senderBalance < amount * LAMPORTS_PER_SOL) {
+        console.log("Balance too low, requesting airdrop on devnet");
+        const airdropSuccess = await this.requestAirdrop(senderKey.toString());
+        
+        if (!airdropSuccess) {
+          return {
+            success: false,
+            message: "Insufficient funds and airdrop failed. This is a devnet limitation."
+          };
+        }
+        
+        // Wait a moment for airdrop to be processed
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+
       // Convert SOL to lamports
       const lamportsAmount = amount * LAMPORTS_PER_SOL;
 
       // Create a Solana transaction
       const transaction = new Transaction().add(
         SystemProgram.transfer({
-          fromPubkey: new PublicKey(window.phantom.solana.publicKey.toString()),
+          fromPubkey: senderKey,
           toPubkey: new PublicKey(recipientAddress),
           lamports: lamportsAmount,
         })
@@ -70,10 +104,9 @@ export class ContractService extends Web3Provider {
       // Set the most recent blockhash
       const { blockhash } = await this.connection.getLatestBlockhash();
       transaction.recentBlockhash = blockhash;
-      transaction.feePayer = new PublicKey(window.phantom.solana.publicKey.toString());
+      transaction.feePayer = senderKey;
 
       // Sign and send the transaction using Phantom wallet
-      // We explicitly check for the signTransaction method before calling it
       if (!window.phantom.solana.signTransaction) {
         return {
           success: false,
@@ -82,15 +115,26 @@ export class ContractService extends Web3Provider {
       }
       
       const signedTransaction = await window.phantom.solana.signTransaction(transaction);
-      const signature = await this.connection.sendRawTransaction(signedTransaction.serialize());
-
-      // Confirm the transaction
-      await this.connection.confirmTransaction(signature);
-
-      return { 
-        success: true, 
-        signature 
-      };
+      
+      try {
+        const signature = await this.connection.sendRawTransaction(signedTransaction.serialize());
+        await this.connection.confirmTransaction(signature);
+        
+        return { 
+          success: true, 
+          signature 
+        };
+      } catch (error) {
+        // Handle SendTransactionError specifically
+        if (error instanceof SendTransactionError) {
+          console.error("SendTransactionError:", error);
+          return {
+            success: false,
+            message: `Transaction failed: ${error.message}`
+          };
+        }
+        throw error; // Re-throw other errors
+      }
     } catch (error) {
       console.error("Error sending SOL transaction:", error);
       return { 
