@@ -193,6 +193,7 @@ export type Database = {
           name: string
           official_response: string | null
           photo_url: string | null
+          shares: number | null
           views: number | null
           wallet_address: string | null
           x_link: string | null
@@ -213,6 +214,7 @@ export type Database = {
           name: string
           official_response?: string | null
           photo_url?: string | null
+          shares?: number | null
           views?: number | null
           wallet_address?: string | null
           x_link?: string | null
@@ -233,6 +235,7 @@ export type Database = {
           name?: string
           official_response?: string | null
           photo_url?: string | null
+          shares?: number | null
           views?: number | null
           wallet_address?: string | null
           x_link?: string | null
@@ -320,6 +323,7 @@ export type Database = {
           name: string | null
           official_response: string | null
           photo_url: string | null
+          shares: number | null
           views: number | null
           wallet_address: string | null
           x_link: string | null
@@ -340,6 +344,7 @@ export type Database = {
           name?: string | null
           official_response?: string | null
           photo_url?: string | null
+          shares?: number | null
           views?: number | null
           wallet_address?: string | null
           x_link?: string | null
@@ -360,6 +365,7 @@ export type Database = {
           name?: string | null
           official_response?: string | null
           photo_url?: string | null
+          shares?: number | null
           views?: number | null
           wallet_address?: string | null
           x_link?: string | null
