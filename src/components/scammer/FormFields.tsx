@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { X, Plus } from "lucide-react";
+import { useState, useEffect } from "react";
 
 interface TagInputProps {
   label: string;
@@ -25,6 +26,27 @@ export function TagInput({
   addValue,
   removeValue,
 }: TagInputProps) {
+  const [showReminder, setShowReminder] = useState(false);
+  
+  // Check if user has entered text but hasn't added it
+  useEffect(() => {
+    if (currentValue.trim().length > 0) {
+      const timer = setTimeout(() => {
+        setShowReminder(true);
+      }, 3000); // Show reminder after 3 seconds of inactivity
+      
+      return () => clearTimeout(timer);
+    } else {
+      setShowReminder(false);
+    }
+  }, [currentValue]);
+
+  // Hide reminder when value is added
+  const handleAddValue = (e: React.FormEvent) => {
+    addValue(e);
+    setShowReminder(false);
+  };
+
   return (
     <div className="space-y-3">
       <Label>{label}</Label>
@@ -33,12 +55,23 @@ export function TagInput({
           placeholder={placeholder}
           value={currentValue}
           onChange={(e) => setCurrentValue(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addValue(e))}
+          onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddValue(e))}
+          className={showReminder ? "border-amber-500" : ""}
         />
-        <Button type="button" variant="outline" onClick={addValue}>
+        <Button 
+          type="button" 
+          variant="outline" 
+          onClick={handleAddValue}
+          className="bg-western-wood/20 border-western-wood/40 hover:bg-western-wood/30"
+        >
           <Plus className="h-4 w-4" />
         </Button>
       </div>
+      {showReminder && (
+        <p className="text-amber-600 text-sm mt-1">
+          Press + or Enter to add this {label.toLowerCase().replace(/s$/, '')}
+        </p>
+      )}
       {values.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-2">
           {values.map((value, i) => (
