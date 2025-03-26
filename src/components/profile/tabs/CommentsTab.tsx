@@ -1,9 +1,10 @@
+
 import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { commentService } from "@/services/storage/localStorageService";
-import { CommentList } from "@/components/comments/CommentList";
-import { useWallet } from "@/context/WalletContext";
 import { Skeleton } from "@/components/ui/skeleton";
+import { supabase } from "@/lib/supabase";
+import { useWallet } from "@/context/WalletContext";
+import { CommentList } from "@/components/comments/CommentList";
 
 export function CommentsTab() {
   const [comments, setComments] = useState<any[]>([]);
@@ -15,23 +16,22 @@ export function CommentsTab() {
       setIsLoading(true);
       try {
         if (address) {
-          // Try to load from Supabase first
-          const userComments = await commentService.getCommentsByAuthor(address);
-          if (userComments && userComments.length > 0) {
-            setComments(userComments);
-          } else {
-            // Fallback to localStorage
-            const localComments = commentService.getCommentsByAuthor(address);
-            setComments(localComments);
+          const { data: userComments, error } = await supabase
+            .from('comments')
+            .select('*')
+            .eq('author', address)
+            .order('created_at', { ascending: false });
+            
+          if (error) {
+            console.error("Error fetching comments:", error);
+            throw error;
           }
+          
+          setComments(userComments || []);
         }
       } catch (error) {
         console.error("Error loading user comments:", error);
-        // Fallback to localStorage on error
-        if (address) {
-          const localComments = commentService.getCommentsByAuthor(address);
-          setComments(localComments);
-        }
+        setComments([]);
       } finally {
         setIsLoading(false);
       }

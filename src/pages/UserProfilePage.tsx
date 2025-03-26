@@ -9,7 +9,7 @@ import { ProfileSkeleton } from "@/components/profile/ProfileSkeleton";
 import { ProfileError } from "@/components/profile/ProfileError";
 import { ReportsTab } from "@/components/profile/tabs/ReportsTab";
 import { InfoTab } from "@/components/profile/tabs/InfoTab";
-import { ActivityTab } from "@/components/profile/tabs/ActivityTab";
+import { LikesTab } from "@/components/profile/tabs/LikesTab";
 import { CommentsTab } from "@/components/profile/tabs/CommentsTab";
 import { BountiesTab } from "@/components/profile/tabs/BountiesTab";
 import { BookOpen, User, Heart, MessageSquare, Coins } from "lucide-react";
@@ -46,9 +46,9 @@ export function UserProfilePage() {
                   <User className="h-4 w-4" />
                   <span className="hidden sm:inline">Info</span>
                 </TabsTrigger>
-                <TabsTrigger value="activity" className="flex items-center gap-2">
+                <TabsTrigger value="likes" className="flex items-center gap-2">
                   <Heart className="h-4 w-4" />
-                  <span className="hidden sm:inline">Activity</span>
+                  <span className="hidden sm:inline">Likes</span>
                 </TabsTrigger>
                 <TabsTrigger value="comments" className="flex items-center gap-2">
                   <MessageSquare className="h-4 w-4" />
@@ -68,8 +68,8 @@ export function UserProfilePage() {
                 <InfoTab profile={profile} />
               </TabsContent>
               
-              <TabsContent value="activity" className="mt-6">
-                <ActivityTab />
+              <TabsContent value="likes" className="mt-6">
+                <LikesTab address={profile.walletAddress} />
               </TabsContent>
               
               <TabsContent value="comments" className="mt-6">

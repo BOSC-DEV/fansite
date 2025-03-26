@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { ThumbsUp, ThumbsDown, Eye, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -36,7 +35,6 @@ export function ScammerInteractionButtons({
   const [hasProfile, setHasProfile] = useState(false);
   const { isConnected, address, connectWallet } = useWallet();
 
-  // Check if user has a profile
   useEffect(() => {
     if (address) {
       const checkProfile = async () => {
@@ -62,7 +60,6 @@ export function ScammerInteractionButtons({
     setIsInteractionLocked(true);
     
     try {
-      // Check if user is connected
       if (!isConnected || !address) {
         toast.error("You must be connected with a wallet to vote");
         await connectWallet();
@@ -70,14 +67,12 @@ export function ScammerInteractionButtons({
         return;
       }
 
-      // Check if profile check has completed
       if (!profileChecked) {
         toast.info("Please wait while we check your profile");
         setIsInteractionLocked(false);
         return;
       }
       
-      // Check if user has profile
       if (!hasProfile) {
         toast.error("You need to create a profile before voting", {
           description: "Go to your profile page to create one",
@@ -90,7 +85,6 @@ export function ScammerInteractionButtons({
         return;
       }
 
-      // Call the onLike callback to update parent component
       onLike();
     } catch (error) {
       console.error("Error handling like:", error);
@@ -105,7 +99,6 @@ export function ScammerInteractionButtons({
     setIsInteractionLocked(true);
     
     try {
-      // Check if user is connected
       if (!isConnected || !address) {
         toast.error("You must be connected with a wallet to vote");
         await connectWallet();
@@ -113,14 +106,12 @@ export function ScammerInteractionButtons({
         return;
       }
 
-      // Check if profile check has completed
       if (!profileChecked) {
         toast.info("Please wait while we check your profile");
         setIsInteractionLocked(false);
         return;
       }
       
-      // Check if user has profile
       if (!hasProfile) {
         toast.error("You need to create a profile before voting", {
           description: "Go to your profile page to create one",
@@ -133,7 +124,6 @@ export function ScammerInteractionButtons({
         return;
       }
 
-      // Call the onDislike callback to update parent component
       onDislike();
     } catch (error) {
       console.error("Error handling dislike:", error);
@@ -176,7 +166,6 @@ export function ScammerInteractionButtons({
         variant="outline"
         size="sm"
         className="flex items-center gap-2"
-        disabled
       >
         <Eye className="h-4 w-4" />
         <span>{views || 0}</span>
@@ -194,4 +183,3 @@ export function ScammerInteractionButtons({
     </div>
   );
 }
-
