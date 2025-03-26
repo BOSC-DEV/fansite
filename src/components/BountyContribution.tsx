@@ -55,3 +55,4 @@ export function BountyContribution({
     </Card>
   );
 }
+
