@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { storageService } from "@/services/storage";
 import { Scammer } from "@/lib/types";
@@ -44,7 +45,8 @@ export function useScammerFormSubmit() {
         likes: scammer.likes,
         dislikes: scammer.dislikes,
         views: scammer.views,
-        addedBy: scammer.addedBy
+        addedBy: scammer.addedBy,
+        comments: Array.isArray(scammer.comments) ? scammer.comments : []
       };
       
       // Convert date to string for storage
