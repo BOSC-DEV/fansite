@@ -92,6 +92,32 @@ export class CommentService extends BaseSupabaseService {
     }));
   }
 
+  async getCommentsByAuthor(author: string): Promise<Comment[]> {
+    const { data, error } = await this.supabase
+      .from('comments')
+      .select('*')
+      .eq('author', author)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching author comments:', error);
+      return [];
+    }
+
+    // Convert from database format to client format
+    return data.map(item => ({
+      id: item.id,
+      scammerId: item.scammer_id || '',
+      content: item.content,
+      author: item.author,
+      authorName: item.author_name,
+      authorProfilePic: item.author_profile_pic || '',
+      createdAt: item.created_at,
+      likes: item.likes || 0,
+      dislikes: item.dislikes || 0
+    }));
+  }
+
   async likeComment(commentId: string): Promise<void> {
     const { data: comment } = await this.supabase
       .from('comments')

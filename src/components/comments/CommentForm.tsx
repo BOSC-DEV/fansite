@@ -1,6 +1,8 @@
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 interface CommentFormProps {
   scammerId: string;
@@ -23,14 +25,34 @@ export function CommentForm({
   isConnected,
   connectWallet
 }: CommentFormProps) {
+  const [connecting, setConnecting] = useState(false);
+  
+  const handleConnect = async () => {
+    setConnecting(true);
+    try {
+      await connectWallet();
+      toast.success("Wallet connected successfully");
+    } catch (error) {
+      console.error("Error connecting wallet:", error);
+      toast.error("Failed to connect wallet. Please try again.");
+    } finally {
+      setConnecting(false);
+    }
+  };
+
   if (!isConnected) {
     return (
       <div className="bg-muted/30 rounded-lg p-4 text-center">
         <p className="text-sm text-muted-foreground mb-2">
           Connect your wallet to comment on this listing
         </p>
-        <Button onClick={connectWallet} variant="outline" size="sm">
-          Connect Wallet
+        <Button 
+          onClick={handleConnect} 
+          variant="outline" 
+          size="sm"
+          disabled={connecting}
+        >
+          {connecting ? "Connecting..." : "Connect Wallet"}
         </Button>
       </div>
     );
@@ -44,6 +66,7 @@ export function CommentForm({
         onChange={(e) => setContent(e.target.value)}
         rows={3}
         className="resize-none"
+        disabled={isSubmitting}
       />
       <div className="flex justify-end">
         <Button 

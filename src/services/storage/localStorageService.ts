@@ -128,6 +128,26 @@ class LocalStorageService {
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }
 
+  // Get comments by author
+  getCommentsByAuthor(author: string): Comment[] {
+    try {
+      // Get all comments from localStorage
+      const allCommentsString = localStorage.getItem('comments');
+      if (!allCommentsString) {
+        return [];
+      }
+      
+      const allComments: Comment[] = JSON.parse(allCommentsString);
+      
+      // Filter comments by author
+      return allComments.filter(comment => comment.author === author)
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    } catch (error) {
+      console.error("Error getting comments by author:", error);
+      return [];
+    }
+  }
+
   // Likes and dislikes methods
   likeScammer(scammerId: string): void {
     const scammer = this.getScammer(scammerId);
