@@ -8,6 +8,7 @@ interface ViewsButtonProps {
 }
 
 export function ViewsButton({ count }: ViewsButtonProps) {
+  // This component displays the number of views a scammer profile has received
   // Added aria-label for better accessibility
   return (
     <InteractionButton
