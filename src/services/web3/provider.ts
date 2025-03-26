@@ -84,7 +84,7 @@ export class Web3Provider {
         return false;
       }
       
-      // Store signature time
+      // Store signature time - valid for 24 hours
       localStorage.setItem('lastSignatureTime', currentTime.toString());
       
       return true;

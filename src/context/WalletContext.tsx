@@ -28,7 +28,39 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [chainId, setChainId] = useState<number | null>(null);
   const [web3Provider] = useState(() => new Web3Provider());
 
+  // Check for locally stored wallet data on component mount
   useEffect(() => {
+    const storedWalletData = localStorage.getItem('walletData');
+    const storedTimestamp = localStorage.getItem('walletTimestamp');
+    
+    if (storedWalletData && storedTimestamp) {
+      const parsedData = JSON.parse(storedWalletData);
+      const timestamp = parseInt(storedTimestamp);
+      const currentTime = Date.now();
+      
+      // Check if stored data is less than 24 hours old (24h * 60m * 60s * 1000ms)
+      if (currentTime - timestamp < 24 * 60 * 60 * 1000) {
+        console.log("Found valid stored wallet data, restoring session");
+        setAddress(parsedData.address);
+        setConnected(true);
+        setChainId(101); // Solana mainnet
+        
+        // Try to get balance
+        if (parsedData.address) {
+          web3Provider.getBalance(parsedData.address)
+            .then(balance => setBalance(balance))
+            .catch(error => {
+              console.error("Failed to get balance on restore:", error);
+              setBalance(10); // Default balance
+            });
+        }
+      } else {
+        console.log("Stored wallet data expired, removing");
+        localStorage.removeItem('walletData');
+        localStorage.removeItem('walletTimestamp');
+      }
+    }
+    
     const checkConnection = async () => {
       console.log("Checking wallet connection status...");
       if (window.phantom?.solana && window.phantom.solana.isConnected && window.phantom.solana.publicKey) {
@@ -40,6 +72,10 @@ export function WalletProvider({ children }: { children: ReactNode }) {
             setConnected(true);
             // 101 is Solana mainnet
             setChainId(101);
+            
+            // Store wallet data with timestamp for 24-hour persistence
+            localStorage.setItem('walletData', JSON.stringify({ address: connectedAddress }));
+            localStorage.setItem('walletTimestamp', Date.now().toString());
             
             try {
               const tokenBalance = await web3Provider.getBalance(connectedAddress);
@@ -104,6 +140,10 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         // Set Solana mainnet chainId for compatibility
         setChainId(101);
         
+        // Store wallet data with timestamp for 24-hour persistence
+        localStorage.setItem('walletData', JSON.stringify({ address: connectedAddress }));
+        localStorage.setItem('walletTimestamp', Date.now().toString());
+        
         try {
           const tokenBalance = await web3Provider.getBalance(connectedAddress);
           setBalance(tokenBalance);
@@ -139,6 +179,11 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       setBalance(null);
       setSmartWalletAddress(null);
       setChainId(null);
+      
+      // Clear persisted wallet data
+      localStorage.removeItem('walletData');
+      localStorage.removeItem('walletTimestamp');
+      
       toast.success('Wallet disconnected');
     } catch (error) {
       console.error('Failed to disconnect wallet:', error);

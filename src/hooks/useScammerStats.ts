@@ -1,8 +1,10 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { storageService } from "@/services/storage";
 import { toast } from "sonner";
 import { Scammer } from "@/lib/types";
+import { useWallet } from '@/context/WalletContext';
+import { supabase } from '@/lib/supabase';
 
 export function useScammerStats(scammer: Scammer) {
   const [isLiked, setIsLiked] = useState(false);
@@ -10,6 +12,48 @@ export function useScammerStats(scammer: Scammer) {
   const [likes, setLikes] = useState(scammer.likes || 0);
   const [dislikes, setDislikes] = useState(scammer.dislikes || 0);
   const [views, setViews] = useState(scammer.views || 0);
+  const { address } = useWallet();
+  
+  // Check if user has already interacted when component mounts
+  useEffect(() => {
+    if (!address || !scammer.id) return;
+    
+    const checkPreviousInteraction = async () => {
+      try {
+        // Check database first
+        const { data, error } = await supabase
+          .from('user_scammer_interactions')
+          .select('liked, disliked')
+          .eq('user_id', address)
+          .eq('scammer_id', scammer.id)
+          .maybeSingle();
+          
+        if (error) {
+          console.error("Error checking previous interaction:", error);
+          return;
+        }
+        
+        if (data) {
+          console.log("Found previous interaction:", data);
+          setIsLiked(!!data.liked);
+          setIsDisliked(!!data.disliked);
+          return;
+        }
+        
+        // Fallback to local storage
+        const storedInteraction = localStorage.getItem(`scammer-interactions-${scammer.id}`);
+        if (storedInteraction) {
+          const { liked, disliked } = JSON.parse(storedInteraction);
+          setIsLiked(liked);
+          setIsDisliked(disliked);
+        }
+      } catch (error) {
+        console.error("Error checking previous interaction:", error);
+      }
+    };
+    
+    checkPreviousInteraction();
+  }, [scammer.id, address]);
 
   const handleLike = async () => {
     if (isLiked) {
@@ -27,6 +71,54 @@ export function useScammerStats(scammer: Scammer) {
     }
 
     try {
+      // Save to local storage as backup
+      localStorage.setItem(`scammer-interactions-${scammer.id}`, JSON.stringify({
+        liked: !isLiked,
+        disliked: isDisliked ? false : isDisliked
+      }));
+      
+      // Save to database for persistence
+      if (address) {
+        try {
+          // Check if record exists
+          const { data, error } = await supabase
+            .from('user_scammer_interactions')
+            .select('id')
+            .eq('user_id', address)
+            .eq('scammer_id', scammer.id)
+            .maybeSingle();
+          
+          if (error) {
+            console.error("Error checking interaction record:", error);
+          } else if (data) {
+            // Update existing record
+            await supabase
+              .from('user_scammer_interactions')
+              .update({ 
+                liked: !isLiked, 
+                disliked: isDisliked ? false : isDisliked,
+                last_updated: new Date()
+              })
+              .eq('id', data.id);
+          } else {
+            // Insert new record
+            await supabase
+              .from('user_scammer_interactions')
+              .insert([
+                { 
+                  user_id: address, 
+                  scammer_id: scammer.id, 
+                  liked: !isLiked, 
+                  disliked: isDisliked ? false : isDisliked 
+                }
+              ]);
+          }
+        } catch (dbError) {
+          console.error("Error saving interaction to DB:", dbError);
+        }
+      }
+      
+      // Update in storage service
       await storageService.updateScammerStats(scammer.id, {
         likes: isLiked ? likes - 1 : likes + 1,
         dislikes: isDisliked ? dislikes - 1 : dislikes,
@@ -53,6 +145,54 @@ export function useScammerStats(scammer: Scammer) {
     }
 
     try {
+      // Save to local storage as backup
+      localStorage.setItem(`scammer-interactions-${scammer.id}`, JSON.stringify({
+        liked: isLiked ? false : isLiked,
+        disliked: !isDisliked
+      }));
+      
+      // Save to database for persistence
+      if (address) {
+        try {
+          // Check if record exists
+          const { data, error } = await supabase
+            .from('user_scammer_interactions')
+            .select('id')
+            .eq('user_id', address)
+            .eq('scammer_id', scammer.id)
+            .maybeSingle();
+          
+          if (error) {
+            console.error("Error checking interaction record:", error);
+          } else if (data) {
+            // Update existing record
+            await supabase
+              .from('user_scammer_interactions')
+              .update({ 
+                liked: isLiked ? false : isLiked, 
+                disliked: !isDisliked,
+                last_updated: new Date()
+              })
+              .eq('id', data.id);
+          } else {
+            // Insert new record
+            await supabase
+              .from('user_scammer_interactions')
+              .insert([
+                { 
+                  user_id: address, 
+                  scammer_id: scammer.id, 
+                  liked: isLiked ? false : isLiked, 
+                  disliked: !isDisliked 
+                }
+              ]);
+          }
+        } catch (dbError) {
+          console.error("Error saving interaction to DB:", dbError);
+        }
+      }
+      
+      // Update in storage service
       await storageService.updateScammerStats(scammer.id, {
         likes: isLiked ? likes - 1 : likes,
         dislikes: isDisliked ? dislikes - 1 : dislikes + 1,

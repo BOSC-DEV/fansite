@@ -6,6 +6,7 @@ import { InteractionButton } from "./InteractionButton";
 import { storageService } from "@/services/storage/localStorageService";
 import { useWallet } from "@/context/WalletContext";
 import { profileService } from "@/services/storage/profileService";
+import { supabase } from "@/lib/supabase";
 
 interface InteractionsBarProps {
   scammerId?: string;
@@ -31,19 +32,51 @@ export function InteractionsBar({
   const { isConnected, address, connectWallet } = useWallet();
   const [profileChecked, setProfileChecked] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
+  const [isInteractionLocked, setIsInteractionLocked] = useState(false);
   
-  // Check if user has already liked/disliked on component mount
+  // Check for previous interactions from database
   useEffect(() => {
-    if (scammerId && address) {
-      // Check for local interactions
-      const userInteractions = localStorage.getItem(`scammer-interactions-${scammerId}`);
-      if (userInteractions) {
-        const { liked, disliked } = JSON.parse(userInteractions);
-        setIsLiked(liked);
-        setIsDisliked(disliked);
-      }
+    if (scammerId && address && isConnected) {
+      const checkInteractions = async () => {
+        try {
+          // Check user_scammer_interactions table for this user and scammer
+          const { data, error } = await supabase
+            .from('user_scammer_interactions')
+            .select('liked, disliked')
+            .eq('user_id', address)
+            .eq('scammer_id', scammerId)
+            .maybeSingle();
+          
+          if (error) {
+            console.error("Error checking interactions:", error);
+            return;
+          }
+          
+          if (data) {
+            console.log("Found interaction record:", data);
+            setIsLiked(data.liked || false);
+            setIsDisliked(data.disliked || false);
+          } else {
+            // Fallback to local storage if no DB record
+            const userInteractions = localStorage.getItem(`scammer-interactions-${scammerId}`);
+            if (userInteractions) {
+              const { liked, disliked } = JSON.parse(userInteractions);
+              setIsLiked(liked);
+              setIsDisliked(disliked);
+            }
+          }
+        } catch (error) {
+          console.error("Error checking interactions:", error);
+        }
+      };
       
-      // Check if user has a profile
+      checkInteractions();
+    }
+  }, [scammerId, address, isConnected]);
+  
+  // Check if user has a profile
+  useEffect(() => {
+    if (address) {
       const checkProfile = async () => {
         try {
           const exists = await profileService.hasProfile(address);
@@ -56,8 +89,11 @@ export function InteractionsBar({
       };
       
       checkProfile();
+    } else {
+      setProfileChecked(false);
+      setHasProfile(false);
     }
-  }, [scammerId, address]);
+  }, [address]);
   
   // Update local likes/dislikes when props change
   useEffect(() => {
@@ -65,131 +101,214 @@ export function InteractionsBar({
     setLocalDislikes(dislikes);
   }, [likes, dislikes]);
 
+  // Update DB with user interaction
+  const saveInteractionToDB = async (liked: boolean, disliked: boolean) => {
+    if (!scammerId || !address) return;
+    
+    try {
+      // Check if record exists
+      const { data, error } = await supabase
+        .from('user_scammer_interactions')
+        .select('id')
+        .eq('user_id', address)
+        .eq('scammer_id', scammerId)
+        .maybeSingle();
+      
+      if (error) {
+        console.error("Error checking interaction record:", error);
+        return;
+      }
+      
+      if (data) {
+        // Update existing record
+        await supabase
+          .from('user_scammer_interactions')
+          .update({ liked, disliked, last_updated: new Date() })
+          .eq('id', data.id);
+      } else {
+        // Insert new record
+        await supabase
+          .from('user_scammer_interactions')
+          .insert([
+            { user_id: address, scammer_id: scammerId, liked, disliked }
+          ]);
+      }
+    } catch (error) {
+      console.error("Error saving interaction to DB:", error);
+    }
+  };
+
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click event
     
-    if (!scammerId) return;
-
-    // Check if user is connected
-    if (!isConnected || !address) {
-      toast.error("You must be connected with a wallet to like");
-      connectWallet();
-      return;
-    }
-
-    // Check if profile check has completed
-    if (!profileChecked) {
-      toast.info("Please wait while we check your profile");
-      return;
-    }
+    if (!scammerId || isInteractionLocked) return;
     
-    // Check if user has a profile once profile check is done
-    if (!hasProfile) {
-      toast.error("You need to create a profile before liking", {
-        description: "Go to your profile page to create one",
-        action: {
-          label: "Create Profile",
-          onClick: () => window.location.href = "/profile"
-        }
-      });
-      return;
-    }
-
-    if (isLiked) {
-      // Unlike
-      setIsLiked(false);
-      setLocalLikes(prev => prev - 1);
-      toast.info("Like removed");
-    } else {
-      // Like
-      if (isDisliked) {
-        // Remove dislike if present
-        setIsDisliked(false);
-        setLocalDislikes(prev => prev - 1);
-      }
-      setIsLiked(true);
-      setLocalLikes(prev => prev + 1);
-      toast.success("Liked scammer");
-    }
-
-    // Store interaction in localStorage
-    localStorage.setItem(`scammer-interactions-${scammerId}`, JSON.stringify({ 
-      liked: !isLiked, 
-      disliked: isDisliked ? false : isDisliked 
-    }));
-
-    // Update in storage service
+    setIsInteractionLocked(true);
+    
     try {
-      storageService.updateScammerStats(scammerId, {
-        likes: isLiked ? localLikes - 1 : localLikes + 1,
-        dislikes: isDisliked ? localDislikes - 1 : localDislikes,
-      });
+      // Check if user is connected
+      if (!isConnected || !address) {
+        toast.error("You must be connected with a wallet to like");
+        await connectWallet();
+        setIsInteractionLocked(false);
+        return;
+      }
+
+      // Check if profile check has completed
+      if (!profileChecked) {
+        toast.info("Please wait while we check your profile");
+        setIsInteractionLocked(false);
+        return;
+      }
+      
+      // Check if user has a profile once profile check is done
+      if (!hasProfile) {
+        toast.error("You need to create a profile before liking", {
+          description: "Go to your profile page to create one",
+          action: {
+            label: "Create Profile",
+            onClick: () => window.location.href = "/profile"
+          }
+        });
+        setIsInteractionLocked(false);
+        return;
+      }
+
+      let newLikes = localLikes;
+      let newDislikes = localDislikes;
+
+      if (isLiked) {
+        // Unlike
+        newLikes = localLikes - 1;
+        setIsLiked(false);
+        toast.info("Like removed");
+      } else {
+        // Like
+        newLikes = localLikes + 1;
+        
+        if (isDisliked) {
+          // Remove dislike if present
+          newDislikes = localDislikes - 1;
+          setIsDisliked(false);
+        }
+        
+        setIsLiked(true);
+        toast.success("Liked scammer");
+      }
+      
+      // Update local state
+      setLocalLikes(newLikes);
+      setLocalDislikes(newDislikes);
+
+      // Store interaction both locally and in DB
+      localStorage.setItem(`scammer-interactions-${scammerId}`, JSON.stringify({ 
+        liked: !isLiked, 
+        disliked: isDisliked ? false : isDisliked 
+      }));
+      
+      // Update in database
+      await saveInteractionToDB(!isLiked, isDisliked ? false : isDisliked);
+
+      // Update in storage service
+      try {
+        storageService.updateScammerStats(scammerId, {
+          likes: newLikes,
+          dislikes: newDislikes,
+        });
+      } catch (error) {
+        console.error("Error updating likes:", error);
+      }
     } catch (error) {
-      console.error("Error updating likes:", error);
+      console.error("Error handling like:", error);
+    } finally {
+      setIsInteractionLocked(false);
     }
   };
 
   const handleDislike = async (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click event
     
-    if (!scammerId) return;
-
-    // Check if user is connected
-    if (!isConnected || !address) {
-      toast.error("You must be connected with a wallet to dislike");
-      connectWallet();
-      return;
-    }
-
-    // Check if profile check has completed
-    if (!profileChecked) {
-      toast.info("Please wait while we check your profile");
-      return;
-    }
+    if (!scammerId || isInteractionLocked) return;
     
-    // Check if user has a profile once profile check is done
-    if (!hasProfile) {
-      toast.error("You need to create a profile before disliking", {
-        description: "Go to your profile page to create one",
-        action: {
-          label: "Create Profile",
-          onClick: () => window.location.href = "/profile"
-        }
-      });
-      return;
-    }
-
-    if (isDisliked) {
-      // Remove dislike
-      setIsDisliked(false);
-      setLocalDislikes(prev => prev - 1);
-      toast.info("Dislike removed");
-    } else {
-      // Dislike
-      if (isLiked) {
-        // Remove like if present
-        setIsLiked(false);
-        setLocalLikes(prev => prev - 1);
-      }
-      setIsDisliked(true);
-      setLocalDislikes(prev => prev + 1);
-      toast.success("Disliked scammer");
-    }
-
-    // Store interaction in localStorage
-    localStorage.setItem(`scammer-interactions-${scammerId}`, JSON.stringify({ 
-      liked: isLiked ? false : isLiked, 
-      disliked: !isDisliked 
-    }));
-
-    // Update in storage service
+    setIsInteractionLocked(true);
+    
     try {
-      storageService.updateScammerStats(scammerId, {
-        likes: isLiked ? localLikes - 1 : localLikes,
-        dislikes: isDisliked ? localDislikes - 1 : localDislikes + 1,
-      });
+      // Check if user is connected
+      if (!isConnected || !address) {
+        toast.error("You must be connected with a wallet to dislike");
+        await connectWallet();
+        setIsInteractionLocked(false);
+        return;
+      }
+
+      // Check if profile check has completed
+      if (!profileChecked) {
+        toast.info("Please wait while we check your profile");
+        setIsInteractionLocked(false);
+        return;
+      }
+      
+      // Check if user has a profile once profile check is done
+      if (!hasProfile) {
+        toast.error("You need to create a profile before disliking", {
+          description: "Go to your profile page to create one",
+          action: {
+            label: "Create Profile",
+            onClick: () => window.location.href = "/profile"
+          }
+        });
+        setIsInteractionLocked(false);
+        return;
+      }
+
+      let newLikes = localLikes;
+      let newDislikes = localDislikes;
+
+      if (isDisliked) {
+        // Remove dislike
+        newDislikes = localDislikes - 1;
+        setIsDisliked(false);
+        toast.info("Dislike removed");
+      } else {
+        // Dislike
+        newDislikes = localDislikes + 1;
+        
+        if (isLiked) {
+          // Remove like if present
+          newLikes = localLikes - 1;
+          setIsLiked(false);
+        }
+        
+        setIsDisliked(true);
+        toast.success("Disliked scammer");
+      }
+      
+      // Update local state
+      setLocalLikes(newLikes);
+      setLocalDislikes(newDislikes);
+
+      // Store interaction both locally and in DB
+      localStorage.setItem(`scammer-interactions-${scammerId}`, JSON.stringify({ 
+        liked: isLiked ? false : isLiked, 
+        disliked: !isDisliked 
+      }));
+      
+      // Update in database
+      await saveInteractionToDB(isLiked ? false : isLiked, !isDisliked);
+
+      // Update in storage service
+      try {
+        storageService.updateScammerStats(scammerId, {
+          likes: newLikes,
+          dislikes: newDislikes,
+        });
+      } catch (error) {
+        console.error("Error updating dislikes:", error);
+      }
     } catch (error) {
-      console.error("Error updating dislikes:", error);
+      console.error("Error handling dislike:", error);
+    } finally {
+      setIsInteractionLocked(false);
     }
   };
 

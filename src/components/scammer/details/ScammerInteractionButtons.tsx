@@ -5,6 +5,7 @@ import { ThumbsUp, ThumbsDown, Eye, MessageSquare, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { useWallet } from "@/context/WalletContext";
 import { profileService } from "@/services/storage/profileService";
+import { supabase } from "@/lib/supabase";
 
 interface ScammerInteractionButtonsProps {
   likes: number;
@@ -32,8 +33,9 @@ export function ScammerInteractionButtons({
   const { isConnected, address, connectWallet } = useWallet();
   const [profileChecked, setProfileChecked] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
+  const [isInteractionLocked, setIsInteractionLocked] = useState(false);
   
-  // Check if user has a profile
+  // Check if user has a profile and previous interactions
   useEffect(() => {
     if (address) {
       const checkProfile = async () => {
@@ -41,6 +43,27 @@ export function ScammerInteractionButtons({
           const exists = await profileService.hasProfile(address);
           setHasProfile(exists);
           setProfileChecked(true);
+          
+          // Check for previous DB interactions
+          if (exists && scammerId) {
+            try {
+              const { data, error } = await supabase
+                .from('user_scammer_interactions')
+                .select('liked, disliked')
+                .eq('user_id', address)
+                .eq('scammer_id', scammerId)
+                .maybeSingle();
+              
+              if (error) {
+                console.error("Error checking interactions:", error);
+              } else if (data) {
+                // We found a previous interaction for this user and scammer
+                console.log("Found interaction record:", data);
+              }
+            } catch (error) {
+              console.error("Error checking interactions:", error);
+            }
+          }
         } catch (error) {
           console.error("Error checking if user has profile:", error);
           setProfileChecked(true);
@@ -48,67 +71,151 @@ export function ScammerInteractionButtons({
       };
       
       checkProfile();
+    } else {
+      setProfileChecked(false);
+      setHasProfile(false);
     }
-  }, [address]);
+  }, [address, scammerId]);
+  
+  // Update DB with user interaction
+  const saveInteractionToDB = async (liked: boolean, disliked: boolean) => {
+    if (!scammerId || !address) return;
+    
+    try {
+      // Check if record exists
+      const { data, error } = await supabase
+        .from('user_scammer_interactions')
+        .select('id')
+        .eq('user_id', address)
+        .eq('scammer_id', scammerId)
+        .maybeSingle();
+      
+      if (error) {
+        console.error("Error checking interaction record:", error);
+        return;
+      }
+      
+      if (data) {
+        // Update existing record
+        await supabase
+          .from('user_scammer_interactions')
+          .update({ liked, disliked, last_updated: new Date() })
+          .eq('id', data.id);
+      } else {
+        // Insert new record
+        await supabase
+          .from('user_scammer_interactions')
+          .insert([
+            { user_id: address, scammer_id: scammerId, liked, disliked }
+          ]);
+      }
+    } catch (error) {
+      console.error("Error saving interaction to DB:", error);
+    }
+  };
   
   const handleLike = async () => {
-    // Check if user is connected
-    if (!isConnected || !address) {
-      toast.error("You must be connected with a wallet to like");
-      connectWallet();
-      return;
-    }
+    if (isInteractionLocked) return;
     
-    // Check if profile check has completed
-    if (!profileChecked) {
-      toast.info("Please wait while we check your profile");
-      return;
-    }
+    setIsInteractionLocked(true);
     
-    // Check if user has a profile once profile check is done
-    if (!hasProfile) {
-      toast.error("You need to create a profile before liking", {
-        description: "Go to your profile page to create one",
-        action: {
-          label: "Create Profile",
-          onClick: () => window.location.href = "/profile"
-        }
-      });
-      return;
+    try {
+      // Check if user is connected
+      if (!isConnected || !address) {
+        toast.error("You must be connected with a wallet to like");
+        await connectWallet();
+        setIsInteractionLocked(false);
+        return;
+      }
+      
+      // Check if profile check has completed
+      if (!profileChecked) {
+        toast.info("Please wait while we check your profile");
+        setIsInteractionLocked(false);
+        return;
+      }
+      
+      // Check if user has a profile once profile check is done
+      if (!hasProfile) {
+        toast.error("You need to create a profile before liking", {
+          description: "Go to your profile page to create one",
+          action: {
+            label: "Create Profile",
+            onClick: () => window.location.href = "/profile"
+          }
+        });
+        setIsInteractionLocked(false);
+        return;
+      }
+      
+      // Update DB for persistent storage
+      await saveInteractionToDB(!isLiked, isDisliked ? false : isDisliked);
+      
+      // Proceed with like operation
+      onLike();
+      
+      // Store result in local storage for backup
+      localStorage.setItem(`scammer-interactions-${scammerId}`, JSON.stringify({ 
+        liked: !isLiked, 
+        disliked: isDisliked ? false : isDisliked 
+      }));
+    } catch (error) {
+      console.error("Error handling like:", error);
+    } finally {
+      setIsInteractionLocked(false);
     }
-    
-    // Proceed with like operation
-    onLike();
   };
   
   const handleDislike = async () => {
-    // Check if user is connected
-    if (!isConnected || !address) {
-      toast.error("You must be connected with a wallet to dislike");
-      connectWallet();
-      return;
-    }
+    if (isInteractionLocked) return;
     
-    // Check if profile check has completed
-    if (!profileChecked) {
-      toast.info("Please wait while we check your profile");
-      return;
-    }
+    setIsInteractionLocked(true);
     
-    // Check if user has a profile once profile check is done
-    if (!hasProfile) {
-      toast.error("You need to create a profile before disliking", {
-        description: "Go to your profile page to create one",
-        action: {
-          label: "Create Profile",
-          onClick: () => window.location.href = "/profile"
-        }
-      });
-      return;
+    try {
+      // Check if user is connected
+      if (!isConnected || !address) {
+        toast.error("You must be connected with a wallet to dislike");
+        await connectWallet();
+        setIsInteractionLocked(false);
+        return;
+      }
+      
+      // Check if profile check has completed
+      if (!profileChecked) {
+        toast.info("Please wait while we check your profile");
+        setIsInteractionLocked(false);
+        return;
+      }
+      
+      // Check if user has a profile once profile check is done
+      if (!hasProfile) {
+        toast.error("You need to create a profile before disliking", {
+          description: "Go to your profile page to create one",
+          action: {
+            label: "Create Profile",
+            onClick: () => window.location.href = "/profile"
+          }
+        });
+        setIsInteractionLocked(false);
+        return;
+      }
+      
+      // Update DB for persistent storage
+      await saveInteractionToDB(isLiked ? false : isLiked, !isDisliked);
+      
+      // Proceed with dislike operation
+      onDislike();
+      
+      // Store result in local storage for backup
+      localStorage.setItem(`scammer-interactions-${scammerId}`, JSON.stringify({ 
+        liked: isLiked ? false : isLiked, 
+        disliked: !isDisliked 
+      }));
+    } catch (error) {
+      console.error("Error handling dislike:", error);
+    } finally {
+      setIsInteractionLocked(false);
     }
-    
-    // Proceed with dislike operation
-    onDislike();
   };
 
   const scrollToComments = () => {
