@@ -11,9 +11,10 @@ import { storageService } from "@/services/storage/localStorageService";
 interface ScammerCardProps {
   scammer: Scammer;
   className?: string;
+  rank?: number;
 }
 
-export function ScammerCard({ scammer, className }: ScammerCardProps) {
+export function ScammerCard({ scammer, className, rank }: ScammerCardProps) {
   const formattedBounty = useMemo(() => 
     formatCurrency(scammer.bountyAmount), 
   [scammer.bountyAmount]);
@@ -41,6 +42,7 @@ export function ScammerCard({ scammer, className }: ScammerCardProps) {
         views={scammer.views || 0}
         comments={commentsCount}
         scammerId={scammer.id}
+        rank={rank}
       />
       
       <CardContent className="p-0">

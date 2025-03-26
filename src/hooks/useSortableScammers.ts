@@ -9,10 +9,14 @@ export const useSortableScammers = (scammers: Scammer[]) => {
   const [sortField, setSortField] = useState<ScammerSortField>('dateAdded');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
 
-  const handleSort = (field: ScammerSortField) => {
-    if (sortField === field) {
-      // Toggle direction if same field clicked
+  const handleSort = (field: ScammerSortField, direction?: SortDirection) => {
+    if (sortField === field && !direction) {
+      // Toggle direction if same field clicked and no direction specified
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else if (direction) {
+      // Use specified direction
+      setSortField(field);
+      setSortDirection(direction);
     } else {
       // Set new field and default to descending
       setSortField(field);
