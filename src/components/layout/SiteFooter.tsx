@@ -29,39 +29,21 @@ export const SiteFooter = () => {
             <span className="text-xl font-wanted text-zinc-950">Book of Scams</span>
           </div>
           
-          <div className="flex space-x-6">
-            <Link to="/" className="text-sm text-western-parchment hover:text-western-sand font-western">
-              Saloon
-            </Link>
-            <Link to="/most-wanted" className="text-sm text-western-parchment hover:text-western-sand font-western">
-              Most Wanted
-            </Link>
-            <Link to="/create-listing" className="text-sm text-western-parchment hover:text-western-sand font-western">
-              Report Outlaw
-            </Link>
-          </div>
-          
-          <div className="text-sm text-western-parchment/70 font-western">
-            &copy; {new Date().getFullYear()} Book of Scams
-          </div>
-        </div>
-        
-        <div className="border-t border-western-wood/20 pt-4 text-center">
-          <div className="text-sm text-western-parchment/80 max-w-2xl mx-auto">
-            <div className="flex items-center justify-center gap-2 text-western-parchment">
-              <span className="font-western">Ca:</span>
-              <span className="font-western cursor-pointer" onClick={copyToClipboard}>
-                {formatWalletAddress(DEVELOPER_WALLET_ADDRESS)}
-              </span>
-              {copied ? (
-                <Check className="h-4 w-4 ml-2 text-green-400" />
-              ) : (
-                <Copy className="h-4 w-4 ml-2 cursor-pointer" onClick={copyToClipboard} />
-              )}
+          <div className="flex flex-col items-center gap-4">
+            <div className="flex space-x-6">
+              <Link to="/" className="text-sm text-western-parchment hover:text-western-sand font-western">
+                Saloon
+              </Link>
+              <Link to="/most-wanted" className="text-sm text-western-parchment hover:text-western-sand font-western">
+                Most Wanted
+              </Link>
+              <Link to="/create-listing" className="text-sm text-western-parchment hover:text-western-sand font-western">
+                Report Outlaw
+              </Link>
             </div>
             
-            {/* Social links */}
-            <div className="flex items-center justify-center gap-6 mt-4">
+            {/* Social links moved under menu options */}
+            <div className="flex items-center gap-6">
               <a 
                 href="https://x.com/bookofscamslol" 
                 target="_blank" 
@@ -79,6 +61,26 @@ export const SiteFooter = () => {
                 <Mail className="h-4 w-4" />
                 <span className="font-western text-sm">dev@bookofscamslol</span>
               </a>
+            </div>
+          </div>
+          
+          <div className="text-sm text-western-parchment/70 font-western">
+            &copy; {new Date().getFullYear()} Book of Scams
+          </div>
+        </div>
+        
+        <div className="text-center">
+          <div className="text-sm text-western-parchment/80 max-w-2xl mx-auto">
+            <div className="flex items-center justify-center gap-2 text-western-parchment">
+              <span className="font-western">Ca:</span>
+              <span className="font-western cursor-pointer" onClick={copyToClipboard}>
+                {formatWalletAddress(DEVELOPER_WALLET_ADDRESS)}
+              </span>
+              {copied ? (
+                <Check className="h-4 w-4 ml-2 text-green-400" />
+              ) : (
+                <Copy className="h-4 w-4 ml-2 cursor-pointer" onClick={copyToClipboard} />
+              )}
             </div>
           </div>
         </div>
