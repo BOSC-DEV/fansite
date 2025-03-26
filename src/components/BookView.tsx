@@ -150,7 +150,7 @@ export const BookView = ({
           placeholder="Bounty amount"
           value={bountyAmount}
           onChange={(e) => setBountyAmount(e.target.value)}
-          className="w-32"
+          className="w-32 western-input"
           disabled={!isConnected || isAddingBounty}
         />
         <Button 
@@ -158,7 +158,7 @@ export const BookView = ({
           size="sm"
           onClick={handleAddBounty}
           disabled={!isConnected || isAddingBounty || !bountyAmount}
-          className="gap-1 bg-green-50 hover:bg-green-100 border-green-200 text-green-700"
+          className="gap-1 bg-western-parchment hover:bg-western-sand border-western-wood text-western-accent"
         >
           {isAddingBounty ? (
             <span>Adding...</span>
