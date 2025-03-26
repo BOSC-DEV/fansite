@@ -1,4 +1,5 @@
-import { Connection, PublicKey, LAMPORTS_PER_SOL, Transaction, SystemProgram } from '@solana/web3.js';
+
+import { Connection, PublicKey, LAMPORTS_PER_SOL, Transaction, SystemProgram, clusterApiUrl } from '@solana/web3.js';
 import { toast } from 'sonner';
 
 export class ContractService {
@@ -6,7 +7,7 @@ export class ContractService {
   
   constructor() {
     // Use Solana devnet for testing
-    this.connection = new Connection("https://api.devnet.solana.com", "confirmed");
+    this.connection = new Connection(clusterApiUrl('devnet'), "confirmed");
   }
   
   // Get the balance of the current wallet
