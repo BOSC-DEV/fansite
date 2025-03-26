@@ -9,15 +9,15 @@ import { scammerService } from "@/services/storage";
 import { useScammers } from "@/hooks/use-scammers";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScammerStatsCard } from "@/components/stats/ScammerStatsCard";
-import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
 import { formatCurrency, formatDate } from "@/utils/formatters";
 import { useSortableScammers } from "@/hooks/useSortableScammers";
+import { ScammerGrid } from "@/components/scammer/ScammerGrid";
 
 interface FeaturedScammersProps {
   limit?: number;
 }
 
-const FeaturedScammersComponent = ({ limit = 6 }: FeaturedScammersProps) => {
+const FeaturedScammersComponent = ({ limit = 3 }: FeaturedScammersProps) => {
   const { isLoading, filteredScammers } = useScammers();
   
   // Use the same sorting hook as the Most Wanted page
@@ -28,8 +28,12 @@ const FeaturedScammersComponent = ({ limit = 6 }: FeaturedScammersProps) => {
     sortDirection
   } = useSortableScammers(filteredScammers);
   
-  // Take only the first 'limit' scammers for performance
+  // Take only the first 'limit' scammers for display
   const limitedScammers = sortedScammers.slice(0, limit);
+  
+  // For pagination used by ScammerGrid component
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 1; // Since we're only showing 3 items, we don't need pagination
 
   return (
     <section className="py-16 bg-western-parchment/30">
@@ -47,25 +51,25 @@ const FeaturedScammersComponent = ({ limit = 6 }: FeaturedScammersProps) => {
           </Button>
         </div>
         
-        {!isLoading && limitedScammers.length > 0 && (
+        {!isLoading && filteredScammers.length > 0 && (
           <ScammerStatsCard scammers={filteredScammers} className="mb-6" />
         )}
         
-        <div className="wanted-poster-border paper-texture rounded-sm p-4">
+        <div className="paper-texture rounded-sm p-4">
           {isLoading ? (
-            <div className="grid grid-cols-1 gap-4">
-              <Skeleton className="h-16 w-full" />
-              <Skeleton className="h-16 w-full" />
-              <Skeleton className="h-16 w-full" />
-              <Skeleton className="h-16 w-full" />
-              <Skeleton className="h-16 w-full" />
-              <Skeleton className="h-16 w-full" />
-            </div>
+            <ScammerGrid
+              paginatedScammers={[]}
+              currentPage={1}
+              totalPages={1}
+              setCurrentPage={() => {}}
+              isLoading={true}
+            />
           ) : limitedScammers.length > 0 ? (
-            <ScammerTableCompact 
-              scammers={limitedScammers}
-              formatCurrency={formatCurrency}
-              formatDate={formatDate}
+            <ScammerGrid 
+              paginatedScammers={limitedScammers}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              setCurrentPage={setCurrentPage}
             />
           ) : (
             <div className="p-6 text-center">
