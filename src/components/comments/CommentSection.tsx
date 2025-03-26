@@ -94,8 +94,8 @@ export function CommentSection({ scammerId }: CommentSectionProps) {
             </Alert>
           )}
           
-          <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
-            {/* Sort buttons - left side */}
+          <div className="flex items-center gap-4">
+            {/* Sort buttons - moved to left */}
             <div className="flex space-x-2">
               <Button 
                 variant={sortMethod === 'newest' ? "default" : "outline"} 

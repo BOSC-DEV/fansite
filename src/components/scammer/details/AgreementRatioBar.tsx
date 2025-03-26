@@ -51,7 +51,7 @@ export function AgreementRatioBar({ likes, dislikes, onLike, onDislike }: Agreem
           indicatorClassName="bg-green-500"
         />
         
-        {/* Add invisible overlay with mouse indicators */}
+        {/* Add visible overlay with mouse indicators */}
         <div className="absolute inset-0 flex pt-1 opacity-0 hover:opacity-10 transition-opacity">
           <div className="w-1/2 h-2 bg-green-600"></div>
           <div className="w-1/2 h-2 bg-red-600"></div>
