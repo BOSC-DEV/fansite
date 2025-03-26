@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Star, BookOpen } from "lucide-react";
+import { BookOpen } from "lucide-react";
 
 export const HeroSection = () => {
   return <section className="pt-20 pb-12 md:pt-32 md:pb-24 px-3 sm:px-4 old-paper">
@@ -19,7 +19,6 @@ export const HeroSection = () => {
               <Button asChild size="default" className="western-btn gap-2 hover:animate-wiggle bg-western-leather hover:bg-western-accent text-western-parchment">
                 <Link to="/most-wanted">
                   Most Wanted
-                  <Star className="h-4 w-4 ml-1" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="default" className="western-btn gap-2 border-2 border-dashed border-western-wood text-western-wood hover:animate-wiggle hover:bg-western-wood hover:text-western-parchment">

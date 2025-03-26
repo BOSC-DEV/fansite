@@ -33,11 +33,13 @@ export function Comment({ comment, showScammerLink = false }: CommentProps) {
     isDisliked,
     handleLike,
     handleDislike
-  } = useCommentInteractions({
-    commentId: comment.id,
-    initialLikes: comment.likes,
-    initialDislikes: comment.dislikes
-  });
+  } = useCommentInteractions(
+    comment.id,
+    comment.likes,
+    comment.dislikes,
+    false, // initialIsLiked
+    false  // initialIsDisliked
+  );
 
   // Use the dedicated hook for view tracking
   useCommentsViewTracking(comment.id);
