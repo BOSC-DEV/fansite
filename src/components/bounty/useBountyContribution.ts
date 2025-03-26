@@ -3,17 +3,17 @@ import { useState } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
-import { scammerService } from "@/services/storage/localStorageService";
-import { ContractService } from "@/services/web3/contracts";
+import { scammerService as localScammerService } from "@/services/storage/localStorage/scammerService";
+import { scammerService } from "@/services/storage/scammer/scammerService";
 import { Connection, PublicKey, LAMPORTS_PER_SOL, Transaction, SystemProgram } from "@solana/web3.js";
-import { scammerService as newScammerService } from "@/services/storage/scammer/scammerService";
+import { ScammerListing as LocalScammerListing } from "@/services/storage/localStorage/scammerService";
+import { ScammerListing as SupabaseScammerListing } from "@/services/storage/scammer/scammerTypes";
 
 export function useBountyContribution(scammerId: string, scammerName: string, currentBounty: number) {
   const { isConnected, address, connectWallet } = useWallet();
   const [amount, setAmount] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [copied, setCopied] = useState(false);
-  const contractService = new ContractService();
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Only allow numbers and decimals
@@ -78,7 +78,7 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
       // Convert the phantom wallet publicKey to a proper Solana PublicKey object
       const fromPublicKey = new PublicKey(window.phantom.solana.publicKey.toString());
       
-      // Request the user to send a transaction
+      // Create a connection to Solana
       const connection = new Connection("https://api.devnet.solana.com", "confirmed");
       
       // Create a transaction
@@ -135,12 +135,13 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
       // Convert amount from string to number
       const solAmount = parseFloat(amount);
       
-      // Try to get the scammer from both services in case one fails
-      let scammer = await newScammerService.getScammer(scammerId);
+      // Try to get the scammer from the Supabase service first
+      let scammer: SupabaseScammerListing | LocalScammerListing | null = 
+        await scammerService.getScammer(scammerId);
       
-      // If not found in new scammerService, try the localStorage service
+      // If not found in Supabase, try the localStorage service
       if (!scammer) {
-        scammer = await scammerService.getScammer(scammerId);
+        scammer = await localScammerService.getScammer(scammerId);
       }
       
       // If still not found, create a basic record
@@ -164,6 +165,9 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
           dislikes: 0,
           views: 0
         };
+      } else if (!Array.isArray(scammer.comments)) {
+        // Ensure comments is an array if it exists but isn't one
+        scammer.comments = [];
       }
       
       console.log("Found/created scammer:", scammer.name, "with ID:", scammerId);
@@ -175,28 +179,30 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
         throw new Error("Transaction failed to complete");
       }
       
-      // Update the bounty amount - for now we increment by the amount in SOL tokens
+      // Update the bounty amount - increment by the amount in SOL tokens
       const newBounty = (scammer.bountyAmount || 0) + solAmount;
       scammer.bountyAmount = newBounty;
       
-      // Save the updated scammer to localStorage service
-      await scammerService.saveScammer({
+      // Save to both storage services to ensure consistency
+      
+      // Save to localStorage service first
+      await localScammerService.saveScammer({
         ...scammer,
         comments: Array.isArray(scammer.comments) ? scammer.comments : []
       });
       
-      // Try to save to the new scammerService too if it exists
+      // Try to save to Supabase service if it exists
       try {
-        if (typeof newScammerService.saveScammer === 'function') {
-          // Make sure the scammer object has the required properties for the new service
-          const scammerForNewService = {
+        if (typeof scammerService.saveScammer === 'function') {
+          // Create a version of the scammer object compatible with Supabase service
+          const scammerForSupabase: SupabaseScammerListing = {
             ...scammer,
             comments: Array.isArray(scammer.comments) ? scammer.comments : []
           };
-          await newScammerService.saveScammer(scammerForNewService);
+          await scammerService.saveScammer(scammerForSupabase);
         }
       } catch (err) {
-        console.log("Note: Could not save to newScammerService, but localStorage succeeded");
+        console.log("Note: Could not save to Supabase service, but localStorage succeeded");
       }
       
       toast.success(`Successfully contributed ${amount} SOL to the bounty!`);
@@ -204,7 +210,7 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
       // Reset the form
       setAmount("");
       
-      // Reload the page to show the updated bounty
+      // Reload the page after a short delay to show the updated bounty
       setTimeout(() => {
         window.location.reload();
       }, 1500);
