@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
 import { Header } from "@/components/Header";
@@ -72,7 +73,7 @@ export default function Leaderboard() {
         <div className="mt-8 mb-12">
           <PageHeader
             title="Leaderboards"
-            description="The leaderboard will be ordered by total bounty generated once the bounty payment system is live. In the meantime, it's organised chronologically."
+            description="The leaderboard will be ordered by total bounty generated once the bounty payment system is live."
             actionIcon={<Trophy className="h-5 w-5 mr-1" />}
           />
         </div>
