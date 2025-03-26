@@ -16,12 +16,12 @@ export function BountyFooter({
   onContribute 
 }: BountyFooterProps) {
   return (
-    <div className="border-t border-western-wood/20 bg-western-sand/10 p-6 pt-4">
+    <div className="border-t border-western-wood/20 bg-western-sand/20 p-6 pt-4">
       {isConnected ? (
         <Button 
           onClick={onContribute}
           disabled={isSubmitting || !amount || parseFloat(amount) <= 0}
-          className="w-full bg-western-accent hover:bg-western-accent/90 text-western-parchment"
+          className="w-full bg-western-accent hover:bg-western-accent/90 text-western-parchment font-western"
         >
           {isSubmitting ? (
             "Processing..."
@@ -33,7 +33,7 @@ export function BountyFooter({
           )}
         </Button>
       ) : (
-        <div className="w-full text-center text-western-wood">
+        <div className="w-full text-center text-western-wood font-western">
           Connect your wallet to contribute
         </div>
       )}
