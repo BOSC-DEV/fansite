@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Scammer } from "@/lib/types";
@@ -9,8 +9,13 @@ import { useWallet } from "@/context/WalletContext";
 import { scammerService } from "@/services/storage";
 import { useScammers } from "@/hooks/use-scammers";
 
-export const FeaturedScammers = ({ limit = 10 }: { limit?: number }) => {
+interface FeaturedScammersProps {
+  limit?: number;
+}
+
+const FeaturedScammersComponent = ({ limit = 10 }: FeaturedScammersProps) => {
   const { isLoading, filteredScammers } = useScammers();
+  // Take only the first 'limit' scammers for performance
   const limitedScammers = filteredScammers.slice(0, limit);
 
   const formatCurrency = (amount: number) => {
@@ -69,3 +74,6 @@ export const FeaturedScammers = ({ limit = 10 }: { limit?: number }) => {
     </section>
   );
 };
+
+// Memoize the component to prevent unnecessary re-renders
+export const FeaturedScammers = memo(FeaturedScammersComponent);

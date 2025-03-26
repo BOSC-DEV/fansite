@@ -30,7 +30,6 @@ export const SiteFooter = () => {
           </div>
           
           <div className="flex flex-col items-center gap-4">
-            {/* Social links centered */}
             <div className="flex items-center gap-6">
               <a 
                 href="https://x.com/bookofscamslol" 
