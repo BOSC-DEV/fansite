@@ -1,8 +1,9 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ScammerImageLoader } from "./ScammerImageLoader";
 import { InteractionsBar } from "./InteractionsBar";
 import { ScammerCardBadge } from "./ScammerCardBadge";
+import { scammerService } from "@/services/storage/scammer/scammerService";
 
 interface ScammerCardImageProps {
   name: string;
@@ -32,6 +33,14 @@ export function ScammerCardImage({
     setImageLoaded(loaded);
     setImageError(error);
   };
+
+  // Increment view count when component mounts, but only once
+  useEffect(() => {
+    if (scammerId) {
+      // Increment view count
+      scammerService.incrementScammerViews(scammerId);
+    }
+  }, [scammerId]);
 
   // Only attempt to scroll if we're on a detail page
   const scrollToComments = () => {

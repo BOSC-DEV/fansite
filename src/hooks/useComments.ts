@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Comment, storageService } from "@/services/storage/localStorageService";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
@@ -12,11 +12,8 @@ export function useComments(scammerId: string) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { isConnected, connectWallet, address } = useWallet();
 
-  useEffect(() => {
-    loadComments();
-  }, [scammerId]);
-
-  const loadComments = () => {
+  // Memoize loadComments function to avoid recreating it on each render
+  const loadComments = useCallback(() => {
     setIsLoading(true);
     try {
       const loadedComments = storageService.getCommentsForScammer(scammerId);
@@ -27,7 +24,12 @@ export function useComments(scammerId: string) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [scammerId]);
+
+  // Load comments when component mounts or scammerId changes
+  useEffect(() => {
+    loadComments();
+  }, [scammerId, loadComments]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +41,7 @@ export function useComments(scammerId: string) {
     
     if (!isConnected || !address) {
       toast.error("You must be connected with a wallet to comment");
-      connectWallet();
+      await connectWallet();
       return;
     }
     
@@ -70,9 +72,11 @@ export function useComments(scammerId: string) {
       // Save to localStorage
       storageService.saveComment(comment);
       
+      // Optimistically update the UI immediately
+      setComments(prevComments => [comment, ...prevComments]);
+      
       toast.success("Comment added successfully");
       setContent("");
-      loadComments();
     } catch (error) {
       console.error("Error adding comment:", error);
       toast.error("Failed to add comment. Please try again.");

@@ -4,6 +4,7 @@ import { ThumbsUp, ThumbsDown, Eye, MessageSquare, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { InteractionButton } from "./InteractionButton";
 import { storageService } from "@/services/storage/localStorageService";
+import { useWallet } from "@/context/WalletContext";
 
 interface InteractionsBarProps {
   scammerId?: string;
@@ -26,6 +27,7 @@ export function InteractionsBar({
   const [isDisliked, setIsDisliked] = useState(false);
   const [localLikes, setLocalLikes] = useState(likes);
   const [localDislikes, setLocalDislikes] = useState(dislikes);
+  const { isConnected, address, connectWallet } = useWallet();
   
   // Check if user has already liked/disliked on component mount
   useEffect(() => {
@@ -49,6 +51,20 @@ export function InteractionsBar({
     e.stopPropagation(); // Prevent card click event
     
     if (!scammerId) return;
+
+    // Check if user is connected and has a profile
+    if (!isConnected || !address) {
+      toast.error("You must be connected with a wallet to like");
+      connectWallet();
+      return;
+    }
+
+    // Check if user has a profile
+    const profile = storageService.getProfile(address);
+    if (!profile) {
+      toast.error("You need to create a profile before liking");
+      return;
+    }
 
     if (isLiked) {
       // Unlike
@@ -88,6 +104,20 @@ export function InteractionsBar({
     e.stopPropagation(); // Prevent card click event
     
     if (!scammerId) return;
+
+    // Check if user is connected and has a profile
+    if (!isConnected || !address) {
+      toast.error("You must be connected with a wallet to dislike");
+      connectWallet();
+      return;
+    }
+
+    // Check if user has a profile
+    const profile = storageService.getProfile(address);
+    if (!profile) {
+      toast.error("You need to create a profile before disliking");
+      return;
+    }
 
     if (isDisliked) {
       // Remove dislike
