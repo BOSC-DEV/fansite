@@ -1,12 +1,6 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useSolanaPrice } from "@/utils/priceUtils";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 interface SolAmountProps {
   amount: number;
@@ -14,6 +8,7 @@ interface SolAmountProps {
 }
 
 export function SolAmount({ amount, className }: SolAmountProps) {
+  const [showUsd, setShowUsd] = useState(false);
   const { data: solPrice, isLoading, isError } = useSolanaPrice();
   
   const formattedSol = `${amount.toLocaleString()} SOL`;
@@ -30,16 +25,12 @@ export function SolAmount({ amount, className }: SolAmountProps) {
   }
 
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <span className={className}>{formattedSol}</span>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>{usdValue}</p>
-          <p className="text-xs text-muted-foreground">Estimated Value</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <span 
+      className={className}
+      onMouseEnter={() => setShowUsd(true)}
+      onMouseLeave={() => setShowUsd(false)}
+    >
+      {showUsd ? usdValue : formattedSol}
+    </span>
   );
 }
