@@ -35,6 +35,7 @@ export type Database = {
           id: string
           likes: number | null
           scammer_id: string | null
+          views: number | null
         }
         Insert: {
           author: string
@@ -46,6 +47,7 @@ export type Database = {
           id: string
           likes?: number | null
           scammer_id?: string | null
+          views?: number | null
         }
         Update: {
           author?: string
@@ -57,6 +59,7 @@ export type Database = {
           id?: string
           likes?: number | null
           scammer_id?: string | null
+          views?: number | null
         }
         Relationships: [
           {
