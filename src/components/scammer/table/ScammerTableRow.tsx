@@ -43,12 +43,6 @@ export const ScammerTableRow = ({
         {(currentPage - 1) * itemsPerPage + index + 1}
       </TableCell>
       
-      <TableCell className="text-center font-medium">
-        <div className="flex items-center justify-center">
-          <span className="text-western-accent font-wanted">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
-        </div>
-      </TableCell>
-      
       <TableCell>
         <div className="flex items-center space-x-3">
           <Avatar className="border-2 border-western-wood">
@@ -61,6 +55,12 @@ export const ScammerTableRow = ({
               {scammer.walletAddress}
             </div>
           </div>
+        </div>
+      </TableCell>
+      
+      <TableCell className="text-center font-medium">
+        <div className="flex items-center justify-center">
+          <span className="text-western-accent font-wanted">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
         </div>
       </TableCell>
       

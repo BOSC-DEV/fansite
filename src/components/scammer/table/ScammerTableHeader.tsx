@@ -15,6 +15,8 @@ export const ScammerTableHeader = ({ onSort, sortField, sortDirection }: Scammer
       <TableRow>
         <TableHead className="w-[60px] text-center text-western-accent font-wanted">№</TableHead>
         
+        <TableHead className="text-western-accent font-wanted">Outlaw</TableHead>
+        
         <TableHead 
           className="text-center text-western-accent font-wanted cursor-pointer"
           onClick={() => onSort('bountyAmount')}
@@ -25,7 +27,6 @@ export const ScammerTableHeader = ({ onSort, sortField, sortDirection }: Scammer
           </div>
         </TableHead>
         
-        <TableHead className="text-western-accent font-wanted">Outlaw</TableHead>
         <TableHead className="text-western-accent font-wanted">Links</TableHead>
         <TableHead className="text-western-accent font-wanted">Accused Of</TableHead>
         <TableHead className="text-center text-western-accent font-wanted">Aliases</TableHead>

@@ -25,13 +25,13 @@ export const ScammerTableCompact = ({
         <TableHeader className="bg-western-sand/60 border-b border-western-wood/30">
           <TableRow>
             <TableHead className="text-western-accent font-wanted">Outlaw</TableHead>
-            <TableHead className="text-western-accent font-wanted">Links</TableHead>
-            <TableHead className="text-western-accent font-wanted">Accused Of</TableHead>
             <TableHead className="text-center text-western-accent font-wanted">
               <div className="flex items-center justify-center">
                 Bounty
               </div>
             </TableHead>
+            <TableHead className="text-western-accent font-wanted">Links</TableHead>
+            <TableHead className="text-western-accent font-wanted">Accused Of</TableHead>
             <TableHead className="text-center text-western-accent font-wanted">
               <div className="flex items-center justify-center">
                 <ThumbsUp className="h-4 w-4" />
@@ -83,6 +83,9 @@ export const ScammerTableCompact = ({
                     </div>
                   </div>
                 </TableCell>
+                <TableCell className="text-center font-medium">
+                  <span className="text-western-accent font-wanted">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
+                </TableCell>
                 <TableCell>
                   {links.length > 0 ? (
                     <div className="flex items-center space-x-2">
@@ -110,9 +113,6 @@ export const ScammerTableCompact = ({
                 </TableCell>
                 <TableCell className="max-w-[200px]">
                   <p className="truncate text-sm">{scammer.accusedOf}</p>
-                </TableCell>
-                <TableCell className="text-center font-medium">
-                  <span className="text-western-accent font-wanted">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
                 </TableCell>
                 <TableCell className="text-center">
                   {scammer.likes || 0}
