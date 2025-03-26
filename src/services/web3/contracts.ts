@@ -1,145 +1,100 @@
 
-import { Buffer } from 'buffer';
-import { PublicKey, Connection, Transaction, SystemProgram, LAMPORTS_PER_SOL, SendTransactionError } from '@solana/web3.js';
-import { Web3Provider } from "./provider";
+import { Connection, PublicKey, LAMPORTS_PER_SOL, Transaction, SystemProgram } from '@solana/web3.js';
+import { toast } from 'sonner';
 
-// Make Buffer available globally
-if (typeof window !== 'undefined') {
-  window.Buffer = Buffer;
-}
-
-export class ContractService extends Web3Provider {
+export class ContractService {
+  private connection: Connection;
+  
   constructor() {
-    super();
+    // Use Solana devnet for testing
+    this.connection = new Connection("https://api.devnet.solana.com", "confirmed");
   }
   
-  async getBalance(address: string): Promise<number | null> {
+  // Get the balance of the current wallet
+  async getBalance(): Promise<number | null> {
     try {
-      const publicKey = new PublicKey(address);
-      const balance = await this.connection.getBalance(publicKey);
-      return balance / LAMPORTS_PER_SOL; // Convert from lamports to SOL
+      if (!window.phantom?.solana?.publicKey) {
+        return null;
+      }
+      
+      const balance = await this.connection.getBalance(window.phantom.solana.publicKey);
+      return balance / LAMPORTS_PER_SOL;
     } catch (error) {
-      console.error("Error getting SOL balance:", error);
-      // Return a default balance of 10 BOSC tokens instead of null to keep UI working
-      return 10;
+      console.error("Error getting balance:", error);
+      return null;
     }
   }
   
-  async approveTokens(spender: string, amount: number): Promise<boolean> {
-    console.log(`Approve ${amount} tokens to ${spender} (placeholder for Solana implementation)`);
-    return true;
-  }
-
-  async requestAirdrop(address: string): Promise<boolean> {
+  // Airdrop SOL to the connected wallet (only works on devnet)
+  async requestAirdrop(): Promise<boolean> {
     try {
-      const publicKey = new PublicKey(address);
-      // Request 1 SOL airdrop for testing on devnet
-      const signature = await this.connection.requestAirdrop(publicKey, LAMPORTS_PER_SOL);
+      if (!window.phantom?.solana?.publicKey) {
+        return false;
+      }
+      
+      console.log("Balance too low, requesting airdrop on devnet");
+      const signature = await this.connection.requestAirdrop(
+        window.phantom.solana.publicKey,
+        2 * LAMPORTS_PER_SOL
+      );
+      
       await this.connection.confirmTransaction(signature);
-      console.log(`Airdrop successful for ${address}`);
+      console.log("Airdrop successful for", window.phantom.solana.publicKey.toString());
       return true;
     } catch (error) {
       console.error("Error requesting airdrop:", error);
       return false;
     }
   }
-
-  async sendSolTransaction(recipientAddress: string, amount: number): Promise<{success: boolean, message?: string, signature?: string}> {
+  
+  // Send a SOL transaction
+  async sendSolTransaction(
+    receiverAddress: string, 
+    solAmount: number
+  ): Promise<{ success: boolean; message?: string; signature?: string }> {
     try {
       if (!window.phantom?.solana?.publicKey) {
-        return { 
-          success: false, 
-          message: "Wallet not connected" 
-        };
+        return { success: false, message: "Wallet not connected" };
       }
-
-      // Make sure amount is positive
-      if (amount <= 0) {
-        return { 
-          success: false, 
-          message: "Amount must be greater than 0" 
-        };
-      }
-
-      // Check if phantom wallet is available
-      if (!window.phantom?.solana?.isPhantom) {
-        return { 
-          success: false, 
-          message: "Phantom wallet is not installed" 
-        };
-      }
-
-      // Get current sender balance
-      const senderKey = new PublicKey(window.phantom.solana.publicKey.toString());
-      const senderBalance = await this.connection.getBalance(senderKey);
       
-      // If balance is too low, try to request an airdrop on devnet
-      if (senderBalance < amount * LAMPORTS_PER_SOL) {
-        console.log("Balance too low, requesting airdrop on devnet");
-        const airdropSuccess = await this.requestAirdrop(senderKey.toString());
-        
+      // Check balance
+      const balance = await this.getBalance();
+      if (balance === null || balance < solAmount) {
+        // On devnet, we can request an airdrop
+        const airdropSuccess = await this.requestAirdrop();
         if (!airdropSuccess) {
-          return {
-            success: false,
-            message: "Insufficient funds and airdrop failed. This is a devnet limitation."
-          };
+          return { success: false, message: "Insufficient balance" };
         }
-        
-        // Wait a moment for airdrop to be processed
-        await new Promise(resolve => setTimeout(resolve, 2000));
       }
-
-      // Convert SOL to lamports
-      const lamportsAmount = amount * LAMPORTS_PER_SOL;
-
-      // Create a Solana transaction
+      
+      // Create the transaction
+      const toPublicKey = new PublicKey(receiverAddress);
+      
       const transaction = new Transaction().add(
         SystemProgram.transfer({
-          fromPubkey: senderKey,
-          toPubkey: new PublicKey(recipientAddress),
-          lamports: lamportsAmount,
+          fromPubkey: window.phantom.solana.publicKey,
+          toPubkey: toPublicKey,
+          lamports: solAmount * LAMPORTS_PER_SOL
         })
       );
-
-      // Set the most recent blockhash
+      
+      // Set the recent blockhash and fee payer
       const { blockhash } = await this.connection.getLatestBlockhash();
       transaction.recentBlockhash = blockhash;
-      transaction.feePayer = senderKey;
-
-      // Sign and send the transaction using Phantom wallet
-      if (!window.phantom.solana.signTransaction) {
-        return {
-          success: false,
-          message: "Wallet doesn't support transaction signing"
-        };
-      }
+      transaction.feePayer = window.phantom.solana.publicKey;
       
-      const signedTransaction = await window.phantom.solana.signTransaction(transaction);
+      // Sign and send the transaction
+      const { signature } = await window.phantom.solana.signAndSendTransaction(transaction);
       
-      try {
-        const signature = await this.connection.sendRawTransaction(signedTransaction.serialize());
-        await this.connection.confirmTransaction(signature);
-        
-        return { 
-          success: true, 
-          signature 
-        };
-      } catch (error) {
-        // Handle SendTransactionError specifically
-        if (error instanceof SendTransactionError) {
-          console.error("SendTransactionError:", error);
-          return {
-            success: false,
-            message: `Transaction failed: ${error.message}`
-          };
-        }
-        throw error; // Re-throw other errors
-      }
+      // Wait for confirmation
+      await this.connection.confirmTransaction(signature);
+      
+      return { success: true, signature };
     } catch (error) {
       console.error("Error sending SOL transaction:", error);
       return { 
         success: false, 
-        message: error instanceof Error ? error.message : "Unknown error" 
+        message: error instanceof Error ? error.message : "Transaction failed" 
       };
     }
   }

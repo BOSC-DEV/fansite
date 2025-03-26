@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Scammer } from "@/lib/types";
 import { ScammerSidebar } from './details/ScammerSidebar';
 import { ScammerContent } from './details/ScammerContent';
-import { useWallet } from "@/context/WalletContext";
+import { useWallet } from "@/context/wallet";
 import { useScammerProfile } from '@/hooks/useScammerProfile';
 import { useScammerStats } from '@/hooks/useScammerStats';
 import { ScammerHeader } from './details/ScammerHeader';
