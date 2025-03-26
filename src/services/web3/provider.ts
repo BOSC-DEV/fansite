@@ -9,8 +9,8 @@ export class Web3Provider {
   protected connection: Connection;
 
   constructor() {
-    // Initialize Solana connection (using devnet for development)
-    this.connection = new Connection(clusterApiUrl('devnet'));
+    // Use a public RPC endpoint that doesn't require authentication
+    this.connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
   }
 
   // Connect wallet and request signature
@@ -98,7 +98,7 @@ export class Web3Provider {
       return balance / 10 ** 9; // Convert lamports to SOL
     } catch (error) {
       console.error("Error getting balance:", error);
-      throw error;
+      return 0; // Return 0 instead of throwing on error
     }
   }
 }

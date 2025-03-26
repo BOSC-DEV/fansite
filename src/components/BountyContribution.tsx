@@ -1,6 +1,5 @@
 
 import { Card, CardContent } from "@/components/ui/card";
-import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
 import { BountyHeader } from "./bounty/BountyHeader";
 import { BountyWalletInfo } from "./bounty/BountyWalletInfo";
 import { BountyAmountInput } from "./bounty/BountyAmountInput";
@@ -35,7 +34,7 @@ export function BountyContribution({
       <CardContent className="pt-6">
         <BountyWalletInfo 
           currentBounty={currentBounty}
-          developerWalletAddress={"TBC"}
+          developerWalletAddress="TBC"
           copied={copied}
           onCopyClick={copyToClipboard}
         />

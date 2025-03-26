@@ -36,31 +36,31 @@ export function useBountyContribution(
   };
 
   const handleContribute = async () => {
-    console.log("Current wallet connection state:", { isConnected, address });
-    
-    // Validate wallet connection
-    const walletReady = await checkWallet();
-    if (!walletReady) {
-      // Try to reconnect the wallet if not ready
-      try {
-        await connectWallet();
-        const reconnected = window.phantom?.solana?.isConnected || false;
-        if (!reconnected) return;
-      } catch (error) {
-        console.error("Failed to reconnect wallet:", error);
+    try {
+      console.log("Current wallet connection state:", { isConnected, address });
+      
+      // Validate wallet connection
+      const walletReady = await checkWallet();
+      if (!walletReady) {
+        // Try to reconnect the wallet if not ready
+        try {
+          await connectWallet();
+          const reconnected = window.phantom?.solana?.isConnected || false;
+          if (!reconnected) return;
+        } catch (error) {
+          console.error("Failed to reconnect wallet:", error);
+          return;
+        }
+      }
+
+      // Validate amount
+      if (!amount || parseFloat(amount) <= 0) {
+        toast.error("Please enter a valid amount");
         return;
       }
-    }
 
-    // Validate amount
-    if (!amount || parseFloat(amount) <= 0) {
-      toast.error("Please enter a valid amount");
-      return;
-    }
+      setIsSubmitting(true);
 
-    setIsSubmitting(true);
-
-    try {
       // Verify wallet connection again before proceeding
       if (!window.phantom?.solana?.isConnected) {
         throw new Error("Phantom wallet is not connected");
