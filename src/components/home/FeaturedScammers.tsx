@@ -4,20 +4,22 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Scammer } from "@/lib/types";
 import { ArrowRight } from "lucide-react";
-import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
 import { useWallet } from "@/context/WalletContext";
 import { scammerService } from "@/services/storage";
 import { useScammers } from "@/hooks/use-scammers";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ScammerGrid } from "@/components/scammer/ScammerGrid";
+import { ScammerStatsCard } from "@/components/stats/ScammerStatsCard";
 
 interface FeaturedScammersProps {
   limit?: number;
 }
 
-const FeaturedScammersComponent = ({ limit = 10 }: FeaturedScammersProps) => {
+const FeaturedScammersComponent = ({ limit = 6 }: FeaturedScammersProps) => {
   const { isLoading, filteredScammers } = useScammers();
   // Take only the first 'limit' scammers for performance
   const limitedScammers = filteredScammers.slice(0, limit);
+  const [currentPage] = useState(1);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -51,20 +53,27 @@ const FeaturedScammersComponent = ({ limit = 10 }: FeaturedScammersProps) => {
           </Button>
         </div>
         
-        <div className="wanted-poster-border paper-texture rounded-sm">
+        {!isLoading && limitedScammers.length > 0 && (
+          <ScammerStatsCard scammers={filteredScammers} className="mb-6" />
+        )}
+        
+        <div className="wanted-poster-border paper-texture rounded-sm p-6">
           {isLoading ? (
-            <div className="p-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <Skeleton className="h-32 w-full" />
-                <Skeleton className="h-32 w-full" />
-                <Skeleton className="h-32 w-full" />
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Skeleton className="h-64 w-full" />
+              <Skeleton className="h-64 w-full" />
+              <Skeleton className="h-64 w-full" />
+              <Skeleton className="h-64 w-full" />
+              <Skeleton className="h-64 w-full" />
+              <Skeleton className="h-64 w-full" />
             </div>
           ) : limitedScammers.length > 0 ? (
-            <ScammerTableCompact 
-              scammers={limitedScammers}
-              formatCurrency={formatCurrency}
-              formatDate={formatDate}
+            <ScammerGrid 
+              paginatedScammers={limitedScammers}
+              currentPage={currentPage}
+              totalPages={1}
+              setCurrentPage={() => {}}
+              isLoading={false}
             />
           ) : (
             <div className="p-6 text-center">

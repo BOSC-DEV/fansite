@@ -64,9 +64,9 @@ const Index = () => {
       
       <main className="flex-grow">
         <HeroSection />
-        <div className="relative px-0">
+        <div className="relative">
           <div className="torn-edge-top"></div>
-          <FeaturedScammers limit={10} />
+          <FeaturedScammers limit={6} />
           <div className="torn-edge-bottom"></div>
         </div>
         <HowItWorksSection />
