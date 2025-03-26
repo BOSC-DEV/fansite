@@ -7,9 +7,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 interface SearchAndFilterControlsProps {
   searchQuery: string;
   handleSearch: (query: string) => void;
-  viewType: "book" | "table";
+  viewType: "grid" | "table";
   sortBy: "newest" | "oldest" | "bounty";
-  handleViewChange: (view: "book" | "table") => void;
+  handleViewChange: (view: "grid" | "table") => void;
   handleSortChange: (sort: "newest" | "oldest" | "bounty") => void;
 }
 

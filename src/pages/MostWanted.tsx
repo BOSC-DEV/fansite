@@ -3,15 +3,16 @@ import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { ScammerTable } from "@/components/scammer/ScammerTable";
 import { ScammerGrid } from "@/components/scammer/ScammerGrid";
-import { BookView } from "@/components/BookView";
 import { NoResults } from "@/components/scammer/NoResults";
 import { MostWantedHeader } from "@/components/scammer/MostWantedHeader";
-import { SearchAndFilterControls } from "@/components/search/SearchAndFilterControls";
+import { SearchBar } from "@/components/search/SearchBar";
 import { useScammers } from "@/hooks/use-scammers";
 import { usePagination } from "@/hooks/use-pagination";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { formatCurrency, formatDate } from "@/utils/formatters";
 import { useSortableScammers } from "@/hooks/useSortableScammers";
+import { Button } from "@/components/ui/button";
+import { List, Grid } from "lucide-react";
 
 const MostWanted = () => {
   const { 
@@ -28,49 +29,31 @@ const MostWanted = () => {
     sortDirection
   } = useSortableScammers(filteredScammers);
   
-  const [viewType, setViewType] = useState<"book" | "table">("book");
-  const [sortBy, setSortBy] = useState<"newest" | "oldest" | "bounty">("newest");
+  const [viewType, setViewType] = useState<"grid" | "table">("table");
   const isMobile = useIsMobile();
-  
-  // Sort scammers based on sortBy
-  useEffect(() => {
-    if (sortBy === "newest") {
-      handleSort("dateAdded", "desc");
-    } else if (sortBy === "oldest") {
-      handleSort("dateAdded", "asc");
-    } else if (sortBy === "bounty") {
-      handleSort("bountyAmount", "desc");
-    }
-  }, [sortBy, handleSort]);
   
   const { 
     currentPage, 
     setCurrentPage,
     totalPages,
     startIndex,
-    endIndex,
-    goToNextPage,
-    goToPreviousPage
+    endIndex
   } = usePagination({
     totalItems: sortedScammers.length,
-    viewType
+    viewType: viewType
   });
   
   const paginatedScammers = sortedScammers.slice(startIndex, endIndex);
 
-  // Auto-switch to book view on mobile
+  // Auto-switch to grid view on mobile
   useEffect(() => {
     if (isMobile && viewType === "table") {
-      setViewType("book");
+      setViewType("grid");
     }
   }, [isMobile, viewType]);
 
-  const handleViewChange = (view: "book" | "table") => {
+  const handleViewChange = (view: "grid" | "table") => {
     setViewType(view);
-  };
-
-  const handleSortChange = (sort: "newest" | "oldest" | "bounty") => {
-    setSortBy(sort);
   };
 
   return (
@@ -81,14 +64,34 @@ const MostWanted = () => {
           <MostWantedHeader />
           
           <div className="space-y-4 md:space-y-6">
-            <SearchAndFilterControls
-              searchQuery={searchQuery}
-              handleSearch={handleSearch}
-              viewType={viewType}
-              sortBy={sortBy}
-              handleViewChange={handleViewChange}
-              handleSortChange={handleSortChange}
-            />
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="w-full md:w-1/2 lg:w-1/3">
+                <SearchBar onSearch={handleSearch} initialQuery={searchQuery} />
+              </div>
+              
+              {!isMobile && (
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className={`border-western-wood ${viewType === 'table' ? 'bg-western-wood text-western-parchment' : 'bg-western-parchment text-western-wood'}`}
+                    onClick={() => handleViewChange('table')}
+                  >
+                    <List className="h-4 w-4 mr-1" />
+                    Table
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className={`border-western-wood ${viewType === 'grid' ? 'bg-western-wood text-western-parchment' : 'bg-western-parchment text-western-wood'}`}
+                    onClick={() => handleViewChange('grid')}
+                  >
+                    <Grid className="h-4 w-4 mr-1" />
+                    Grid
+                  </Button>
+                </div>
+              )}
+            </div>
 
             {isLoading ? (
               <div className="flex justify-center items-center py-10 md:py-20">
@@ -112,14 +115,11 @@ const MostWanted = () => {
                 />
               </div>
             ) : (
-              <BookView
-                scammers={sortedScammers}
+              <ScammerGrid
+                paginatedScammers={paginatedScammers}
                 currentPage={currentPage}
                 totalPages={totalPages}
-                onNextPage={goToNextPage}
-                onPrevPage={goToPreviousPage}
-                formatCurrency={formatCurrency}
-                formatDate={formatDate}
+                setCurrentPage={setCurrentPage}
               />
             )}
           </div>

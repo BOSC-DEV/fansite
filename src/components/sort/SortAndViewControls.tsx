@@ -5,9 +5,9 @@ import { BookOpen, List, SortDesc } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SortAndViewControlsProps {
-  viewType: "book" | "table";
+  viewType: "grid" | "table";
   sortBy: "newest" | "oldest" | "bounty";
-  onViewChange: (view: "book" | "table") => void;
+  onViewChange: (view: "grid" | "table") => void;
   onSortChange: (sort: "newest" | "oldest" | "bounty") => void;
 }
 
@@ -20,7 +20,7 @@ export const SortAndViewControls = ({
   const isMobile = useIsMobile();
   
   const toggleViewMode = () => {
-    onViewChange(viewType === "table" ? "book" : "table");
+    onViewChange(viewType === "table" ? "grid" : "table");
   };
 
   const handleSortChange = () => {
@@ -49,11 +49,11 @@ export const SortAndViewControls = ({
       <div className="flex items-center space-x-2">
         <List className={`h-4 w-4 ${viewType === 'table' ? 'text-primary' : 'text-muted-foreground'}`} />
         <Switch 
-          checked={viewType === 'book'} 
+          checked={viewType === 'grid'} 
           onCheckedChange={toggleViewMode} 
           aria-label="Toggle view mode"
         />
-        <BookOpen className={`h-4 w-4 ${viewType === 'book' ? 'text-primary' : 'text-muted-foreground'}`} />
+        <BookOpen className={`h-4 w-4 ${viewType === 'grid' ? 'text-primary' : 'text-muted-foreground'}`} />
       </div>
     </div>
   );

@@ -71,29 +71,29 @@ export const BookContainer = ({
         >
           <div className="relative w-full h-full overflow-hidden">
             {/* Fancy book cover design */}
-            <div className="absolute inset-0 paper-texture rounded-lg border-4 border-western-leather shadow-[0_10px_15px_rgba(0,0,0,0.1),0_4px_6px_rgba(0,0,0,0.05),inset_0_0_0_1px_rgba(255,255,255,0.1)]">
+            <div className="absolute inset-0 bg-gradient-to-br from-[#f8f5f0] to-[#e8e0d5] dark:from-[#252136] dark:to-[#1a1625] rounded-lg border-[3px] border-[#d1c7b7] dark:border-[#2d2841] shadow-[0_10px_15px_rgba(0,0,0,0.1),0_4px_6px_rgba(0,0,0,0.05),inset_0_0_0_1px_rgba(255,255,255,0.1)]">
               {/* Book binding effect */}
-              <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-western-wood to-western-leather transform -skew-y-6 origin-top"></div>
+              <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#c2b8a3] to-[#d1c7b7] dark:from-[#352d4d] dark:to-[#2d2841] transform -skew-y-6 origin-top"></div>
               
               {/* Book page curl effect */}
-              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-transparent via-transparent to-western-sand/30 transform -translate-y-2 translate-x-2 rotate-6"></div>
+              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-transparent via-transparent to-[#d1c7b7]/30 dark:to-[#352d4d]/30 transform -translate-y-2 translate-x-2 rotate-6"></div>
               
               {/* Bottom page curl effect */}
-              <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tr from-transparent to-western-sand/20 transform translate-y-2 translate-x-2 -rotate-6"></div>
+              <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tr from-transparent to-[#d1c7b7]/20 dark:to-[#352d4d]/20 transform translate-y-2 translate-x-2 -rotate-6"></div>
               
               {/* Book shine effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-lg opacity-60"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent dark:from-white/10 rounded-lg opacity-60"></div>
             </div>
             
             {/* Page content */}
             <div className="absolute inset-0 p-6 sm:p-8 flex flex-col">
-              <div className="flex justify-center items-center mb-4 sm:mb-6 relative">
-                <div className="font-wanted text-xl sm:text-2xl text-western-accent uppercase tracking-wide text-center py-1 px-4 bg-western-sand/20 border-b border-western-wood/30 rounded-t-md">
+              <div className="flex justify-center items-center mb-4 sm:mb-6">
+                <div className="font-impact text-xl sm:text-2xl text-accent bg-gradient-to-r from-meme-red to-meme-purple bg-clip-text text-transparent uppercase tracking-wide">
                   Most Wanted Scammers
                 </div>
-                <div className="absolute right-6 sm:right-8 flex items-center text-western-wood">
+                <div className="absolute right-6 sm:right-8 flex items-center text-muted-foreground">
                   <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                  <span className="font-western text-xs sm:text-sm">Volume 1</span>
+                  <span className="font-mono text-xs sm:text-sm">Volume 1</span>
                 </div>
               </div>
               
