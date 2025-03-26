@@ -1,9 +1,9 @@
 
 import React from "react";
 import { TableHeader, TableHead, TableRow } from "@/components/ui/table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, ThumbsUp, Eye, MessageSquare, Clock } from "lucide-react";
 
-type SortField = 'totalReports' | 'totalLikes' | 'totalViews' | 'totalComments' | 'totalBounty';
+type SortField = 'totalReports' | 'totalLikes' | 'totalViews' | 'totalComments' | 'totalBounty' | 'joinedDuration';
 
 interface LeaderboardHeaderProps {
   onSort: (field: SortField) => void;
@@ -30,7 +30,7 @@ export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({ onSort }) 
           onClick={() => onSort('totalLikes')}
         >
           <div className="flex items-center justify-center">
-            Likes
+            <ThumbsUp className="h-4 w-4" />
             <ArrowUpDown className="ml-1 h-4 w-4" />
           </div>
         </TableHead>
@@ -39,7 +39,7 @@ export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({ onSort }) 
           onClick={() => onSort('totalViews')}
         >
           <div className="flex items-center justify-center">
-            Views
+            <Eye className="h-4 w-4" />
             <ArrowUpDown className="ml-1 h-4 w-4" />
           </div>
         </TableHead>
@@ -48,7 +48,7 @@ export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({ onSort }) 
           onClick={() => onSort('totalComments')}
         >
           <div className="flex items-center justify-center">
-            Comments
+            <MessageSquare className="h-4 w-4" />
             <ArrowUpDown className="ml-1 h-4 w-4" />
           </div>
         </TableHead>
@@ -58,6 +58,15 @@ export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({ onSort }) 
         >
           <div className="flex items-center justify-center">
             Total Bounty
+            <ArrowUpDown className="ml-1 h-4 w-4" />
+          </div>
+        </TableHead>
+        <TableHead 
+          className="text-center text-western-accent font-wanted cursor-pointer"
+          onClick={() => onSort('joinedDuration')}
+        >
+          <div className="flex items-center justify-center">
+            <Clock className="h-4 w-4" />
             <ArrowUpDown className="ml-1 h-4 w-4" />
           </div>
         </TableHead>

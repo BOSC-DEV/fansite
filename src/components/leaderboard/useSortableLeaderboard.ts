@@ -2,7 +2,7 @@
 import { useState, useMemo } from "react";
 import type { LeaderboardUser } from "@/services/storage/leaderboardService";
 
-export type SortField = 'totalReports' | 'totalLikes' | 'totalViews' | 'totalComments' | 'totalBounty';
+export type SortField = 'totalReports' | 'totalLikes' | 'totalViews' | 'totalComments' | 'totalBounty' | 'joinedDuration';
 export type SortDirection = 'asc' | 'desc';
 
 export const useSortableLeaderboard = (users: LeaderboardUser[]) => {
@@ -24,6 +24,20 @@ export const useSortableLeaderboard = (users: LeaderboardUser[]) => {
     const usersCopy = [...users];
     if (sortField) {
       usersCopy.sort((a, b) => {
+        // Special case for joinedDuration sorting
+        if (sortField === 'joinedDuration') {
+          const dateA = new Date(a.createdAt);
+          const dateB = new Date(b.createdAt);
+          
+          // For ascending, older accounts first (smaller value = longer duration)
+          if (sortDirection === 'asc') {
+            return dateA.getTime() - dateB.getTime();
+          }
+          // For descending, newer accounts first (larger value = shorter duration)
+          return dateB.getTime() - dateA.getTime();
+        }
+        
+        // For all other fields
         const valueA = a[sortField];
         const valueB = b[sortField];
         

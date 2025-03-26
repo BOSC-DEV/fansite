@@ -3,8 +3,8 @@ import React, { forwardRef } from "react";
 import { TableRow, TableCell } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
-import { Trophy, Award, Medal } from "lucide-react";
-import { formatCurrency } from "@/utils/formatters";
+import { Trophy, Award, Medal, ThumbsUp, Eye, MessageSquare, Clock } from "lucide-react";
+import { formatCurrency, formatTimeAgo } from "@/utils/formatters";
 import type { LeaderboardUser } from "@/services/storage/leaderboardService";
 import { ProfileLinks } from "@/components/profile/ProfileLinks";
 
@@ -46,6 +46,34 @@ export const LeaderboardRow = forwardRef<HTMLTableRowElement, LeaderboardRowProp
       }
     };
 
+    // Format the joined duration (time since sign up)
+    const formatJoinedDuration = (dateString: string) => {
+      const now = new Date();
+      const createdAt = new Date(dateString);
+      const diffInMilliseconds = now.getTime() - createdAt.getTime();
+      
+      // Calculate different time units
+      const diffInSeconds = Math.floor(diffInMilliseconds / 1000);
+      const diffInMinutes = Math.floor(diffInSeconds / 60);
+      const diffInHours = Math.floor(diffInMinutes / 60);
+      const diffInDays = Math.floor(diffInHours / 24);
+      const diffInWeeks = Math.floor(diffInDays / 7);
+      const diffInYears = Math.floor(diffInDays / 365);
+      
+      // Format based on the largest applicable unit
+      if (diffInYears > 0) {
+        return `${diffInYears}y`;
+      } else if (diffInWeeks > 0) {
+        return `${diffInWeeks}w`;
+      } else if (diffInDays > 0) {
+        return `${diffInDays}d`;
+      } else if (diffInHours > 0) {
+        return `${diffInHours}h`;
+      } else {
+        return "< 1h";
+      }
+    };
+
     return (
       <TableRow 
         ref={ref}
@@ -80,6 +108,9 @@ export const LeaderboardRow = forwardRef<HTMLTableRowElement, LeaderboardRowProp
         <TableCell className="text-center hidden md:table-cell">{user.totalComments}</TableCell>
         <TableCell className="text-center font-bold text-western-accent">
           {formatCurrency(user.totalBounty)} BOSC
+        </TableCell>
+        <TableCell className="text-center text-western-wood">
+          {formatJoinedDuration(user.createdAt)}
         </TableCell>
       </TableRow>
     );
