@@ -23,9 +23,9 @@ export const ScammerGrid = ({
   if (isLoading) {
     return (
       <div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
           {[1, 2, 3, 4, 5, 6].map((_, index) => (
-            <Card key={index} className="overflow-hidden border-western-wood bg-western-parchment/80">
+            <Card key={index} className="overflow-hidden border-western-wood bg-western-parchment/80 w-full">
               <div className="aspect-square relative">
                 <Skeleton className="w-full h-full absolute inset-0" />
               </div>
@@ -42,8 +42,8 @@ export const ScammerGrid = ({
   }
   
   return (
-    <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
         {paginatedScammers.map((scammer, index) => {
           // Calculate absolute position for rank
           const absolutePosition = (currentPage - 1) * paginatedScammers.length + index + 1;
@@ -53,6 +53,7 @@ export const ScammerGrid = ({
               key={scammer.id}
               scammer={scammer}
               rank={absolutePosition}
+              className="w-full"
             />
           );
         })}

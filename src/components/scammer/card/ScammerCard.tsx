@@ -46,12 +46,12 @@ export function ScammerCard({ scammer, className, rank }: ScammerCardProps) {
   
   return (
     <Card className={cn(
-      "overflow-hidden transition-all duration-300 hover:shadow-md h-full border-western-wood bg-western-parchment/80",
+      "overflow-hidden transition-all duration-300 hover:shadow-md h-full border-western-wood bg-western-parchment/80 w-full",
       className
     )}>
       <ScammerCardImage 
         name={scammer.name}
-        photoUrl={scammer.photoUrl}
+        photoUrl={scammer.photoUrl || ""}
         likes={scammer.likes || 0}
         dislikes={scammer.dislikes || 0}
         views={scammer.views || 0}

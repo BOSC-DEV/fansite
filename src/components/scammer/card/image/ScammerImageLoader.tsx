@@ -19,6 +19,16 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
     setImageError(false);
   }, [photoUrl]);
 
+  // Check if photoUrl is empty or invalid immediately
+  useEffect(() => {
+    if (!photoUrl || photoUrl.trim() === '') {
+      console.log(`Empty image URL for scammer: ${name}`);
+      setImageError(true);
+      setImageLoaded(true);
+      onImageLoaded(true, true);
+    }
+  }, [photoUrl, name, onImageLoaded]);
+
   const handleImageError = () => {
     console.log(`Image failed to load for scammer: ${name}, URL: ${photoUrl}`);
     setImageError(true);
@@ -27,6 +37,7 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
   };
 
   const handleImageLoad = () => {
+    console.log(`Image loaded successfully for scammer: ${name}`);
     setImageLoaded(true);
     onImageLoaded(true, false);
   };
