@@ -1,8 +1,10 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { ThumbsUp, ThumbsDown, Eye, MessageSquare, Share2 } from "lucide-react";
 import { toast } from "sonner";
+import { useWallet } from "@/context/WalletContext";
+import { profileService } from "@/services/storage/profileService";
 
 interface ScammerInteractionButtonsProps {
   likes: number;
@@ -27,6 +29,88 @@ export function ScammerInteractionButtons({
   onDislike,
   scammerId
 }: ScammerInteractionButtonsProps) {
+  const { isConnected, address, connectWallet } = useWallet();
+  const [profileChecked, setProfileChecked] = useState(false);
+  const [hasProfile, setHasProfile] = useState(false);
+  
+  // Check if user has a profile
+  useEffect(() => {
+    if (address) {
+      const checkProfile = async () => {
+        try {
+          const exists = await profileService.hasProfile(address);
+          setHasProfile(exists);
+          setProfileChecked(true);
+        } catch (error) {
+          console.error("Error checking if user has profile:", error);
+          setProfileChecked(true);
+        }
+      };
+      
+      checkProfile();
+    }
+  }, [address]);
+  
+  const handleLike = async () => {
+    // Check if user is connected
+    if (!isConnected || !address) {
+      toast.error("You must be connected with a wallet to like");
+      connectWallet();
+      return;
+    }
+    
+    // Check if profile check has completed
+    if (!profileChecked) {
+      toast.info("Please wait while we check your profile");
+      return;
+    }
+    
+    // Check if user has a profile once profile check is done
+    if (!hasProfile) {
+      toast.error("You need to create a profile before liking", {
+        description: "Go to your profile page to create one",
+        action: {
+          label: "Create Profile",
+          onClick: () => window.location.href = "/profile"
+        }
+      });
+      return;
+    }
+    
+    // Proceed with like operation
+    onLike();
+  };
+  
+  const handleDislike = async () => {
+    // Check if user is connected
+    if (!isConnected || !address) {
+      toast.error("You must be connected with a wallet to dislike");
+      connectWallet();
+      return;
+    }
+    
+    // Check if profile check has completed
+    if (!profileChecked) {
+      toast.info("Please wait while we check your profile");
+      return;
+    }
+    
+    // Check if user has a profile once profile check is done
+    if (!hasProfile) {
+      toast.error("You need to create a profile before disliking", {
+        description: "Go to your profile page to create one",
+        action: {
+          label: "Create Profile",
+          onClick: () => window.location.href = "/profile"
+        }
+      });
+      return;
+    }
+    
+    // Proceed with dislike operation
+    onDislike();
+  };
+
   const scrollToComments = () => {
     const commentsSection = document.querySelector('.comments-section');
     if (commentsSection) {
@@ -55,7 +139,7 @@ export function ScammerInteractionButtons({
           variant="ghost"
           size="sm"
           className={`h-8 w-8 rounded-full p-0 ${isLiked ? 'text-green-400/80' : 'text-western-wood/60 hover:text-western-wood/80 hover:bg-western-sand/30'}`}
-          onClick={onLike}
+          onClick={handleLike}
         >
           <ThumbsUp className="h-5 w-5" />
         </Button>
@@ -67,7 +151,7 @@ export function ScammerInteractionButtons({
           variant="ghost"
           size="sm"
           className={`h-8 w-8 rounded-full p-0 ${isDisliked ? 'text-red-400/80' : 'text-western-wood/60 hover:text-western-wood/80 hover:bg-western-sand/30'}`}
-          onClick={onDislike}
+          onClick={handleDislike}
         >
           <ThumbsDown className="h-5 w-5" />
         </Button>

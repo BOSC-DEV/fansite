@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { InteractionButton } from "./InteractionButton";
 import { storageService } from "@/services/storage/localStorageService";
 import { useWallet } from "@/context/WalletContext";
+import { profileService } from "@/services/storage/profileService";
 
 interface InteractionsBarProps {
   scammerId?: string;
@@ -28,18 +29,35 @@ export function InteractionsBar({
   const [localLikes, setLocalLikes] = useState(likes);
   const [localDislikes, setLocalDislikes] = useState(dislikes);
   const { isConnected, address, connectWallet } = useWallet();
+  const [profileChecked, setProfileChecked] = useState(false);
+  const [hasProfile, setHasProfile] = useState(false);
   
   // Check if user has already liked/disliked on component mount
   useEffect(() => {
-    if (scammerId) {
+    if (scammerId && address) {
+      // Check for local interactions
       const userInteractions = localStorage.getItem(`scammer-interactions-${scammerId}`);
       if (userInteractions) {
         const { liked, disliked } = JSON.parse(userInteractions);
         setIsLiked(liked);
         setIsDisliked(disliked);
       }
+      
+      // Check if user has a profile
+      const checkProfile = async () => {
+        try {
+          const exists = await profileService.hasProfile(address);
+          setHasProfile(exists);
+          setProfileChecked(true);
+        } catch (error) {
+          console.error("Error checking if user has profile:", error);
+          setProfileChecked(true);
+        }
+      };
+      
+      checkProfile();
     }
-  }, [scammerId]);
+  }, [scammerId, address]);
   
   // Update local likes/dislikes when props change
   useEffect(() => {
@@ -47,22 +65,33 @@ export function InteractionsBar({
     setLocalDislikes(dislikes);
   }, [likes, dislikes]);
 
-  const handleLike = (e: React.MouseEvent) => {
+  const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click event
     
     if (!scammerId) return;
 
-    // Check if user is connected and has a profile
+    // Check if user is connected
     if (!isConnected || !address) {
       toast.error("You must be connected with a wallet to like");
       connectWallet();
       return;
     }
 
-    // Check if user has a profile
-    const profile = storageService.getProfile(address);
-    if (!profile) {
-      toast.error("You need to create a profile before liking");
+    // Check if profile check has completed
+    if (!profileChecked) {
+      toast.info("Please wait while we check your profile");
+      return;
+    }
+    
+    // Check if user has a profile once profile check is done
+    if (!hasProfile) {
+      toast.error("You need to create a profile before liking", {
+        description: "Go to your profile page to create one",
+        action: {
+          label: "Create Profile",
+          onClick: () => window.location.href = "/profile"
+        }
+      });
       return;
     }
 
@@ -100,22 +129,33 @@ export function InteractionsBar({
     }
   };
 
-  const handleDislike = (e: React.MouseEvent) => {
+  const handleDislike = async (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click event
     
     if (!scammerId) return;
 
-    // Check if user is connected and has a profile
+    // Check if user is connected
     if (!isConnected || !address) {
       toast.error("You must be connected with a wallet to dislike");
       connectWallet();
       return;
     }
 
-    // Check if user has a profile
-    const profile = storageService.getProfile(address);
-    if (!profile) {
-      toast.error("You need to create a profile before disliking");
+    // Check if profile check has completed
+    if (!profileChecked) {
+      toast.info("Please wait while we check your profile");
+      return;
+    }
+    
+    // Check if user has a profile once profile check is done
+    if (!hasProfile) {
+      toast.error("You need to create a profile before disliking", {
+        description: "Go to your profile page to create one",
+        action: {
+          label: "Create Profile",
+          onClick: () => window.location.href = "/profile"
+        }
+      });
       return;
     }
 
