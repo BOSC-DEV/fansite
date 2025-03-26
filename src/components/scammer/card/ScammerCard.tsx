@@ -4,7 +4,7 @@ import { Scammer } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { formatCurrency, formatDate } from "@/utils/formatters";
-import { ScammerCardImage } from "./ScammerCardImage";
+import { ScammerCardImage } from "./image/ScammerCardImage";
 import { ScammerCardContent } from "./ScammerCardContent";
 import { storageService } from "@/services/storage/localStorageService";
 
