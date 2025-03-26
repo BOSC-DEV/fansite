@@ -51,7 +51,7 @@ export function useWalletState() {
     restoreWalletConnection();
   }, [web3Provider]);
 
-  // Check wallet connection status
+  // Check wallet connection status and update balance periodically
   useEffect(() => {
     const checkConnection = async () => {
       console.log("Checking wallet connection status...");
@@ -89,8 +89,27 @@ export function useWalletState() {
       }
     };
 
+    // Update balance periodically when connected
+    const updateBalance = async () => {
+      if (connected && address) {
+        try {
+          const newBalance = await web3Provider.getBalance(address);
+          setBalance(newBalance);
+        } catch (error) {
+          console.error("Failed to update balance:", error);
+        }
+      }
+    };
+
     checkConnection();
-  }, [web3Provider]);
+    
+    // Set up balance refresh interval (every 30 seconds)
+    const balanceInterval = setInterval(updateBalance, 30000);
+    
+    return () => {
+      clearInterval(balanceInterval);
+    };
+  }, [web3Provider, connected, address]);
   
   return {
     connected,
