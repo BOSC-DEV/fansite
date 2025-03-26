@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { SolAmount } from "@/components/SolAmount";
 
 interface ScammerCardContentProps {
   id: string;
@@ -37,9 +38,10 @@ export function ScammerCardContent({
       
       <div className="flex justify-between items-center">
         <div className="flex items-center">
-          <span className="text-sm font-bold text-western-accent font-wanted">
-            {formattedBounty} SOL
-          </span>
+          <SolAmount 
+            amount={bountyAmount}
+            className="text-sm font-bold text-western-accent font-wanted"
+          />
         </div>
         <div className="text-xs text-western-wood/70">
           Added {formattedDate}

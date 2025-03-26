@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Globe } from "lucide-react";
 import { UploaderAvatar } from "./UploaderAvatar";
 import { commentService } from "@/services/storage/localStorageService";
+import { SolAmount } from "@/components/SolAmount";
 
 interface ScammerTableRowProps {
   scammer: Scammer;
@@ -60,7 +61,7 @@ export const ScammerTableRow = ({
       
       <TableCell className="text-center font-medium">
         <div className="flex items-center justify-center">
-          <span className="text-western-accent font-wanted">{formatCurrency(scammer.bountyAmount)} $BOSC</span>
+          <SolAmount amount={scammer.bountyAmount} className="text-western-accent font-wanted" />
         </div>
       </TableCell>
       

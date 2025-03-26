@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { Header } from "@/components/Header";
@@ -6,10 +7,14 @@ import { FeaturedScammers } from "@/components/home/FeaturedScammers";
 import { HowItWorksSection } from "@/components/home/HowItWorksSection";
 import { WarningSection } from "@/components/home/WarningSection";
 import { Helmet } from "react-helmet-async";
+import { useSolanaPrice } from "@/utils/priceUtils";
 
 const Index = () => {
   const { isConnected } = useWallet();
   const [scrolled, setScrolled] = useState(false);
+  
+  // Preload Solana price on the homepage
+  const { data: solPrice } = useSolanaPrice();
 
   useEffect(() => {
     const handleScroll = () => {

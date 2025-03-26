@@ -7,6 +7,7 @@ import { Trophy, Award, Medal, ThumbsUp, Eye, MessageSquare, Clock } from "lucid
 import { formatCurrency, formatTimeAgo } from "@/utils/formatters";
 import type { LeaderboardUser } from "@/services/storage/leaderboardService";
 import { ProfileLinks } from "@/components/profile/ProfileLinks";
+import { SolAmount } from "@/components/SolAmount";
 
 interface LeaderboardRowProps {
   user: LeaderboardUser;
@@ -107,7 +108,7 @@ export const LeaderboardRow = forwardRef<HTMLTableRowElement, LeaderboardRowProp
         <TableCell className="text-center hidden md:table-cell">{user.totalViews}</TableCell>
         <TableCell className="text-center hidden md:table-cell">{user.totalComments}</TableCell>
         <TableCell className="text-center font-bold text-western-accent">
-          {formatCurrency(user.totalBounty)} BOSC
+          <SolAmount amount={user.totalBounty} />
         </TableCell>
         <TableCell className="text-center text-western-wood">
           {formatJoinedDuration(user.createdAt)}
