@@ -6,6 +6,7 @@ import { Scammer } from "@/lib/types";
 import { Award, Users, TrendingUp, BarChart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SolAmount } from "@/components/SolAmount";
+import { Link } from "react-router-dom";
 
 interface ScammerStatsCardProps {
   scammers: Scammer[];
@@ -90,7 +91,11 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
             </div>
             <div>
               <p className="text-sm font-medium text-western-wood/70">Recently Added</p>
-              <h4 className="text-base font-bold truncate text-western-wood">{stats.recentScammer?.name}</h4>
+              <Link to={`/scammer/${stats.recentScammer?.id}`} className="hover:text-western-accent transition-colors">
+                <h4 className="text-base font-bold truncate text-western-wood hover:underline">
+                  {stats.recentScammer?.name}
+                </h4>
+              </Link>
               <p className="text-xs text-western-wood/70">
                 {new Date(stats.recentScammer?.dateAdded).toLocaleDateString()}
               </p>
@@ -100,8 +105,7 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
 
         <Separator className="my-6 bg-western-wood/30" />
 
-        <div className="flex justify-between items-center">
-          <p className="text-sm text-western-wood/70">Statistics updated in real-time</p>
+        <div className="flex justify-end items-center">
           <p className="text-sm font-medium text-western-accent font-wanted">Most Wanted List</p>
         </div>
       </CardContent>
