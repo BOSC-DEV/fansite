@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
@@ -155,10 +154,6 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
       
       // Save the updated scammer
       const saveResult = await storageService.saveScammer(scammer);
-      
-      if (!saveResult) {
-        throw new Error("Failed to update scammer bounty");
-      }
       
       toast.success(`Successfully contributed ${amount} SOL to the bounty!`);
       
