@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { ThumbsUp, ThumbsDown, Eye, MessageSquare } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, Eye, MessageSquare, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useWallet } from '@/context/WalletContext';
 import { toast } from 'sonner';
@@ -140,6 +141,20 @@ export function ScammerInteractionButtons({
     }
   };
 
+  const shareScammer = () => {
+    const shareUrl = `${window.location.origin}/scammer/${scammerId}`;
+    navigator.clipboard.writeText(shareUrl)
+      .then(() => {
+        toast.success("Link copied to clipboard", {
+          description: "Share this scammer with others"
+        });
+      })
+      .catch((error) => {
+        console.error("Failed to copy link:", error);
+        toast.error("Failed to copy link");
+      });
+  };
+
   return (
     <div className="flex items-center gap-4">
       <Button
@@ -179,6 +194,17 @@ export function ScammerInteractionButtons({
       >
         <MessageSquare className="h-4 w-4" />
         <span>{comments || 0}</span>
+      </Button>
+      
+      <Button
+        variant="outline"
+        size="sm"
+        className="flex items-center gap-2"
+        onClick={shareScammer}
+        title="Share this scammer"
+      >
+        <Share2 className="h-4 w-4" />
+        <span>Share</span>
       </Button>
     </div>
   );
