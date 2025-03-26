@@ -102,12 +102,6 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
             </div>
           </div>
         </div>
-
-        <Separator className="my-6 bg-western-wood/30" />
-
-        <div className="flex justify-end items-center">
-          <p className="text-sm font-medium text-western-accent font-wanted">Most Wanted List</p>
-        </div>
       </CardContent>
     </Card>
   );
