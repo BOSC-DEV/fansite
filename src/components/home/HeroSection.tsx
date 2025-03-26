@@ -30,25 +30,36 @@ export const HeroSection = () => {
             </div>
           </div>
           
-          <div className="relative h-[250px] sm:h-[300px] md:h-[400px] animate-fade-in rounded-sm overflow-hidden border-4 border-western-wood transform -rotate-1 shadow-lg wanted-poster-bg mx-auto w-full max-w-[320px] sm:max-w-none">
-            <div className="absolute inset-0 bg-gradient-to-br from-western-leather/30 via-western-accent/20 to-western-parchment/50 opacity-70 rounded-sm"></div>
-            
-            {/* Nail at the center top of the wanted poster - moved down slightly */}
-            <div className="absolute top-[15px] left-1/2 transform -translate-x-1/2 z-10">
-              <div className="w-8 h-8 bg-gray-600 rounded-full shadow-lg flex items-center justify-center">
-                <div className="w-6 h-6 bg-gradient-to-br from-gray-500 to-gray-700 rounded-full shadow-inner flex items-center justify-center">
-                  <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
+          <div className="relative h-[250px] sm:h-[350px] md:h-[450px] animate-fade-in mx-auto w-full max-w-[320px] sm:max-w-[400px] md:max-w-[500px]">
+            {/* Wanted poster */}
+            <div className="absolute inset-0 transform rotate-1 bg-western-parchment border-4 border-western-wood rounded-sm shadow-lg">
+              {/* Nail at the top center */}
+              <div className="absolute top-3 left-1/2 transform -translate-x-1/2 z-10">
+                <div className="w-8 h-8 bg-gray-600 rounded-full shadow-lg flex items-center justify-center">
+                  <div className="w-6 h-6 bg-gradient-to-br from-gray-500 to-gray-700 rounded-full shadow-inner flex items-center justify-center">
+                    <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
+                  </div>
                 </div>
               </div>
-              <div className="absolute top-1 left-1/2 transform -translate-x-1/2 w-[2px] h-[4px] bg-gray-800 rounded-b"></div>
-            </div>
-            
-            <div className="absolute inset-0 flex items-center justify-center text-western-wood p-4 sm:p-6">
-              <div className="text-center space-y-8">
+              
+              {/* Poster content */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center p-6 mt-5">
                 <h2 className="font-wanted uppercase text-center">
                   <div className="text-5xl sm:text-6xl text-western-accent font-bold tracking-wider mb-4">WANTED:</div>
-                  <div className="text-2xl sm:text-3xl text-western-leather tracking-wide py-0 my-2 px-0">Scammers, Grifters & Criminals of All Creeds</div>
+                  <div className="text-xl sm:text-2xl md:text-3xl text-western-leather tracking-wide py-0 my-6 px-0 text-center">
+                    SCAMMERS, GRIFTERS &<br />
+                    CRIMINALS OF ALL<br />
+                    CREEDS
+                  </div>
                 </h2>
+                
+                {/* Optional: Decorative elements */}
+                <div className="absolute top-0 left-0 right-0 h-8 bg-western-parchment opacity-20 pointer-events-none"></div>
+                <div className="absolute bottom-0 left-0 right-0 h-8 bg-western-parchment opacity-20 pointer-events-none"></div>
+                
+                {/* Cross pattern overlay for texture */}
+                <div className="absolute inset-0 opacity-5 pointer-events-none" 
+                     style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%238B4513' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }}></div>
               </div>
             </div>
           </div>
