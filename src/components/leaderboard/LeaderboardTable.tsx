@@ -58,11 +58,11 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   }
 
   return (
-    <div className="overflow-x-auto paper-texture border-2 border-western-wood rounded-sm">
+    <div className="overflow-x-auto paper-texture border-2 border-western-wood rounded-sm shadow-lg">
       <ScrollArea className="max-h-[80vh]">
-        <Table>
+        <Table className="w-full">
           <LeaderboardHeader onSort={handleSort} />
-          <TableBody>
+          <TableBody className="divide-y divide-western-wood/20">
             {sortedUsers.map((user, index) => {
               const originalIndex = users.findIndex(u => u.id === user.id);
               if (index === sortedUsers.length - 1) {

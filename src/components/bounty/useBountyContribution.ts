@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
-import { checkWallet, copyAddressToClipboard } from "./utils/walletUtils";
+import { copyAddressToClipboard } from "./utils/walletUtils";
 import { transferSol } from "./utils/transactionUtils";
 import { getOrCreateScammer, updateScammerBounty } from "./utils/scammerUtils";
 
@@ -37,7 +37,7 @@ export function useBountyContribution(
 
   const handleContribute = async () => {
     try {
-      console.log("Current wallet connection state:", { isConnected, address });
+      console.log("Starting contribution process...");
       
       // Validate wallet connection
       if (!isConnected) {
@@ -62,11 +62,6 @@ export function useBountyContribution(
 
       setIsSubmitting(true);
 
-      // Verify wallet connection again before proceeding
-      if (!window.phantom?.solana?.isConnected) {
-        throw new Error("Phantom wallet is not connected");
-      }
-
       // Convert amount from string to number
       const solAmount = parseFloat(amount);
       
@@ -78,26 +73,31 @@ export function useBountyContribution(
       // Transfer SOL to the developer wallet
       toast.info("Please confirm the transaction in your wallet");
       
-      const result = await transferSol(DEVELOPER_WALLET_ADDRESS, solAmount);
-      
-      if (!result.success) {
-        throw new Error("Transaction failed to complete");
+      try {
+        const result = await transferSol(DEVELOPER_WALLET_ADDRESS, solAmount);
+        
+        if (!result.success) {
+          throw new Error("Transaction failed to complete");
+        }
+        
+        toast.success("Transaction confirmed!");
+        
+        // Update the scammer record with new bounty amount
+        await updateScammerBounty(scammer, solAmount);
+        
+        toast.success(`Successfully contributed ${amount} SOL to the bounty!`);
+        
+        // Reset the form
+        setAmount("");
+        
+        // Reload the page after a short delay to show the updated bounty
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      } catch (error) {
+        console.error("Transaction error:", error);
+        throw error;
       }
-      
-      toast.success("Transaction confirmed!");
-      
-      // Update the scammer record with new bounty amount
-      await updateScammerBounty(scammer, solAmount);
-      
-      toast.success(`Successfully contributed ${amount} SOL to the bounty!`);
-      
-      // Reset the form
-      setAmount("");
-      
-      // Reload the page after a short delay to show the updated bounty
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
     } catch (error) {
       console.error("Error contributing to bounty:", error);
       toast.error(`Failed to contribute to bounty: ${error instanceof Error ? error.message : "Unknown error"}`);
