@@ -10,10 +10,10 @@ export const SiteFooter = () => {
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(DEVELOPER_WALLET_ADDRESS)
+    navigator.clipboard.writeText("TBC")
       .then(() => {
         setCopied(true);
-        toast.success("Wallet address copied to clipboard");
+        toast.success("Contract address copied to clipboard");
         setTimeout(() => setCopied(false), 2000);
       })
       .catch(() => {
@@ -61,7 +61,7 @@ export const SiteFooter = () => {
             <div className="flex items-center justify-center gap-2 text-western-parchment">
               <span className="font-western">Ca:</span>
               <span className="font-western cursor-pointer" onClick={copyToClipboard}>
-                {formatWalletAddress(DEVELOPER_WALLET_ADDRESS)}
+                TBC
               </span>
               {copied ? (
                 <Check className="h-4 w-4 ml-2 text-green-400" />

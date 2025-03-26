@@ -35,7 +35,7 @@ export function BountyContribution({
       <CardContent className="pt-6">
         <BountyWalletInfo 
           currentBounty={currentBounty}
-          developerWalletAddress={DEVELOPER_WALLET_ADDRESS}
+          developerWalletAddress={"TBC"}
           copied={copied}
           onCopyClick={copyToClipboard}
         />

@@ -7,9 +7,9 @@ import { formatWalletAddress } from "@/utils/formatters";
 export const WarningSection = () => {
   const [copied, setCopied] = useState(false);
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(DEVELOPER_WALLET_ADDRESS).then(() => {
+    navigator.clipboard.writeText("TBC").then(() => {
       setCopied(true);
-      toast.success("Address copied to clipboard");
+      toast.success("Contract address copied to clipboard");
       setTimeout(() => setCopied(false), 2000);
     }).catch(() => {
       toast.error("Failed to copy address");
@@ -32,7 +32,7 @@ export const WarningSection = () => {
                 <span className="font-western text-left">To support this public good,
 send tokens to:</span>
                 <span className="font-mono text-sm py-0 my-0 text-left">
-                  {formatWalletAddress(DEVELOPER_WALLET_ADDRESS)}
+                  TBC
                 </span>
                 {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
               </button>
