@@ -27,12 +27,22 @@ const Index = () => {
       <Helmet>
         <title>BOSC - Book of Scams</title>
         <meta name="description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
+        
+        {/* Open Graph / Facebook */}
         <meta property="og:title" content="BOSC - Book of Scams" />
         <meta property="og:description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
         <meta property="og:image" content="/lovable-uploads/193c1585-dc76-49e4-9490-147d52522837.png" />
-        <meta property="twitter:title" content="BOSC - Book of Scams" />
-        <meta property="twitter:description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
-        <meta property="twitter:image" content="/lovable-uploads/193c1585-dc76-49e4-9490-147d52522837.png" />
+        <meta property="og:url" content="https://bookofscams.lol/" />
+        <meta property="og:type" content="website" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@bookofscamslol" />
+        <meta name="twitter:creator" content="@bookofscamslol" />
+        <meta name="twitter:title" content="BOSC - Book of Scams" />
+        <meta name="twitter:description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
+        <meta name="twitter:image" content="https://bookofscams.lol/lovable-uploads/193c1585-dc76-49e4-9490-147d52522837.png" />
+        <meta name="twitter:image:alt" content="Book of Scams - BOSC" />
       </Helmet>
       
       <div className="dust-swirl"></div>
