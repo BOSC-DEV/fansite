@@ -5,6 +5,8 @@ import { supabase } from '@/lib/supabase';
 export function useCommentsViewTracking(commentId: string) {
   useEffect(() => {
     const trackView = async () => {
+      if (!commentId) return;
+      
       try {
         // Get an anonymized IP hash
         const { data } = await supabase.functions.invoke('get-client-ip-hash');
@@ -26,7 +28,7 @@ export function useCommentsViewTracking(commentId: string) {
           .from('comments')
           .select('views')
           .eq('id', commentId)
-          .single();
+          .maybeSingle();
         
         if (error) {
           console.error("Error fetching comment view count:", error);
@@ -44,8 +46,6 @@ export function useCommentsViewTracking(commentId: string) {
       }
     };
     
-    if (commentId) {
-      trackView();
-    }
+    trackView();
   }, [commentId]);
 }
