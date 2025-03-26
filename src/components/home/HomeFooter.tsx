@@ -10,10 +10,10 @@ export const HomeFooter = () => {
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText("TBC")
+    navigator.clipboard.writeText(DEVELOPER_WALLET_ADDRESS)
       .then(() => {
         setCopied(true);
-        toast.success("TBC copied to clipboard");
+        toast.success("Developer wallet address copied to clipboard");
         setTimeout(() => setCopied(false), 2000);
       })
       .catch(() => {
@@ -49,7 +49,7 @@ export const HomeFooter = () => {
         <div className="mt-4 pt-4 border-t border-western-wood/20 text-center">
           <div className="flex items-center justify-center gap-2 text-western-wood">
             <span className="font-western">Ca:</span>
-            <span className="font-western cursor-pointer" onClick={copyToClipboard}>TBC</span>
+            <span className="font-western cursor-pointer" onClick={copyToClipboard}>{formatWalletAddress(DEVELOPER_WALLET_ADDRESS)}</span>
             {copied ? (
               <Check className="h-4 w-4 text-green-600" />
             ) : (

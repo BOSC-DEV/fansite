@@ -20,10 +20,41 @@ export class ScammerStatsService extends ScammerBaseService {
   }
 
   /**
-   * Increment the view count for a scammer
+   * Increment the view count for a scammer, only if the IP hasn't viewed it before
    */
   async incrementScammerViews(scammerId: string): Promise<boolean> {
     try {
+      // Create an anonymous hash of the IP to protect privacy while tracking uniqueness
+      const ipHash = await this.getAnonymousIpHash();
+      
+      // Check if this IP has already viewed this scammer
+      const { data: existingView } = await supabase
+        .from('scammer_views')
+        .select('id')
+        .eq('scammer_id', scammerId)
+        .eq('ip_hash', ipHash)
+        .maybeSingle();
+      
+      // If the IP has already viewed this scammer, don't increment the count
+      if (existingView) {
+        console.log("This IP has already viewed this scammer");
+        return true; // Return true to indicate successful check, but no increment
+      }
+      
+      // Record the new view
+      const { error: insertError } = await supabase
+        .from('scammer_views')
+        .insert({
+          scammer_id: scammerId,
+          ip_hash: ipHash
+        });
+      
+      if (insertError) {
+        console.error("Error recording scammer view:", insertError);
+        return false;
+      }
+      
+      // Increment the view count
       const scammer = await this.getScammerRecord(scammerId);
       
       if (!scammer) {
@@ -47,6 +78,22 @@ export class ScammerStatsService extends ScammerBaseService {
     } catch (error) {
       console.error("Error in incrementScammerViews:", error);
       return false;
+    }
+  }
+  
+  /**
+   * Generate an anonymous hash of the client's IP address
+   */
+  private async getAnonymousIpHash(): Promise<string> {
+    try {
+      // Call an edge function to get a hashed version of the client IP
+      // This protects privacy while allowing us to track unique views
+      const { data } = await supabase.functions.invoke('get-client-ip-hash');
+      return data?.ipHash || 'unknown';
+    } catch (error) {
+      console.error("Error getting anonymous IP hash:", error);
+      // Fallback to a random string if we can't get the IP hash
+      return `fallback-${Math.random().toString(36).substring(2, 15)}`;
     }
   }
   

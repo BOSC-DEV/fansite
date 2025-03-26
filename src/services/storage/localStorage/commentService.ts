@@ -84,12 +84,22 @@ export class CommentService extends LocalStorageUtils {
     }
   }
 
-  // Add a new method to increment the view count
+  // Update this method to track unique views by using localStorage
   incrementCommentViews(commentId: string): void {
     const comment = this.getComment(commentId);
     if (comment) {
-      comment.views = (comment.views || 0) + 1;
-      this.setItem(`${STORAGE_KEYS.COMMENTS}${commentId}`, comment);
+      // Create a unique key to track if this browser has viewed this comment
+      const viewKey = `comment-view-${commentId}`;
+      
+      // Check if this browser has already viewed this comment
+      if (!localStorage.getItem(viewKey)) {
+        // Mark this browser as having viewed this comment
+        localStorage.setItem(viewKey, 'true');
+        
+        // Increment the view count
+        comment.views = (comment.views || 0) + 1;
+        this.setItem(`${STORAGE_KEYS.COMMENTS}${commentId}`, comment);
+      }
     }
   }
 }

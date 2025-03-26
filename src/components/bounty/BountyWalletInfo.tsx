@@ -37,7 +37,7 @@ export function BountyWalletInfo({
             className="flex items-center text-western-wood/80 hover:text-western-wood transition-colors"
           >
             <span className="font-mono text-xs">
-              {formatWalletAddress(DEVELOPER_WALLET_ADDRESS)}
+              {formatWalletAddress(developerWalletAddress)}
             </span>
             {copied ? (
               <Check className="ml-2 h-4 w-4 text-green-600" />

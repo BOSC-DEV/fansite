@@ -153,19 +153,40 @@ export class CommentService extends BaseSupabaseService {
     }
   }
 
-  // Add a new method to increment the view count
+  // Update this method to track views by IP for comments
   async incrementCommentViews(commentId: string): Promise<void> {
-    const { data: comment } = await this.supabase
-      .from('comments')
-      .select('views')
-      .eq('id', commentId)
-      .single();
-
-    if (comment) {
-      await this.supabase
+    try {
+      // Get an anonymized IP hash
+      const { data } = await this.supabase.functions.invoke('get-client-ip-hash');
+      const ipHash = data?.ipHash || 'unknown';
+      
+      // Check if this IP has already viewed this comment
+      // We'll use a local storage mechanism since we don't have a separate table for comment views
+      const localStorageKey = `comment-view-${commentId}-${ipHash}`;
+      
+      if (localStorage.getItem(localStorageKey)) {
+        // This IP has already viewed this comment
+        return;
+      }
+      
+      // Mark this IP as having viewed this comment
+      localStorage.setItem(localStorageKey, 'true');
+      
+      // Increment the view count
+      const { data: comment } = await this.supabase
         .from('comments')
-        .update({ views: (comment.views || 0) + 1 })
-        .eq('id', commentId);
+        .select('views')
+        .eq('id', commentId)
+        .single();
+
+      if (comment) {
+        await this.supabase
+          .from('comments')
+          .update({ views: (comment.views || 0) + 1 })
+          .eq('id', commentId);
+      }
+    } catch (error) {
+      console.error("Error incrementing comment views:", error);
     }
   }
 }
