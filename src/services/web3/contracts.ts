@@ -1,4 +1,3 @@
-
 import { Connection, PublicKey, LAMPORTS_PER_SOL, Transaction, SystemProgram } from '@solana/web3.js';
 import { toast } from 'sonner';
 
@@ -11,14 +10,20 @@ export class ContractService {
   }
   
   // Get the balance of the current wallet
-  async getBalance(): Promise<number | null> {
+  async getBalance(walletAddress?: string): Promise<number | null> {
     try {
-      if (!window.phantom?.solana?.publicKey) {
+      let publicKey: PublicKey;
+      
+      if (walletAddress) {
+        // If a wallet address is provided, use it
+        publicKey = new PublicKey(walletAddress);
+      } else if (window.phantom?.solana?.publicKey) {
+        // Otherwise try to use the connected wallet
+        publicKey = new PublicKey(window.phantom.solana.publicKey.toString());
+      } else {
         return null;
       }
       
-      // Convert the string public key to a Solana PublicKey object
-      const publicKey = new PublicKey(window.phantom.solana.publicKey.toString());
       const balance = await this.connection.getBalance(publicKey);
       return balance / LAMPORTS_PER_SOL;
     } catch (error) {

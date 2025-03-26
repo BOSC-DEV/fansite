@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
@@ -5,6 +6,7 @@ import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
 import { storageService } from "@/services/storage/localStorageService";
 import { ContractService } from "@/services/web3/contracts";
 import { Connection, PublicKey, LAMPORTS_PER_SOL, Transaction, SystemProgram } from "@solana/web3.js";
+import { scammerService } from "@/services/storage/scammer/scammerService";
 
 export function useBountyContribution(scammerId: string, scammerName: string, currentBounty: number) {
   const { isConnected, address, connectWallet } = useWallet();
@@ -133,13 +135,37 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
       // Convert amount from string to number
       const solAmount = parseFloat(amount);
       
-      // First, check if the scammer exists in our database
-      const scammer = await storageService.getScammer(scammerId);
+      // Try to get the scammer from both services in case one fails
+      let scammer = await scammerService.getScammer(scammerId);
+      
+      // If not found in scammerService, try the localStorage service
       if (!scammer) {
-        throw new Error("Scammer not found in our database");
+        scammer = await storageService.getScammer(scammerId);
       }
       
-      console.log("Found scammer:", scammer.name, "with ID:", scammerId);
+      // If still not found, create a basic record
+      if (!scammer) {
+        console.log("Creating new scammer record for bounty contribution");
+        scammer = {
+          id: scammerId,
+          name: scammerName,
+          photoUrl: "",
+          accusedOf: "",
+          links: [],
+          aliases: [],
+          accomplices: [],
+          officialResponse: "",
+          bountyAmount: currentBounty || 0,
+          walletAddress: "",
+          dateAdded: new Date().toISOString(),
+          comments: [],
+          likes: 0,
+          dislikes: 0,
+          views: 0
+        };
+      }
+      
+      console.log("Found/created scammer:", scammer.name, "with ID:", scammerId);
       
       // Transfer SOL to the developer wallet
       const result = await transferSol(DEVELOPER_WALLET_ADDRESS, solAmount);
@@ -152,8 +178,17 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
       const newBounty = (scammer.bountyAmount || 0) + solAmount;
       scammer.bountyAmount = newBounty;
       
-      // Save the updated scammer
-      const saveResult = await storageService.saveScammer(scammer);
+      // Save the updated scammer to both services for redundancy
+      await storageService.saveScammer(scammer);
+      
+      // Try to save to the scammerService too if it exists
+      try {
+        if (typeof scammerService.saveScammer === 'function') {
+          await scammerService.saveScammer(scammer);
+        }
+      } catch (err) {
+        console.log("Note: Could not save to scammerService, but localStorage succeeded");
+      }
       
       toast.success(`Successfully contributed ${amount} SOL to the bounty!`);
       
