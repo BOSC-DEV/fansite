@@ -65,7 +65,7 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
     return true;
   };
 
-  // Handle the actual SOL transfer
+  // Handle the actual SOL transfer with improved error handling
   const transferSol = async (receiverAddress: string, solAmount: number) => {
     try {
       // Ensure we have a valid receiver address
@@ -78,31 +78,60 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
       // Convert the phantom wallet publicKey to a proper Solana PublicKey object
       const fromPublicKey = new PublicKey(window.phantom.solana.publicKey.toString());
       
-      // Create a connection to Solana
-      const connection = new Connection("https://api.devnet.solana.com", "confirmed");
+      // Create a connection to Solana - using mainnet-beta instead of devnet
+      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+      
+      // Check balance before transfer
+      const balance = await connection.getBalance(fromPublicKey);
+      const requiredLamports = solAmount * LAMPORTS_PER_SOL;
+      
+      if (balance < requiredLamports) {
+        throw new Error(`Insufficient balance. You need at least ${solAmount} SOL.`);
+      }
       
       // Create a transaction
       const transaction = new Transaction().add(
         SystemProgram.transfer({
           fromPubkey: fromPublicKey,
           toPubkey: toPublicKey,
-          lamports: solAmount * LAMPORTS_PER_SOL
+          lamports: requiredLamports
         })
       );
       
-      // Get the latest blockhash
-      const { blockhash } = await connection.getLatestBlockhash();
+      // Get the latest blockhash with more specific commitment
+      const { blockhash } = await connection.getLatestBlockhash('finalized');
       transaction.recentBlockhash = blockhash;
       transaction.feePayer = fromPublicKey;
       
-      // Request signature from the user
-      const { signature } = await window.phantom.solana.signAndSendTransaction(transaction);
+      console.log("Sending transaction with params:", {
+        fromAddress: fromPublicKey.toString(),
+        toAddress: toPublicKey.toString(),
+        amount: solAmount,
+        lamports: requiredLamports
+      });
       
-      // Wait for transaction confirmation
-      await connection.confirmTransaction(signature);
-      
-      console.log("Transaction confirmed:", signature);
-      return { success: true, signature };
+      // Request signature from the user with proper error handling
+      try {
+        const { signature } = await window.phantom.solana.signAndSendTransaction(transaction);
+        console.log("Transaction sent with signature:", signature);
+        
+        // Wait for transaction confirmation with a simpler approach
+        const status = await connection.confirmTransaction(signature, 'confirmed');
+        
+        if (status.value.err) {
+          console.error("Transaction confirmed but failed:", status.value.err);
+          throw new Error(`Transaction error: ${status.value.err}`);
+        }
+        
+        console.log("Transaction confirmed successfully:", signature);
+        return { success: true, signature };
+      } catch (signError: any) {
+        // Handle user rejection or signing errors
+        if (signError.code === 4001) {
+          throw new Error("Transaction rejected by user");
+        }
+        throw signError;
+      }
     } catch (error) {
       console.error("Error during SOL transfer:", error);
       throw error;
@@ -173,11 +202,15 @@ export function useBountyContribution(scammerId: string, scammerName: string, cu
       console.log("Found/created scammer:", scammer.name, "with ID:", scammerId);
       
       // Transfer SOL to the developer wallet
+      toast.info("Please confirm the transaction in your wallet");
+      
       const result = await transferSol(DEVELOPER_WALLET_ADDRESS, solAmount);
       
       if (!result.success) {
         throw new Error("Transaction failed to complete");
       }
+      
+      toast.success("Transaction confirmed!");
       
       // Update the bounty amount - increment by the amount in SOL tokens
       const newBounty = (scammer.bountyAmount || 0) + solAmount;
