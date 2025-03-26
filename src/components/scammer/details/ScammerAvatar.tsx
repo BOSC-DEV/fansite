@@ -10,14 +10,17 @@ interface ScammerAvatarProps {
 export function ScammerAvatar({ name, photoUrl }: ScammerAvatarProps) {
   const [imageError, setImageError] = useState(false);
   
-  // Fallback URL when image fails to load
+  // Fallback URL when image fails to load or photoUrl is empty
   const fallbackImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&size=200`;
+  
+  // The image to display - use fallback if error or if photoUrl is empty
+  const displayImageUrl = imageError || !photoUrl ? fallbackImageUrl : photoUrl;
   
   return (
     <div className="flex justify-center">
       <div className="relative w-full aspect-square max-w-full rounded-md overflow-hidden border-2 border-western-wood shadow-md">
         <img
-          src={imageError ? fallbackImageUrl : photoUrl}
+          src={displayImageUrl}
           alt={name}
           className="w-full h-full object-cover"
           onError={() => setImageError(true)}

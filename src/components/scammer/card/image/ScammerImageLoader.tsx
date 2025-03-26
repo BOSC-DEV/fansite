@@ -20,7 +20,7 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
   }, [photoUrl]);
 
   const handleImageError = () => {
-    console.log(`Image failed to load for scammer: ${name}`);
+    console.log(`Image failed to load for scammer: ${name}, URL: ${photoUrl}`);
     setImageError(true);
     setImageLoaded(true); // Mark as loaded even on error so we display the fallback
     onImageLoaded(true, true);
@@ -31,11 +31,11 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
     onImageLoaded(true, false);
   };
 
-  // Fallback URL when image fails to load - ensure name is properly encoded
+  // Generate fallback URL when image fails to load - ensure name is properly encoded
   const fallbackImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Unknown')}&background=random&size=400`;
   
-  // The image to display
-  const displayImageUrl = imageError ? fallbackImageUrl : photoUrl;
+  // The image to display - use fallback if error or if photoUrl is empty
+  const displayImageUrl = imageError || !photoUrl ? fallbackImageUrl : photoUrl;
 
   // Ensure image has absolute URL for social sharing
   const getAbsoluteImageUrl = (url: string) => {

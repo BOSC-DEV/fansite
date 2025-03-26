@@ -32,6 +32,14 @@ const ScammerCardImageComponent = ({
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
+  // Debug the image URL
+  useEffect(() => {
+    console.log(`ScammerCardImage for ${name}:`, {
+      photoUrl,
+      hasPhoto: Boolean(photoUrl)
+    });
+  }, [name, photoUrl]);
+
   const handleImageLoaded = (loaded: boolean, error: boolean) => {
     setImageLoaded(loaded);
     setImageError(error);

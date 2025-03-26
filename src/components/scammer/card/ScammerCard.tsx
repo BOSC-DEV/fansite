@@ -1,5 +1,5 @@
 
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { Scammer } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -20,6 +20,15 @@ export function ScammerCard({ scammer, className, rank }: ScammerCardProps) {
     console.error("Invalid scammer data:", scammer);
     return null;
   }
+
+  // Debug the scammer data
+  useEffect(() => {
+    console.log(`ScammerCard rendering for ${scammer.name}:`, {
+      id: scammer.id,
+      photoUrl: scammer.photoUrl,
+      hasPhoto: Boolean(scammer.photoUrl)
+    });
+  }, [scammer]);
 
   const formattedBounty = useMemo(() => 
     formatCurrency(scammer.bountyAmount), 

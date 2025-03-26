@@ -33,7 +33,14 @@ const FeaturedScammersComponent = ({ limit = 3 }: FeaturedScammersProps) => {
   
   // For pagination used by ScammerGrid component
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 1; // Since we're only showing 3 items, we don't need pagination
+  const totalPages = 1; // Since we're only showing limited items, we don't need pagination
+
+  // Debug the scammer data
+  useEffect(() => {
+    if (!isLoading && limitedScammers.length > 0) {
+      console.log("FeaturedScammers - Scammers to display:", limitedScammers);
+    }
+  }, [isLoading, limitedScammers]);
 
   return (
     <section className="py-16 bg-western-parchment/30">
