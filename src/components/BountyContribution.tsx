@@ -11,6 +11,7 @@ import { ArrowRight, Coins, Copy, Check } from "lucide-react";
 import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
 import { formatWalletAddress } from "@/utils/formatters";
 import { storageService } from "@/services/storage/localStorageService";
+import { ContractService } from "@/services/web3/contracts";
 
 interface BountyContributionProps {
   scammerId: string;
@@ -27,6 +28,7 @@ export function BountyContribution({
   const [amount, setAmount] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [copied, setCopied] = useState(false);
+  const contractService = new ContractService();
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Only allow numbers and decimals
@@ -62,8 +64,20 @@ export function BountyContribution({
     setIsSubmitting(true);
 
     try {
-      // In a real implementation, this would call a smart contract
-      // For now, we'll just update the local storage
+      // Send SOL transaction through wallet
+      if (!window.phantom?.solana) {
+        throw new Error("Phantom wallet not available");
+      }
+
+      // Convert amount from string to number
+      const solAmount = parseFloat(amount);
+      
+      // Create the Solana transaction
+      const result = await contractService.sendSolTransaction(DEVELOPER_WALLET_ADDRESS, solAmount);
+      
+      if (!result.success) {
+        throw new Error(result.message || "Transaction failed");
+      }
       
       // Get the current scammer data
       const scammer = storageService.getScammer(scammerId);
@@ -71,14 +85,14 @@ export function BountyContribution({
         throw new Error("Scammer not found");
       }
       
-      // Update the bounty amount
-      const newBounty = (scammer.bountyAmount || 0) + parseFloat(amount);
+      // Update the bounty amount - for now we increment by the same amount in BOSC tokens
+      const newBounty = (scammer.bountyAmount || 0) + solAmount;
       scammer.bountyAmount = newBounty;
       
       // Save the updated scammer
       storageService.saveScammer(scammer);
       
-      toast.success(`Successfully contributed ${amount} $BOSC to the bounty!`);
+      toast.success(`Successfully contributed ${amount} SOL to the bounty!`);
       
       // Reset the form
       setAmount("");
@@ -89,7 +103,7 @@ export function BountyContribution({
       }, 1500);
     } catch (error) {
       console.error("Error contributing to bounty:", error);
-      toast.error("Failed to contribute to bounty. Please try again.");
+      toast.error(`Failed to contribute to bounty: ${error instanceof Error ? error.message : "Unknown error"}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -100,7 +114,7 @@ export function BountyContribution({
       <CardHeader className="border-b border-western-wood/20">
         <CardTitle className="text-western-accent font-wanted">Contribute to Bounty</CardTitle>
         <CardDescription className="text-western-wood">
-          Add $BOSC tokens to increase the bounty for {scammerName}
+          Add SOL tokens to increase the bounty for {scammerName}
         </CardDescription>
       </CardHeader>
       
@@ -138,7 +152,7 @@ export function BountyContribution({
           <Separator className="my-4 bg-western-wood/20" />
           
           <div>
-            <Label htmlFor="amount" className="text-western-wood">Contribution Amount</Label>
+            <Label htmlFor="amount" className="text-western-wood">Contribution Amount (in SOL)</Label>
             <div className="flex mt-1.5">
               <Input
                 id="amount"
@@ -149,7 +163,7 @@ export function BountyContribution({
                 className="bg-western-parchment border-western-wood/50 text-western-wood"
               />
               <div className="flex items-center justify-center bg-western-sand/20 border border-western-wood/30 border-l-0 px-3 rounded-r-sm">
-                <span className="text-sm font-medium text-western-wood">$BOSC</span>
+                <span className="text-sm font-medium text-western-wood">SOL</span>
               </div>
             </div>
           </div>
