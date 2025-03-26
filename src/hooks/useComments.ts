@@ -1,6 +1,6 @@
 
 import { useEffect } from "react";
-import { useWallet } from "@/context/WalletContext";
+import { useWallet } from "@/context/wallet";
 import { useCommentsLoad } from "./comments/useCommentsLoad";
 import { useProfileCheck } from "./comments/useProfileCheck";
 import { useCommentSubmit } from "./comments/useCommentSubmit";
