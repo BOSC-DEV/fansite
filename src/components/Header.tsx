@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Wallet, Home, Award, BookOpen, User, Trophy, FileText, Coins } from "lucide-react";
+import { Wallet, Home, Award, BookOpen, User, Trophy, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProfileButton } from "./profile/ProfileButton";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -125,15 +124,12 @@ export const Header = () => {
                 </span>
                 <div className="flex items-center text-xs font-bold text-western-sand">
                   <img 
-                    src="/lovable-uploads/8c729ed2-b786-45d8-98ec-782f58195d12.png" 
+                    src="/lovable-uploads/bcdbe104-d382-4061-bcbd-50c9512136fe.png" 
                     alt="SOL"
                     className="h-3 w-3 mr-1" 
                   />
                   {balance !== null ? (
-                    <span>{balance.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })} SOL</span>
+                    <span><SolAmount amount={balance} /></span>
                   ) : (
                     <span>0.00 SOL</span>
                   )}

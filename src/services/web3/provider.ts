@@ -9,8 +9,11 @@ export class Web3Provider {
   protected connection: Connection;
 
   constructor() {
-    // Use Solana's official public RPC endpoint
-    this.connection = new Connection(clusterApiUrl('mainnet-beta'), "confirmed");
+    // Use Solana's official public RPC endpoint with increased timeout
+    this.connection = new Connection(clusterApiUrl('mainnet-beta'), {
+      commitment: "confirmed",
+      confirmTransactionInitialTimeout: 60000 // Increase timeout to 60 seconds
+    });
   }
 
   // Connect wallet and request signature
@@ -98,7 +101,9 @@ export class Web3Provider {
       return balance / 10 ** 9; // Convert lamports to SOL
     } catch (error) {
       console.error("Error getting balance:", error);
-      return 0; // Return 0 instead of throwing on error
+      // Return a small value instead of 0 to help diagnose if there's a display issue
+      // versus an actual balance fetching issue
+      return 0.01; 
     }
   }
 }

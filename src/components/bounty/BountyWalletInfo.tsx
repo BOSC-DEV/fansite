@@ -21,7 +21,7 @@ export function BountyWalletInfo({
         <Label htmlFor="current-bounty" className="text-western-wood">Current Bounty</Label>
         <div className="flex items-center mt-1.5 bg-western-sand/10 border border-western-wood/30 rounded-sm p-2">
           <span className="font-medium text-western-accent">
-            <SolAmount amount={currentBounty} />
+            <SolAmount amount={currentBounty} showIcon={true} />
           </span>
         </div>
       </div>

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { LogOut, RefreshCw, Wallet, Coins } from "lucide-react";
+import { LogOut, RefreshCw, Wallet } from "lucide-react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { SolAmount } from '@/components/SolAmount';
@@ -68,7 +68,7 @@ export const WalletDisconnect = ({ onDisconnect }: WalletDisconnectProps) => {
           <div className="flex justify-between items-center">
             <div className="flex items-center">
               <img 
-                src="/lovable-uploads/8c729ed2-b786-45d8-98ec-782f58195d12.png" 
+                src="/lovable-uploads/bcdbe104-d382-4061-bcbd-50c9512136fe.png" 
                 alt="SOL"
                 className="h-4 w-4 text-western-accent mr-2" 
               />

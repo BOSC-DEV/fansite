@@ -1,7 +1,6 @@
 
 import React, { useState } from "react";
 import { useSolanaPrice } from "@/utils/priceUtils";
-import { Coins } from "lucide-react";
 
 interface SolAmountProps {
   amount: number;
@@ -13,11 +12,8 @@ export function SolAmount({ amount, className, showIcon = false }: SolAmountProp
   const [showUsd, setShowUsd] = useState(false);
   const { data: solPrice, isLoading, isError } = useSolanaPrice();
   
-  // Format with 2 decimal places instead of whole numbers
-  const formattedSol = `${amount.toLocaleString(undefined, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })} SOL`;
+  // Format with 2 decimal places
+  const formattedSol = `${amount.toFixed(2)} SOL`;
   
   let usdValue = "Loading...";
   
@@ -39,7 +35,7 @@ export function SolAmount({ amount, className, showIcon = false }: SolAmountProp
     >
       {showIcon && (
         <img 
-          src="/lovable-uploads/8c729ed2-b786-45d8-98ec-782f58195d12.png" 
+          src="/lovable-uploads/bcdbe104-d382-4061-bcbd-50c9512136fe.png" 
           alt="SOL"
           className="h-4 w-4 mr-1 inline-block" 
         />
