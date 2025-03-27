@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface ScammerAvatarProps {
   name: string;
@@ -17,8 +16,8 @@ export function ScammerAvatar({ name, photoUrl }: ScammerAvatarProps) {
     }
   }, [photoUrl]);
   
-  // Fallback URL when image fails to load or photoUrl is empty
-  const fallbackImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&size=200`;
+  // Generate fallback URL when image fails to load
+  const fallbackImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Unknown')}&background=random&size=200`;
   
   // The image to display - use fallback if error or if photoUrl is empty
   const displayImageUrl = imageError || !photoUrl ? fallbackImageUrl : photoUrl;

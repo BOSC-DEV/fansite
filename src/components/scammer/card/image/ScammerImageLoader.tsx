@@ -24,7 +24,7 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
     if (!photoUrl || photoUrl.trim() === '') {
       console.log(`Empty image URL for scammer: ${name}`);
       setImageError(true);
-      setImageLoaded(true);
+      setImageLoaded(true); // Mark as loaded even though we'll show fallback
       onImageLoaded(true, true);
     }
   }, [photoUrl, name, onImageLoaded]);
