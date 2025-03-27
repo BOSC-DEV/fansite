@@ -2,8 +2,14 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { UserProfile } from "@/services/storage";
-import { Twitter, Globe, Copy, Award } from "lucide-react";
+import { Twitter, Globe, Copy, Award, HelpCircle } from "lucide-react";
 import { toast } from "sonner";
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger 
+} from "@/components/ui/tooltip";
 
 interface InfoTabProps {
   profile: UserProfile;
@@ -53,10 +59,32 @@ export function InfoTab({ profile }: InfoTabProps) {
           
           {profile.points !== undefined && (
             <div>
-              <h3 className="text-sm font-medium text-western-wood">Points</h3>
+              <h3 className="text-sm font-medium text-western-wood flex items-center gap-1">
+                Score
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="inline-flex cursor-help">
+                        <HelpCircle className="h-3.5 w-3.5 text-western-accent/70" />
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-xs bg-western-parchment text-western-wood border-western-accent/50 p-4">
+                      <p className="font-medium mb-1">Score Algorithm</p>
+                      <p className="text-xs mb-2">Your score is calculated based on:</p>
+                      <ul className="text-xs list-disc pl-4 space-y-1">
+                        <li>Profile age (days on BOSC)</li>
+                        <li>Number of scammer reports submitted</li>
+                        <li>Engagement on your reports (likes and views)</li>
+                        <li>Bounties generated and spent</li>
+                      </ul>
+                      <p className="text-xs mt-2">Higher engagement and more contributions lead to a higher score!</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </h3>
               <div className="flex items-center gap-2">
                 <Award className="h-4 w-4 text-yellow-500" />
-                <p className="text-western-wood font-medium">{profile.points.toLocaleString()} points</p>
+                <p className="text-western-wood font-medium">{profile.points.toLocaleString()} score</p>
               </div>
             </div>
           )}

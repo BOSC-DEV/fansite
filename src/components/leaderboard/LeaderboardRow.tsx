@@ -1,3 +1,4 @@
+
 import React, { forwardRef } from "react";
 import { TableRow, TableCell } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -22,7 +23,7 @@ export const LeaderboardRow = forwardRef<HTMLTableRowElement, LeaderboardRowProp
           <div className="flex flex-col items-center justify-center">
             <Trophy className="h-6 w-6 text-yellow-400" />
             <span className="font-bold text-western-accent">{rank}</span>
-            <span className="text-xs text-yellow-500">{user.points.toLocaleString()} pts</span>
+            <span className="text-xs text-yellow-500">{user.points.toLocaleString()} score</span>
           </div>
         );
       } else if (rank === 2) {
@@ -30,7 +31,7 @@ export const LeaderboardRow = forwardRef<HTMLTableRowElement, LeaderboardRowProp
           <div className="flex flex-col items-center justify-center">
             <Award className="h-6 w-6 text-gray-300" />
             <span className="font-bold text-western-accent">{rank}</span>
-            <span className="text-xs text-yellow-500">{user.points.toLocaleString()} pts</span>
+            <span className="text-xs text-yellow-500">{user.points.toLocaleString()} score</span>
           </div>
         );
       } else if (rank === 3) {
@@ -38,14 +39,14 @@ export const LeaderboardRow = forwardRef<HTMLTableRowElement, LeaderboardRowProp
           <div className="flex flex-col items-center justify-center">
             <Medal className="h-6 w-6 text-amber-700" />
             <span className="font-bold text-western-accent">{rank}</span>
-            <span className="text-xs text-yellow-500">{user.points.toLocaleString()} pts</span>
+            <span className="text-xs text-yellow-500">{user.points.toLocaleString()} score</span>
           </div>
         );
       } else {
         return (
           <div className="text-center">
             <span className="font-bold text-western-accent">{rank}</span>
-            <div className="text-xs text-yellow-500">{user.points.toLocaleString()} pts</div>
+            <div className="text-xs text-yellow-500">{user.points.toLocaleString()} score</div>
           </div>
         );
       }

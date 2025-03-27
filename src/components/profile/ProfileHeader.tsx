@@ -2,11 +2,17 @@
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { CalendarDays, MapPin, Link2, Coins, Award, Gift } from "lucide-react";
+import { CalendarDays, MapPin, Link2, Coins, Award, Gift, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EditProfileButton } from "./EditProfileButton";
 import { useWallet } from "@/context/WalletContext";
 import { SolAmount } from '@/components/SolAmount';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from "@/components/ui/tooltip";
 
 interface ProfileHeaderProps {
   username: string;
@@ -69,10 +75,28 @@ export function ProfileHeader({
             <p className="text-sm text-western-wood/70">@{username}</p>
             
             <div className="mt-1 flex items-center space-x-2">
-              <Badge variant="outline" className="bg-western-accent/10 border-western-accent/30 text-western-accent text-xs">
-                <Gift className="h-3 w-3 mr-1" />
-                <span className="font-mono">{points.toLocaleString()} points</span>
-              </Badge>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge variant="outline" className="bg-western-accent/10 border-western-accent/30 text-western-accent text-xs cursor-help">
+                      <Gift className="h-3 w-3 mr-1" />
+                      <span className="font-mono">{points.toLocaleString()} score</span>
+                      <HelpCircle className="h-3 w-3 ml-1 text-western-accent/70" />
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs bg-western-parchment text-western-wood border-western-accent/50 p-4">
+                    <p className="font-medium mb-1">Score Algorithm</p>
+                    <p className="text-xs mb-2">Score is calculated based on:</p>
+                    <ul className="text-xs list-disc pl-4 space-y-1">
+                      <li>Profile age (days)</li>
+                      <li>Number of reports submitted</li>
+                      <li>Engagement (likes × views)</li>
+                      <li>Bounties generated and spent</li>
+                    </ul>
+                    <p className="text-xs mt-2">Higher engagement and more contributions lead to a higher score!</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               {address && (
                 <Badge variant="outline" className="bg-western-accent/10 border-western-accent/30 text-western-accent text-xs">
                   <Coins className="h-3 w-3 mr-1" />
