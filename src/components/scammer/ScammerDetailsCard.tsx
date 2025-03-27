@@ -65,7 +65,7 @@ export function ScammerDetailsCard({
         />
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col md:flex-row gap-6">
           <ScammerSidebar
             name={scammer.name}
             photoUrl={scammer.photoUrl}
@@ -88,7 +88,7 @@ export function ScammerDetailsCard({
             scammerId={scammer.id}
           />
           
-          <div className="w-full">
+          <div className="flex-1 w-full">
             <ScammerContent 
               aliases={scammer.aliases}
               links={scammer.links}

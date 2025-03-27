@@ -58,9 +58,9 @@ export function ScammerHeader({
 
   return (
     <div className="flex justify-between items-start">
-      <div>
+      <div className="w-full">
         <CardTitle className="text-2xl text-western-wood">{name}</CardTitle>
-        <CardDescription className="text-western-wood/70 mt-1">
+        <CardDescription className="text-western-wood/70 mt-1 w-full">
           Accused of: {accusedOf}
         </CardDescription>
         {bountyAmount > 0 && (
@@ -73,16 +73,17 @@ export function ScammerHeader({
       </div>
       
       {isCreator && (
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 ml-2 shrink-0">
           <Button 
             variant="outline" 
-            size="sm"
+            size="icon"
             asChild
             className="bg-western-sand/30 border-western-sand/20 text-western-wood/80 hover:bg-western-wood hover:text-western-parchment transition-colors"
+            aria-label="Edit Listing"
+            title="Edit Listing"
           >
             <Link to={`/edit-listing/${scammerId}`}>
-              <Edit className="h-4 w-4 mr-1" />
-              Edit Listing
+              <Edit className="h-4 w-4" />
             </Link>
           </Button>
           
@@ -90,11 +91,12 @@ export function ScammerHeader({
             <AlertDialogTrigger asChild>
               <Button 
                 variant="outline" 
-                size="sm"
+                size="icon"
                 className="bg-western-sand/30 border-western-sand/20 text-western-wood/80 hover:bg-red-500 hover:text-white hover:border-red-500/30 transition-colors"
+                aria-label="Archive Listing"
+                title="Archive Listing"
               >
-                <Trash2 className="h-4 w-4 mr-1" />
-                Archive
+                <Trash2 className="h-4 w-4" />
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent className="bg-western-parchment border-western-wood/40">
