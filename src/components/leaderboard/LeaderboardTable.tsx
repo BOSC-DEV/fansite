@@ -105,7 +105,7 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
           </div>
         </div>
       ) : (
-        <ScrollArea className="max-h-[80vh]" type="auto">
+        <ScrollArea orientation="vertical" className="max-h-[80vh]" type="auto">
           <div>
             <Table className="w-full">
               <LeaderboardHeader onSort={handleSort} sortField={sortField} sortDirection={sortDirection} />

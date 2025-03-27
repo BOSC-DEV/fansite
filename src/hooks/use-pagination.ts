@@ -4,7 +4,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 interface UsePaginationOptions {
   totalItems: number;
-  viewType?: "grid" | "table" | "book";
+  viewType?: "grid" | "table" | "book" | "compact";
   initialPage?: number;
   customItemsPerPage?: number;
 }
@@ -26,6 +26,8 @@ export const usePagination = ({
       return isMobile ? 6 : 12;
     } else if (viewType === "book") {
       return 1;
+    } else if (viewType === "compact") {
+      return isMobile ? 5 : 10;
     } else { // table
       return isMobile ? 5 : 10;
     }
