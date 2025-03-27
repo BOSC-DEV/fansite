@@ -45,6 +45,11 @@ const ScammerCardImageComponent = ({
   const handleImageLoaded = (loaded: boolean, error: boolean) => {
     setImageLoaded(loaded);
     setImageError(error);
+    
+    // If there was an error loading the image, but we still need to show the card
+    if (error && !imageLoaded) {
+      console.log(`Using fallback for ${name} in ScammerCardImage`);
+    }
   };
 
   // Increment view count when component mounts, but only once

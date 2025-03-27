@@ -40,9 +40,17 @@ export function ScammerCard({ scammer, className, rank }: ScammerCardProps) {
   
   // Get comments count from comment service
   const commentsCount = useMemo(() => {
-    const scammerComments = commentService.getCommentsForScammer(scammer.id);
-    return scammerComments.length;
+    try {
+      const scammerComments = commentService.getCommentsForScammer(scammer.id);
+      return scammerComments.length;
+    } catch (error) {
+      console.error(`Failed to get comments for scammer ${scammer.id}:`, error);
+      return 0;
+    }
   }, [scammer.id]);
+  
+  // Prepare fallback photo URL in case photoUrl is undefined
+  const safePhotoUrl = scammer.photoUrl || "";
   
   return (
     <Card className={cn(
@@ -51,7 +59,7 @@ export function ScammerCard({ scammer, className, rank }: ScammerCardProps) {
     )}>
       <ScammerCardImage 
         name={scammer.name}
-        photoUrl={scammer.photoUrl || ""}
+        photoUrl={safePhotoUrl}
         likes={scammer.likes || 0}
         dislikes={scammer.dislikes || 0}
         views={scammer.views || 0}
@@ -65,9 +73,9 @@ export function ScammerCard({ scammer, className, rank }: ScammerCardProps) {
         <ScammerCardContent 
           id={scammer.id}
           accusedOf={scammer.accusedOf}
-          bountyAmount={scammer.bountyAmount}
+          bountyAmount={scammer.bountyAmount || 0}
           dateAdded={scammer.dateAdded.toString()}
-          aliases={scammer.aliases}
+          aliases={scammer.aliases || []}
           formattedBounty={formattedBounty}
           formattedDate={formattedDate}
         />

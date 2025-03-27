@@ -38,7 +38,7 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
       retryCount.current += 1;
       
       // Add cache-busting parameter to URL
-      const retrySrc = `${photoUrl}${photoUrl.includes('?') ? '&' : '?'}retry=${retryCount.current}`;
+      const retrySrc = `${photoUrl}${photoUrl.includes('?') ? '&' : '?'}retry=${retryCount.current}&t=${Date.now()}`;
       
       // Try preloading the image
       const img = new Image();
@@ -55,6 +55,9 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
           setImageError(true);
           setImageLoaded(true);
           onImageLoaded(true, true);
+        } else {
+          // Trigger another retry with incrementing the counter
+          handleImageError();
         }
       };
       

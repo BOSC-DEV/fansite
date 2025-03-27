@@ -47,7 +47,7 @@ export function ScammerAvatar({ name, photoUrl }: ScammerAvatarProps) {
       retryCount.current += 1;
       
       // Add cache-busting parameter to force reload
-      const retrySrc = `${photoUrl}${photoUrl.includes('?') ? '&' : '?'}retry=${retryCount.current}`;
+      const retrySrc = `${photoUrl}${photoUrl.includes('?') ? '&' : '?'}retry=${retryCount.current}&t=${Date.now()}`;
       
       // Create a new Image to try preloading
       const img = new Image();
@@ -57,6 +57,9 @@ export function ScammerAvatar({ name, photoUrl }: ScammerAvatarProps) {
         if (retryCount.current >= maxRetries) {
           console.error(`ScammerAvatar: Max retries reached for ${name}, using fallback`);
           setImageError(true);
+        } else {
+          // Try another retry
+          handleImageError();
         }
       };
       
