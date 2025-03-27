@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { storageService, UserProfile, ScammerListing } from "@/services/storage";
 import { Scammer } from "@/lib/types";
@@ -34,6 +33,16 @@ export function useUserProfile(username: string | undefined) {
           
           if (usernameProfile) {
             console.log("Profile found by username in Supabase:", usernameProfile);
+            
+            // Get the leaderboard data to get points
+            const { data: leaderboardData } = await supabase
+              .from('leaderboard_stats')
+              .select('*')
+              .eq('wallet_address', usernameProfile.wallet_address)
+              .maybeSingle();
+              
+            const points = leaderboardData?.total_points || 0;
+            
             setProfile({
               id: usernameProfile.id,
               displayName: usernameProfile.display_name,
@@ -43,7 +52,8 @@ export function useUserProfile(username: string | undefined) {
               createdAt: usernameProfile.created_at,
               xLink: usernameProfile.x_link || '',
               websiteLink: usernameProfile.website_link || '',
-              bio: usernameProfile.bio || ''
+              bio: usernameProfile.bio || '',
+              points: points
             });
             
             // Fetch scammers by this user's wallet address
@@ -72,6 +82,16 @@ export function useUserProfile(username: string | undefined) {
           
           if (walletProfile) {
             console.log("Profile found by wallet address in Supabase:", walletProfile);
+            
+            // Get the leaderboard data to get points
+            const { data: leaderboardData } = await supabase
+              .from('leaderboard_stats')
+              .select('*')
+              .eq('wallet_address', walletProfile.wallet_address)
+              .maybeSingle();
+              
+            const points = leaderboardData?.total_points || 0;
+            
             setProfile({
               id: walletProfile.id,
               displayName: walletProfile.display_name,
@@ -81,7 +101,8 @@ export function useUserProfile(username: string | undefined) {
               createdAt: walletProfile.created_at,
               xLink: walletProfile.x_link || '',
               websiteLink: walletProfile.website_link || '',
-              bio: walletProfile.bio || ''
+              bio: walletProfile.bio || '',
+              points: points
             });
             
             // Fetch scammers by this user's wallet address

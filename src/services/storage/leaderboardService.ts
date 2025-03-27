@@ -18,7 +18,7 @@ export interface LeaderboardUser {
   createdAt: string;
   xLink?: string;
   websiteLink?: string;
-  points: number; // New field for profile points
+  points: number; // Points field for profile ranking
 }
 
 export class LeaderboardService extends BaseSupabaseService {

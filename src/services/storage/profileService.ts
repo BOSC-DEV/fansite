@@ -1,4 +1,3 @@
-
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 
@@ -13,6 +12,7 @@ export interface UserProfile {
   xLink?: string;
   websiteLink?: string;
   bio?: string;
+  points?: number; // Added points property
 }
 
 export class ProfileService extends BaseSupabaseService {
@@ -56,7 +56,8 @@ export class ProfileService extends BaseSupabaseService {
       createdAt: data.created_at,
       xLink: data.x_link || '',
       websiteLink: data.website_link || '',
-      bio: data.bio || ''
+      bio: data.bio || '',
+      points: data.points || 0
     };
   }
 
@@ -95,7 +96,8 @@ export class ProfileService extends BaseSupabaseService {
       createdAt: data.created_at,
       xLink: data.x_link || '',
       websiteLink: data.website_link || '',
-      bio: data.bio || ''
+      bio: data.bio || '',
+      points: data.points || 0
     };
   }
 
@@ -186,7 +188,8 @@ export class ProfileService extends BaseSupabaseService {
       created_at: profile.createdAt,
       x_link: profile.xLink || null,
       website_link: profile.websiteLink || null,
-      bio: profile.bio || null
+      bio: profile.bio || null,
+      points: profile.points || 0
     };
     
     console.log("[ProfileService] Converted profile for database:", dbProfile);
@@ -282,7 +285,8 @@ export class ProfileService extends BaseSupabaseService {
       createdAt: item.created_at,
       xLink: item.x_link || '',
       websiteLink: item.website_link || '',
-      bio: item.bio || ''
+      bio: item.bio || '',
+      points: item.points || 0
     }));
   }
 }

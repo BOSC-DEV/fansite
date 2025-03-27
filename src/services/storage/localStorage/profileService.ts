@@ -10,6 +10,7 @@ export interface UserProfile {
   websiteLink?: string;
   bio?: string;
   username?: string;
+  points?: number; // Added points property
 }
 
 /**
