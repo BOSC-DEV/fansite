@@ -8,7 +8,7 @@ import { HowItWorksSection } from "@/components/home/HowItWorksSection";
 import { WarningSection } from "@/components/home/WarningSection";
 import { Helmet } from "react-helmet-async";
 import { useSolanaPrice } from "@/utils/priceUtils";
-import { HomeFooter } from "@/components/home/HomeFooter";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
@@ -77,8 +77,8 @@ const Index = () => {
         <WarningSection />
       </main>
       
-      {/* Only add home footer on the index page */}
-      <HomeFooter />
+      {/* Use SiteFooter instead of HomeFooter */}
+      <SiteFooter />
       
       <div className="relative">
         <div className="absolute left-0 opacity-30 bottom-20 h-16 w-16 tumbleweed">
