@@ -77,14 +77,7 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
                   </Link>
                 )}
               </div>
-              {stats.highestBountyScammer && (
-                <Link 
-                  to={`/scammer/${stats.highestBountyScammer?.id}`} 
-                  className="text-xs text-western-wood/70 truncate hover:text-western-accent hover:underline"
-                >
-                  {stats.highestBountyScammer?.name}
-                </Link>
-              )}
+              {/* Removed the scammer name display here */}
             </div>
           </div>
 
