@@ -58,9 +58,9 @@ const ScammerDetail = () => {
   const imageUrl = getAbsoluteUrl(scammer.photoUrl);
 
   return (
-    <div className="min-h-screen old-paper">
+    <div className="min-h-screen old-paper flex flex-col">
       <Header />
-      <div className="container mx-auto max-w-6xl px-4 py-4">
+      <div className="container mx-auto max-w-6xl px-4 py-4 flex-1 overflow-y-auto pb-16">
         <Button
           variant="ghost"
           size="sm"

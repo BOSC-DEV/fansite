@@ -51,7 +51,7 @@ export function InteractionsBar({
 
   if (isMobile) {
     return (
-      <div className="w-full flex justify-between py-2 px-2 bg-black/30 text-white text-xs">
+      <div className="w-full flex justify-between py-2 px-3 bg-black/60 text-white text-xs absolute bottom-0 left-0 right-0">
         <InteractionButton 
           icon={ThumbsUp} 
           count={localLikes} 
@@ -59,7 +59,7 @@ export function InteractionsBar({
           active={isLiked}
           activeColor="bg-green-600/80"
           className="!bg-transparent"
-          iconSize={14}
+          iconSize={3}
         />
         
         <InteractionButton 
@@ -69,14 +69,14 @@ export function InteractionsBar({
           active={isDisliked}
           activeColor="bg-red-600/80"
           className="!bg-transparent"
-          iconSize={14}
+          iconSize={3}
         />
         
         <InteractionButton 
           icon={Eye} 
           count={views}
           className="!bg-transparent"
-          iconSize={14}
+          iconSize={3}
         />
         
         <InteractionButton 
@@ -85,7 +85,7 @@ export function InteractionsBar({
           onClick={scrollToComments}
           title="View comments"
           className="!bg-transparent"
-          iconSize={14}
+          iconSize={3}
         />
         
         {scammerId && (
@@ -93,7 +93,7 @@ export function InteractionsBar({
             scammerId={scammerId} 
             count={shares} 
             className="!bg-transparent"
-            iconSize={14}
+            iconSize={3}
           />
         )}
       </div>

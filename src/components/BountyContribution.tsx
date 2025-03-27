@@ -29,7 +29,7 @@ export function BountyContribution({
   } = useBountyContribution(scammerId, scammerName, currentBounty);
 
   return (
-    <Card className="border-western-wood bg-western-parchment/70">
+    <Card className="border-western-wood bg-western-parchment/70 mb-6">
       <BountyHeader scammerName={scammerName} />
       
       <CardContent className="pt-6">

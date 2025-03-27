@@ -32,13 +32,15 @@ export function InteractionButton({
     className
   );
   
+  const iconClasses = cn(`h-${iconSize} w-${iconSize} mr-1`);
+  
   return (
     <div 
       className={buttonClasses}
       onClick={onClick} 
       title={title}
     >
-      <Icon className={`h-${iconSize} w-${iconSize} mr-1`} />
+      <Icon className={iconClasses} />
       <span>{count || 0}</span>
     </div>
   );

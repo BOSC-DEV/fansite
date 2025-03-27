@@ -8,9 +8,9 @@ const CreateListing = () => {
     <div className="min-h-screen flex flex-col old-paper">
       <Header />
 
-      <main className="flex-1 py-[24px]">
+      <main className="flex-1 py-[24px] overflow-y-auto pb-16">
         <div className="container mx-auto px-4">
-          <div className="paper-texture border-2 border-western-wood rounded-sm p-6 py-[24px]">
+          <div className="paper-texture border-2 border-western-wood rounded-sm p-6 py-[24px] mb-6">
             <div className="mb-6 text-center">
               <h1 className="text-3xl font-wanted text-western-accent mb-2">Post a Bounty</h1>
               <p className="text-western-wood max-w-2xl mx-auto">
