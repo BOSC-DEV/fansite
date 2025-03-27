@@ -17,6 +17,9 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
   const imageRef = useRef<HTMLImageElement>(null);
   const isMounted = useRef(true);
   
+  // Generate fallback URL when image fails to load - ensure name is properly encoded
+  const fallbackImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Unknown')}&background=random&size=400`;
+  
   // Reset component state when image URL changes
   useEffect(() => {
     setImageLoaded(false);
@@ -35,7 +38,7 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
     
     // Check if photoUrl is empty or invalid immediately
     if (!photoUrl || photoUrl.trim() === '') {
-      console.log(`Empty image URL for scammer: ${name}`);
+      console.log(`Empty image URL for scammer: ${name}, using fallback`);
       setImageError(true);
       setImageLoaded(true); // Mark as loaded even though we'll show fallback
       onImageLoaded(true, true);
@@ -46,36 +49,6 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
       isMounted.current = false;
     };
   }, [photoUrl, name, onImageLoaded]);
-
-  const handleImageError = () => {
-    if (!isMounted.current) return;
-    
-    console.log(`Image failed to load for scammer: ${name}, URL: ${photoUrl}, retry: ${retryCount}`);
-    
-    if (retryCount < maxRetries) {
-      // Try again with cache buster
-      setRetryCount(prev => prev + 1);
-    } else {
-      // After max retries, fallback to generated avatar
-      setImageError(true);
-      setImageLoaded(true); // Mark as loaded so we show the fallback
-      onImageLoaded(true, true);
-    }
-  };
-
-  const handleImageLoad = () => {
-    if (!isMounted.current) return;
-    
-    console.log(`Image loaded successfully for scammer: ${name}`);
-    setImageLoaded(true);
-    onImageLoaded(true, false);
-  };
-
-  // Generate fallback URL when image fails to load - ensure name is properly encoded
-  const fallbackImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Unknown')}&background=random&size=400`;
-  
-  // The image to display - use fallback if error or if photoUrl is empty
-  const displayImageUrl = imageError || !photoUrl ? fallbackImageUrl : photoUrl;
 
   // Add cache buster to the URL for retries
   const getImageUrl = () => {
@@ -88,6 +61,31 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
     }
     
     return photoUrl;
+  };
+
+  const handleImageError = () => {
+    if (!isMounted.current) return;
+    
+    console.log(`Image failed to load for scammer: ${name}, URL: ${photoUrl}, retry: ${retryCount}`);
+    
+    if (retryCount < maxRetries) {
+      // Try again with cache buster
+      setRetryCount(prev => prev + 1);
+    } else {
+      // After max retries, fallback to generated avatar
+      console.log(`Image failed after ${maxRetries} retries for ${name}, using fallback`);
+      setImageError(true);
+      setImageLoaded(true); // Mark as loaded so we show the fallback
+      onImageLoaded(true, true);
+    }
+  };
+
+  const handleImageLoad = () => {
+    if (!isMounted.current) return;
+    
+    console.log(`Image loaded successfully for scammer: ${name}`);
+    setImageLoaded(true);
+    onImageLoaded(true, false);
   };
   
   // Ensure image has absolute URL for social sharing
@@ -107,6 +105,9 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
   // Set absolute URL for use in SEO
   const absoluteImageUrl = getAbsoluteImageUrl(displayImageUrl);
   
+  // The image to display - use fallback if error or if photoUrl is empty
+  const displayImageUrl = imageError || !photoUrl ? fallbackImageUrl : photoUrl;
+  
   return (
     <>
       {!imageLoaded && (
@@ -117,6 +118,7 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
       
       <img
         ref={imageRef}
+        key={`${photoUrl}-${retryCount}`} // Key helps React understand this is a new image
         src={getImageUrl()}
         alt={name || "Scammer"}
         className={cn(

@@ -1,5 +1,5 @@
 
-import { useState, useEffect, memo, useCallback } from "react";
+import { useState, useEffect, memo, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ScammerImageLoader } from "./ScammerImageLoader";
 import { InteractionsBar } from "./InteractionsBar";
@@ -32,22 +32,36 @@ const ScammerCardImageComponent = ({
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [hasAttemptedViewIncrement, setHasAttemptedViewIncrement] = useState(false);
+  const mounted = useRef(true);
 
-  // Debug the image URL
+  // Set up when component mounts and clean up when it unmounts
   useEffect(() => {
-    console.log(`ScammerCardImage for ${name}:`, {
+    mounted.current = true;
+    
+    // Debug the image URL
+    console.log(`ScammerCardImage mounted for ${name}:`, {
       photoUrl,
       hasPhoto: Boolean(photoUrl)
     });
+    
+    return () => {
+      mounted.current = false;
+    };
   }, [name, photoUrl]);
 
   const handleImageLoaded = useCallback((loaded: boolean, error: boolean) => {
+    if (!mounted.current) return;
+    
     setImageLoaded(loaded);
     setImageError(error);
-  }, []);
+    
+    console.log(`Image state updated for ${name}:`, { loaded, error });
+  }, [name]);
 
   // Increment view count when component mounts, but only once and only after image loads
   useEffect(() => {
+    if (!mounted.current) return;
+    
     if (scammerId && imageLoaded && !hasAttemptedViewIncrement) {
       // Increment view count
       const incrementViews = async () => {
@@ -64,14 +78,14 @@ const ScammerCardImageComponent = ({
   }, [scammerId, imageLoaded, hasAttemptedViewIncrement]);
 
   // Only attempt to scroll if we're on a detail page
-  const scrollToComments = () => {
+  const scrollToComments = useCallback(() => {
     if (scammerId) {
       const commentsSection = document.querySelector('.comments-section');
       if (commentsSection) {
         commentsSection.scrollIntoView({ behavior: 'smooth' });
       }
     }
-  };
+  }, [scammerId]);
   
   return (
     <Link 
