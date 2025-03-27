@@ -12,8 +12,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { formatCurrency, formatDate } from "@/utils/formatters";
 import { useSortableScammers } from "@/hooks/useSortableScammers";
 import { Button } from "@/components/ui/button";
-import { List, Grid } from "lucide-react";
+import { List, Grid, Table } from "lucide-react";
 import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const MostWanted = () => {
   const { 
@@ -30,7 +31,7 @@ const MostWanted = () => {
     sortDirection
   } = useSortableScammers(filteredScammers);
   
-  const [viewType, setViewType] = useState<"grid" | "table">("grid");
+  const [viewType, setViewType] = useState<"grid" | "table" | "compact">("grid");
   const isMobile = useIsMobile();
   
   const { 
@@ -47,12 +48,13 @@ const MostWanted = () => {
   const paginatedScammers = sortedScammers.slice(startIndex, endIndex);
 
   useEffect(() => {
-    if (isMobile && viewType === "table") {
+    // Only reset to grid if on desktop
+    if (!isMobile && viewType === "compact") {
       setViewType("grid");
     }
   }, [isMobile, viewType]);
 
-  const handleViewChange = (view: "grid" | "table") => {
+  const handleViewChange = (view: "grid" | "table" | "compact") => {
     setViewType(view);
   };
 
@@ -69,7 +71,20 @@ const MostWanted = () => {
                 <SearchBar onSearch={handleSearch} initialQuery={searchQuery} />
               </div>
               
-              {!isMobile && (
+              {isMobile ? (
+                <div className="flex justify-center w-full">
+                  <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && handleViewChange(value as "grid" | "compact")}>
+                    <ToggleGroupItem value="grid" aria-label="Toggle grid view">
+                      <Grid className="h-4 w-4 mr-1" />
+                      Grid
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="compact" aria-label="Toggle list view">
+                      <List className="h-4 w-4 mr-1" />
+                      List
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                </div>
+              ) : (
                 <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
@@ -77,7 +92,7 @@ const MostWanted = () => {
                     className={`border-western-wood ${viewType === 'table' ? 'bg-western-wood text-western-parchment' : 'bg-western-parchment text-western-wood'}`}
                     onClick={() => handleViewChange('table')}
                   >
-                    <List className="h-4 w-4 mr-1" />
+                    <Table className="h-4 w-4 mr-1" />
                     Table
                   </Button>
                   <Button
@@ -105,12 +120,20 @@ const MostWanted = () => {
               <NoResults query={searchQuery} />
             ) : isMobile ? (
               <div className="mt-4">
-                <ScammerGrid
-                  paginatedScammers={paginatedScammers}
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  setCurrentPage={setCurrentPage}
-                />
+                {viewType === "grid" ? (
+                  <ScammerGrid
+                    paginatedScammers={paginatedScammers}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    setCurrentPage={setCurrentPage}
+                  />
+                ) : (
+                  <ScammerTableCompact
+                    scammers={paginatedScammers}
+                    formatCurrency={formatCurrency}
+                    formatDate={formatDate}
+                  />
+                )}
               </div>
             ) : viewType === "table" ? (
               <div className="w-full">

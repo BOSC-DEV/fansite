@@ -8,6 +8,7 @@ import { Scammer } from "@/lib/types";
 import { useScammerProfile } from "@/hooks/useScammerProfile";
 import { commentService } from "@/services/storage/localStorageService";
 import { SolAmount } from "@/components/SolAmount";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ScammerTableCompactProps {
   scammers: Scammer[];
@@ -22,7 +23,7 @@ export const ScammerTableCompact = ({
 }: ScammerTableCompactProps) => {
   return (
     <div className="rounded-sm border-western-wood bg-western-parchment/80 overflow-hidden">
-      <div className="w-full overflow-x-auto pb-4">
+      <ScrollArea orientation="horizontal" className="w-full">
         <div className="min-w-[800px]">
           <Table>
             <TableHeader className="bg-western-sand/60 border-b border-western-wood/30">
@@ -135,6 +136,9 @@ export const ScammerTableCompact = ({
             </TableBody>
           </Table>
         </div>
+      </ScrollArea>
+      <div className="text-center py-3 text-xs text-western-wood/70">
+        Swipe sideways to see more details
       </div>
     </div>
   );

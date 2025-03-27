@@ -21,10 +21,10 @@ export const PageControls = ({
   const isMobile = useIsMobile();
   
   return (
-    <div className={`flex justify-center mt-6 ${isMobile ? 'mb-24' : 'mb-10'} space-x-4 sm:space-x-12`}>
+    <div className={`flex justify-center mt-6 ${isMobile ? 'mb-28' : 'mb-10'} space-x-4 sm:space-x-12`}>
       <Button
         variant="outline"
-        size={isMobile ? "default" : "lg"}
+        size={isMobile ? "sm" : "lg"}
         onClick={onPrevPage}
         disabled={currentPage === 1 || isFlipping}
         className="shadow-md hover:shadow-lg transition-all hover:-translate-x-1 border-2 border-[#d1c7b7] dark:border-[#2d2841] bg-[#f8f5f0] dark:bg-[#252136] text-foreground"
@@ -35,7 +35,7 @@ export const PageControls = ({
       
       <Button
         variant="outline"
-        size={isMobile ? "default" : "lg"}
+        size={isMobile ? "sm" : "lg"}
         onClick={onNextPage}
         disabled={currentPage === totalPages || isFlipping}
         className="shadow-md hover:shadow-lg transition-all hover:translate-x-1 border-2 border-[#d1c7b7] dark:border-[#2d2841] bg-[#f8f5f0] dark:bg-[#252136] text-foreground"

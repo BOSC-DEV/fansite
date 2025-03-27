@@ -68,35 +68,40 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   return (
     <div className="overflow-x-auto paper-texture">
       {isMobile ? (
-        <div className="w-full overflow-x-auto pb-4">
-          <div className="min-w-[800px]">
-            <Table>
-              <LeaderboardHeader onSort={handleSort} sortField={sortField} sortDirection={sortDirection} />
-              <TableBody className="divide-y divide-western-wood/20">
-                {sortedUsers.map((user, index) => {
-                  const userRank = originalRanks.get(user.id) || index + 1;
-                  
-                  if (index === sortedUsers.length - 1) {
-                    return (
-                      <LeaderboardRow 
-                        ref={lastUserElementRef}
-                        key={user.id} 
-                        user={user} 
-                        rank={userRank}
-                      />
-                    );
-                  } else {
-                    return (
-                      <LeaderboardRow 
-                        key={user.id} 
-                        user={user} 
-                        rank={userRank}
-                      />
-                    );
-                  }
-                })}
-              </TableBody>
-            </Table>
+        <div className="w-full pb-4">
+          <ScrollArea orientation="horizontal" className="w-full">
+            <div className="min-w-[800px]">
+              <Table>
+                <LeaderboardHeader onSort={handleSort} sortField={sortField} sortDirection={sortDirection} />
+                <TableBody className="divide-y divide-western-wood/20">
+                  {sortedUsers.map((user, index) => {
+                    const userRank = originalRanks.get(user.id) || index + 1;
+                    
+                    if (index === sortedUsers.length - 1) {
+                      return (
+                        <LeaderboardRow 
+                          ref={lastUserElementRef}
+                          key={user.id} 
+                          user={user} 
+                          rank={userRank}
+                        />
+                      );
+                    } else {
+                      return (
+                        <LeaderboardRow 
+                          key={user.id} 
+                          user={user} 
+                          rank={userRank}
+                        />
+                      );
+                    }
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          </ScrollArea>
+          <div className="text-center py-3 text-xs text-western-wood/70">
+            Swipe sideways to see more details
           </div>
         </div>
       ) : (

@@ -38,15 +38,13 @@ export function InteractionButton({
     className
   );
   
-  const iconSizeClass = isMobile ? "h-3 w-3" : `h-${actualIconSize} w-${actualIconSize}`;
-  
   return (
     <div 
       className={buttonClasses}
       onClick={onClick} 
       title={title}
     >
-      <Icon className={`${iconSizeClass} mr-1`} />
+      <Icon className={`h-${actualIconSize} w-${actualIconSize} ${isMobile ? 'h-3 w-3' : ''} mr-1`} />
       <span>{count || 0}</span>
     </div>
   );
