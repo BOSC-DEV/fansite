@@ -34,11 +34,11 @@ export const HeroSection = () => {
           <div className="relative h-[250px] sm:h-[350px] md:h-[450px] animate-fade-in mx-auto w-full max-w-[320px] sm:max-w-[400px] md:max-w-[500px]">
             {/* Wanted poster */}
             <div className="absolute inset-0 transform rotate-1 bg-western-parchment border-4 border-western-wood rounded-sm shadow-lg">
-              {/* Nail at the top center - smaller on mobile */}
+              {/* Nail at the top center - even smaller on mobile */}
               <div className="absolute top-3 left-1/2 transform -translate-x-1/2 z-10">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gray-600 rounded-full shadow-lg flex items-center justify-center">
-                  <div className="w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-br from-gray-500 to-gray-700 rounded-full shadow-inner flex items-center justify-center">
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gray-400 rounded-full"></div>
+                <div className="w-5 h-5 sm:w-8 sm:h-8 bg-gray-600 rounded-full shadow-lg flex items-center justify-center">
+                  <div className="w-3 h-3 sm:w-6 sm:h-6 bg-gradient-to-br from-gray-500 to-gray-700 rounded-full shadow-inner flex items-center justify-center">
+                    <div className="w-1.5 h-1.5 sm:w-3 sm:h-3 bg-gray-400 rounded-full"></div>
                   </div>
                 </div>
               </div>
