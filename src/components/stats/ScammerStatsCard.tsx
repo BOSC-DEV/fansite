@@ -7,6 +7,8 @@ import { Award, Users, TrendingUp, BarChart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SolAmount } from "@/components/SolAmount";
 import { Link } from "react-router-dom";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { ScammerAvatar } from "@/components/scammer/details/ScammerAvatar";
 
 interface ScammerStatsCardProps {
   scammers: Scammer[];
@@ -58,9 +60,24 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
             </div>
             <div className="flex flex-col">
               <p className="text-sm font-medium text-western-wood/70">Highest Bounty</p>
-              <h4 className="text-2xl font-bold text-western-accent">
-                <SolAmount amount={stats.highestBounty} />
-              </h4>
+              <div className="flex items-center gap-2">
+                <h4 className="text-2xl font-bold text-western-accent">
+                  <SolAmount amount={stats.highestBounty} />
+                </h4>
+                {stats.highestBountyScammer && (
+                  <Link to={`/scammer/${stats.highestBountyScammer?.id}`}>
+                    <Avatar className="h-8 w-8 border-2 border-western-accent cursor-pointer hover:ring-2 hover:ring-western-wood/50 transition-all">
+                      <AvatarImage 
+                        src={stats.highestBountyScammer.photoUrl} 
+                        alt={stats.highestBountyScammer.name} 
+                      />
+                      <AvatarFallback className="bg-western-sand text-western-wood">
+                        {stats.highestBountyScammer.name.substring(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Link>
+                )}
+              </div>
               {stats.highestBountyScammer && (
                 <Link 
                   to={`/scammer/${stats.highestBountyScammer?.id}`} 
