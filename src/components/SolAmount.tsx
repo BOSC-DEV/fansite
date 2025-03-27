@@ -6,14 +6,15 @@ interface SolAmountProps {
   amount: number;
   className?: string;
   showIcon?: boolean;
+  decimals?: number;
 }
 
-export function SolAmount({ amount, className, showIcon = false }: SolAmountProps) {
+export function SolAmount({ amount, className, showIcon = false, decimals = 2 }: SolAmountProps) {
   const [showUsd, setShowUsd] = useState(false);
   const { data: solPrice, isLoading, isError } = useSolanaPrice();
   
-  // Format with exactly 2 decimal places
-  const formattedSol = `${amount.toFixed(2)} SOL`;
+  // Format with configurable decimal places
+  const formattedSol = `${amount.toFixed(decimals)} SOL`;
   
   let usdValue = "Loading...";
   
