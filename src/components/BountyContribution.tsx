@@ -6,6 +6,7 @@ import { BountyAmountInput } from "./bounty/BountyAmountInput";
 import { BountyFooter } from "./bounty/BountyFooter";
 import { useBountyContribution } from "./bounty/useBountyContribution";
 import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface BountyContributionProps {
   scammerId: string;
@@ -28,8 +29,10 @@ export function BountyContribution({
     isConnected
   } = useBountyContribution(scammerId, scammerName, currentBounty);
 
+  const isMobile = useIsMobile();
+
   return (
-    <Card className="border-western-wood bg-western-parchment/70 mb-6">
+    <Card className={`border-western-wood bg-western-parchment/70 mb-6 ${isMobile ? 'pb-4' : ''}`}>
       <BountyHeader scammerName={scammerName} />
       
       <CardContent className="pt-6">

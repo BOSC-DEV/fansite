@@ -9,10 +9,12 @@ import { LoadingState } from "@/components/scammer/LoadingState";
 import { ScammerNotFound } from "@/components/scammer/ScammerNotFound";
 import { UnauthorizedAccess } from "@/components/scammer/UnauthorizedAccess";
 import { EditScammerForm } from "@/components/scammer/EditScammerForm";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const EditListing = () => {
   const { id } = useParams<{ id: string }>();
   const { isLoading, scammer, isAuthorized } = useEditScammer(id);
+  const isMobile = useIsMobile();
 
   if (isLoading) {
     return (
@@ -48,7 +50,7 @@ const EditListing = () => {
     <div className="min-h-screen flex flex-col old-paper">
       <Header />
 
-      <main className="flex-1 py-4 overflow-y-auto pb-16">
+      <main className={`flex-1 py-4 overflow-y-auto ${isMobile ? 'pb-32' : 'pb-16'}`}>
         <div className="container mx-auto px-4">
           <Button
             variant="ghost"

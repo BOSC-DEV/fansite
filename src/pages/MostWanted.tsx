@@ -13,6 +13,12 @@ import { formatCurrency, formatDate } from "@/utils/formatters";
 import { useSortableScammers } from "@/hooks/useSortableScammers";
 import { Button } from "@/components/ui/button";
 import { List, Grid } from "lucide-react";
+import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem
+} from "@/components/ui/carousel";
 
 const MostWanted = () => {
   const { 
@@ -53,6 +59,28 @@ const MostWanted = () => {
 
   const handleViewChange = (view: "grid" | "table") => {
     setViewType(view);
+  };
+
+  const renderMobileTable = () => {
+    return (
+      <Carousel 
+        opts={{
+          align: "start",
+          containScroll: "trimSnaps"
+        }}
+        className="w-full"
+      >
+        <CarouselContent className="-ml-1">
+          <CarouselItem className="pl-1 min-w-full">
+            <ScammerTableCompact 
+              scammers={paginatedScammers}
+              formatCurrency={formatCurrency}
+              formatDate={formatDate}
+            />
+          </CarouselItem>
+        </CarouselContent>
+      </Carousel>
+    );
   };
 
   return (
@@ -102,7 +130,19 @@ const MostWanted = () => {
               />
             ) : sortedScammers.length === 0 ? (
               <NoResults query={searchQuery} />
-            ) : viewType === "table" && !isMobile ? (
+            ) : isMobile ? (
+              <>
+                {renderMobileTable()}
+                <div className="mt-4">
+                  <ScammerGrid
+                    paginatedScammers={paginatedScammers}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    setCurrentPage={setCurrentPage}
+                  />
+                </div>
+              </>
+            ) : viewType === "table" ? (
               <div className="w-full">
                 <ScammerTable 
                   paginatedScammers={paginatedScammers}
