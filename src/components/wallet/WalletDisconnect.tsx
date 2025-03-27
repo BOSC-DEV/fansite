@@ -70,7 +70,8 @@ export const WalletDisconnect = ({ onDisconnect }: WalletDisconnectProps) => {
               <img 
                 src="/lovable-uploads/b56ce7fa-4bb2-4920-b10e-4b0c6907f0ec.png" 
                 alt="SOL"
-                className="h-4 w-4 text-western-accent mr-2" 
+                className="h-4 w-4 mr-2" 
+                style={{ objectFit: "contain" }}
               />
               <span className="text-sm text-western-wood/70">Balance</span>
             </div>

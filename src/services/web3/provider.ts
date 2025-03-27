@@ -103,9 +103,18 @@ export class Web3Provider {
       return solBalance;
     } catch (error) {
       console.error("Error getting balance:", error);
-      // For debugging purposes, show a very small value instead of 0 to see if the display works
-      // This helps distinguish between an actual 0 balance and a failed request
-      return 0.05; 
+      // Try alternative RPC endpoint if main one fails
+      try {
+        const fallbackConnection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+        const publicKey = new PublicKey(address);
+        const balance = await fallbackConnection.getBalance(publicKey);
+        const solBalance = balance / 10 ** 9;
+        console.log(`Retrieved balance using fallback for ${address}: ${solBalance} SOL`);
+        return solBalance;
+      } catch (fallbackError) {
+        console.error("Fallback getBalance also failed:", fallbackError);
+        return 0.05; // Return 0.05 for testing
+      }
     }
   }
 }

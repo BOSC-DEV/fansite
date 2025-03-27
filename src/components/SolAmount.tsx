@@ -12,7 +12,7 @@ export function SolAmount({ amount, className, showIcon = false }: SolAmountProp
   const [showUsd, setShowUsd] = useState(false);
   const { data: solPrice, isLoading, isError } = useSolanaPrice();
   
-  // Format with 2 decimal places always
+  // Format with exactly 2 decimal places
   const formattedSol = `${amount.toFixed(2)} SOL`;
   
   let usdValue = "Loading...";
@@ -38,6 +38,7 @@ export function SolAmount({ amount, className, showIcon = false }: SolAmountProp
           src="/lovable-uploads/b56ce7fa-4bb2-4920-b10e-4b0c6907f0ec.png" 
           alt="SOL"
           className="h-4 w-4 mr-1 inline-block" 
+          style={{ objectFit: "contain" }}
         />
       )}
       {showUsd ? usdValue : formattedSol}

@@ -128,6 +128,7 @@ export const Header = () => {
                     src="/lovable-uploads/b56ce7fa-4bb2-4920-b10e-4b0c6907f0ec.png" 
                     alt="SOL"
                     className="h-3 w-3 mr-1" 
+                    style={{ objectFit: "contain" }}
                   />
                   {balance !== null ? (
                     <span><SolAmount amount={balance} /></span>
