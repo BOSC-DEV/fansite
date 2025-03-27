@@ -17,7 +17,6 @@ import Leaderboard from './pages/Leaderboard';
 import MyReportsPage from './pages/MyReportsPage';
 import MyBountiesPage from './pages/MyBountiesPage';
 import { WalletProvider } from './context/wallet';
-import { SiteFooter } from './components/layout/SiteFooter';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -46,7 +45,6 @@ function App() {
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </div>
-                <SiteFooter />
                 <Toaster />
                 <Sonner />
               </div>
@@ -59,3 +57,4 @@ function App() {
 }
 
 export default App;
+
