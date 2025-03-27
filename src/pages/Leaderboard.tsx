@@ -71,11 +71,13 @@ export default function Leaderboard() {
       <Header />
       <main className="flex-1 container mx-auto max-w-6xl px-4 py-20">
         <div className="mt-8 mb-12">
-          <PageHeader
-            title="Leaderboards"
-            description="The leaderboard will be ordered by total bounty generated once the bounty payment system is live."
-            actionIcon={<Trophy className="h-5 w-5 mr-1" />}
-          />
+          <div className="wanted-poster-border paper-texture rounded-sm">
+            <PageHeader
+              title="Leaderboards"
+              description="The leaderboard will be ordered by total bounty generated once the bounty payment system is live."
+              actionIcon={<Trophy className="h-5 w-5 mr-1" />}
+            />
+          </div>
         </div>
 
         {error ? (
@@ -83,7 +85,7 @@ export default function Leaderboard() {
             <p className="text-red-500">{error}</p>
           </div>
         ) : (
-          <div className="wanted-poster-border paper-texture p-6 rounded-sm">
+          <div className="wanted-poster-border paper-texture rounded-sm">
             <LeaderboardTable 
               users={leaderboardUsers} 
               isLoading={isLoading} 

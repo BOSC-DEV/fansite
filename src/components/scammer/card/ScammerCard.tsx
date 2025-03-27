@@ -46,7 +46,7 @@ export function ScammerCard({ scammer, className, rank }: ScammerCardProps) {
   
   return (
     <Card className={cn(
-      "overflow-hidden transition-all duration-300 hover:shadow-md h-full border-western-wood bg-western-parchment/80 w-full",
+      "overflow-hidden transition-all duration-300 hover:shadow-md h-full border border-western-wood bg-western-parchment/80 w-full",
       className
     )}>
       <ScammerCardImage 
