@@ -46,9 +46,6 @@ export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({
         <TableHead>
           <div className="flex items-center">
             {sortableHeader('name', 'User')}
-            <span className="ml-2 text-xs text-western-wood/60 hidden md:inline">
-              Sort by: name
-            </span>
           </div>
         </TableHead>
         <TableHead className="text-center">Links</TableHead>
@@ -65,10 +62,10 @@ export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({
           {sortableHeader('comments', 'Comments')}
         </TableHead>
         <TableHead className="text-center">
-          {sortableHeader('bountyGenerated', 'Bounty Generated')}
+          {sortableHeader('bountyGenerated', 'Generated')}
         </TableHead>
         <TableHead className="text-center">
-          {sortableHeader('bountySpent', 'Bounty Spent')}
+          {sortableHeader('bountySpent', 'Spent')}
         </TableHead>
         <TableHead className="text-center">
           {sortableHeader('joined', 'Joined')}
