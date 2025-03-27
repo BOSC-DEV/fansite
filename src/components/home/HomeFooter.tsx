@@ -6,7 +6,13 @@ export const HomeFooter = () => {
     <footer className="py-8 border-t-2 border-western-leather/30 bg-western-parchment/10">
       <div className="container mx-auto max-w-6xl px-4">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div>
+          <div className="flex items-center">
+            <img 
+              src="/lovable-uploads/3560f524-f977-4118-b1a3-688a8be62f4e.png"
+              alt="Book of Scams Logo"
+              className="h-10 mr-3" 
+              style={{ objectFit: "contain" }}
+            />
             <span className="font-wanted text-transparent bg-clip-text bg-gradient-to-r from-western-accent to-western-leather">Book of Scams</span>
           </div>
           
@@ -30,4 +36,3 @@ export const HomeFooter = () => {
     </footer>
   );
 }
-

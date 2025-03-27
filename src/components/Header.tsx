@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
@@ -92,6 +93,12 @@ export const Header = () => {
       <div className="container mx-auto px-4 flex items-center">
         <div className="flex-shrink-0 mr-8">
           <Link to="/" className="flex items-center space-x-2 text-xl">
+            <img 
+              src="/lovable-uploads/3560f524-f977-4118-b1a3-688a8be62f4e.png" 
+              alt="Book of Scams Logo" 
+              className="h-10 w-10"
+              style={{ objectFit: "contain" }}
+            />
             <span className="font-wanted text-western-parchment"></span>
           </Link>
         </div>

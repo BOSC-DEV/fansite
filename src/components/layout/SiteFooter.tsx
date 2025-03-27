@@ -11,7 +11,7 @@ export const SiteFooter = () => {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center">
             <img 
-              src="/lovable-uploads/193c1585-dc76-49e4-9490-147d52522837.png"
+              src="/lovable-uploads/3560f524-f977-4118-b1a3-688a8be62f4e.png"
               alt="Book of Scams Logo"
               className="h-12 mr-3"
               style={{ objectFit: "contain" }}

@@ -26,7 +26,8 @@ const Index = () => {
   }, []);
 
   // Make sure image URLs are absolute for Twitter cards
-  const imageUrl = "https://bookofscams.lol/lovable-uploads/193c1585-dc76-49e4-9490-147d52522837.png";
+  const logoUrl = "https://bookofscams.lol/lovable-uploads/3560f524-f977-4118-b1a3-688a8be62f4e.png";
+  const bannerUrl = "https://bookofscams.lol/lovable-uploads/35ca060f-4b79-4d9a-b6df-72323cdf7506.png";
   const siteUrl = "https://bookofscams.lol/";
 
   return (
@@ -41,7 +42,7 @@ const Index = () => {
         <meta property="og:url" content={siteUrl} />
         <meta property="og:title" content="BOSC - Book of Scams" />
         <meta property="og:description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
-        <meta property="og:image" content={imageUrl} />
+        <meta property="og:image" content={bannerUrl} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         
@@ -52,7 +53,7 @@ const Index = () => {
         <meta name="twitter:url" content={siteUrl} />
         <meta name="twitter:title" content="BOSC - Book of Scams" />
         <meta name="twitter:description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
-        <meta name="twitter:image" content={imageUrl} />
+        <meta name="twitter:image" content={bannerUrl} />
         <meta name="twitter:image:alt" content="Book of Scams - BOSC" />
       </Helmet>
       
