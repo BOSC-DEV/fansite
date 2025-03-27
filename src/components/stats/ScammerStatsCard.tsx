@@ -3,12 +3,11 @@ import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Scammer } from "@/lib/types";
-import { Award, Users, TrendingUp, BarChart } from "lucide-react";
+import { Award, Users, TrendingUp, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SolAmount } from "@/components/SolAmount";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { ScammerAvatar } from "@/components/scammer/details/ScammerAvatar";
 
 interface ScammerStatsCardProps {
   scammers: Scammer[];
@@ -105,21 +104,29 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
           {/* Recently Added */}
           <div className="flex items-center gap-4">
             <div className="rounded-md bg-western-sand/30 p-2 text-western-accent">
-              <BarChart className="h-5 w-5" />
+              <Clock className="h-5 w-5" />
             </div>
             <div>
               <p className="text-sm font-medium text-western-wood/70">Recently Added</p>
               {stats.recentScammer && (
-                <>
-                  <Link to={`/scammer/${stats.recentScammer?.id}`} className="hover:text-western-accent transition-colors">
-                    <h4 className="text-xl font-bold truncate text-western-wood hover:underline">
+                <div className="flex items-center gap-2">
+                  <h4 className="text-xl font-bold truncate text-western-wood">
+                    <Link to={`/scammer/${stats.recentScammer?.id}`} className="hover:text-western-accent hover:underline transition-colors">
                       {stats.recentScammer?.name}
-                    </h4>
+                    </Link>
+                  </h4>
+                  <Link to={`/scammer/${stats.recentScammer?.id}`}>
+                    <Avatar className="h-8 w-8 border-2 border-western-accent cursor-pointer hover:ring-2 hover:ring-western-wood/50 transition-all">
+                      <AvatarImage 
+                        src={stats.recentScammer.photoUrl} 
+                        alt={stats.recentScammer.name} 
+                      />
+                      <AvatarFallback className="bg-western-sand text-western-wood">
+                        {stats.recentScammer.name.substring(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
                   </Link>
-                  <p className="text-xs text-western-wood/70">
-                    {new Date(stats.recentScammer?.dateAdded).toLocaleDateString()}
-                  </p>
-                </>
+                </div>
               )}
             </div>
           </div>
