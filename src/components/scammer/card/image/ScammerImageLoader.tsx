@@ -1,5 +1,5 @@
 
-import { useState, useEffect, memo, useRef } from "react";
+import { useState, useEffect, memo, useRef, useCallback } from "react";
 import { AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -13,11 +13,11 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
-  const maxRetries = 3;
-  const imageRef = useRef<HTMLImageElement>(null);
+  const maxRetries = 2;
   const isMounted = useRef(true);
+  const imgKey = useRef(`img-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`);
   
-  // Generate fallback URL when image fails to load - ensure name is properly encoded
+  // Generate fallback URL when image fails to load
   const fallbackImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Unknown')}&background=random&size=400`;
   
   // The image to display - use fallback if error or if photoUrl is empty
@@ -33,12 +33,16 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
     setImageError(false);
     setRetryCount(0);
     
+    // Generate new key to force re-render
+    imgKey.current = `img-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    
     // Check if photoUrl is empty or invalid immediately
     if (!photoUrl || photoUrl.trim() === '') {
-      console.log(`Empty image URL for scammer: ${name}, using fallback`);
-      setImageError(true);
-      setImageLoaded(true); // Mark as loaded even though we'll show fallback
-      onImageLoaded(true, true);
+      if (isMounted.current) {
+        setImageError(true);
+        setImageLoaded(true); // Mark as loaded even though we'll show fallback
+        onImageLoaded(true, true);
+      }
     }
     
     // Return cleanup function
@@ -47,74 +51,48 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
     };
   }, [photoUrl, name, onImageLoaded]);
 
-  // Add cache buster to the URL for retries
-  const getImageUrl = () => {
+  // Prepare the image URL with caching strategy
+  const getImageUrl = useCallback(() => {
     if (imageError || !photoUrl) return fallbackImageUrl;
     
-    // Add cache buster for retries
-    if (retryCount > 0) {
-      const separator = photoUrl.includes('?') ? '&' : '?';
-      return `${photoUrl}${separator}retry=${retryCount}&t=${Date.now()}`;
-    }
-    
     // Always add a timestamp to prevent browser caching between page navigations
+    const cacheBuster = `t=${imgKey.current}`;
     const separator = photoUrl.includes('?') ? '&' : '?';
-    return `${photoUrl}${separator}t=${Date.now()}`;
-  };
+    
+    return `${photoUrl}${separator}${cacheBuster}`;
+  }, [photoUrl, imageError, fallbackImageUrl]);
 
-  const handleImageError = () => {
+  const handleImageLoad = useCallback(() => {
     if (!isMounted.current) return;
     
-    console.log(`Image failed to load for scammer: ${name}, URL: ${photoUrl}, retry: ${retryCount}`);
+    setImageLoaded(true);
+    onImageLoaded(true, false);
+  }, [onImageLoaded]);
+
+  const handleImageError = useCallback(() => {
+    if (!isMounted.current) return;
     
     if (retryCount < maxRetries) {
       // Try again with cache buster
       setRetryCount(prev => prev + 1);
     } else {
       // After max retries, fallback to generated avatar
-      console.log(`Image failed after ${maxRetries} retries for ${name}, using fallback`);
       setImageError(true);
-      setImageLoaded(true); // Mark as loaded so we show the fallback
+      setImageLoaded(true);
       onImageLoaded(true, true);
     }
-  };
-
-  const handleImageLoad = () => {
-    if (!isMounted.current) return;
-    
-    console.log(`Image loaded successfully for scammer: ${name}`);
-    setImageLoaded(true);
-    onImageLoaded(true, false);
-  };
-  
-  // Ensure image has absolute URL for social sharing
-  const getAbsoluteImageUrl = (url: string) => {
-    if (!url) return fallbackImageUrl;
-    
-    if (url.startsWith('http')) {
-      return url;
-    }
-    
-    // Create absolute URL from relative URL
-    const origin = window.location.origin;
-    const path = url.startsWith('/') ? url : `/${url}`;
-    return `${origin}${path}`;
-  };
-  
-  // Set absolute URL for use in SEO
-  const absoluteImageUrl = getAbsoluteImageUrl(displayImageUrl);
+  }, [retryCount, maxRetries, onImageLoaded]);
   
   return (
     <>
       {!imageLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-muted animate-pulse">
+        <div className="absolute inset-0 flex items-center justify-center bg-muted">
           <AlertCircle className="h-8 w-8 text-muted-foreground/50" />
         </div>
       )}
       
       <img
-        ref={imageRef}
-        key={`img-${photoUrl}-${retryCount}-${Date.now()}`} // Enhanced key to force re-render
+        key={`${imgKey.current}-${retryCount}`}
         src={getImageUrl()}
         alt={name || "Scammer"}
         className={cn(
@@ -124,7 +102,7 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
         onLoad={handleImageLoad}
         onError={handleImageError}
         loading="lazy"
-        data-absolute-url={absoluteImageUrl} // Store for potential SEO use
+        data-testid="scammer-image"
       />
     </>
   );
