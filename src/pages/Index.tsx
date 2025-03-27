@@ -77,7 +77,6 @@ const Index = () => {
         <WarningSection />
       </main>
       
-      {/* Use only one footer component */}
       <SiteFooter />
       
       <div className="relative">
@@ -92,8 +91,7 @@ const Index = () => {
         </div>
       </div>
       
-      {/* Add padding at the bottom on mobile devices to prevent footer from being hidden by the menu bar */}
-      {isMobile && <div className="h-16"></div>}
+      {/* Remove the extra padding at the bottom on mobile devices */}
     </div>
   );
 };
