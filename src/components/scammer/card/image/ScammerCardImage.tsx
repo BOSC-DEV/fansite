@@ -33,6 +33,7 @@ const ScammerCardImageComponent = ({
   const [imageError, setImageError] = useState(false);
   const [hasAttemptedViewIncrement, setHasAttemptedViewIncrement] = useState(false);
   const mounted = useRef(true);
+  const instanceId = useRef(`scammer-card-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`);
 
   // Set up when component mounts and clean up when it unmounts
   useEffect(() => {
@@ -41,7 +42,8 @@ const ScammerCardImageComponent = ({
     // Debug the image URL
     console.log(`ScammerCardImage mounted for ${name}:`, {
       photoUrl,
-      hasPhoto: Boolean(photoUrl)
+      hasPhoto: Boolean(photoUrl),
+      instanceId: instanceId.current
     });
     
     return () => {
@@ -49,13 +51,20 @@ const ScammerCardImageComponent = ({
     };
   }, [name, photoUrl]);
 
+  // Reset state when photoUrl changes
+  useEffect(() => {
+    setImageLoaded(false);
+    setImageError(false);
+    setHasAttemptedViewIncrement(false);
+  }, [photoUrl]);
+
   const handleImageLoaded = useCallback((loaded: boolean, error: boolean) => {
     if (!mounted.current) return;
     
     setImageLoaded(loaded);
     setImageError(error);
     
-    console.log(`Image state updated for ${name}:`, { loaded, error });
+    console.log(`Image state updated for ${name}:`, { loaded, error, instanceId: instanceId.current });
   }, [name]);
 
   // Increment view count when component mounts, but only once and only after image loads

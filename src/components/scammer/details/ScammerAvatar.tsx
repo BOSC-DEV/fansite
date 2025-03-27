@@ -11,12 +11,19 @@ export function ScammerAvatar({ name, photoUrl }: ScammerAvatarProps) {
   const [retryCount, setRetryCount] = useState(0);
   const maxRetries = 3;
   const isMounted = useRef(true);
-  const imgKey = useRef(`img-${Date.now()}`);
+  const imgKey = useRef(`img-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`);
   
   // Set up when component mounts and clean up when it unmounts
   useEffect(() => {
     isMounted.current = true;
     console.log(`ScammerAvatar mounted for ${name}:`, { photoUrl });
+    
+    // Reset states on mount/update
+    setImageError(false);
+    setRetryCount(0);
+    
+    // Generate a new key when component mounts to force re-render
+    imgKey.current = `img-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
     
     return () => {
       isMounted.current = false;
@@ -28,12 +35,6 @@ export function ScammerAvatar({ name, photoUrl }: ScammerAvatarProps) {
     if (!photoUrl || photoUrl.trim() === '') {
       console.log(`Empty avatar URL for ${name}, using fallback`);
       setImageError(true);
-    } else {
-      // Reset error state when a new URL is provided
-      setImageError(false);
-      setRetryCount(0);
-      // Generate a new key when URL changes to force re-render
-      imgKey.current = `img-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
     }
   }, [photoUrl, name]);
   
@@ -50,7 +51,9 @@ export function ScammerAvatar({ name, photoUrl }: ScammerAvatarProps) {
       return `${photoUrl}${separator}retry=${retryCount}&t=${Date.now()}`;
     }
     
-    return photoUrl;
+    // Always add a timestamp to prevent browser caching between page navigations
+    const separator = photoUrl.includes('?') ? '&' : '?';
+    return `${photoUrl}${separator}t=${Date.now()}`;
   };
   
   const handleImageError = () => {
@@ -72,7 +75,7 @@ export function ScammerAvatar({ name, photoUrl }: ScammerAvatarProps) {
     <div className="flex justify-center">
       <div className="relative w-full aspect-square max-w-full rounded-md overflow-hidden border border-western-wood shadow-md">
         <img
-          key={`${imgKey.current}-${retryCount}`} // Key helps React understand this is a new image
+          key={`${imgKey.current}-${retryCount}`} // Enhanced key to force re-render
           src={getImageUrl()}
           alt={name}
           className="w-full h-full object-cover"

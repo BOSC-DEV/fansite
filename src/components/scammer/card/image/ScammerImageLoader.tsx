@@ -23,21 +23,15 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
   // The image to display - use fallback if error or if photoUrl is empty
   const displayImageUrl = imageError || !photoUrl ? fallbackImageUrl : photoUrl;
   
-  // Reset component state when image URL changes
+  // Reset component state when image URL changes or component mounts
   useEffect(() => {
+    // Mark component as mounted
+    isMounted.current = true;
+    
+    // Reset states
     setImageLoaded(false);
     setImageError(false);
     setRetryCount(0);
-    
-    // Return cleanup function
-    return () => {
-      isMounted.current = false;
-    };
-  }, [photoUrl]);
-
-  // Set up when component mounts
-  useEffect(() => {
-    isMounted.current = true;
     
     // Check if photoUrl is empty or invalid immediately
     if (!photoUrl || photoUrl.trim() === '') {
@@ -47,7 +41,7 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
       onImageLoaded(true, true);
     }
     
-    // Cleanup when component unmounts
+    // Return cleanup function
     return () => {
       isMounted.current = false;
     };
@@ -63,7 +57,9 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
       return `${photoUrl}${separator}retry=${retryCount}&t=${Date.now()}`;
     }
     
-    return photoUrl;
+    // Always add a timestamp to prevent browser caching between page navigations
+    const separator = photoUrl.includes('?') ? '&' : '?';
+    return `${photoUrl}${separator}t=${Date.now()}`;
   };
 
   const handleImageError = () => {
@@ -118,7 +114,7 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
       
       <img
         ref={imageRef}
-        key={`${photoUrl}-${retryCount}`} // Key helps React understand this is a new image
+        key={`img-${photoUrl}-${retryCount}-${Date.now()}`} // Enhanced key to force re-render
         src={getImageUrl()}
         alt={name || "Scammer"}
         className={cn(
