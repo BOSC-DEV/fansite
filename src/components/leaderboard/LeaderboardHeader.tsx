@@ -7,14 +7,14 @@ type SortField = 'rank' | 'name' | 'reports' | 'likes' | 'views' | 'comments' | 
 
 interface LeaderboardHeaderProps {
   onSort: (field: SortField) => void;
-  sortField?: SortField;
-  sortDirection?: 'asc' | 'desc';
+  sortField: SortField;
+  sortDirection: 'asc' | 'desc';
 }
 
 export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({ 
   onSort, 
-  sortField = 'points', 
-  sortDirection = 'desc' 
+  sortField, 
+  sortDirection
 }) => {
   const renderSortIndicator = (field: SortField) => {
     if (sortField !== field) return null;

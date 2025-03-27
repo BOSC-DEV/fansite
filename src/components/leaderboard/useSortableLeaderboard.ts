@@ -10,6 +10,8 @@ interface UseSortableLeaderboardReturn {
   handleSort: (field: SortField) => void;
   sortField: SortField;
   sortDirection: SortDirection;
+  // Add a map to track original ranks based on points
+  originalRanks: Map<string, number>;
 }
 
 export const useSortableLeaderboard = (users: LeaderboardUser[]): UseSortableLeaderboardReturn => {
@@ -28,14 +30,30 @@ export const useSortableLeaderboard = (users: LeaderboardUser[]): UseSortableLea
     }
   };
 
+  // First create ranks based on points
+  const originalRanks = useMemo(() => {
+    const rankMap = new Map<string, number>();
+    
+    // First, sort users by points in descending order
+    const pointsSorted = [...users].sort((a, b) => b.points - a.points);
+    
+    // Assign ranks based on this initial points sorting
+    pointsSorted.forEach((user, index) => {
+      rankMap.set(user.id, index + 1);
+    });
+    
+    return rankMap;
+  }, [users]);
+
   const sortedUsers = useMemo(() => {
     return [...users].sort((a, b) => {
       let comparison = 0;
 
       switch (sortField) {
         case 'rank':
-          // Rank is implicit in the original order
-          return sortDirection === 'asc' ? 1 : -1;
+          // Use the pre-calculated ranks based on points
+          comparison = originalRanks.get(a.id)! - originalRanks.get(b.id)!;
+          break;
         case 'name':
           comparison = a.displayName.localeCompare(b.displayName);
           break;
@@ -70,12 +88,13 @@ export const useSortableLeaderboard = (users: LeaderboardUser[]): UseSortableLea
       // Flip the comparison result for descending order
       return sortDirection === 'asc' ? comparison : -comparison;
     });
-  }, [users, sortField, sortDirection]);
+  }, [users, sortField, sortDirection, originalRanks]);
 
   return {
     sortedUsers,
     handleSort,
     sortField,
-    sortDirection
+    sortDirection,
+    originalRanks
   };
 };

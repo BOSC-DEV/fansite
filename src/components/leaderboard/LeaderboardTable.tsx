@@ -26,7 +26,7 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   hasMore = false, 
   loadMore = () => {} 
 }) => {
-  const { sortedUsers, handleSort } = useSortableLeaderboard(users);
+  const { sortedUsers, handleSort, sortField, sortDirection, originalRanks } = useSortableLeaderboard(users);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const observer = useRef<IntersectionObserver | null>(null);
   const lastUserElementRef = useCallback((node: HTMLTableRowElement | null) => {
@@ -61,17 +61,19 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
     <div className="overflow-x-auto paper-texture">
       <ScrollArea className="max-h-[80vh]">
         <Table className="w-full">
-          <LeaderboardHeader onSort={handleSort} />
+          <LeaderboardHeader onSort={handleSort} sortField={sortField} sortDirection={sortDirection} />
           <TableBody className="divide-y divide-western-wood/20">
             {sortedUsers.map((user, index) => {
-              const originalIndex = users.findIndex(u => u.id === user.id);
+              // Use the original rank from our map
+              const userRank = originalRanks.get(user.id) || index + 1;
+              
               if (index === sortedUsers.length - 1) {
                 return (
                   <LeaderboardRow 
                     ref={lastUserElementRef}
                     key={user.id} 
                     user={user} 
-                    originalIndex={originalIndex} 
+                    rank={userRank}
                   />
                 );
               } else {
@@ -79,7 +81,7 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                   <LeaderboardRow 
                     key={user.id} 
                     user={user} 
-                    originalIndex={originalIndex} 
+                    rank={userRank}
                   />
                 );
               }
