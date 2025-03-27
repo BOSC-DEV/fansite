@@ -97,6 +97,9 @@ const FeaturedScammersComponent = ({ limit = 3 }: FeaturedScammersProps) => {
                 scammers={limitedScammers}
                 formatCurrency={formatCurrency}
                 formatDate={formatDate}
+                onSort={handleSort}
+                sortField={sortField}
+                sortDirection={sortDirection}
               />
             ) : (
               <ScammerGrid 

@@ -3,24 +3,33 @@ import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Eye, ThumbsUp, User, Globe } from "lucide-react";
+import { ArrowUpDown, Eye, ThumbsUp, User, Globe } from "lucide-react";
 import { Scammer } from "@/lib/types";
 import { useScammerProfile } from "@/hooks/useScammerProfile";
 import { commentService } from "@/services/storage/localStorageService";
 import { SolAmount } from "@/components/SolAmount";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScammerSortField, SortDirection } from "@/hooks/useSortableScammers";
 
 interface ScammerTableCompactProps {
   scammers: Scammer[];
   formatCurrency: (amount: number) => string;
   formatDate: (date: Date) => string;
+  onSort?: (field: ScammerSortField) => void;
+  sortField?: ScammerSortField;
+  sortDirection?: SortDirection;
 }
 
 export const ScammerTableCompact = ({ 
   scammers, 
   formatCurrency, 
-  formatDate 
+  formatDate,
+  onSort,
+  sortField,
+  sortDirection
 }: ScammerTableCompactProps) => {
+  const isSortable = !!onSort;
+
   return (
     <div className="rounded-sm border-western-wood bg-western-parchment/80 overflow-hidden">
       <ScrollArea orientation="horizontal" className="w-full">
@@ -29,24 +38,52 @@ export const ScammerTableCompact = ({
             <TableHeader className="bg-western-sand/60 border-b border-western-wood/30">
               <TableRow>
                 <TableHead className="text-western-accent font-wanted">Outlaw</TableHead>
-                <TableHead className="text-center text-western-accent font-wanted">
+                <TableHead 
+                  className={`text-center text-western-accent font-wanted ${isSortable ? 'cursor-pointer' : ''}`}
+                  onClick={() => isSortable && onSort('bountyAmount')}
+                >
                   <div className="flex items-center justify-center">
                     Bounty
+                    {isSortable && (
+                      <ArrowUpDown className={`ml-1 h-4 w-4 ${sortField === 'bountyAmount' ? 'opacity-100' : 'opacity-50'}`} />
+                    )}
                   </div>
                 </TableHead>
                 <TableHead className="text-western-accent font-wanted">Links</TableHead>
                 <TableHead className="text-western-accent font-wanted">Accused Of</TableHead>
-                <TableHead className="text-center text-western-accent font-wanted">
+                <TableHead 
+                  className={`text-center text-western-accent font-wanted ${isSortable ? 'cursor-pointer' : ''}`}
+                  onClick={() => isSortable && onSort('likes')}
+                >
                   <div className="flex items-center justify-center">
                     <ThumbsUp className="h-4 w-4" />
+                    {isSortable && (
+                      <ArrowUpDown className={`ml-1 h-4 w-4 ${sortField === 'likes' ? 'opacity-100' : 'opacity-50'}`} />
+                    )}
                   </div>
                 </TableHead>
-                <TableHead className="text-center text-western-accent font-wanted">
+                <TableHead 
+                  className={`text-center text-western-accent font-wanted ${isSortable ? 'cursor-pointer' : ''}`}
+                  onClick={() => isSortable && onSort('views')}
+                >
                   <div className="flex items-center justify-center">
                     <Eye className="h-4 w-4" />
+                    {isSortable && (
+                      <ArrowUpDown className={`ml-1 h-4 w-4 ${sortField === 'views' ? 'opacity-100' : 'opacity-50'}`} />
+                    )}
                   </div>
                 </TableHead>
-                <TableHead className="text-right text-western-accent font-wanted">Posted</TableHead>
+                <TableHead 
+                  className={`text-right text-western-accent font-wanted ${isSortable ? 'cursor-pointer' : ''}`}
+                  onClick={() => isSortable && onSort('dateAdded')}
+                >
+                  <div className="flex items-center justify-end">
+                    Posted
+                    {isSortable && (
+                      <ArrowUpDown className={`ml-1 h-4 w-4 ${sortField === 'dateAdded' ? 'opacity-100' : 'opacity-50'}`} />
+                    )}
+                  </div>
+                </TableHead>
                 <TableHead className="text-center text-western-accent font-wanted">
                   <div className="flex items-center justify-center">
                     <User className="h-4 w-4" />
@@ -138,7 +175,7 @@ export const ScammerTableCompact = ({
         </div>
       </ScrollArea>
       <div className="text-center py-3 text-xs text-western-wood/70">
-        Swipe sideways to see more details
+        Swipe sideways to see more details {isSortable && "— Tap column headers to sort"}
       </div>
     </div>
   );

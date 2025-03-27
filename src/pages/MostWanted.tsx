@@ -132,6 +132,9 @@ const MostWanted = () => {
                     scammers={paginatedScammers}
                     formatCurrency={formatCurrency}
                     formatDate={formatDate}
+                    onSort={handleSort}
+                    sortField={sortField}
+                    sortDirection={sortDirection}
                   />
                 )}
               </div>
