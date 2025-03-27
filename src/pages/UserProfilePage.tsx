@@ -43,6 +43,7 @@ export function UserProfilePage() {
               joinDate={profile.createdAt ? new Date(profile.createdAt) : undefined}
               isCurrentUser={false}
               address={profile.walletAddress}
+              points={profile.points}
             />
             
             {/* Tabs Section */}

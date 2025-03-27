@@ -1,4 +1,3 @@
-
 import React, { forwardRef } from "react";
 import { TableRow, TableCell } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -17,33 +16,38 @@ interface LeaderboardRowProps {
 export const LeaderboardRow = forwardRef<HTMLTableRowElement, LeaderboardRowProps>(
   ({ user, originalIndex }, ref) => {
     const getRankDisplay = (index: number) => {
-      // Always show the rank number (for all ranks)
-      const rankNumber = <span className="font-bold text-western-accent">{index + 1}</span>;
-      
-      // For top 3, also show the corresponding icon
+      // For top 3, show the corresponding icon
       if (index === 0) {
         return (
           <div className="flex flex-col items-center justify-center">
             <Trophy className="h-6 w-6 text-yellow-400" />
-            {rankNumber}
+            <span className="font-bold text-western-accent">{index + 1}</span>
+            <span className="text-xs text-yellow-500">{user.points.toLocaleString()} pts</span>
           </div>
         );
       } else if (index === 1) {
         return (
           <div className="flex flex-col items-center justify-center">
             <Award className="h-6 w-6 text-gray-300" />
-            {rankNumber}
+            <span className="font-bold text-western-accent">{index + 1}</span>
+            <span className="text-xs text-yellow-500">{user.points.toLocaleString()} pts</span>
           </div>
         );
       } else if (index === 2) {
         return (
           <div className="flex flex-col items-center justify-center">
             <Medal className="h-6 w-6 text-amber-700" />
-            {rankNumber}
+            <span className="font-bold text-western-accent">{index + 1}</span>
+            <span className="text-xs text-yellow-500">{user.points.toLocaleString()} pts</span>
           </div>
         );
       } else {
-        return rankNumber;
+        return (
+          <div className="text-center">
+            <span className="font-bold text-western-accent">{index + 1}</span>
+            <div className="text-xs text-yellow-500">{user.points.toLocaleString()} pts</div>
+          </div>
+        );
       }
     };
 
@@ -95,7 +99,6 @@ export const LeaderboardRow = forwardRef<HTMLTableRowElement, LeaderboardRowProp
             <div className="flex flex-col justify-center">
               <p className="font-medium font-western">{user.displayName}</p>
               <p className="text-xs text-western-accent/80 font-medium">@{user.username}</p>
-              <p className="text-xs text-yellow-500 font-medium">{user.points.toLocaleString()} points</p>
             </div>
           </Link>
         </TableCell>

@@ -1,7 +1,7 @@
 
 import React from "react";
 import { TableHeader, TableRow, TableHead } from "@/components/ui/table";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Award } from "lucide-react";
 
 type SortField = 'rank' | 'name' | 'reports' | 'likes' | 'views' | 'comments' | 'bountyGenerated' | 'bountySpent' | 'joined' | 'points';
 
@@ -13,7 +13,7 @@ interface LeaderboardHeaderProps {
 
 export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({ 
   onSort, 
-  sortField = 'bountyGenerated', 
+  sortField = 'points', 
   sortDirection = 'desc' 
 }) => {
   const renderSortIndicator = (field: SortField) => {
@@ -38,13 +38,16 @@ export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({
     <TableHeader className="bg-western-light-wood/30 sticky top-0 z-10">
       <TableRow>
         <TableHead className="text-center">
-          {sortableHeader('rank', 'Rank')}
+          <div className="flex items-center justify-center">
+            <Award className="h-4 w-4 mr-1 text-yellow-500" />
+            {sortableHeader('points', 'Rank (Points)')}
+          </div>
         </TableHead>
         <TableHead>
           <div className="flex items-center">
             {sortableHeader('name', 'User')}
             <span className="ml-2 text-xs text-western-wood/60 hidden md:inline">
-              Sort by: points, name
+              Sort by: name
             </span>
           </div>
         </TableHead>

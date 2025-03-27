@@ -2,7 +2,7 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { UserProfile } from "@/services/storage";
-import { Twitter, Globe, Copy } from "lucide-react";
+import { Twitter, Globe, Copy, Award } from "lucide-react";
 import { toast } from "sonner";
 
 interface InfoTabProps {
@@ -50,6 +50,16 @@ export function InfoTab({ profile }: InfoTabProps) {
               </button>
             </div>
           </div>
+          
+          {profile.points !== undefined && (
+            <div>
+              <h3 className="text-sm font-medium text-western-wood">Points</h3>
+              <div className="flex items-center gap-2">
+                <Award className="h-4 w-4 text-yellow-500" />
+                <p className="text-western-wood font-medium">{profile.points.toLocaleString()} points</p>
+              </div>
+            </div>
+          )}
           
           <div>
             <h3 className="text-sm font-medium text-western-wood">Joined</h3>

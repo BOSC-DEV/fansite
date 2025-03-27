@@ -13,8 +13,8 @@ interface UseSortableLeaderboardReturn {
 }
 
 export const useSortableLeaderboard = (users: LeaderboardUser[]): UseSortableLeaderboardReturn => {
-  // Default sort by bounty generated (descending)
-  const [sortField, setSortField] = useState<SortField>('bountyGenerated');
+  // Default sort by points (descending)
+  const [sortField, setSortField] = useState<SortField>('points');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
 
   const handleSort = (field: SortField) => {

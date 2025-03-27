@@ -2,7 +2,7 @@
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { CalendarDays, MapPin, Link2, Coins } from "lucide-react";
+import { CalendarDays, MapPin, Link2, Coins, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EditProfileButton } from "./EditProfileButton";
 import { useWallet } from "@/context/WalletContext";
@@ -19,6 +19,7 @@ interface ProfileHeaderProps {
   isCurrentUser: boolean;
   address?: string;
   walletBalance?: number;
+  points?: number;
 }
 
 export function ProfileHeader({
@@ -31,7 +32,8 @@ export function ProfileHeader({
   joinDate,
   isCurrentUser,
   address,
-  walletBalance
+  walletBalance,
+  points = 0
 }: ProfileHeaderProps) {
   const { balance } = useWallet();
   const displayBalance = walletBalance !== undefined ? walletBalance : balance;
@@ -74,6 +76,12 @@ export function ProfileHeader({
                 <Badge variant="outline" className="bg-western-accent/10 border-western-accent/30 text-western-accent text-xs">
                   <Coins className="h-3 w-3 mr-1" />
                   <SolAmount amount={displayBalance || 0} className="font-mono" />
+                </Badge>
+              )}
+              {points > 0 && (
+                <Badge variant="outline" className="bg-yellow-500/10 border-yellow-500/30 text-yellow-500 text-xs">
+                  <Award className="h-3 w-3 mr-1" />
+                  <span className="font-mono">{points.toLocaleString()} pts</span>
                 </Badge>
               )}
             </div>
