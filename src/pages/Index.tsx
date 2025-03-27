@@ -26,7 +26,7 @@ const Index = () => {
   }, []);
 
   // Make sure image URLs are absolute for Twitter cards
-  const logoUrl = "https://bookofscams.lol/lovable-uploads/3560f524-f977-4118-b1a3-688a8be62f4e.png";
+  const logoUrl = "https://bookofscams.lol/lovable-uploads/8a55e27c-a460-46a6-9f26-dd32ef3512ff.png";
   const bannerUrl = "https://bookofscams.lol/lovable-uploads/35ca060f-4b79-4d9a-b6df-72323cdf7506.png";
   const siteUrl = "https://bookofscams.lol/";
 

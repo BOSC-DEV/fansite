@@ -8,7 +8,7 @@ export const HomeFooter = () => {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center">
             <img 
-              src="/lovable-uploads/3560f524-f977-4118-b1a3-688a8be62f4e.png"
+              src="/lovable-uploads/8a55e27c-a460-46a6-9f26-dd32ef3512ff.png"
               alt="Book of Scams Logo"
               className="h-10 mr-3" 
               style={{ objectFit: "contain" }}
