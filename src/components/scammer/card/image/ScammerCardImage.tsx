@@ -1,6 +1,6 @@
 
 import { useState, useEffect, memo, useCallback, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ScammerImageLoader } from "./ScammerImageLoader";
 import { InteractionsBar } from "./InteractionsBar";
 import { ScammerCardBadge } from "./ScammerCardBadge";
@@ -36,6 +36,11 @@ const ScammerCardImageComponent = ({
   const mounted = useRef(true);
   const instanceId = useRef(`scammer-card-${Date.now()}`);
   const isMobile = useIsMobile();
+  const location = useLocation();
+  
+  // Don't show interaction bar on homepage when on mobile
+  const isHomePage = location.pathname === "/";
+  const showInteractions = !(isMobile && isHomePage);
 
   // Reset component state on mount and updates
   useEffect(() => {
@@ -119,7 +124,7 @@ const ScammerCardImageComponent = ({
         />
       </Link>
       
-      {isMobile && (
+      {isMobile && showInteractions && (
         <InteractionsBar 
           scammerId={scammerId}
           likes={likes}
