@@ -8,7 +8,7 @@ export const SiteFooter = () => {
   const isMobile = useIsMobile();
 
   return (
-    <footer className={`py-6 border-t border-western-wood wood-texture ${isMobile ? '' : ''}`}>
+    <footer className={`py-6 border-t border-western-wood wood-texture ${isMobile ? 'mb-16' : ''}`}>
       <div className="container mx-auto max-w-6xl px-4">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center">
