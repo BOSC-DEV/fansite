@@ -126,23 +126,6 @@ export function ProfileHeader({
           </div>
         )}
       </div>
-      
-      <div className="border-t border-western-wood/20 pt-4">
-        <div className="flex space-x-6">
-          <div>
-            <span className="text-sm font-bold text-western-wood">0</span>
-            <span className="text-sm text-western-wood/70 ml-1">Following</span>
-          </div>
-          <div>
-            <span className="text-sm font-bold text-western-wood">0</span>
-            <span className="text-sm text-western-wood/70 ml-1">Followers</span>
-          </div>
-          <div>
-            <span className="text-sm font-bold text-western-wood">0</span>
-            <span className="text-sm text-western-wood/70 ml-1">Reports</span>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
