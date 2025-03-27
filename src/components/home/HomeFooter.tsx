@@ -1,9 +1,12 @@
 
 import { Link } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const HomeFooter = () => {
+  const isMobile = useIsMobile();
+  
   return (
-    <footer className="py-8 border-t-2 border-western-leather/30 bg-western-parchment/10">
+    <footer className={`py-8 border-t-2 border-western-leather/30 bg-western-parchment/10 ${isMobile ? 'mb-14' : ''}`}>
       <div className="container mx-auto max-w-6xl px-4">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center">

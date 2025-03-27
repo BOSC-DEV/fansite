@@ -8,10 +8,13 @@ import { HowItWorksSection } from "@/components/home/HowItWorksSection";
 import { WarningSection } from "@/components/home/WarningSection";
 import { Helmet } from "react-helmet-async";
 import { useSolanaPrice } from "@/utils/priceUtils";
+import { HomeFooter } from "@/components/home/HomeFooter";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
   const { isConnected } = useWallet();
   const [scrolled, setScrolled] = useState(false);
+  const isMobile = useIsMobile();
   
   // Preload Solana price on the homepage
   const { data: solPrice } = useSolanaPrice();
@@ -74,6 +77,9 @@ const Index = () => {
         <WarningSection />
       </main>
       
+      {/* Only add home footer on the index page */}
+      <HomeFooter />
+      
       <div className="relative">
         <div className="absolute left-0 opacity-30 bottom-20 h-16 w-16 tumbleweed">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -85,6 +91,9 @@ const Index = () => {
           </svg>
         </div>
       </div>
+      
+      {/* Add padding at the bottom on mobile devices to prevent footer from being hidden by the menu bar */}
+      {isMobile && <div className="h-16"></div>}
     </div>
   );
 };
