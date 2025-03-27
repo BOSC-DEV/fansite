@@ -85,7 +85,7 @@ export function ScammerHeader({
         {bountyAmount > 0 && (
           <div className="mt-2 flex items-center">
             <span className="text-sm text-western-accent font-medium">
-              Total Bounty: <SolAmount amount={bountyAmount} className="font-bold" />
+              Total Bounty: <SolAmount amount={bountyAmount} className="font-bold" showIcon={true} />
             </span>
           </div>
         )}

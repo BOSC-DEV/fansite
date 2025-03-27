@@ -98,12 +98,14 @@ export class Web3Provider {
     try {
       const publicKey = new PublicKey(address);
       const balance = await this.connection.getBalance(publicKey);
-      return balance / 10 ** 9; // Convert lamports to SOL
+      const solBalance = balance / 10 ** 9; // Convert lamports to SOL
+      console.log(`Retrieved balance for ${address}: ${solBalance} SOL`);
+      return solBalance;
     } catch (error) {
       console.error("Error getting balance:", error);
-      // Return a small value instead of 0 to help diagnose if there's a display issue
-      // versus an actual balance fetching issue
-      return 0.01; 
+      // For debugging purposes, show a very small value instead of 0 to see if the display works
+      // This helps distinguish between an actual 0 balance and a failed request
+      return 0.05; 
     }
   }
 }

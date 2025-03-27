@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
@@ -124,7 +125,7 @@ export const Header = () => {
                 </span>
                 <div className="flex items-center text-xs font-bold text-western-sand">
                   <img 
-                    src="/lovable-uploads/bcdbe104-d382-4061-bcbd-50c9512136fe.png" 
+                    src="/lovable-uploads/b56ce7fa-4bb2-4920-b10e-4b0c6907f0ec.png" 
                     alt="SOL"
                     className="h-3 w-3 mr-1" 
                   />
