@@ -40,7 +40,7 @@ export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({
         <TableHead className="text-center">
           <div className="flex items-center justify-center">
             <Award className="h-4 w-4 mr-1 text-yellow-500" />
-            {sortableHeader('points', 'Rank (Points)')}
+            {sortableHeader('points', 'Rank')}
           </div>
         </TableHead>
         <TableHead>
