@@ -5,6 +5,7 @@ import { ScammerImageLoader } from "./ScammerImageLoader";
 import { InteractionsBar } from "./InteractionsBar";
 import { ScammerCardBadge } from "./ScammerCardBadge";
 import { scammerService } from "@/services/storage/scammer/scammerService";
+import { toast } from "sonner";
 
 interface ScammerCardImageProps {
   name: string;
@@ -31,6 +32,7 @@ const ScammerCardImageComponent = ({
 }: ScammerCardImageProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [viewIncremented, setViewIncremented] = useState(false);
 
   // Debug the image URL
   useEffect(() => {
@@ -47,11 +49,12 @@ const ScammerCardImageComponent = ({
 
   // Increment view count when component mounts, but only once
   useEffect(() => {
-    if (scammerId) {
+    if (scammerId && !viewIncremented) {
       // Increment view count
       const incrementViews = async () => {
         try {
           await scammerService.incrementScammerViews(scammerId);
+          setViewIncremented(true);
         } catch (error) {
           console.error("Failed to increment views:", error);
         }
@@ -59,7 +62,7 @@ const ScammerCardImageComponent = ({
       
       incrementViews();
     }
-  }, [scammerId]);
+  }, [scammerId, viewIncremented]);
 
   // Only attempt to scroll if we're on a detail page
   const scrollToComments = () => {
