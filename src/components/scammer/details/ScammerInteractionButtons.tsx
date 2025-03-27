@@ -17,6 +17,7 @@ export interface ScammerInteractionButtonsProps {
   isDisliked: boolean;
   onLike: () => void;
   onDislike: () => void;
+  className?: string;
 }
 
 export function ScammerInteractionButtons({
@@ -29,10 +30,11 @@ export function ScammerInteractionButtons({
   isLiked,
   isDisliked,
   onLike,
-  onDislike
+  onDislike,
+  className
 }: ScammerInteractionButtonsProps) {
   return (
-    <div className="flex items-center gap-4">
+    <div className={`flex items-center gap-2 ${className || ''}`}>
       <LikeButton 
         count={likes} 
         isActive={isLiked} 

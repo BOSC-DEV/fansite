@@ -31,6 +31,7 @@ export function ScammerDetailsCard({
   imageLoaded, 
   setImageLoaded, 
   formatDate = (date) => new Date(date).toLocaleDateString(),
+  scammerStats,
   onLikeScammer,
   onDislikeScammer 
 }: ScammerDetailsCardProps) {
@@ -42,11 +43,6 @@ export function ScammerDetailsCard({
   const { 
     isLiked, 
     isDisliked, 
-    likes, 
-    dislikes, 
-    views,
-    handleLike,
-    handleDislike 
   } = useScammerStats(scammer);
 
   // Fetch comment count
@@ -65,15 +61,6 @@ export function ScammerDetailsCard({
           accusedOf={scammer.accusedOf}
           isCreator={isCreator}
           scammerId={scammer.id}
-          likes={likes}
-          dislikes={dislikes}
-          views={views}
-          shares={scammer.shares || 0}
-          comments={commentCount}
-          isLiked={isLiked}
-          isDisliked={isDisliked}
-          onLike={handleLike}
-          onDislike={handleDislike}
           bountyAmount={scammer.bountyAmount}
         />
       </CardHeader>
@@ -89,6 +76,16 @@ export function ScammerDetailsCard({
             isProfileLoading={isProfileLoading}
             profileId={profileId}
             formatDate={formatDate}
+            scammerStats={scammerStats ? {
+              ...scammerStats,
+              comments: commentCount,
+              shares: scammerStats.shares || 0,
+            } : undefined}
+            isLiked={isLiked}
+            isDisliked={isDisliked}
+            onLike={onLikeScammer}
+            onDislike={onDislikeScammer}
+            scammerId={scammer.id}
           />
           
           <div className="w-full">
