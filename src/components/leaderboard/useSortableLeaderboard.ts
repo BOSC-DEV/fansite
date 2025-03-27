@@ -67,6 +67,7 @@ export const useSortableLeaderboard = (users: LeaderboardUser[]): UseSortableLea
           comparison = 0;
       }
 
+      // Flip the comparison result for descending order
       return sortDirection === 'asc' ? comparison : -comparison;
     });
   }, [users, sortField, sortDirection]);
