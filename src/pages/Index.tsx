@@ -77,7 +77,7 @@ const Index = () => {
         <WarningSection />
       </main>
       
-      {/* Use SiteFooter instead of HomeFooter */}
+      {/* Use only one footer component */}
       <SiteFooter />
       
       <div className="relative">
