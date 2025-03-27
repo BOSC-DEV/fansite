@@ -5,6 +5,7 @@ import { LogOut, RefreshCw, Wallet } from "lucide-react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { SolAmount } from '@/components/SolAmount';
+import { useNavigate } from 'react-router-dom';
 
 interface WalletDisconnectProps {
   onDisconnect?: () => void;
@@ -13,6 +14,7 @@ interface WalletDisconnectProps {
 export const WalletDisconnect = ({ onDisconnect }: WalletDisconnectProps) => {
   const { disconnectWallet, address, balance, connectWallet } = useWallet();
   const [isRefreshing, setIsRefreshing] = React.useState(false);
+  const navigate = useNavigate();
 
   const handleDisconnect = async () => {
     await disconnectWallet();
@@ -20,6 +22,7 @@ export const WalletDisconnect = ({ onDisconnect }: WalletDisconnectProps) => {
     if (onDisconnect) {
       onDisconnect();
     }
+    navigate('/');
   };
 
   const handleRefreshBalance = async () => {

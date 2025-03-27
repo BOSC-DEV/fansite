@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Wallet, Home, Award, BookOpen, User, Trophy, FileText } from "lucide-react";
+import { Wallet, Home, Award, BookOpen, User, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProfileButton } from "./profile/ProfileButton";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -18,7 +17,6 @@ export const Header = () => {
     balance,
     connectWallet,
     connecting,
-    disconnectWallet
   } = useWallet();
   const [isScrolled, setIsScrolled] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
