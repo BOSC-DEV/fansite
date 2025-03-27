@@ -108,7 +108,10 @@ export const LeaderboardRow = forwardRef<HTMLTableRowElement, LeaderboardRowProp
         <TableCell className="text-center hidden md:table-cell">{user.totalViews}</TableCell>
         <TableCell className="text-center hidden md:table-cell">{user.totalComments}</TableCell>
         <TableCell className="text-center font-bold text-western-accent">
-          <SolAmount amount={user.totalBounty} />
+          <SolAmount amount={user.totalBountyGenerated} />
+        </TableCell>
+        <TableCell className="text-center font-bold text-western-accent">
+          <SolAmount amount={user.totalBountySpent} />
         </TableCell>
         <TableCell className="text-center text-western-wood">
           {formatJoinedDuration(user.createdAt)}

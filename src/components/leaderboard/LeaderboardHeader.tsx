@@ -3,7 +3,7 @@ import React from "react";
 import { TableHeader, TableHead, TableRow } from "@/components/ui/table";
 import { ArrowUpDown, ThumbsUp, Eye, MessageSquare, Clock } from "lucide-react";
 
-type SortField = 'totalReports' | 'totalLikes' | 'totalViews' | 'totalComments' | 'totalBounty' | 'joinedDuration';
+type SortField = 'totalReports' | 'totalLikes' | 'totalViews' | 'totalComments' | 'totalBountyGenerated' | 'totalBountySpent' | 'joinedDuration';
 
 interface LeaderboardHeaderProps {
   onSort: (field: SortField) => void;
@@ -54,10 +54,19 @@ export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({ onSort }) 
         </TableHead>
         <TableHead 
           className="text-center text-western-accent font-wanted cursor-pointer"
-          onClick={() => onSort('totalBounty')}
+          onClick={() => onSort('totalBountyGenerated')}
         >
-          <div className="flex items-center justify-center">
-            Total Bounty
+          <div className="flex items-center justify-center whitespace-nowrap">
+            Generated
+            <ArrowUpDown className="ml-1 h-4 w-4" />
+          </div>
+        </TableHead>
+        <TableHead 
+          className="text-center text-western-accent font-wanted cursor-pointer"
+          onClick={() => onSort('totalBountySpent')}
+        >
+          <div className="flex items-center justify-center whitespace-nowrap">
+            Spent
             <ArrowUpDown className="ml-1 h-4 w-4" />
           </div>
         </TableHead>

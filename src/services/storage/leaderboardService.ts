@@ -1,4 +1,3 @@
-
 import { BaseSupabaseService } from './baseSupabaseService';
 import { scammerService } from './scammer/scammerService';
 import { v4 as uuidv4 } from 'uuid';
@@ -13,7 +12,8 @@ export interface LeaderboardUser {
   totalLikes: number;
   totalViews: number;
   totalComments: number;
-  totalBounty: number;
+  totalBountyGenerated: number;
+  totalBountySpent: number;
   createdAt: string;
   xLink?: string;
   websiteLink?: string;
@@ -85,6 +85,10 @@ export class LeaderboardService extends BaseSupabaseService {
           console.warn('[LeaderboardService] Error counting comments:', error);
         }
         
+        // For now, we'll keep these separate but with the same value
+        // In a real implementation, you would calculate these separately based on actual data
+        const bountyGenerated = userScammers.reduce((sum, scammer) => sum + (scammer.bountyAmount || 0), 0);
+        
         return {
           id: profile.id,
           walletAddress: profile.wallet_address,
@@ -95,7 +99,8 @@ export class LeaderboardService extends BaseSupabaseService {
           totalLikes: totalLikes,
           totalViews: totalViews,
           totalComments: totalComments,
-          totalBounty: 0, // Keep at 0 until bounty system is ready
+          totalBountyGenerated: bountyGenerated,
+          totalBountySpent: 0, // Keep at 0 until bounty system is ready
           createdAt: profile.created_at,
           xLink: profile.x_link || undefined,
           websiteLink: profile.website_link || undefined

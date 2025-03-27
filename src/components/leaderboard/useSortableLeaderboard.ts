@@ -2,7 +2,7 @@
 import { useState, useMemo } from "react";
 import type { LeaderboardUser } from "@/services/storage/leaderboardService";
 
-export type SortField = 'totalReports' | 'totalLikes' | 'totalViews' | 'totalComments' | 'totalBounty' | 'joinedDuration';
+export type SortField = 'totalReports' | 'totalLikes' | 'totalViews' | 'totalComments' | 'totalBountyGenerated' | 'totalBountySpent' | 'joinedDuration';
 export type SortDirection = 'asc' | 'desc';
 
 export const useSortableLeaderboard = (users: LeaderboardUser[]) => {
