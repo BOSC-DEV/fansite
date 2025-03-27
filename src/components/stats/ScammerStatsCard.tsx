@@ -45,8 +45,8 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
   };
 
   return (
-    <Card className={cn("mb-8 border-western-wood bg-western-parchment/80", className)}>
-      <CardContent className="p-6">
+    <Card className={cn("mb-6 border-western-wood bg-western-parchment/80 w-full", className)}>
+      <CardContent className="p-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="flex items-center gap-4">
             <div className="rounded-md bg-western-sand/30 p-2 text-western-accent">

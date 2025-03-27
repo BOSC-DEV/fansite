@@ -103,7 +103,7 @@ const MostWanted = () => {
             ) : sortedScammers.length === 0 ? (
               <NoResults query={searchQuery} />
             ) : viewType === "table" && !isMobile ? (
-              <div className="paper-texture border-2 border-western-wood rounded-sm">
+              <div className="w-full">
                 <ScammerTable 
                   paginatedScammers={paginatedScammers}
                   currentPage={currentPage}

@@ -62,7 +62,7 @@ const FeaturedScammersComponent = ({ limit = 3 }: FeaturedScammersProps) => {
           <ScammerStatsCard scammers={filteredScammers} className="mb-6" />
         )}
         
-        <div className="paper-texture rounded-sm p-4 w-full">
+        <div className="w-full">
           {isLoading ? (
             <ScammerGrid
               paginatedScammers={[]}

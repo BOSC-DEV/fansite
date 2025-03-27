@@ -16,7 +16,7 @@ export function ReportsTab({ scammers }: ReportsTabProps) {
     <>
       <h2 className="text-xl font-bold mb-4 font-western text-western-accent">Scammer Reports</h2>
       {scammers.length > 0 ? (
-        <Card className="p-6">
+        <div className="w-full">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {scammers.map((scammer, index) => (
               <ScammerCard 
@@ -26,7 +26,7 @@ export function ReportsTab({ scammers }: ReportsTabProps) {
               />
             ))}
           </div>
-        </Card>
+        </div>
       ) : (
         <Card className="p-6 text-center">
           <p className="text-western-sand mb-4">No scammer reports yet</p>
