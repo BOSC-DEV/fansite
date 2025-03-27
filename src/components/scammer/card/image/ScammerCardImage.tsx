@@ -1,5 +1,5 @@
 
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect, memo, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { ScammerImageLoader } from "./ScammerImageLoader";
 import { InteractionsBar } from "./InteractionsBar";
@@ -31,6 +31,7 @@ const ScammerCardImageComponent = ({
 }: ScammerCardImageProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [hasAttemptedViewIncrement, setHasAttemptedViewIncrement] = useState(false);
 
   // Debug the image URL
   useEffect(() => {
@@ -40,17 +41,18 @@ const ScammerCardImageComponent = ({
     });
   }, [name, photoUrl]);
 
-  const handleImageLoaded = (loaded: boolean, error: boolean) => {
+  const handleImageLoaded = useCallback((loaded: boolean, error: boolean) => {
     setImageLoaded(loaded);
     setImageError(error);
-  };
+  }, []);
 
-  // Increment view count when component mounts, but only once
+  // Increment view count when component mounts, but only once and only after image loads
   useEffect(() => {
-    if (scammerId) {
+    if (scammerId && imageLoaded && !hasAttemptedViewIncrement) {
       // Increment view count
       const incrementViews = async () => {
         try {
+          setHasAttemptedViewIncrement(true);
           await scammerService.incrementScammerViews(scammerId);
         } catch (error) {
           console.error("Failed to increment views:", error);
@@ -59,7 +61,7 @@ const ScammerCardImageComponent = ({
       
       incrementViews();
     }
-  }, [scammerId]);
+  }, [scammerId, imageLoaded, hasAttemptedViewIncrement]);
 
   // Only attempt to scroll if we're on a detail page
   const scrollToComments = () => {
