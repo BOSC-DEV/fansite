@@ -67,7 +67,11 @@ export const WalletDisconnect = ({ onDisconnect }: WalletDisconnectProps) => {
         <div className="bg-western-parchment/50 p-3 rounded border border-western-wood/20">
           <div className="flex justify-between items-center">
             <div className="flex items-center">
-              <Coins className="h-4 w-4 text-western-accent mr-2" />
+              <img 
+                src="/lovable-uploads/8c729ed2-b786-45d8-98ec-782f58195d12.png" 
+                alt="SOL"
+                className="h-4 w-4 text-western-accent mr-2" 
+              />
               <span className="text-sm text-western-wood/70">Balance</span>
             </div>
             <div className="flex items-center">
@@ -75,7 +79,7 @@ export const WalletDisconnect = ({ onDisconnect }: WalletDisconnectProps) => {
                 {balance !== null ? (
                   <SolAmount amount={balance} />
                 ) : (
-                  "0 SOL"
+                  "0.00 SOL"
                 )}
               </span>
               <Button 

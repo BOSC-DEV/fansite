@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
@@ -124,14 +125,17 @@ export const Header = () => {
                 </span>
                 <div className="flex items-center text-xs font-bold text-western-sand">
                   <img 
-                    src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjIiIGhlaWdodD0iMTAwIj48cGF0aCBmaWxsPSIjQTY2N0Y4IiBkPSJNOTAuODA3IDUuNDRBNDAuOTM3IDQwLjkzNyAwIDAgMCA5Ny42MDcuODAzYTQyLjQ1NyA0Mi40NTcgMCAwIDEgOC4xMjggMTEuMDQgMTYuOTYzIDE2Ljk2MyAwIDAgMS0xNC45MjgtNi40MDNtLTU5LjU5MyAwYTE2Ljk2OCAxNi45NjggMCAwIDEtMTQuOTMgNi40MDNBNDI0OTUgNDIuNDk1IDAgMCAxIDI0LjQxMy44MDNhNDA5MzcgNDAuOTM3IDAgMCAwIDYuODAxIDQuNjM3TTEzLjI3NiA3MC4xNjJhNDAgNDAgMCAwIDAgMi4zMjggOC4wMTggMzguMjYyIDM4LjI2MiAwIDAgMS05LjEwMSAxLjAyNmMyLjczOC03LjYzIDE0LjcyNS04LjE5MSAxNC43MjUtOC4xOTFhMzguODgyIDM4Ljg4MiAwIDAgMC03Ljk1Mi0uODUzbTk1LjQ2OSAwYTM4LjI5NSAzOC4yOTUgMCAwIDAtNy45NTMuODUzcy4xOTkuMDEgMTQuNzI2IDguMTkxYTM4Ljc0IDM4Ljc0IDAgMCAxLTkuMTAxLTEuMDI2YzEuMTQtMi41ODUgMS45MTctNS4yNjQgMi4zMjgtOC4wMW0tODcuMzI1LTQwYTQxLjMxIDQxLjMxIDAgMCAwIDEwOC41NDcgNDIuNDN6Ii8+PC9zdmc+" 
+                    src="/lovable-uploads/8c729ed2-b786-45d8-98ec-782f58195d12.png" 
                     alt="SOL"
                     className="h-3 w-3 mr-1" 
                   />
                   {balance !== null ? (
-                    <span>{balance} SOL</span>
+                    <span>{balance.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })} SOL</span>
                   ) : (
-                    <span>0 SOL</span>
+                    <span>0.00 SOL</span>
                   )}
                 </div>
               </div>

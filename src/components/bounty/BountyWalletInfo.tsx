@@ -1,5 +1,6 @@
 
 import { Label } from "@/components/ui/label";
+import { SolAmount } from "@/components/SolAmount";
 
 interface BountyWalletInfoProps {
   currentBounty: number;
@@ -20,7 +21,7 @@ export function BountyWalletInfo({
         <Label htmlFor="current-bounty" className="text-western-wood">Current Bounty</Label>
         <div className="flex items-center mt-1.5 bg-western-sand/10 border border-western-wood/30 rounded-sm p-2">
           <span className="font-medium text-western-accent">
-            {currentBounty.toLocaleString()} SOL
+            <SolAmount amount={currentBounty} />
           </span>
         </div>
       </div>
