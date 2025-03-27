@@ -87,6 +87,42 @@ export const Header = () => {
     });
   }
 
+  // Don't render the header on mobile
+  if (isMobile) {
+    return (
+      <div className="md:hidden fixed bottom-0 left-0 right-0 flex justify-around items-center bg-western-wood/90 backdrop-blur-sm shadow-lg py-3 px-2 z-50">
+        {menuItems.map(item => (
+          <Link 
+            key={item.path} 
+            to={item.path} 
+            className={cn(
+              "flex flex-col items-center justify-center p-2 rounded-lg transition-colors", 
+              location.pathname === item.path ? "text-western-parchment bg-western-accent/30" : "text-western-sand hover:text-western-parchment"
+            )}
+          >
+            {item.icon}
+            <span className="text-xs mt-1 font-western">{item.label}</span>
+          </Link>
+        ))}
+        
+        {!isConnected && (
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handleConnectClick} 
+            disabled={connecting} 
+            className="flex flex-col items-center justify-center p-2 h-auto text-western-sand hover:text-western-parchment"
+          >
+            <Wallet className="h-4 w-4" />
+            <span className="text-xs mt-1 font-western">
+              {connecting ? "..." : "Connect"}
+            </span>
+          </Button>
+        )}
+      </div>
+    );
+  }
+
   return (
     <header className={cn("fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out wood-texture", 
       isScrolled ? "py-3 shadow-md" : "py-5")}>
@@ -103,7 +139,7 @@ export const Header = () => {
           </Link>
         </div>
         
-        <nav className="hidden md:flex flex-1 items-center">
+        <nav className="flex flex-1 items-center">
           <div className="flex space-x-10">
             {menuItems.map(item => (
               <Link 
@@ -123,7 +159,7 @@ export const Header = () => {
 
         <div className="flex items-center ml-auto">
           {isConnected ? (
-            <div className="hidden md:flex items-center space-x-4">
+            <div className="flex items-center space-x-4">
               <div className="flex flex-col items-end">
                 <span className="text-xs text-western-parchment/70">
                   {formatAddress(address || "")}
@@ -150,51 +186,16 @@ export const Header = () => {
               size="sm" 
               onClick={handleConnectClick} 
               disabled={connecting} 
-              className="hidden md:flex h-9 animate-pulse-subtle bg-western-accent text-western-parchment hover:bg-western-accent/80"
+              className="h-9 animate-pulse-subtle bg-western-accent text-western-parchment hover:bg-western-accent/80"
             >
               <Wallet className="h-4 w-4 mr-2" />
               {connecting ? "Connecting..." : "Connect Wallet"}
             </Button>
           )}
-
-          {isMobile && (
-            <div className="md:hidden flex items-center">
-              <div className="fixed bottom-0 left-0 right-0 flex justify-around items-center bg-western-wood/90 backdrop-blur-sm shadow-lg py-3 px-2 z-50">
-                {menuItems.map(item => (
-                  <Link 
-                    key={item.path} 
-                    to={item.path} 
-                    className={cn(
-                      "flex flex-col items-center justify-center p-2 rounded-lg transition-colors", 
-                      location.pathname === item.path ? "text-western-parchment bg-western-accent/30" : "text-western-sand hover:text-western-parchment"
-                    )}
-                  >
-                    {item.icon}
-                    <span className="text-xs mt-1 font-western">{item.label}</span>
-                  </Link>
-                ))}
-                
-                {!isConnected && (
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={handleConnectClick} 
-                    disabled={connecting} 
-                    className="flex flex-col items-center justify-center p-2 h-auto text-western-sand hover:text-western-parchment"
-                  >
-                    <Wallet className="h-4 w-4" />
-                    <span className="text-xs mt-1 font-western">
-                      {connecting ? "..." : "Connect"}
-                    </span>
-                  </Button>
-                )}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </header>
   );
-}
+};
 
 export default Header;
