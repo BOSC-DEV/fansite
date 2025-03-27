@@ -1,4 +1,3 @@
-
 import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -8,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { SolAmount } from "@/components/SolAmount";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { truncateText } from "@/utils/formatters";
 
 interface ScammerStatsCardProps {
   scammers: Scammer[];
@@ -105,7 +105,7 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
                 <div className="flex items-center gap-2">
                   <h4 className="text-2xl font-bold text-western-accent">
                     <Link to={`/scammer/${stats.recentScammer?.id}`} className="hover:underline">
-                      {stats.recentScammer?.name}
+                      {truncateText(stats.recentScammer?.name, 12)}
                     </Link>
                   </h4>
                   <Link to={`/scammer/${stats.recentScammer?.id}`}>
