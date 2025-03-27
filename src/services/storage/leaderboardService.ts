@@ -1,3 +1,4 @@
+
 import { BaseSupabaseService } from './baseSupabaseService';
 import { scammerService } from './scammer/scammerService';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,6 +18,7 @@ export interface LeaderboardUser {
   createdAt: string;
   xLink?: string;
   websiteLink?: string;
+  points: number; // New field for profile points
 }
 
 export class LeaderboardService extends BaseSupabaseService {
@@ -85,9 +87,28 @@ export class LeaderboardService extends BaseSupabaseService {
           console.warn('[LeaderboardService] Error counting comments:', error);
         }
         
-        // For now, we'll keep these separate but with the same value
-        // In a real implementation, you would calculate these separately based on actual data
+        // Bounty amounts
         const bountyGenerated = userScammers.reduce((sum, scammer) => sum + (scammer.bountyAmount || 0), 0);
+        const bountySpent = 0; // Keep at 0 until bounty system is ready
+        
+        // Calculate profile age in days
+        const profileCreatedDate = new Date(profile.created_at);
+        const now = new Date();
+        const ageInMilliseconds = now.getTime() - profileCreatedDate.getTime();
+        const ageInDays = Math.floor(ageInMilliseconds / (1000 * 60 * 60 * 24));
+        
+        // Calculate points using the equation:
+        // profile days old + scammers reported + views + likes x total bounty generated x total bounty spent
+        let points = ageInDays + totalReports + totalViews + totalLikes;
+        
+        // Multiply by bounty amounts
+        if (bountyGenerated > 0) {
+          points *= bountyGenerated;
+        }
+        
+        if (bountySpent > 0) {
+          points *= bountySpent;
+        }
         
         return {
           id: profile.id,
@@ -100,10 +121,11 @@ export class LeaderboardService extends BaseSupabaseService {
           totalViews: totalViews,
           totalComments: totalComments,
           totalBountyGenerated: bountyGenerated,
-          totalBountySpent: 0, // Keep at 0 until bounty system is ready
+          totalBountySpent: bountySpent,
           createdAt: profile.created_at,
           xLink: profile.x_link || undefined,
-          websiteLink: profile.website_link || undefined
+          websiteLink: profile.website_link || undefined,
+          points: Math.round(points) // Round points to nearest integer
         };
       });
     } catch (error) {

@@ -95,6 +95,7 @@ export const LeaderboardRow = forwardRef<HTMLTableRowElement, LeaderboardRowProp
             <div className="flex flex-col justify-center">
               <p className="font-medium font-western">{user.displayName}</p>
               <p className="text-xs text-western-accent/80 font-medium">@{user.username}</p>
+              <p className="text-xs text-yellow-500 font-medium">{user.points.toLocaleString()} points</p>
             </div>
           </Link>
         </TableCell>

@@ -1,55 +1,74 @@
 
-import { useState, useMemo } from "react";
-import type { LeaderboardUser } from "@/services/storage/leaderboardService";
+import { useState, useMemo } from 'react';
+import type { LeaderboardUser } from '@/services/storage/leaderboardService';
 
-export type SortField = 'totalReports' | 'totalLikes' | 'totalViews' | 'totalComments' | 'totalBountyGenerated' | 'totalBountySpent' | 'joinedDuration';
-export type SortDirection = 'asc' | 'desc';
+type SortField = 'rank' | 'name' | 'reports' | 'likes' | 'views' | 'comments' | 'bountyGenerated' | 'bountySpent' | 'joined' | 'points';
+type SortDirection = 'asc' | 'desc';
 
-export const useSortableLeaderboard = (users: LeaderboardUser[]) => {
-  const [sortField, setSortField] = useState<SortField | null>(null);
+interface UseSortableLeaderboardReturn {
+  sortedUsers: LeaderboardUser[];
+  handleSort: (field: SortField) => void;
+  sortField: SortField;
+  sortDirection: SortDirection;
+}
+
+export const useSortableLeaderboard = (users: LeaderboardUser[]): UseSortableLeaderboardReturn => {
+  // Default sort by bounty generated (descending)
+  const [sortField, setSortField] = useState<SortField>('bountyGenerated');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
-      // Toggle direction if same field clicked
+      // Toggle direction if clicking the same field
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
-      // Set new field and default to descending
+      // New field, set to descending by default (most common expectation)
       setSortField(field);
       setSortDirection('desc');
     }
   };
 
   const sortedUsers = useMemo(() => {
-    const usersCopy = [...users];
-    if (sortField) {
-      usersCopy.sort((a, b) => {
-        // Special case for joinedDuration sorting
-        if (sortField === 'joinedDuration') {
-          const dateA = new Date(a.createdAt);
-          const dateB = new Date(b.createdAt);
-          
-          // For ascending, older accounts first (smaller value = longer duration)
-          if (sortDirection === 'asc') {
-            return dateA.getTime() - dateB.getTime();
-          }
-          // For descending, newer accounts first (larger value = shorter duration)
-          return dateB.getTime() - dateA.getTime();
-        }
-        
-        // For all other fields
-        const valueA = a[sortField];
-        const valueB = b[sortField];
-        
-        // For ascending, smaller numbers first
-        if (sortDirection === 'asc') {
-          return (valueA as number) - (valueB as number);
-        }
-        // For descending, larger numbers first
-        return (valueB as number) - (valueA as number);
-      });
-    }
-    return usersCopy;
+    return [...users].sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortField) {
+        case 'rank':
+          // Rank is implicit in the original order
+          return sortDirection === 'asc' ? 1 : -1;
+        case 'name':
+          comparison = a.displayName.localeCompare(b.displayName);
+          break;
+        case 'reports':
+          comparison = a.totalReports - b.totalReports;
+          break;
+        case 'likes':
+          comparison = a.totalLikes - b.totalLikes;
+          break;
+        case 'views':
+          comparison = a.totalViews - b.totalViews;
+          break;
+        case 'comments':
+          comparison = a.totalComments - b.totalComments;
+          break;
+        case 'bountyGenerated':
+          comparison = a.totalBountyGenerated - b.totalBountyGenerated;
+          break;
+        case 'bountySpent':
+          comparison = a.totalBountySpent - b.totalBountySpent;
+          break;
+        case 'joined':
+          comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+          break;
+        case 'points':
+          comparison = a.points - b.points;
+          break;
+        default:
+          comparison = 0;
+      }
+
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
   }, [users, sortField, sortDirection]);
 
   return {
