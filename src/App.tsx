@@ -46,7 +46,7 @@ function App() {
                   </Routes>
                 </div>
                 <Toaster />
-                <Sonner />
+                <Sonner position="top-center" expand={true} closeButton={true} />
               </div>
             </Router>
           </WalletProvider>
@@ -57,4 +57,3 @@ function App() {
 }
 
 export default App;
-

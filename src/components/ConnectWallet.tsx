@@ -1,12 +1,15 @@
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useWallet } from "@/context/WalletContext";
-import { Wallet, AlertCircle } from "lucide-react";
-import { useEffect } from "react";
+import { Wallet, AlertCircle, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+
 interface ConnectWalletProps {
   redirectPath?: string;
   className?: string;
 }
+
 export function ConnectWallet({
   redirectPath,
   className
@@ -16,11 +19,16 @@ export function ConnectWallet({
     connectWallet
   } = useWallet();
   
+  const [showPhantomError, setShowPhantomError] = useState(false);
+  
   useEffect(() => {
     // If the user is already connected and there's a redirect path, redirect them
     if (isConnected && redirectPath) {
       window.location.href = redirectPath;
     }
+    
+    // Check if Phantom is installed
+    setShowPhantomError(!window.phantom?.solana);
   }, [isConnected, redirectPath]);
   
   const handleConnectClick = async () => {
@@ -32,9 +40,23 @@ export function ConnectWallet({
   };
 
   return <Card className={className}>
-      
       <CardContent>
         <div className="flex flex-col items-center justify-center py-2 text-center space-y-4 my-[20px]">
+          {showPhantomError && (
+            <Alert variant="destructive" className="mb-4 relative">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                Phantom wallet extension not found. Please install it first.
+              </AlertDescription>
+              <button 
+                onClick={() => setShowPhantomError(false)}
+                className="absolute right-2 top-2 rounded-full p-1 hover:bg-red-800/20"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </Alert>
+          )}
+          
           <button 
             onClick={handleConnectClick}
             className="h-16 w-16 rounded-full bg-muted/50 flex items-center justify-center mb-2 hover:bg-muted/70 transition-colors cursor-pointer"
@@ -57,4 +79,5 @@ export function ConnectWallet({
       </CardContent>
     </Card>;
 }
+
 export default ConnectWallet;

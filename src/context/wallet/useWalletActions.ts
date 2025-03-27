@@ -28,7 +28,10 @@ export function useWalletActions(walletState: ReturnType<typeof useWalletState>)
     try {
       // Check if phantom extension is installed
       if (!window.phantom?.solana) {
-        toast.error("Phantom wallet extension not found. Please install it first.");
+        toast.error("Phantom wallet extension not found. Please install it first.", {
+          duration: 5000,
+          dismissible: true,
+        });
         console.error("Phantom wallet not installed");
         setConnecting(false);
         return false;
@@ -57,7 +60,10 @@ export function useWalletActions(walletState: ReturnType<typeof useWalletState>)
         
         // Only show success toast if this was a new connection
         if (!walletState.connected) {
-          toast.success('Wallet connected successfully!');
+          toast.success('Wallet connected successfully!', {
+            duration: 3000,
+            dismissible: true,
+          });
         }
         
         console.log(`Wallet connected: ${connectedAddress}`);
@@ -67,7 +73,10 @@ export function useWalletActions(walletState: ReturnType<typeof useWalletState>)
       }
     } catch (error: any) {
       console.error('Failed to connect wallet:', error);
-      toast.error(`Failed to connect wallet: ${error.message || 'Unknown error'}`);
+      toast.error(`Failed to connect wallet: ${error.message || 'Unknown error'}`, {
+        duration: 5000,
+        dismissible: true,
+      });
       // Important: Set the wallet as disconnected on error
       setConnected(false);
       setAddress(null);
@@ -91,10 +100,16 @@ export function useWalletActions(walletState: ReturnType<typeof useWalletState>)
       localStorage.removeItem('walletData');
       localStorage.removeItem('walletTimestamp');
       
-      toast.success('Wallet disconnected');
+      toast.success('Wallet disconnected', {
+        duration: 3000,
+        dismissible: true,
+      });
     } catch (error) {
       console.error('Failed to disconnect wallet:', error);
-      toast.error('Failed to disconnect wallet');
+      toast.error('Failed to disconnect wallet', {
+        duration: 5000,
+        dismissible: true,
+      });
     }
   };
   
