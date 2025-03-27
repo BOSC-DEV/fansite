@@ -5,18 +5,22 @@ import { BookOpen } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export const HeroSection = () => {
-  return <section className="pt-20 pb-12 md:pt-32 md:pb-24 px-3 sm:px-4 old-paper">
+  const isMobile = useIsMobile();
+  
+  return <section className="pt-12 pb-10 md:pt-24 md:pb-20 px-3 sm:px-4 old-paper">
       <div className="container mx-auto max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
-          <div className="space-y-3 md:space-y-4 md:pr-8 animate-fade-in flex flex-col items-start">
-            <h1 className="font-wanted uppercase tracking-wide wanted-poster mx-0 my-0 py-[15px] px-0 text-western-accent">
+          <div className="space-y-3 md:space-y-4 md:pr-8 animate-fade-in flex flex-col items-center md:items-start text-center md:text-left">
+            <h1 className="font-wanted uppercase tracking-wide wanted-poster mx-auto md:mx-0 my-0 py-[15px] px-0 text-western-accent">
               <span className="block text-5xl md:text-6xl lg:text-7xl">BOOK OF</span>
               <span className="block text-[4.2rem] md:text-[4.9rem] lg:text-[5.6rem] -mt-2">SCAMS</span>
             </h1>
             
-            <p className="sm:text-xl text-western-wood max-w-lg font-western text-xl -mt-14 mb-0 -mb-2">Book of Scams is a decentralised criminal registry bringing accountability and justice to The Wild West of crypto.</p>
+            <p className="sm:text-xl text-western-wood max-w-lg font-western text-xl -mt-10 md:-mt-14 mb-0 -mb-2 mx-auto md:mx-0">
+              Book of Scams is a decentralised criminal registry bringing accountability and justice to The Wild West of crypto.
+            </p>
             
-            <div className="flex flex-col sm:flex-row gap-3 pt-4 w-full">
+            <div className="flex flex-col sm:flex-row gap-3 pt-4 w-full justify-center md:justify-start">
               <Button asChild size="default" className="western-btn gap-2 hover:animate-wiggle bg-western-leather hover:bg-western-accent text-western-parchment">
                 <Link to="/most-wanted">
                   Most Wanted
@@ -31,7 +35,7 @@ export const HeroSection = () => {
             </div>
           </div>
           
-          <div className="relative h-[250px] sm:h-[350px] md:h-[450px] animate-fade-in mx-auto w-full max-w-[320px] sm:max-w-[400px] md:max-w-[500px]">
+          <div className="relative h-[250px] sm:h-[350px] md:h-[450px] animate-fade-in mx-auto w-full max-w-[320px] sm:max-w-[400px] md:max-w-[500px] mt-6 md:mt-0">
             {/* Wanted poster */}
             <div className="absolute inset-0 transform rotate-1 bg-western-parchment border-4 border-western-wood rounded-sm shadow-lg">
               {/* Nail at the top center - even smaller on mobile */}
