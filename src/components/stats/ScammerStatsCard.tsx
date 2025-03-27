@@ -36,18 +36,11 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
 
   if (!stats) return null;
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'decimal',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
-
   return (
     <Card className={cn("mb-6 border-western-wood bg-western-parchment/80 w-full", className)}>
       <CardContent className="p-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {/* Total Scammers */}
           <div className="flex items-center gap-4">
             <div className="rounded-md bg-western-sand/30 p-2 text-western-accent">
               <Users className="h-5 w-5" />
@@ -58,21 +51,28 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
             </div>
           </div>
 
+          {/* Highest Bounty */}
           <div className="flex items-center gap-4">
             <div className="rounded-md bg-western-sand/30 p-2 text-western-accent">
               <Award className="h-5 w-5" />
             </div>
-            <div>
+            <div className="flex flex-col">
               <p className="text-sm font-medium text-western-wood/70">Highest Bounty</p>
               <h4 className="text-2xl font-bold text-western-accent">
                 <SolAmount amount={stats.highestBounty} />
               </h4>
-              <Link to={`/scammer/${stats.highestBountyScammer?.id}`} className="text-xs text-western-wood/70 truncate hover:text-western-accent hover:underline">
-                {stats.highestBountyScammer?.name}
-              </Link>
+              {stats.highestBountyScammer && (
+                <Link 
+                  to={`/scammer/${stats.highestBountyScammer?.id}`} 
+                  className="text-xs text-western-wood/70 truncate hover:text-western-accent hover:underline"
+                >
+                  {stats.highestBountyScammer?.name}
+                </Link>
+              )}
             </div>
           </div>
 
+          {/* Total Bounties */}
           <div className="flex items-center gap-4">
             <div className="rounded-md bg-western-sand/30 p-2 text-western-accent">
               <TrendingUp className="h-5 w-5" />
@@ -85,20 +85,25 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
             </div>
           </div>
 
+          {/* Recently Added */}
           <div className="flex items-center gap-4">
             <div className="rounded-md bg-western-sand/30 p-2 text-western-accent">
               <BarChart className="h-5 w-5" />
             </div>
             <div>
               <p className="text-sm font-medium text-western-wood/70">Recently Added</p>
-              <Link to={`/scammer/${stats.recentScammer?.id}`} className="hover:text-western-accent transition-colors">
-                <h4 className="text-base font-bold truncate text-western-wood hover:underline">
-                  {stats.recentScammer?.name}
-                </h4>
-              </Link>
-              <p className="text-xs text-western-wood/70">
-                {new Date(stats.recentScammer?.dateAdded).toLocaleDateString()}
-              </p>
+              {stats.recentScammer && (
+                <>
+                  <Link to={`/scammer/${stats.recentScammer?.id}`} className="hover:text-western-accent transition-colors">
+                    <h4 className="text-xl font-bold truncate text-western-wood hover:underline">
+                      {stats.recentScammer?.name}
+                    </h4>
+                  </Link>
+                  <p className="text-xs text-western-wood/70">
+                    {new Date(stats.recentScammer?.dateAdded).toLocaleDateString()}
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </div>

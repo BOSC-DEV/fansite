@@ -41,7 +41,9 @@ export function SolAmount({ amount, className, showIcon = false }: SolAmountProp
           style={{ objectFit: "contain" }}
         />
       )}
-      {showUsd ? usdValue : formattedSol}
+      <span className="inline-block">
+        {showUsd ? usdValue : formattedSol}
+      </span>
     </span>
   );
 }
