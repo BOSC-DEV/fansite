@@ -90,8 +90,6 @@ const Index = () => {
           </svg>
         </div>
       </div>
-      
-      {/* Remove the extra padding at the bottom on mobile devices */}
     </div>
   );
 };

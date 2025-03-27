@@ -18,7 +18,7 @@ const EditListing = () => {
     return (
       <div className="min-h-screen flex flex-col old-paper">
         <Header />
-        <main className="flex-1 pt-28 pb-16">
+        <main className="flex-1 py-4">
           <div className="container mx-auto px-4">
             <LoadingState />
           </div>
@@ -35,7 +35,7 @@ const EditListing = () => {
     return (
       <div className="min-h-screen flex flex-col old-paper">
         <Header />
-        <main className="flex-1 pt-28 pb-16">
+        <main className="flex-1 py-4">
           <div className="container mx-auto px-4">
             <UnauthorizedAccess scammerId={id || ""} />
           </div>
@@ -48,7 +48,7 @@ const EditListing = () => {
     <div className="min-h-screen flex flex-col old-paper">
       <Header />
 
-      <main className="flex-1 pt-28 pb-16">
+      <main className="flex-1 py-4">
         <div className="container mx-auto px-4">
           <Button
             variant="ghost"

@@ -58,7 +58,7 @@ const MostWanted = () => {
   return (
     <div className="min-h-screen old-paper">
       <Header />
-      <main className="pt-20 md:pt-28 pb-16">
+      <main className="py-4">
         <div className="container mx-auto max-w-6xl px-4">
           <MostWantedHeader />
           

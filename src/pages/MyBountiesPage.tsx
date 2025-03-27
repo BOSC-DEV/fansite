@@ -62,7 +62,7 @@ export function MyBountiesPage() {
   return (
     <div className="min-h-screen old-paper">
       <Header />
-      <main className="container mx-auto px-4 pt-28 pb-20">
+      <main className="container mx-auto px-4 py-4">
         <div className="flex flex-col items-center mb-8">
           <div className="flex items-center justify-between w-full max-w-4xl">
             <h1 className="text-3xl font-bold font-wanted text-western-accent mb-2">

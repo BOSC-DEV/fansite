@@ -69,8 +69,8 @@ export default function Leaderboard() {
       </Helmet>
       
       <Header />
-      <main className="flex-1 container mx-auto max-w-6xl px-4 py-20">
-        <div className="mt-8 mb-12">
+      <main className="flex-1 container mx-auto max-w-6xl px-4 py-4">
+        <div className="mb-6">
           <div className="wanted-poster-border paper-texture rounded-sm">
             <PageHeader
               title="Leaderboards"

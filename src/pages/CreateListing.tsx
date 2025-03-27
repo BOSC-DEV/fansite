@@ -8,7 +8,7 @@ const CreateListing = () => {
     <div className="min-h-screen flex flex-col old-paper">
       <Header />
 
-      <main className="flex-1 pt-28 pb-16 py-[60px]">
+      <main className="flex-1 py-[24px]">
         <div className="container mx-auto px-4">
           <div className="paper-texture border-2 border-western-wood rounded-sm p-6 py-[24px]">
             <div className="mb-6 text-center">

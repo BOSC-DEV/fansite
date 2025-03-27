@@ -59,33 +59,8 @@ const ScammerDetail = () => {
 
   return (
     <div className="min-h-screen old-paper">
-      <Helmet>
-        <title>{`${scammer.name} - Book of Scams`}</title>
-        <meta name="description" content={`${scammer.name} is accused of ${scammer.accusedOf}. Reported on Book of Scams.`} />
-        <link rel="canonical" href={canonicalUrl} />
-        
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="profile" />
-        <meta property="og:url" content={canonicalUrl} />
-        <meta property="og:title" content={`${scammer.name} - Book of Scams`} />
-        <meta property="og:description" content={`${scammer.name} is accused of ${scammer.accusedOf}. Reported on Book of Scams.`} />
-        <meta property="og:image" content={imageUrl} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        
-        {/* Twitter / X */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@bookofscamslol" />
-        <meta name="twitter:creator" content="@bookofscamslol" />
-        <meta name="twitter:url" content={canonicalUrl} />
-        <meta name="twitter:title" content={`${scammer.name} - Book of Scams`} />
-        <meta name="twitter:description" content={`${scammer.name} is accused of ${scammer.accusedOf}. View their profile on Book of Scams.`} />
-        <meta name="twitter:image" content={imageUrl} />
-        <meta name="twitter:image:alt" content={`Profile image of ${scammer.name}`} />
-      </Helmet>
-      
       <Header />
-      <div className="container mx-auto max-w-6xl px-4 pt-28 pb-16">
+      <div className="container mx-auto max-w-6xl px-4 py-4">
         <Button
           variant="ghost"
           size="sm"

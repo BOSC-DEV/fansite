@@ -26,7 +26,7 @@ export function UserProfilePage() {
   return (
     <div className="min-h-screen old-paper">
       <Header />
-      <main className="container mx-auto px-4 pt-28 pb-12">
+      <main className="container mx-auto px-4 py-4">
         {isLoading ? (
           <ProfileSkeleton />
         ) : error ? (
