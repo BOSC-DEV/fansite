@@ -7,9 +7,11 @@ import { scammerStatsService } from '@/services/storage/scammer/scammerStatsServ
 interface ShareButtonProps {
   scammerId?: string;
   count?: number;
+  className?: string;
+  iconSize?: number;
 }
 
-export function ShareButton({ scammerId, count = 0 }: ShareButtonProps) {
+export function ShareButton({ scammerId, count = 0, className, iconSize }: ShareButtonProps) {
   const copyShareLink = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!scammerId) return;
@@ -36,7 +38,8 @@ export function ShareButton({ scammerId, count = 0 }: ShareButtonProps) {
       count={count}
       onClick={copyShareLink}
       title="Copy share link"
-      className="[&>span]:hidden"
+      className={className}
+      iconSize={iconSize}
     />
   );
 }

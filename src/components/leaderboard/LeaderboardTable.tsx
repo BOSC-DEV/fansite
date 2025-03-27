@@ -12,6 +12,7 @@ import { EmptyLeaderboard } from "./EmptyLeaderboard";
 import { useSortableLeaderboard } from "./useSortableLeaderboard";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader2 } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface LeaderboardTableProps {
   users: LeaderboardUser[];
@@ -29,6 +30,8 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   const { sortedUsers, handleSort, sortField, sortDirection, originalRanks } = useSortableLeaderboard(users);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const observer = useRef<IntersectionObserver | null>(null);
+  const isMobile = useIsMobile();
+  
   const lastUserElementRef = useCallback((node: HTMLTableRowElement | null) => {
     if (isLoading || isLoadingMore) return;
     
@@ -59,35 +62,37 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
 
   return (
     <div className="overflow-x-auto paper-texture">
-      <ScrollArea className="max-h-[80vh]">
-        <Table className="w-full">
-          <LeaderboardHeader onSort={handleSort} sortField={sortField} sortDirection={sortDirection} />
-          <TableBody className="divide-y divide-western-wood/20">
-            {sortedUsers.map((user, index) => {
-              // Use the original rank from our map
-              const userRank = originalRanks.get(user.id) || index + 1;
-              
-              if (index === sortedUsers.length - 1) {
-                return (
-                  <LeaderboardRow 
-                    ref={lastUserElementRef}
-                    key={user.id} 
-                    user={user} 
-                    rank={userRank}
-                  />
-                );
-              } else {
-                return (
-                  <LeaderboardRow 
-                    key={user.id} 
-                    user={user} 
-                    rank={userRank}
-                  />
-                );
-              }
-            })}
-          </TableBody>
-        </Table>
+      <ScrollArea className="max-h-[80vh]" type={isMobile ? "scroll" : "auto"}>
+        <div className={isMobile ? "min-w-[600px]" : ""}>
+          <Table className="w-full">
+            <LeaderboardHeader onSort={handleSort} sortField={sortField} sortDirection={sortDirection} />
+            <TableBody className="divide-y divide-western-wood/20">
+              {sortedUsers.map((user, index) => {
+                // Use the original rank from our map
+                const userRank = originalRanks.get(user.id) || index + 1;
+                
+                if (index === sortedUsers.length - 1) {
+                  return (
+                    <LeaderboardRow 
+                      ref={lastUserElementRef}
+                      key={user.id} 
+                      user={user} 
+                      rank={userRank}
+                    />
+                  );
+                } else {
+                  return (
+                    <LeaderboardRow 
+                      key={user.id} 
+                      user={user} 
+                      rank={userRank}
+                    />
+                  );
+                }
+              })}
+            </TableBody>
+          </Table>
+        </div>
         {(isLoadingMore || (isLoading && users.length > 0)) && (
           <div className="py-4 flex justify-center">
             <Loader2 className="h-6 w-6 animate-spin text-western-accent" />

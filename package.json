@@ -53,7 +53,7 @@
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.7",
-    "embla-carousel-react": "^8.3.0",
+    "embla-carousel-react": "^8.0.0",
     "ethers": "^6.13.5",
     "framer-motion": "^12.5.0",
     "hardhat": "^2.22.19",

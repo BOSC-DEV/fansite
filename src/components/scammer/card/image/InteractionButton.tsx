@@ -11,6 +11,7 @@ interface InteractionButtonProps {
   activeColor?: string;
   className?: string;
   title?: string;
+  iconSize?: number;
 }
 
 export function InteractionButton({ 
@@ -20,7 +21,8 @@ export function InteractionButton({
   active = false, 
   activeColor = 'bg-black/60',
   className,
-  title
+  title,
+  iconSize = 3
 }: InteractionButtonProps) {
   const buttonClasses = cn(
     "flex items-center",
@@ -36,7 +38,7 @@ export function InteractionButton({
       onClick={onClick} 
       title={title}
     >
-      <Icon className="h-3 w-3 mr-1" />
+      <Icon className={`h-${iconSize} w-${iconSize} mr-1`} />
       <span>{count || 0}</span>
     </div>
   );

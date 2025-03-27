@@ -5,6 +5,7 @@ import { ScammerImageLoader } from "./ScammerImageLoader";
 import { InteractionsBar } from "./InteractionsBar";
 import { ScammerCardBadge } from "./ScammerCardBadge";
 import { scammerService } from "@/services/storage/scammer/scammerService";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ScammerCardImageProps {
   name: string;
@@ -34,6 +35,7 @@ const ScammerCardImageComponent = ({
   const [hasAttemptedViewIncrement, setHasAttemptedViewIncrement] = useState(false);
   const mounted = useRef(true);
   const instanceId = useRef(`scammer-card-${Date.now()}`);
+  const isMobile = useIsMobile();
 
   // Reset component state on mount and updates
   useEffect(() => {
@@ -88,31 +90,47 @@ const ScammerCardImageComponent = ({
   }, [scammerId]);
   
   return (
-    <Link 
-      to={scammerId ? `/scammer/${scammerId}` : "#"} 
-      className="block relative aspect-square overflow-hidden bg-muted cursor-pointer w-full"
-    >
-      <ScammerImageLoader 
-        name={name} 
-        photoUrl={photoUrl} 
-        onImageLoaded={handleImageLoaded} 
-      />
+    <div className="flex flex-col">
+      <Link 
+        to={scammerId ? `/scammer/${scammerId}` : "#"} 
+        className="block relative aspect-square overflow-hidden bg-muted cursor-pointer w-full"
+      >
+        <ScammerImageLoader 
+          name={name} 
+          photoUrl={photoUrl} 
+          onImageLoaded={handleImageLoaded} 
+        />
+        
+        {!isMobile && (
+          <InteractionsBar 
+            scammerId={scammerId}
+            likes={likes}
+            dislikes={dislikes}
+            views={views}
+            shares={shares}
+            comments={comments}
+            onScrollToComments={scrollToComments}
+          />
+        )}
+        
+        <ScammerCardBadge 
+          name={name} 
+          rank={rank} 
+        />
+      </Link>
       
-      <InteractionsBar 
-        scammerId={scammerId}
-        likes={likes}
-        dislikes={dislikes}
-        views={views}
-        shares={shares}
-        comments={comments}
-        onScrollToComments={scrollToComments}
-      />
-      
-      <ScammerCardBadge 
-        name={name} 
-        rank={rank} 
-      />
-    </Link>
+      {isMobile && (
+        <InteractionsBar 
+          scammerId={scammerId}
+          likes={likes}
+          dislikes={dislikes}
+          views={views}
+          shares={shares}
+          comments={comments}
+          onScrollToComments={scrollToComments}
+        />
+      )}
+    </div>
   );
 };
 
