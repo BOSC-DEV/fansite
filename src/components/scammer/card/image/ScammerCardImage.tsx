@@ -5,7 +5,6 @@ import { ScammerImageLoader } from "./ScammerImageLoader";
 import { InteractionsBar } from "./InteractionsBar";
 import { ScammerCardBadge } from "./ScammerCardBadge";
 import { scammerService } from "@/services/storage/scammer/scammerService";
-import { toast } from "sonner";
 
 interface ScammerCardImageProps {
   name: string;
@@ -32,7 +31,6 @@ const ScammerCardImageComponent = ({
 }: ScammerCardImageProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const [viewIncremented, setViewIncremented] = useState(false);
 
   // Debug the image URL
   useEffect(() => {
@@ -45,21 +43,15 @@ const ScammerCardImageComponent = ({
   const handleImageLoaded = (loaded: boolean, error: boolean) => {
     setImageLoaded(loaded);
     setImageError(error);
-    
-    // If there was an error loading the image, but we still need to show the card
-    if (error && !imageLoaded) {
-      console.log(`Using fallback for ${name} in ScammerCardImage`);
-    }
   };
 
   // Increment view count when component mounts, but only once
   useEffect(() => {
-    if (scammerId && !viewIncremented) {
+    if (scammerId) {
       // Increment view count
       const incrementViews = async () => {
         try {
           await scammerService.incrementScammerViews(scammerId);
-          setViewIncremented(true);
         } catch (error) {
           console.error("Failed to increment views:", error);
         }
@@ -67,7 +59,7 @@ const ScammerCardImageComponent = ({
       
       incrementViews();
     }
-  }, [scammerId, viewIncremented]);
+  }, [scammerId]);
 
   // Only attempt to scroll if we're on a detail page
   const scrollToComments = () => {

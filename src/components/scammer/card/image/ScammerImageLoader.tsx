@@ -1,5 +1,5 @@
 
-import { useState, useEffect, memo, useRef } from "react";
+import { useState, useEffect, memo } from "react";
 import { AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -12,16 +12,15 @@ interface ScammerImageLoaderProps {
 const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerImageLoaderProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const retryCount = useRef(0);
-  const maxRetries = 3;
   
-  // Reset states when image URL changes
+  // Reset image states when image URL changes
   useEffect(() => {
     setImageLoaded(false);
     setImageError(false);
-    retryCount.current = 0;
-    
-    // Check if photoUrl is empty or invalid immediately
+  }, [photoUrl]);
+
+  // Check if photoUrl is empty or invalid immediately
+  useEffect(() => {
     if (!photoUrl || photoUrl.trim() === '') {
       console.log(`Empty image URL for scammer: ${name}`);
       setImageError(true);
@@ -31,41 +30,7 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
   }, [photoUrl, name, onImageLoaded]);
 
   const handleImageError = () => {
-    console.log(`Image failed to load for scammer: ${name}, URL: ${photoUrl}, attempt ${retryCount.current + 1}/${maxRetries}`);
-    
-    if (retryCount.current < maxRetries && photoUrl && photoUrl.trim() !== '') {
-      // Increment retry counter
-      retryCount.current += 1;
-      
-      // Add cache-busting parameter to URL
-      const retrySrc = `${photoUrl}${photoUrl.includes('?') ? '&' : '?'}retry=${retryCount.current}&t=${Date.now()}`;
-      
-      // Try preloading the image
-      const img = new Image();
-      img.src = retrySrc;
-      img.onload = () => {
-        console.log(`Retry successful for ${name} on attempt ${retryCount.current}`);
-        setImageLoaded(true);
-        setImageError(false);
-        onImageLoaded(true, false);
-      };
-      img.onerror = () => {
-        if (retryCount.current >= maxRetries) {
-          console.error(`Max retries (${maxRetries}) reached for ${name}, using fallback`);
-          setImageError(true);
-          setImageLoaded(true);
-          onImageLoaded(true, true);
-        } else {
-          // Trigger another retry with incrementing the counter
-          handleImageError();
-        }
-      };
-      
-      return;
-    }
-    
-    // If max retries reached or no valid URL, use fallback
-    console.log(`Using fallback for scammer: ${name} after failed load attempts`);
+    console.log(`Image failed to load for scammer: ${name}, URL: ${photoUrl}`);
     setImageError(true);
     setImageLoaded(true); // Mark as loaded even on error so we display the fallback
     onImageLoaded(true, true);
@@ -104,7 +69,7 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
     <>
       {!imageLoaded && (
         <div className="absolute inset-0 flex items-center justify-center bg-muted animate-pulse">
-          <div className="h-10 w-10 rounded-full border-4 border-western-wood/30 border-t-western-wood animate-spin"></div>
+          <AlertCircle className="h-8 w-8 text-muted-foreground/50" />
         </div>
       )}
       

@@ -4,7 +4,6 @@ import { ScammerCard } from "@/components/scammer/card/ScammerCard";
 import { Pagination } from "@/components/pagination/Pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
-import { useEffect } from "react";
 
 interface ScammerGridProps {
   paginatedScammers: Scammer[];
@@ -21,16 +20,6 @@ export const ScammerGrid = ({
   setCurrentPage,
   isLoading = false
 }: ScammerGridProps) => {
-  // Debug output for grid rendering
-  useEffect(() => {
-    if (!isLoading) {
-      console.log(`ScammerGrid: Rendering ${paginatedScammers.length} scammers on page ${currentPage}`);
-      paginatedScammers.forEach(scammer => {
-        console.log(`Grid scammer: ${scammer.name}, photoUrl: ${Boolean(scammer.photoUrl)}`);
-      });
-    }
-  }, [paginatedScammers, currentPage, isLoading]);
-
   if (isLoading) {
     return (
       <div>
@@ -52,17 +41,6 @@ export const ScammerGrid = ({
     );
   }
   
-  // Handle case where there are no scammers to display
-  if (paginatedScammers.length === 0) {
-    return (
-      <div className="w-full">
-        <Card className="p-6 text-center">
-          <p className="text-western-wood">No scammers to display</p>
-        </Card>
-      </div>
-    );
-  }
-  
   return (
     <div className="w-full">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
@@ -72,7 +50,7 @@ export const ScammerGrid = ({
           
           return (
             <ScammerCard
-              key={scammer.id || index}
+              key={scammer.id}
               scammer={scammer}
               rank={absolutePosition}
               className="w-full"

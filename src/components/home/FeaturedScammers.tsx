@@ -12,15 +12,13 @@ import { ScammerStatsCard } from "@/components/stats/ScammerStatsCard";
 import { formatCurrency, formatDate } from "@/utils/formatters";
 import { useSortableScammers } from "@/hooks/useSortableScammers";
 import { ScammerGrid } from "@/components/scammer/ScammerGrid";
-import { toast } from "sonner";
 
 interface FeaturedScammersProps {
   limit?: number;
 }
 
 const FeaturedScammersComponent = ({ limit = 3 }: FeaturedScammersProps) => {
-  const { isLoading, filteredScammers, error } = useScammers();
-  const [dataLoaded, setDataLoaded] = useState(false);
+  const { isLoading, filteredScammers } = useScammers();
   
   // Use the same sorting hook as the Most Wanted page
   const {
@@ -39,19 +37,10 @@ const FeaturedScammersComponent = ({ limit = 3 }: FeaturedScammersProps) => {
 
   // Debug the scammer data
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && limitedScammers.length > 0) {
       console.log("FeaturedScammers - Scammers to display:", limitedScammers);
-      
-      if (error) {
-        console.error("Failed to load featured scammers:", error);
-        toast.error("Failed to load featured scammers. Please refresh the page.");
-      } else if (limitedScammers.length === 0) {
-        console.log("No featured scammers available to display");
-      } else {
-        setDataLoaded(true);
-      }
     }
-  }, [isLoading, limitedScammers, error]);
+  }, [isLoading, limitedScammers]);
 
   return (
     <section className="py-16 bg-western-parchment/30 w-full">
