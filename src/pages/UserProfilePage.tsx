@@ -33,7 +33,17 @@ export function UserProfilePage() {
           <ProfileError error={error} />
         ) : profile ? (
           <div className="max-w-4xl mx-auto">
-            <ProfileHeader profile={profile} scammersCount={scammers.length} />
+            <ProfileHeader 
+              username={profile.username || ''}
+              name={profile.displayName}
+              bio={profile.bio}
+              avatarUrl={profile.profilePicUrl}
+              location={''} 
+              website={profile.websiteLink}
+              joinDate={profile.createdAt ? new Date(profile.createdAt) : undefined}
+              isCurrentUser={false}
+              address={profile.walletAddress}
+            />
             
             {/* Tabs Section */}
             <Tabs value={activeTab} onValueChange={handleTabChange} className="mb-8">
