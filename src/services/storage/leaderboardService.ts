@@ -97,17 +97,19 @@ export class LeaderboardService extends BaseSupabaseService {
         const ageInMilliseconds = now.getTime() - profileCreatedDate.getTime();
         const ageInDays = Math.floor(ageInMilliseconds / (1000 * 60 * 60 * 24));
         
-        // Calculate points using the equation:
-        // profile days old + scammers reported + views + likes x total bounty generated x total bounty spent
-        let points = ageInDays + totalReports + totalViews + totalLikes;
+        // Calculate points using the new algorithm:
+        // total spent on bounty + total generated + profile total days old + total generated bounties from reports x likes x views
+        let points = bountySpent + bountyGenerated + ageInDays;
         
-        // Multiply by bounty amounts
-        if (bountyGenerated > 0) {
-          points *= bountyGenerated;
-        }
-        
-        if (bountySpent > 0) {
-          points *= bountySpent;
+        // Add the multiplication factor if there are reports with engagement
+        if (totalReports > 0 && (totalLikes > 0 || totalViews > 0)) {
+          const engagementMultiplier = totalLikes * totalViews;
+          if (engagementMultiplier > 0) {
+            points += totalReports * engagementMultiplier;
+          } else {
+            // If either likes or views are 0, just add the reports
+            points += totalReports;
+          }
         }
         
         return {
