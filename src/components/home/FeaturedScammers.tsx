@@ -12,6 +12,7 @@ import { ScammerStatsCard } from "@/components/stats/ScammerStatsCard";
 import { formatCurrency, formatDate } from "@/utils/formatters";
 import { useSortableScammers } from "@/hooks/useSortableScammers";
 import { ScammerGrid } from "@/components/scammer/ScammerGrid";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface FeaturedScammersProps {
   limit?: number;
@@ -19,6 +20,7 @@ interface FeaturedScammersProps {
 
 const FeaturedScammersComponent = ({ limit = 3 }: FeaturedScammersProps) => {
   const { isLoading, filteredScammers } = useScammers();
+  const isMobile = useIsMobile();
   
   // Use the same sorting hook as the Most Wanted page
   const {
@@ -62,7 +64,7 @@ const FeaturedScammersComponent = ({ limit = 3 }: FeaturedScammersProps) => {
           <ScammerStatsCard scammers={filteredScammers} className="mb-6" />
         )}
         
-        <div className="w-full">
+        <div className="w-full pb-12 sm:pb-0">
           {isLoading ? (
             <ScammerGrid
               paginatedScammers={[]}

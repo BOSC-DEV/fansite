@@ -7,6 +7,7 @@ import { LeaderboardTable } from "@/components/leaderboard/LeaderboardTable";
 import { Trophy } from "lucide-react";
 import { leaderboardService } from "@/services/storage/leaderboardService";
 import type { LeaderboardUser } from "@/services/storage/leaderboardService";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const ITEMS_PER_PAGE = 50;
 
@@ -17,6 +18,7 @@ export default function Leaderboard() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const isMobile = useIsMobile();
 
   const fetchLeaderboardData = useCallback(async (isInitial = true) => {
     try {
@@ -69,7 +71,7 @@ export default function Leaderboard() {
       </Helmet>
       
       <Header />
-      <main className="flex-1 container mx-auto max-w-6xl px-4 py-4">
+      <main className={`flex-1 container mx-auto max-w-6xl px-4 py-4 ${isMobile ? 'pb-24' : ''}`}>
         <div className="mb-6">
           <div className="wanted-poster-border paper-texture rounded-sm">
             <PageHeader

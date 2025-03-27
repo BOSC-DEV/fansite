@@ -38,7 +38,7 @@ export function InteractionButton({
     className
   );
   
-  const iconClasses = cn(`h-${actualIconSize} w-${actualIconSize} mr-1`);
+  const iconSizeClass = isMobile ? "h-3 w-3" : `h-${actualIconSize} w-${actualIconSize}`;
   
   return (
     <div 
@@ -46,7 +46,7 @@ export function InteractionButton({
       onClick={onClick} 
       title={title}
     >
-      <Icon className={iconClasses} />
+      <Icon className={`${iconSizeClass} mr-1`} />
       <span>{count || 0}</span>
     </div>
   );

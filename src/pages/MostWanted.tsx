@@ -14,11 +14,6 @@ import { useSortableScammers } from "@/hooks/useSortableScammers";
 import { Button } from "@/components/ui/button";
 import { List, Grid } from "lucide-react";
 import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem
-} from "@/components/ui/carousel";
 
 const MostWanted = () => {
   const { 
@@ -35,7 +30,7 @@ const MostWanted = () => {
     sortDirection
   } = useSortableScammers(filteredScammers);
   
-  const [viewType, setViewType] = useState<"grid" | "table">("table");
+  const [viewType, setViewType] = useState<"grid" | "table">("grid");
   const isMobile = useIsMobile();
   
   const { 
@@ -61,32 +56,10 @@ const MostWanted = () => {
     setViewType(view);
   };
 
-  const renderMobileTable = () => {
-    return (
-      <Carousel 
-        opts={{
-          align: "start",
-          containScroll: "trimSnaps"
-        }}
-        className="w-full"
-      >
-        <CarouselContent className="-ml-1">
-          <CarouselItem className="pl-1 min-w-full">
-            <ScammerTableCompact 
-              scammers={paginatedScammers}
-              formatCurrency={formatCurrency}
-              formatDate={formatDate}
-            />
-          </CarouselItem>
-        </CarouselContent>
-      </Carousel>
-    );
-  };
-
   return (
     <div className="min-h-screen old-paper">
       <Header />
-      <main className="py-4">
+      <main className="py-4 pb-20">
         <div className="container mx-auto max-w-6xl px-4">
           <MostWantedHeader />
           
@@ -131,17 +104,14 @@ const MostWanted = () => {
             ) : sortedScammers.length === 0 ? (
               <NoResults query={searchQuery} />
             ) : isMobile ? (
-              <>
-                {renderMobileTable()}
-                <div className="mt-4">
-                  <ScammerGrid
-                    paginatedScammers={paginatedScammers}
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    setCurrentPage={setCurrentPage}
-                  />
-                </div>
-              </>
+              <div className="mt-4">
+                <ScammerGrid
+                  paginatedScammers={paginatedScammers}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  setCurrentPage={setCurrentPage}
+                />
+              </div>
             ) : viewType === "table" ? (
               <div className="w-full">
                 <ScammerTable 

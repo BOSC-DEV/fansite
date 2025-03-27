@@ -68,45 +68,37 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   return (
     <div className="overflow-x-auto paper-texture">
       {isMobile ? (
-        <Carousel 
-          opts={{
-            align: "start",
-            containScroll: "trimSnaps"
-          }}
-          className="w-full"
-        >
-          <CarouselContent className="-ml-1">
-            <CarouselItem className="pl-1 min-w-full">
-              <Table className="w-full">
-                <LeaderboardHeader onSort={handleSort} sortField={sortField} sortDirection={sortDirection} />
-                <TableBody className="divide-y divide-western-wood/20">
-                  {sortedUsers.map((user, index) => {
-                    const userRank = originalRanks.get(user.id) || index + 1;
-                    
-                    if (index === sortedUsers.length - 1) {
-                      return (
-                        <LeaderboardRow 
-                          ref={lastUserElementRef}
-                          key={user.id} 
-                          user={user} 
-                          rank={userRank}
-                        />
-                      );
-                    } else {
-                      return (
-                        <LeaderboardRow 
-                          key={user.id} 
-                          user={user} 
-                          rank={userRank}
-                        />
-                      );
-                    }
-                  })}
-                </TableBody>
-              </Table>
-            </CarouselItem>
-          </CarouselContent>
-        </Carousel>
+        <div className="w-full overflow-x-auto pb-4">
+          <div className="min-w-[800px]">
+            <Table>
+              <LeaderboardHeader onSort={handleSort} sortField={sortField} sortDirection={sortDirection} />
+              <TableBody className="divide-y divide-western-wood/20">
+                {sortedUsers.map((user, index) => {
+                  const userRank = originalRanks.get(user.id) || index + 1;
+                  
+                  if (index === sortedUsers.length - 1) {
+                    return (
+                      <LeaderboardRow 
+                        ref={lastUserElementRef}
+                        key={user.id} 
+                        user={user} 
+                        rank={userRank}
+                      />
+                    );
+                  } else {
+                    return (
+                      <LeaderboardRow 
+                        key={user.id} 
+                        user={user} 
+                        rank={userRank}
+                      />
+                    );
+                  }
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
       ) : (
         <ScrollArea className="max-h-[80vh]" type="auto">
           <div>

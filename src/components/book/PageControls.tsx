@@ -21,7 +21,7 @@ export const PageControls = ({
   const isMobile = useIsMobile();
   
   return (
-    <div className={`flex justify-center mt-6 ${isMobile ? 'mb-20' : 'mb-10'} space-x-4 sm:space-x-12`}>
+    <div className={`flex justify-center mt-6 ${isMobile ? 'mb-24' : 'mb-10'} space-x-4 sm:space-x-12`}>
       <Button
         variant="outline"
         size={isMobile ? "default" : "lg"}
