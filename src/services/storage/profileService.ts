@@ -46,6 +46,32 @@ export class ProfileService extends BaseSupabaseService {
 
     console.log("[ProfileService] Profile found by wallet address:", data);
     
+    // Try to get points from leaderboard stats
+    let points = 0;
+    try {
+      const { data: leaderboardData, error: leaderboardError } = await this.supabase
+        .from('leaderboard_stats')
+        .select('*')
+        .eq('wallet_address', normalizedWalletAddress)
+        .maybeSingle();
+        
+      if (leaderboardData && !leaderboardError) {
+        // Calculate points based on leaderboard stats
+        const profileAge = Math.floor((new Date().getTime() - new Date(data.created_at).getTime()) / (1000 * 60 * 60 * 24));
+        points = profileAge + 
+                (leaderboardData.total_reports || 0) + 
+                (leaderboardData.total_views || 0) + 
+                (leaderboardData.total_likes || 0);
+                
+        // Multiply by bounty if applicable
+        if (leaderboardData.total_bounty && leaderboardData.total_bounty > 0) {
+          points *= leaderboardData.total_bounty;
+        }
+      }
+    } catch (err) {
+      console.error('[ProfileService] Error fetching leaderboard stats:', err);
+    }
+    
     // Convert snake_case to camelCase for client-side usage
     return {
       id: data.id,
@@ -57,7 +83,7 @@ export class ProfileService extends BaseSupabaseService {
       xLink: data.x_link || '',
       websiteLink: data.website_link || '',
       bio: data.bio || '',
-      points: data.points || 0
+      points: points
     };
   }
 
@@ -87,6 +113,32 @@ export class ProfileService extends BaseSupabaseService {
 
     console.log("[ProfileService] Profile found by username:", data);
 
+    // Try to get points from leaderboard stats
+    let points = 0;
+    try {
+      const { data: leaderboardData, error: leaderboardError } = await this.supabase
+        .from('leaderboard_stats')
+        .select('*')
+        .eq('wallet_address', data.wallet_address)
+        .maybeSingle();
+        
+      if (leaderboardData && !leaderboardError) {
+        // Calculate points based on leaderboard stats
+        const profileAge = Math.floor((new Date().getTime() - new Date(data.created_at).getTime()) / (1000 * 60 * 60 * 24));
+        points = profileAge + 
+                (leaderboardData.total_reports || 0) + 
+                (leaderboardData.total_views || 0) + 
+                (leaderboardData.total_likes || 0);
+                
+        // Multiply by bounty if applicable
+        if (leaderboardData.total_bounty && leaderboardData.total_bounty > 0) {
+          points *= leaderboardData.total_bounty;
+        }
+      }
+    } catch (err) {
+      console.error('[ProfileService] Error fetching leaderboard stats:', err);
+    }
+
     return {
       id: data.id,
       displayName: data.display_name,
@@ -97,7 +149,7 @@ export class ProfileService extends BaseSupabaseService {
       xLink: data.x_link || '',
       websiteLink: data.website_link || '',
       bio: data.bio || '',
-      points: data.points || 0
+      points: points
     };
   }
 
@@ -275,19 +327,50 @@ export class ProfileService extends BaseSupabaseService {
     
     console.log(`[ProfileService] Retrieved ${data.length} profiles`);
     
+    // Get all leaderboard stats in a single query for efficiency
+    const { data: leaderboardData, error: leaderboardError } = await this.supabase
+      .from('leaderboard_stats')
+      .select('*');
+      
+    const leaderboardMap = new Map();
+    if (leaderboardData && !leaderboardError) {
+      leaderboardData.forEach(item => {
+        leaderboardMap.set(item.wallet_address, item);
+      });
+    }
+    
     // Convert from database format to client format
-    return data.map(item => ({
-      id: item.id,
-      displayName: item.display_name,
-      username: item.username || '',
-      profilePicUrl: item.profile_pic_url || '',
-      walletAddress: item.wallet_address,
-      createdAt: item.created_at,
-      xLink: item.x_link || '',
-      websiteLink: item.website_link || '',
-      bio: item.bio || '',
-      points: item.points || 0
-    }));
+    return data.map(item => {
+      let points = 0;
+      const leaderboardItem = leaderboardMap.get(item.wallet_address);
+      
+      if (leaderboardItem) {
+        // Calculate points based on leaderboard stats
+        const profileAge = Math.floor((new Date().getTime() - new Date(item.created_at).getTime()) / (1000 * 60 * 60 * 24));
+        points = profileAge + 
+                (leaderboardItem.total_reports || 0) + 
+                (leaderboardItem.total_views || 0) + 
+                (leaderboardItem.total_likes || 0);
+                
+        // Multiply by bounty if applicable
+        if (leaderboardItem.total_bounty && leaderboardItem.total_bounty > 0) {
+          points *= leaderboardItem.total_bounty;
+        }
+      }
+      
+      return {
+        id: item.id,
+        displayName: item.display_name,
+        username: item.username || '',
+        profilePicUrl: item.profile_pic_url || '',
+        walletAddress: item.wallet_address,
+        createdAt: item.created_at,
+        xLink: item.x_link || '',
+        websiteLink: item.website_link || '',
+        bio: item.bio || '',
+        points: points
+      };
+    });
   }
 }
 

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { storageService, UserProfile, ScammerListing } from "@/services/storage";
 import { Scammer } from "@/lib/types";
@@ -41,7 +42,21 @@ export function useUserProfile(username: string | undefined) {
               .eq('wallet_address', usernameProfile.wallet_address)
               .maybeSingle();
               
-            const points = leaderboardData?.total_points || 0;
+            // Calculate points - using the points formula directly if not available in DB
+            let points = 0;
+            if (leaderboardData) {
+              // If we have leaderboard data, use those stats to calculate points
+              const profileAge = Math.floor((new Date().getTime() - new Date(usernameProfile.created_at).getTime()) / (1000 * 60 * 60 * 24));
+              points = profileAge + 
+                      (leaderboardData.total_reports || 0) + 
+                      (leaderboardData.total_views || 0) + 
+                      (leaderboardData.total_likes || 0);
+                      
+              // Multiply by bounty if applicable
+              if (leaderboardData.total_bounty && leaderboardData.total_bounty > 0) {
+                points *= leaderboardData.total_bounty;
+              }
+            }
             
             setProfile({
               id: usernameProfile.id,
@@ -90,7 +105,21 @@ export function useUserProfile(username: string | undefined) {
               .eq('wallet_address', walletProfile.wallet_address)
               .maybeSingle();
               
-            const points = leaderboardData?.total_points || 0;
+            // Calculate points - using the points formula directly if not available in DB
+            let points = 0;
+            if (leaderboardData) {
+              // If we have leaderboard data, use those stats to calculate points
+              const profileAge = Math.floor((new Date().getTime() - new Date(walletProfile.created_at).getTime()) / (1000 * 60 * 60 * 24));
+              points = profileAge + 
+                      (leaderboardData.total_reports || 0) + 
+                      (leaderboardData.total_views || 0) + 
+                      (leaderboardData.total_likes || 0);
+                      
+              // Multiply by bounty if applicable
+              if (leaderboardData.total_bounty && leaderboardData.total_bounty > 0) {
+                points *= leaderboardData.total_bounty;
+              }
+            }
             
             setProfile({
               id: walletProfile.id,
