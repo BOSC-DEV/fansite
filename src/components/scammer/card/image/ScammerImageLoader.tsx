@@ -20,6 +20,9 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
   // Generate fallback URL when image fails to load - ensure name is properly encoded
   const fallbackImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Unknown')}&background=random&size=400`;
   
+  // The image to display - use fallback if error or if photoUrl is empty
+  const displayImageUrl = imageError || !photoUrl ? fallbackImageUrl : photoUrl;
+  
   // Reset component state when image URL changes
   useEffect(() => {
     setImageLoaded(false);
@@ -104,9 +107,6 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
   
   // Set absolute URL for use in SEO
   const absoluteImageUrl = getAbsoluteImageUrl(displayImageUrl);
-  
-  // The image to display - use fallback if error or if photoUrl is empty
-  const displayImageUrl = imageError || !photoUrl ? fallbackImageUrl : photoUrl;
   
   return (
     <>
