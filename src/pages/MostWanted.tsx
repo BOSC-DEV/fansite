@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { ScammerTable } from "@/components/scammer/ScammerTable";
@@ -74,7 +73,7 @@ const MostWanted = () => {
               
               {isMobile ? (
                 <div className="absolute right-0">
-                  <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && handleViewChange(value as "grid" | "compact")}>
+                  <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && handleViewChange(value as "grid" | "table" | "compact")}>
                     <ToggleGroupItem value="grid" aria-label="Grid view">
                       <Grid className="h-4 w-4" />
                     </ToggleGroupItem>
