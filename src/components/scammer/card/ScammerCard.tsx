@@ -21,7 +21,7 @@ export const ScammerCard: React.FC<ScammerCardProps> = ({
   className = "",
   inProfileSection = false
 }) => {
-  const { id, name, photoUrl, description, bountyAmount, dateAdded, likes, dislikes, views, shares } = scammer;
+  const { id, name, photoUrl, accusedOf, bountyAmount, dateAdded, aliases, likes, dislikes, views, shares } = scammer;
   
   return (
     <Card className={cn("overflow-hidden border-western-wood bg-western-parchment/80", className)}>
@@ -38,11 +38,13 @@ export const ScammerCard: React.FC<ScammerCardProps> = ({
         interactionsPosition={inProfileSection ? "bottomRight" : "topRight"}
       />
       <ScammerCardContent
-        name={name}
-        description={description}
+        id={id}
+        accusedOf={accusedOf}
         bountyAmount={bountyAmount}
         dateAdded={formatDate(dateAdded)}
-        scammerId={id}
+        aliases={aliases || []}
+        formattedBounty={bountyAmount.toString()}
+        formattedDate={formatDate(dateAdded)}
       />
     </Card>
   );
