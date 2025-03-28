@@ -51,7 +51,8 @@ export function ScammerSidebar({
   return (
     <div className="flex flex-col w-full space-y-4">
       <div className="flex flex-col items-center sm:items-start">
-        <div className="w-full max-w-[250px] mx-auto">
+        {/* Removed the max-width constraint to allow image to fill the width */}
+        <div className="w-full">
           <ScammerAvatar 
             name={name}
             photoUrl={photoUrl}
