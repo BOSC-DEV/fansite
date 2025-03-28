@@ -14,6 +14,7 @@ interface InteractionButtonProps {
   title?: string;
   iconSize?: number;
   disabled?: boolean;
+  isViewOrComment?: boolean; // New prop to identify view or comment buttons
 }
 
 export function InteractionButton({ 
@@ -25,24 +26,28 @@ export function InteractionButton({
   className,
   title,
   iconSize,
-  disabled = false
+  disabled = false,
+  isViewOrComment = false
 }: InteractionButtonProps) {
   const isMobile = useIsMobile();
   const defaultIconSize = 3;
   const actualIconSize = iconSize || defaultIconSize;
   
+  // If it's a view or comment button, we don't want to grey it out
+  const isDisabled = disabled && !isViewOrComment;
+  
   const buttonClasses = cn(
     "flex items-center",
     active ? activeColor : "bg-western-wood/80",
     "text-western-parchment py-1 px-2 rounded-full text-xs font-western",
-    onClick && !disabled ? "cursor-pointer hover:bg-western-wood transition-colors" : "cursor-default",
-    disabled ? "opacity-70" : "",
+    onClick && !isDisabled ? "cursor-pointer hover:bg-western-wood transition-colors" : "cursor-default",
+    isDisabled ? "opacity-70" : "",
     isMobile ? "py-0.5 px-1.5" : "",
     className
   );
   
   const handleClick = (e: React.MouseEvent) => {
-    if (onClick && !disabled) {
+    if (onClick && !isDisabled) {
       onClick(e);
     }
   };

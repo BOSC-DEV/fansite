@@ -16,6 +16,8 @@ export function ViewsButton({ count }: ViewsButtonProps) {
       count={count}
       title="Number of views"
       aria-label={`${count} views`}
+      showLabel={false}
+      isViewOrComment={true} // Mark as view button to prevent greying out
     />
   );
 }

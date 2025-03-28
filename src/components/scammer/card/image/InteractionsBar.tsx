@@ -91,6 +91,7 @@ export const InteractionsBar = ({
         icon={Eye}
         count={views}
         disabled={true}
+        isViewOrComment={true} // Mark as view button to prevent greying out
       />
       
       {comments !== undefined && (
@@ -99,6 +100,7 @@ export const InteractionsBar = ({
           count={comments}
           onClick={onScrollToComments}
           disabled={!scammerId || !isDetailPage}
+          isViewOrComment={true} // Mark as comment button to prevent greying out
         />
       )}
       

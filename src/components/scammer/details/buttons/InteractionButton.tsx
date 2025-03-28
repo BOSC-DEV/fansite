@@ -15,6 +15,7 @@ interface InteractionButtonProps {
   title?: string;
   showLabel?: boolean;
   'aria-label'?: string;
+  isViewOrComment?: boolean; // New prop to identify view or comment buttons
 }
 
 export function InteractionButton({
@@ -27,7 +28,8 @@ export function InteractionButton({
   className,
   title,
   showLabel = false,
-  'aria-label': ariaLabel
+  'aria-label': ariaLabel,
+  isViewOrComment = false
 }: InteractionButtonProps) {
   return (
     <Button
