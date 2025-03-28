@@ -1,11 +1,12 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { LogOut, RefreshCw, Wallet } from "lucide-react";
+import { LogOut, RefreshCw, Wallet, Copy, Check } from "lucide-react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { SolAmount } from '@/components/SolAmount';
 import { useNavigate } from 'react-router-dom';
+import { copyAddressToClipboard } from '@/components/bounty/utils/walletUtils';
 
 interface WalletDisconnectProps {
   onDisconnect?: () => void;
@@ -14,6 +15,7 @@ interface WalletDisconnectProps {
 export const WalletDisconnect = ({ onDisconnect }: WalletDisconnectProps) => {
   const { disconnectWallet, address, balance, connectWallet } = useWallet();
   const [isRefreshing, setIsRefreshing] = React.useState(false);
+  const [isCopied, setIsCopied] = React.useState(false);
   const navigate = useNavigate();
 
   const handleDisconnect = async () => {
@@ -41,6 +43,16 @@ export const WalletDisconnect = ({ onDisconnect }: WalletDisconnectProps) => {
   const formatAddress = (address: string) => {
     return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
   };
+  
+  const handleCopyAddress = async () => {
+    if (address) {
+      const success = await copyAddressToClipboard(address);
+      if (success) {
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000);
+      }
+    }
+  };
 
   return (
     <div className="mb-6 p-4 bg-western-sand/20 rounded-lg border border-western-wood/30">
@@ -64,7 +76,27 @@ export const WalletDisconnect = ({ onDisconnect }: WalletDisconnectProps) => {
         <div className="bg-western-parchment/50 p-3 rounded border border-western-wood/20">
           <div className="flex justify-between items-center">
             <span className="text-sm text-western-wood/70">Address</span>
-            <span className="text-sm font-mono text-western-wood">{address ? formatAddress(address) : 'Not connected'}</span>
+            <div className="flex items-center">
+              <span 
+                className="text-sm font-mono text-western-wood cursor-pointer hover:text-western-accent transition-colors"
+                onClick={handleCopyAddress}
+              >
+                {address ? formatAddress(address) : 'Not connected'}
+              </span>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleCopyAddress}
+                className="h-6 w-6 ml-1 hover:bg-western-wood/10 rounded-full"
+                aria-label="Copy address to clipboard"
+              >
+                {isCopied ? (
+                  <Check className="h-3.5 w-3.5 text-green-600" />
+                ) : (
+                  <Copy className="h-3.5 w-3.5 text-western-accent/70" />
+                )}
+              </Button>
+            </div>
           </div>
         </div>
         
