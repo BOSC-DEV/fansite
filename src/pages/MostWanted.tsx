@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { ScammerTable } from "@/components/scammer/ScammerTable";
@@ -17,6 +16,7 @@ import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { GlowingEffectDemo } from "@/components/ui/glowing-effect-demo";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 const MostWanted = () => {
   const { 
@@ -50,7 +50,6 @@ const MostWanted = () => {
   const paginatedScammers = sortedScammers.slice(startIndex, endIndex);
 
   useEffect(() => {
-    // Only reset to grid if on desktop
     if (!isMobile && viewType === "compact") {
       setViewType("grid");
     }
@@ -67,7 +66,6 @@ const MostWanted = () => {
         <div className="container mx-auto max-w-6xl px-4">
           <MostWantedHeader />
           
-          {/* Add GlowingEffectDemo for demonstration */}
           <div className="mb-8">
             <GlowingEffectDemo />
           </div>
