@@ -62,13 +62,13 @@ export function InfoTab({ profile }: InfoTabProps) {
               <h3 className="text-sm font-medium text-western-wood flex items-center gap-1">
                 Score
                 <TooltipProvider>
-                  <Tooltip>
+                  <Tooltip delayDuration={0}>
                     <TooltipTrigger asChild>
-                      <span className="inline-flex cursor-help">
+                      <button className="inline-flex cursor-help">
                         <HelpCircle className="h-3.5 w-3.5 text-western-accent/70" />
-                      </span>
+                      </button>
                     </TooltipTrigger>
-                    <TooltipContent className="max-w-xs bg-western-parchment text-western-wood border-western-accent/50 p-4">
+                    <TooltipContent side="top" className="max-w-xs bg-western-parchment text-western-wood border-western-accent/50 p-4">
                       <p className="font-medium mb-1">Score Algorithm</p>
                       <p className="text-xs mb-2">Your score is calculated based on:</p>
                       <ul className="text-xs list-disc pl-4 space-y-1">
