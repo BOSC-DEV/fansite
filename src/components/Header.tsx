@@ -38,18 +38,23 @@ export const Header = () => {
     }
   };
 
+  // Different padding for mobile vs desktop
+  const headerPadding = isMobile
+    ? isScrolled ? "py-1" : "py-1.5"
+    : isScrolled ? "py-1.5" : "py-2.5";
+
   return (
     <>
       <header className={cn("fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out wood-texture", 
-        isScrolled ? "py-1.5 shadow-md" : "py-2.5")}>
-        <div className="container mx-auto px-4 flex items-center">
+        headerPadding)}>
+        <div className="container mx-auto px-2 sm:px-4 flex items-center">
           <Logo />
           
           {!isMobile && <DesktopNavigation menuItems={menuItems} />}
 
           <div className="flex items-center ml-auto">
             {isConnected ? (
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2 sm:space-x-3">
                 {address && !isMobile && <WalletInfo address={address} balance={balance} />}
                 <ProfileButton />
               </div>
@@ -59,10 +64,13 @@ export const Header = () => {
                 size="sm" 
                 onClick={handleConnectClick} 
                 disabled={connecting} 
-                className="h-7 text-xs animate-pulse-subtle bg-western-accent text-western-parchment hover:bg-western-accent/80"
+                className={cn(
+                  "animate-pulse-subtle bg-western-accent text-western-parchment hover:bg-western-accent/80",
+                  isMobile ? "h-5 text-[10px]" : "h-7 text-xs"
+                )}
               >
-                <Wallet className="h-3.5 w-3.5 mr-1.5" />
-                {connecting ? "Connecting..." : isMobile ? "Connect" : "Connect Wallet"}
+                <Wallet className={isMobile ? "h-2.5 w-2.5 mr-1" : "h-3.5 w-3.5 mr-1.5"} />
+                {connecting ? "..." : isMobile ? "Connect" : "Connect Wallet"}
               </Button>
             )}
           </div>

@@ -28,9 +28,11 @@ function AppContent() {
   
   // Only apply custom padding to non-home pages
   const isHomePage = location.pathname === '/';
+  
+  // Different padding for mobile vs desktop
   const contentPadding = isHomePage 
-    ? "pt-20 md:pt-24 py-[8px]" 
-    : "pt-16 md:pt-20 pb-[8px]"; // Reduced padding to account for smaller header
+    ? isMobile ? "pt-14 pb-12" : "pt-20 md:pt-24 pb-[8px]"
+    : isMobile ? "pt-12 pb-12" : "pt-16 md:pt-20 pb-[8px]";
   
   return (
     <div className="flex flex-col min-h-screen">

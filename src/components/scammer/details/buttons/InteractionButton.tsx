@@ -3,6 +3,7 @@ import React from 'react';
 import { LucideIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface InteractionButtonProps {
   icon: LucideIcon;
@@ -31,12 +32,17 @@ export function InteractionButton({
   'aria-label': ariaLabel,
   isViewOrComment = false
 }: InteractionButtonProps) {
+  const isMobile = useIsMobile();
+  const buttonHeight = isMobile ? 'h-6' : 'h-7';
+  const iconSize = isMobile ? 'h-2.5 w-2.5' : 'h-3 w-3';
+  const textSize = isMobile ? 'text-[10px]' : 'text-xs';
+
   return (
     <Button
       variant="outline"
       size="sm"
       className={cn(
-        'flex items-center gap-1 px-2 py-1 h-7 text-xs font-medium shadow-sm',
+        `flex items-center gap-1 px-2 py-1 ${buttonHeight} ${textSize} font-medium shadow-sm`,
         isActive ? activeClassName : 'bg-western-wood text-western-parchment border-western-wood/80',
         className
       )}
@@ -44,7 +50,7 @@ export function InteractionButton({
       title={title}
       aria-label={ariaLabel}
     >
-      <Icon className="h-3 w-3" />
+      <Icon className={iconSize} />
       <span>{count || 0}</span>
       {showLabel && label && <span className="hidden sm:inline">{label}</span>}
     </Button>

@@ -6,6 +6,7 @@ import { useWallet } from '@/context/WalletContext';
 import { User } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { storageService } from '@/services/storage';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export function ProfileButton() {
   const { address } = useWallet();
@@ -13,6 +14,10 @@ export function ProfileButton() {
   const [username, setUsername] = React.useState<string | null>(null);
   const [profilePic, setProfilePic] = React.useState<string | null>(null);
   const [isProfileLoading, setIsProfileLoading] = React.useState(true);
+  const isMobile = useIsMobile();
+  
+  const avatarSize = isMobile ? "h-6 w-6" : "h-8 w-8";
+  const iconSize = isMobile ? "h-4 w-4" : "h-5 w-5";
 
   React.useEffect(() => {
     const loadProfile = async () => {
@@ -50,10 +55,10 @@ export function ProfileButton() {
       className="rounded-full bg-western-accent hover:bg-western-accent/80 text-western-parchment"
       onClick={handleProfileClick}
     >
-      <Avatar className="h-8 w-8">
+      <Avatar className={avatarSize}>
         <AvatarImage src={profilePic || ''} alt="Profile" />
         <AvatarFallback className="bg-western-wood text-western-parchment text-xs">
-          <User className="h-5 w-5" />
+          <User className={iconSize} />
         </AvatarFallback>
       </Avatar>
     </Button>
