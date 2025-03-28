@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ScammerStatsCard } from "@/components/stats/ScammerStatsCard";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ArrowRight, Shield } from "lucide-react";
+import { ScammerCard } from "@/components/scammer/card/ScammerCard";
 
 export const FeaturedScammers = ({ limit = 3 }: { limit?: number }) => {
   const { filteredScammers, isLoading } = useScammers();
@@ -57,44 +58,14 @@ export const FeaturedScammers = ({ limit = 3 }: { limit?: number }) => {
           <>
             <ScammerStatsCard scammers={filteredScammers} />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {featuredScammers.map((scammer) => (
-                <div key={scammer.id} className="transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                  <Link to={`/scammer/${scammer.id}`}>
-                    <div className="bg-western-parchment/75 rounded-lg overflow-hidden shadow-md border border-western-wood/20">
-                      <div className="h-48 bg-western-leather/10 relative">
-                        {scammer.photoUrl ? (
-                          <img 
-                            src={scammer.photoUrl} 
-                            alt={scammer.name} 
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).src = '/placeholder.svg';
-                            }} 
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-western-leather/10">
-                            <span className="text-6xl text-western-leather/30 font-wanted">{scammer.name.charAt(0)}</span>
-                          </div>
-                        )}
-                        <div className="absolute bottom-0 left-0 right-0 bg-western-wood/80 text-western-parchment p-2 font-semibold">
-                          {scammer.name}
-                        </div>
-                      </div>
-                      <div className="p-4">
-                        <p className="text-western-wood text-sm line-clamp-2">{scammer.accusedOf}</p>
-                        <div className="mt-3 flex justify-between items-center">
-                          <span className="text-sm text-western-wood/70">
-                            {new Date(scammer.dateAdded).toLocaleDateString()}
-                          </span>
-                          <span className="bg-western-leather/10 text-western-leather px-2 py-1 rounded text-sm">
-                            {scammer.bountyAmount ? `${scammer.bountyAmount.toFixed(2)} SOL` : "No bounty"}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+              {featuredScammers.map((scammer, index) => (
+                <ScammerCard
+                  key={scammer.id}
+                  scammer={scammer}
+                  rank={index + 1}
+                  className="w-full transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                />
               ))}
             </div>
           </>
