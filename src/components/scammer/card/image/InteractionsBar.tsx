@@ -1,8 +1,10 @@
 
-import { Eye, ThumbsUp, ThumbsDown, MessageSquare } from "lucide-react";
+import React from "react";
+import { cn } from "@/lib/utils";
 import { InteractionButton } from "./InteractionButton";
-import { useInteractions } from "@/hooks/useInteractions";
-import { ShareButton } from "./ShareButton";
+import { ThumbsUp, ThumbsDown, Eye, MessageSquare, Share2 } from "lucide-react";
+import { useLocation } from "react-router-dom";
+import { useProfileInteraction } from "@/hooks/interactions/useProfileInteraction";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface InteractionsBarProps {
@@ -11,78 +13,93 @@ interface InteractionsBarProps {
   dislikes: number;
   views: number;
   shares: number;
-  comments: number;
+  comments?: number;
   onScrollToComments?: () => void;
+  className?: string;
 }
 
-export function InteractionsBar({
+export const InteractionsBar = ({
   scammerId,
   likes,
   dislikes,
   views,
   shares,
-  comments,
-  onScrollToComments
-}: InteractionsBarProps) {
+  comments = 0,
+  onScrollToComments,
+  className
+}: InteractionsBarProps) => {
+  const location = useLocation();
+  const { handleInteraction } = useProfileInteraction();
   const isMobile = useIsMobile();
   
-  const { 
-    isLiked, 
-    isDisliked, 
-    localLikes, 
-    localDislikes, 
-    handleLike, 
-    handleDislike 
-  } = useInteractions({
-    scammerId,
-    initialLikes: likes,
-    initialDislikes: dislikes
-  });
-
-  const scrollToComments = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (onScrollToComments) {
-      onScrollToComments();
-    } else if (scammerId) {
-      // If we're not on a detail page, navigate to the detail page with a hash
-      window.location.href = `/scammer/${scammerId}#comments`;
-    }
+  // Check if we're on the detail page
+  const isDetailPage = location.pathname.includes(`/scammer/${scammerId}`);
+  
+  // Define actions
+  const handleLike = () => {
+    if (!scammerId) return;
+    handleInteraction(async () => {
+      // Like action will be handled in the parent component
+    });
   };
-
-  // Always show the interaction buttons in the top right corner
+  
+  const handleDislike = () => {
+    if (!scammerId) return;
+    handleInteraction(async () => {
+      // Dislike action will be handled in the parent component
+    });
+  };
+  
+  const handleShare = () => {
+    if (!scammerId) return;
+    const shareUrl = `${window.location.origin}/scammer/${scammerId}`;
+    navigator.clipboard.writeText(shareUrl);
+    
+    // Show toast notification (handled elsewhere)
+  };
+  
   return (
-    <div className="absolute top-0 right-0 p-2 flex space-x-2">
-      <InteractionButton 
-        icon={ThumbsUp} 
-        count={localLikes} 
-        onClick={handleLike} 
-        active={isLiked}
-        activeColor="bg-green-600/80"
-      />
-      
-      <InteractionButton 
-        icon={ThumbsDown} 
-        count={localDislikes} 
-        onClick={handleDislike} 
-        active={isDisliked}
-        activeColor="bg-red-600/80"
-      />
-      
-      <InteractionButton 
-        icon={Eye} 
-        count={views} 
-      />
-      
-      <InteractionButton 
-        icon={MessageSquare} 
-        count={comments} 
-        onClick={scrollToComments}
-        title="View comments"
-      />
-      
-      {scammerId && (
-        <ShareButton scammerId={scammerId} count={shares} />
+    <div 
+      className={cn(
+        "absolute bottom-0 left-0 right-0 flex justify-between items-center bg-black/40 backdrop-blur-sm p-1 gap-1",
+        className
       )}
+    >
+      <InteractionButton
+        icon={ThumbsUp}
+        count={likes}
+        onClick={handleLike}
+        disabled={!scammerId}
+      />
+      
+      <InteractionButton
+        icon={ThumbsDown}
+        count={dislikes}
+        onClick={handleDislike}
+        disabled={!scammerId}
+      />
+      
+      <InteractionButton
+        icon={Eye}
+        count={views}
+        disabled={true}
+      />
+      
+      {comments !== undefined && (
+        <InteractionButton
+          icon={MessageSquare}
+          count={comments}
+          onClick={onScrollToComments}
+          disabled={!scammerId || !isDetailPage}
+        />
+      )}
+      
+      <InteractionButton
+        icon={Share2}
+        count={shares}
+        onClick={handleShare}
+        disabled={!scammerId}
+      />
     </div>
   );
-}
+};

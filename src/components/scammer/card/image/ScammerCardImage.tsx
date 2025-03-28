@@ -105,7 +105,7 @@ const ScammerCardImageComponent = ({
           onImageLoaded={handleImageLoaded} 
         />
         
-        {/* Always show interaction buttons on top right, regardless of device */}
+        {/* Always show interaction buttons with full width on mobile */}
         <InteractionsBar 
           scammerId={scammerId}
           likes={likes}
@@ -114,6 +114,7 @@ const ScammerCardImageComponent = ({
           shares={shares}
           comments={comments}
           onScrollToComments={scrollToComments}
+          className="w-full px-0"
         />
         
         <ScammerCardBadge 
