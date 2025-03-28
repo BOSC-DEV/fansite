@@ -30,6 +30,7 @@ export interface ScammerStats {
   dislikes?: number;
   views?: number;
   shares?: number;
+  comments?: string[];
 }
 
 export interface ScammerDbRecord {

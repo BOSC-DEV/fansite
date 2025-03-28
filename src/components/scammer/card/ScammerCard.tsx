@@ -10,13 +10,19 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Badge } from "@/components/ui/badge";
 import { useMemo } from "react";
 
-interface ScammerCardProps {
+export interface ScammerCardProps {
   scammer: Scammer;
   rank?: number;
   className?: string;
+  inProfileSection?: boolean;
 }
 
-export const ScammerCard = React.memo(({ scammer, rank, className = "" }: ScammerCardProps) => {
+export const ScammerCard = React.memo(({ 
+  scammer, 
+  rank, 
+  className = "",
+  inProfileSection = false
+}: ScammerCardProps) => {
   const isMobile = useIsMobile();
   const dateAdded = useMemo(() => {
     return typeof scammer.dateAdded === "string"
@@ -38,8 +44,9 @@ export const ScammerCard = React.memo(({ scammer, rank, className = "" }: Scamme
       <Link to={`/scammer/${scammer.id}`} className="block">
         <div className="relative">
           <ScammerImageLoader 
-            src={scammer.photoUrl} 
-            alt={scammer.name} 
+            name={scammer.name} 
+            photoUrl={scammer.photoUrl} 
+            onImageLoaded={() => {}}
             className="w-full h-48 object-cover bg-hacker-dark"
             fallback={
               <div className="w-full h-48 flex items-center justify-center bg-hacker-dark">
@@ -75,7 +82,7 @@ export const ScammerCard = React.memo(({ scammer, rank, className = "" }: Scamme
             />
             <InteractionButton 
               icon={MessageSquare} 
-              count={scammer.comments?.length || 0}
+              count={(scammer.comments && Array.isArray(scammer.comments)) ? scammer.comments.length : 0}
               title="Comments"
               isViewOrComment={true}
             />

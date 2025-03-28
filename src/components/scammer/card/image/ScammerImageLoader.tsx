@@ -4,13 +4,21 @@ import { AlertCircle, ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface ScammerImageLoaderProps {
+export interface ScammerImageLoaderProps {
   name: string;
   photoUrl: string;
   onImageLoaded: (loaded: boolean, error: boolean) => void;
+  className?: string;
+  fallback?: React.ReactNode;
 }
 
-const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerImageLoaderProps) => {
+export const ScammerImageLoader = memo(({ 
+  name, 
+  photoUrl, 
+  onImageLoaded,
+  className,
+  fallback
+}: ScammerImageLoaderProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
@@ -103,22 +111,26 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
         </div>
       )}
       
-      <img
-        key={`${imgKey.current}-${retryCount}`}
-        src={getImageUrl()}
-        alt={name || "Scammer"}
-        className={cn(
-          "object-cover w-full h-full transition-opacity duration-300",
-          imageLoaded ? "opacity-100" : "opacity-0"
-        )}
-        onLoad={handleImageLoad}
-        onError={handleImageError}
-        loading="lazy"
-        data-testid="scammer-image"
-      />
+      {imageError && fallback ? (
+        <div className={className}>{fallback}</div>
+      ) : (
+        <img
+          key={`${imgKey.current}-${retryCount}`}
+          src={getImageUrl()}
+          alt={name || "Scammer"}
+          className={cn(
+            "object-cover w-full h-full transition-opacity duration-300",
+            imageLoaded ? "opacity-100" : "opacity-0",
+            className
+          )}
+          onLoad={handleImageLoad}
+          onError={handleImageError}
+          loading="lazy"
+          data-testid="scammer-image"
+        />
+      )}
     </>
   );
-};
+});
 
-// Memoize the component to prevent unnecessary re-renders
-export const ScammerImageLoader = memo(ScammerImageLoaderComponent);
+ScammerImageLoader.displayName = "ScammerImageLoader";
