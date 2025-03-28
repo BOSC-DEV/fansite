@@ -9,6 +9,7 @@ import { WarningSection } from "@/components/home/WarningSection";
 import { Helmet } from "react-helmet-async";
 import { useSolanaPrice } from "@/utils/priceUtils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 
 const Index = () => {
   const { isConnected } = useWallet();
@@ -75,6 +76,9 @@ const Index = () => {
         <HowItWorksSection />
         <WarningSection />
       </main>
+      
+      {/* Add SiteFooter only for the homepage, and only if not on mobile */}
+      {!isMobile && <SiteFooter />}
     </div>
   );
 };

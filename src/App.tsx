@@ -53,7 +53,8 @@ function AppContent() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
-      {!isMobile && <SiteFooter />}
+      {/* Only show SiteFooter if not on homepage */}
+      {!isHomePage && !isMobile && <SiteFooter />}
       <Toaster />
       <Sonner position="bottom-center" expand={true} closeButton={true} />
     </div>
