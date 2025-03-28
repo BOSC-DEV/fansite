@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
-import { Wallet, Twitter, Github, Mail } from "lucide-react";
+import { Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProfileButton } from "./profile/ProfileButton";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -38,42 +38,9 @@ export const Header = () => {
     }
   };
 
-  // For mobile, return the navigation plus the social icons at top
+  // Don't render the header on mobile
   if (isMobile) {
-    return (
-      <>
-        {/* Social Media Icons Header for Mobile */}
-        <div className="fixed top-0 left-0 right-0 z-50 wood-texture py-2 px-4 flex justify-between items-center">
-          <a 
-            href="https://github.com/BOSC-DEV/BOSC-APP" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-western-parchment hover:text-western-sand transition-colors"
-          >
-            <Github className="h-5 w-5" />
-          </a>
-          
-          <a 
-            href="https://x.com/bookofscamslol" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-western-parchment hover:text-western-sand transition-colors"
-          >
-            <Twitter className="h-5 w-5" />
-          </a>
-          
-          <a 
-            href="mailto:dev@bookofscamslol" 
-            className="text-western-parchment hover:text-western-sand transition-colors"
-          >
-            <Mail className="h-5 w-5" />
-          </a>
-        </div>
-
-        {/* Bottom Navigation */}
-        <MobileNavigation menuItems={menuItems} connecting={connecting} />
-      </>
-    );
+    return <MobileNavigation menuItems={menuItems} connecting={connecting} />;
   }
 
   return (

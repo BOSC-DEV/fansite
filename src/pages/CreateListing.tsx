@@ -1,38 +1,32 @@
 
-import React from "react";
-import { Helmet } from "react-helmet-async";
-import { useNavigate } from "react-router-dom";
-import { PageHeader } from "@/components/layout/PageHeader";
-import { FormContainer } from "@/components/createListing/FormContainer";
+import { Header } from "@/components/Header";
+import { CreateListingForm } from "@/components/CreateListingForm";
+import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 
 const CreateListing = () => {
-  const navigate = useNavigate();
   const isMobile = useIsMobile();
-
+  
   return (
-    <div className="flex flex-col min-h-screen">
-      <Helmet>
-        <title>Report a Scammer | BOSC</title>
-        <meta
-          name="description"
-          content="Report a scammer to the Book of Scams. Help protect the community from fraud."
-        />
-      </Helmet>
+    <div className="min-h-screen flex flex-col old-paper">
+      <Header />
 
-      <div className="container mx-auto px-4 max-w-3xl flex-grow">
-        <PageHeader
-          title="Report a Scammer"
-          description="Add a new scammer to the Book of Scams"
-          actionLabel="Back to Scammers"
-          actionLink="/most-wanted"
-        />
-
-        <FormContainer />
-      </div>
-
-      {!isMobile && <SiteFooter />}
+      <main className={`flex-1 py-[8px] md:py-[24px] overflow-y-auto ${isMobile ? 'pb-32' : 'pb-16'}`}>
+        <div className="container mx-auto px-4">
+          <div className="paper-texture border-2 border-western-wood rounded-sm p-6 py-[24px] mb-6">
+            <div className="mb-6 text-center">
+              <h1 className="text-3xl font-wanted text-western-accent mb-2">Post a Bounty</h1>
+              <p className="text-western-wood max-w-2xl mx-auto">
+                Report a scammer to the community and offer a bounty for information leading to recovery of funds
+              </p>
+            </div>
+            <CreateListingForm />
+          </div>
+        </div>
+      </main>
+      
+      <SiteFooter />
     </div>
   );
 };
