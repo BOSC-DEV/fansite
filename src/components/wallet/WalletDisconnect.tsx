@@ -17,8 +17,9 @@ export const WalletDisconnect = ({ onDisconnect }: WalletDisconnectProps) => {
   const navigate = useNavigate();
 
   const handleDisconnect = async () => {
+    // We'll let the disconnectWallet function handle the toast notification
     await disconnectWallet();
-    toast.success("Wallet disconnected");
+    
     if (onDisconnect) {
       onDisconnect();
     }

@@ -90,6 +90,8 @@ export function useWalletActions(walletState: ReturnType<typeof useWalletState>)
   const disconnectWallet = async () => {
     try {
       await web3Provider.disconnectWallet();
+      
+      // Clear all wallet state
       setAddress(null);
       setConnected(false);
       setBalance(null);
@@ -100,6 +102,7 @@ export function useWalletActions(walletState: ReturnType<typeof useWalletState>)
       localStorage.removeItem('walletData');
       localStorage.removeItem('walletTimestamp');
       
+      // Show only one toast notification
       toast.success('Wallet disconnected', {
         duration: 3000,
         dismissible: true,
