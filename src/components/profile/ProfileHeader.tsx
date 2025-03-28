@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { CalendarDays, MapPin, Link2, Coins, Award, Gift, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EditProfileButton } from "./EditProfileButton";
+import { ShareProfileButton } from "./ShareProfileButton";
 import { useWallet } from "@/context/WalletContext";
 import { SolAmount } from '@/components/SolAmount';
 import {
@@ -107,7 +108,13 @@ export function ProfileHeader({
           </div>
         </div>
         
-        {isCurrentUser && <EditProfileButton />}
+        <div className="flex items-center gap-2">
+          {isCurrentUser ? (
+            <EditProfileButton />
+          ) : (
+            <ShareProfileButton username={username} walletAddress={address} />
+          )}
+        </div>
       </div>
       
       {bio && (
