@@ -90,9 +90,9 @@ export function ScammerDetailsCard({
             scammerId={scammer.id}
           />
           
-          {/* Details section */}
+          {/* Details section - changing the heading from "Details" to "Accused of" */}
           <div className="w-full rounded-lg border bg-western-parchment p-4">
-            <h3 className="font-semibold text-western-wood mb-3">Details</h3>
+            <h3 className="font-semibold text-western-wood mb-3">Accused of</h3>
             <p className="text-sm text-western-wood">{scammer.accusedOf}</p>
           </div>
           
