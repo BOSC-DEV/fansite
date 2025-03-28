@@ -10,49 +10,78 @@ export const SiteFooter = () => {
   return (
     <footer className={`py-1 border-t border-western-wood wood-texture mt-auto ${isMobile ? 'mb-16' : ''}`}>
       <div className="container mx-auto max-w-6xl px-2">
-        <div className={`flex ${isMobile ? 'flex-row items-center justify-between' : 'flex-row gap-2 justify-between items-center'}`}>
-          <div className="flex items-center">
-            <img 
-              src="/lovable-uploads/8a55e27c-a460-46a6-9f26-dd32ef3512ff.png"
-              alt="Book of Scams Logo"
-              className={`${isMobile ? 'h-3.5' : 'h-8'} mr-1`}
-              style={{ objectFit: "contain" }}
-            />
-            <span className={`text-western-parchment font-western ${isMobile ? 'text-[10px]' : 'text-xs'}`}>
-              Book of Scams {currentYear} &copy;
-            </span>
-          </div>
-          
-          <div className="flex items-center gap-2">
+        {isMobile ? (
+          <div className="flex justify-center items-center gap-8 py-1">
             <a 
               href="https://github.com/BOSC-DEV/BOSC-APP" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="flex items-center gap-1 text-western-parchment hover:text-western-sand transition-colors"
+              className="text-western-parchment hover:text-western-sand transition-colors"
             >
-              <Github className={`${isMobile ? 'h-2.5 w-2.5' : 'h-3.5 w-3.5'}`} />
-              <span className={`font-western ${isMobile ? 'text-[10px]' : 'text-xs'}`}>GitHub</span>
+              <Github className="h-4 w-4" />
             </a>
             
             <a 
               href="https://x.com/bookofscamslol" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="flex items-center gap-1 text-western-parchment hover:text-western-sand transition-colors"
+              className="text-western-parchment hover:text-western-sand transition-colors"
             >
-              <Twitter className={`${isMobile ? 'h-2.5 w-2.5' : 'h-3.5 w-3.5'}`} />
-              <span className={`font-western ${isMobile ? 'hidden' : 'text-xs'}`}>@bookofscamslol</span>
+              <Twitter className="h-4 w-4" />
             </a>
             
             <a 
               href="mailto:dev@bookofscamslol" 
-              className="flex items-center gap-1 text-western-parchment hover:text-western-sand transition-colors"
+              className="text-western-parchment hover:text-western-sand transition-colors"
             >
-              <Mail className={`${isMobile ? 'h-2.5 w-2.5' : 'h-3.5 w-3.5'}`} />
-              <span className={`font-western ${isMobile ? 'hidden' : 'text-xs'}`}>dev@bookofscamslol</span>
+              <Mail className="h-4 w-4" />
             </a>
           </div>
-        </div>
+        ) : (
+          <div className="flex flex-row gap-2 justify-between items-center">
+            <div className="flex items-center">
+              <img 
+                src="/lovable-uploads/8a55e27c-a460-46a6-9f26-dd32ef3512ff.png"
+                alt="Book of Scams Logo"
+                className="h-8 mr-1"
+                style={{ objectFit: "contain" }}
+              />
+              <span className="text-western-parchment font-western text-xs">
+                Book of Scams {currentYear} &copy;
+              </span>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <a 
+                href="https://github.com/BOSC-DEV/BOSC-APP" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-western-parchment hover:text-western-sand transition-colors"
+              >
+                <Github className="h-3.5 w-3.5" />
+                <span className="font-western text-xs">GitHub</span>
+              </a>
+              
+              <a 
+                href="https://x.com/bookofscamslol" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-western-parchment hover:text-western-sand transition-colors"
+              >
+                <Twitter className="h-3.5 w-3.5" />
+                <span className="font-western text-xs">@bookofscamslol</span>
+              </a>
+              
+              <a 
+                href="mailto:dev@bookofscamslol" 
+                className="flex items-center gap-1 text-western-parchment hover:text-western-sand transition-colors"
+              >
+                <Mail className="h-3.5 w-3.5" />
+                <span className="font-western text-xs">dev@bookofscamslol</span>
+              </a>
+            </div>
+          </div>
+        )}
       </div>
     </footer>
   );
