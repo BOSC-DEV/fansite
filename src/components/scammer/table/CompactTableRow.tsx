@@ -7,7 +7,7 @@ import { Globe } from "lucide-react";
 import { Scammer } from "@/lib/types";
 import { commentService } from "@/services/storage/localStorageService";
 import { SolAmount } from "@/components/SolAmount";
-import { UploaderAvatarCompact } from "./UploaderAvatarCompact";
+import { UploaderAvatar } from "./UploaderAvatar";
 
 interface CompactTableRowProps {
   scammer: Scammer;
@@ -86,7 +86,7 @@ export const CompactTableRow = ({ scammer, formatDate }: CompactTableRowProps) =
         {formatDate(scammer.dateAdded)}
       </TableCell>
       <TableCell className="text-center">
-        <UploaderAvatarCompact addedBy={scammer.addedBy} />
+        <UploaderAvatar addedBy={scammer.addedBy} />
       </TableCell>
     </TableRow>
   );
