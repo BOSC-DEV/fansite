@@ -1,13 +1,11 @@
 
-import React from "react";
-import { Header } from "@/components/header/Header";
-import { SiteFooter } from "@/components/layout/SiteFooter";
+import { Header } from "@/components/Header";
 
 export function ScammerDetailSkeleton() {
   return (
-    <div className="min-h-screen old-paper flex flex-col">
+    <div className="min-h-screen old-paper">
       <Header />
-      <div className="container mx-auto max-w-6xl px-4 pt-32 pb-16 flex-grow">
+      <div className="container mx-auto max-w-6xl px-4 pt-32 pb-16">
         <div className="animate-pulse max-w-3xl mx-auto paper-texture rounded-sm border-2 border-western-wood p-6">
           <div className="h-8 bg-western-wood/20 rounded-md w-1/3 mb-2"></div>
           <div className="h-4 bg-western-wood/20 rounded-md w-1/2 mb-8"></div>
@@ -29,7 +27,6 @@ export function ScammerDetailSkeleton() {
           </div>
         </div>
       </div>
-      <SiteFooter />
     </div>
   );
 }

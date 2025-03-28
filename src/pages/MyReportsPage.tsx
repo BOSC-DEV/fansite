@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Header } from "@/components/header/Header";
+import { Header } from "@/components/Header";
 import { useWallet } from "@/context/WalletContext";
 import { storageService } from "@/services/storage";
 import { Scammer } from "@/lib/types";

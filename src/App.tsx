@@ -18,9 +18,6 @@ import MyReportsPage from './pages/MyReportsPage';
 import MyBountiesPage from './pages/MyBountiesPage';
 import { WalletProvider } from './context/wallet';
 import { useIsMobile } from './hooks/use-mobile';
-import { Header } from './components/header/Header';
-import { SiteFooter } from './components/layout/SiteFooter';
-import { MobileNavigation } from './components/layout/MobileNavigation';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -28,18 +25,18 @@ const queryClient = new QueryClient();
 function AppContent() {
   const isMobile = useIsMobile();
   const location = useLocation();
-  const isIndexPage = location.pathname === "/";
+  
+  // Only apply custom padding to non-home pages
+  const isHomePage = location.pathname === '/';
+  const contentPadding = isHomePage 
+    ? "pt-20 md:pt-24 py-[8px]" 
+    : "pt-24 md:pt-28 pb-[8px]";
   
   return (
     <div className="flex flex-col min-h-screen">
-      {isIndexPage && (
+      <div className={`flex-grow ${contentPadding}`}>
         <Routes>
           <Route path="/" element={<Index />} />
-        </Routes>
-      )}
-      
-      {!isIndexPage && (
-        <Routes>
           <Route path="/most-wanted" element={<MostWanted />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/create-listing" element={<CreateListing />} />
@@ -52,10 +49,7 @@ function AppContent() {
           <Route path="/my-bounties" element={<MyBountiesPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      )}
-      
-      {isMobile && <MobileNavigation />}
-      
+      </div>
       <Toaster />
       <Sonner position="bottom-center" expand={true} closeButton={true} />
     </div>

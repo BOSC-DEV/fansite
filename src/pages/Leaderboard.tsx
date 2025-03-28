@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
-import { Header } from "@/components/header/Header";
+import { Header } from "@/components/Header";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { LeaderboardTable } from "@/components/leaderboard/LeaderboardTable";
 import { Trophy } from "lucide-react";

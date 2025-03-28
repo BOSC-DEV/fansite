@@ -1,6 +1,6 @@
 
 import { useParams, Link } from "react-router-dom";
-import { Header } from "@/components/header/Header";
+import { Header } from "@/components/Header";
 import { ScammerDetailsCard } from "@/components/scammer/ScammerDetailsCard";
 import { ScammerDetailSkeleton } from "@/components/scammer/ScammerDetailSkeleton";
 import { ScammerNotFound } from "@/components/scammer/ScammerNotFound";
