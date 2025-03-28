@@ -4,7 +4,7 @@ import { BookOpen } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 export const HeroSection = () => {
   const isMobile = useIsMobile();
-  return <section className="pt-12 pb-10 md:pt-24 md:pb-20 px-3 sm:px-4 old-paper">
+  return <section className="pt-12 pb-10 md:pt-24 md:pb-20 sm:px-4 old-paper py-0 px-[12px]">
       <div className="container mx-auto max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
           <div className="space-y-3 md:space-y-4 md:pr-8 animate-fade-in flex flex-col items-center md:items-start text-center md:text-left">

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -21,13 +20,10 @@ import { useIsMobile } from './hooks/use-mobile';
 
 // Create a client
 const queryClient = new QueryClient();
-
 function AppContent() {
   const isMobile = useIsMobile();
-  
-  return (
-    <div className="flex flex-col min-h-screen">
-      <div className="flex-grow pt-20 md:pt-24">
+  return <div className="flex flex-col min-h-screen">
+      <div className="flex-grow pt-20 md:pt-24 py-[8px]">
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/most-wanted" element={<MostWanted />} />
@@ -45,13 +41,10 @@ function AppContent() {
       </div>
       <Toaster />
       <Sonner position="bottom-center" expand={true} closeButton={true} />
-    </div>
-  );
+    </div>;
 }
-
 function App() {
-  return (
-    <React.StrictMode>
+  return <React.StrictMode>
       <HelmetProvider>
         <QueryClientProvider client={queryClient}>
           <WalletProvider>
@@ -61,8 +54,6 @@ function App() {
           </WalletProvider>
         </QueryClientProvider>
       </HelmetProvider>
-    </React.StrictMode>
-  );
+    </React.StrictMode>;
 }
-
 export default App;
