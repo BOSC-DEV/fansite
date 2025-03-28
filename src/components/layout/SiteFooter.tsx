@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { Twitter, Mail } from "lucide-react";
+import { Twitter, Mail, Github } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export const SiteFooter = () => {
@@ -24,6 +24,16 @@ export const SiteFooter = () => {
           </div>
           
           <div className="flex items-center gap-4">
+            <a 
+              href="https://github.com/BOSC-DEV/BOSC-APP" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-western-parchment hover:text-western-sand transition-colors"
+            >
+              <Github className="h-3 w-3" />
+              <span className="font-western text-xs">GitHub</span>
+            </a>
+            
             <a 
               href="https://x.com/bookofscamslol" 
               target="_blank" 
