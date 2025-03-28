@@ -24,9 +24,9 @@ const CreateListing = () => {
       <div className="container mx-auto px-4 max-w-3xl flex-grow">
         <PageHeader
           title="Report a Scammer"
-          subtitle="Add a new scammer to the Book of Scams"
-          backButtonLabel="Back to Scammers"
-          onBackButtonClick={() => navigate("/most-wanted")}
+          description="Add a new scammer to the Book of Scams"
+          actionLabel="Back to Scammers"
+          actionLink="/most-wanted"
         />
 
         <FormContainer />

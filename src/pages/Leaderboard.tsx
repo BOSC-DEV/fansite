@@ -24,12 +24,12 @@ const Leaderboard = () => {
       <div className="container mx-auto px-4 max-w-6xl flex-grow">
         <PageHeader
           title="Leaderboard"
-          subtitle="Top contributors to the Book of Scams"
-          backButtonLabel="Back to Scammers"
-          onBackButtonClick={() => navigate("/most-wanted")}
+          description="Top contributors to the Book of Scams"
+          actionLabel="Back to Scammers"
+          actionLink="/most-wanted"
         />
 
-        <LeaderboardTable />
+        <LeaderboardTable users={[]} isLoading={false} />
       </div>
 
       {!isMobile && <SiteFooter />}
