@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { ScammerTable } from "@/components/scammer/ScammerTable";
@@ -12,7 +11,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { formatCurrency, formatDate } from "@/utils/formatters";
 import { useSortableScammers } from "@/hooks/useSortableScammers";
 import { Button } from "@/components/ui/button";
-import { List, Scroll, Table } from "lucide-react";
+import { Grid, Scroll, Table } from "lucide-react";
 import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -68,7 +67,7 @@ const MostWanted = () => {
           
           <div className="space-y-4 md:space-y-6">
             <div className="flex items-center gap-2">
-              <div className={isMobile ? "flex-1 max-w-[75%]" : "flex-1 max-w-[85%]"}>
+              <div className={isMobile ? "flex-1 max-w-[85%]" : "flex-1 max-w-[90%]"}>
                 <SearchBar 
                   onSearch={handleSearch} 
                   initialQuery={searchQuery} 
@@ -79,11 +78,11 @@ const MostWanted = () => {
               {isMobile ? (
                 <div className="flex items-center">
                   <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && handleViewChange(value as "grid" | "table" | "compact")}>
-                    <ToggleGroupItem value="grid" aria-label="Grid view">
+                    <ToggleGroupItem value="compact" aria-label="List view">
                       <Scroll className="h-4 w-4" />
                     </ToggleGroupItem>
-                    <ToggleGroupItem value="compact" aria-label="List view">
-                      <List className="h-4 w-4" />
+                    <ToggleGroupItem value="grid" aria-label="Grid view">
+                      <Grid className="h-4 w-4" />
                     </ToggleGroupItem>
                   </ToggleGroup>
                 </div>
@@ -95,7 +94,7 @@ const MostWanted = () => {
                     className={`border-western-wood ${viewType === 'table' ? 'bg-western-wood text-western-parchment' : 'bg-western-parchment text-western-wood'}`}
                     onClick={() => handleViewChange('table')}
                   >
-                    <Table className="h-4 w-4" />
+                    <Scroll className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="outline"
@@ -103,7 +102,7 @@ const MostWanted = () => {
                     className={`border-western-wood ${viewType === 'grid' ? 'bg-western-wood text-western-parchment' : 'bg-western-parchment text-western-wood'}`}
                     onClick={() => handleViewChange('grid')}
                   >
-                    <Scroll className="h-4 w-4" />
+                    <Grid className="h-4 w-4" />
                   </Button>
                 </div>
               )}
