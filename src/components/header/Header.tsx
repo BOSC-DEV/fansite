@@ -51,11 +51,13 @@ export const Header = () => {
             )}
           </div>
         ) : (
-          // Desktop header - original version with navigation
+          // Desktop header - with centered navigation
           <div className="py-2 flex w-full items-center">
-            <Logo />
+            <div className="flex-none">
+              <Logo />
+            </div>
             
-            <div className="ml-10 flex-1">
+            <div className="flex-1 flex justify-center">
               <nav className="flex space-x-6">
                 {navLinks.map((link) => (
                   <Link 
@@ -70,20 +72,22 @@ export const Header = () => {
               </nav>
             </div>
             
-            {!isConnected ? (
-              <Button 
-                variant="default" 
-                size="sm" 
-                onClick={handleConnectClick} 
-                disabled={connecting} 
-                className="bg-western-accent text-western-parchment hover:bg-western-accent/80 h-8 text-sm"
-              >
-                <Wallet className="h-3.5 w-3.5 mr-1.5" />
-                {connecting ? "..." : "Connect Wallet"}
-              </Button>
-            ) : (
-              <ProfileButton />
-            )}
+            <div className="flex-none">
+              {!isConnected ? (
+                <Button 
+                  variant="default" 
+                  size="sm" 
+                  onClick={handleConnectClick} 
+                  disabled={connecting} 
+                  className="bg-western-accent text-western-parchment hover:bg-western-accent/80 h-8 text-sm"
+                >
+                  <Wallet className="h-3.5 w-3.5 mr-1.5" />
+                  {connecting ? "..." : "Connect Wallet"}
+                </Button>
+              ) : (
+                <ProfileButton />
+              )}
+            </div>
           </div>
         )}
       </div>

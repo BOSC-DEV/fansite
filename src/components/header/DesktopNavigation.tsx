@@ -17,7 +17,7 @@ export const DesktopNavigation = ({ menuItems }: DesktopNavigationProps) => {
   const location = useLocation();
 
   return (
-    <nav className="flex flex-1 items-center">
+    <nav className="flex flex-1 items-center justify-center">
       <div className="flex space-x-10">
         {menuItems.map(item => (
           <Link 
