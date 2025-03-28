@@ -26,7 +26,7 @@ export const BookPage = ({
   if (!scammer) {
     return (
       <div className="text-center p-8">
-        <p className="text-muted-foreground text-xl">No scammer found</p>
+        <p className="text-muted-foreground text-xl font-serif">No scammer found</p>
       </div>
     );
   }
@@ -51,20 +51,20 @@ export const BookPage = ({
             </AvatarFallback>
           </Avatar>
           
-          <h2 className="font-impact text-3xl text-center bg-gradient-to-r from-meme-purple to-meme-blue bg-clip-text text-transparent mb-2">
+          <h2 className="font-wanted text-3xl text-center bg-gradient-to-r from-meme-purple to-meme-blue bg-clip-text text-transparent mb-2">
             {scammer.name}
           </h2>
           
           <div className="flex flex-wrap justify-center gap-2 mb-4">
             {scammer.aliases.map((alias, i) => (
-              <Badge key={i} variant="outline" className="bg-meme-yellow/10">
+              <Badge key={i} variant="outline" className="bg-meme-yellow/10 font-serif">
                 {alias}
               </Badge>
             ))}
           </div>
           
           <div className="mt-auto w-full">
-            <div className="font-bold flex items-center justify-center text-meme-green text-2xl">
+            <div className="font-bold flex items-center justify-center text-meme-green text-2xl font-western">
               {formatCurrency(scammer.bountyAmount)} $BOSC
             </div>
           </div>
@@ -73,8 +73,8 @@ export const BookPage = ({
         {/* Right column - Details */}
         <div className="md:col-span-2 pl-2">
           <div className="mb-4 p-4 bg-meme-red/5 rounded-lg border border-meme-red/20">
-            <h3 className="text-lg font-bold mb-2 text-meme-red">Accused Of:</h3>
-            <p className="italic">{scammer.accusedOf}</p>
+            <h3 className="text-lg font-wanted mb-2 text-meme-red">Accused Of:</h3>
+            <p className="italic font-serif">{scammer.accusedOf}</p>
           </div>
           
           <div className="space-y-4">
@@ -84,7 +84,7 @@ export const BookPage = ({
                 <LinkIcon className="h-4 w-4 text-muted-foreground" />
               </div>
               <div>
-                <p className="text-sm font-medium">Wallet Address</p>
+                <p className="text-sm font-western">Wallet Address</p>
                 <p className="text-xs text-muted-foreground font-mono break-all">
                   {scammer.walletAddress}
                 </p>
@@ -97,8 +97,8 @@ export const BookPage = ({
                 <Calendar className="h-4 w-4 text-muted-foreground" />
               </div>
               <div>
-                <p className="text-sm font-medium">Added on</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-sm font-western">Added on</p>
+                <p className="text-xs text-muted-foreground font-serif">
                   {formatDate(scammer.dateAdded)}
                 </p>
               </div>
@@ -111,10 +111,10 @@ export const BookPage = ({
                   <Users className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium">Known Accomplices</p>
+                  <p className="text-sm font-western">Known Accomplices</p>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {scammer.accomplices.map((accomplice, i) => (
-                      <Badge key={i} variant="secondary" className="text-xs">
+                      <Badge key={i} variant="secondary" className="text-xs font-serif">
                         {accomplice}
                       </Badge>
                     ))}
@@ -126,14 +126,14 @@ export const BookPage = ({
             {/* Official Response */}
             {scammer.officialResponse && (
               <div className="mt-4 p-3 bg-muted/30 rounded-lg text-sm">
-                <p className="font-medium mb-1">Official Response:</p>
-                <p className="text-muted-foreground text-xs">{scammer.officialResponse}</p>
+                <p className="font-western mb-1">Official Response:</p>
+                <p className="text-muted-foreground text-xs font-serif">{scammer.officialResponse}</p>
               </div>
             )}
           </div>
           
           <div className="mt-6 flex justify-end">
-            <Button asChild size="sm" variant="default" className="bg-meme-purple hover:bg-meme-purple/90">
+            <Button asChild size="sm" variant="default" className="bg-meme-purple hover:bg-meme-purple/90 font-western">
               <Link to={`/scammer/${scammer.id}`} className="flex items-center">
                 View Full Details
                 <ExternalLink className="h-4 w-4 ml-2" />

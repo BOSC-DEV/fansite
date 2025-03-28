@@ -59,13 +59,13 @@ export function ScammerHeader({
   return (
     <div className="flex justify-between items-start">
       <div className="w-full">
-        <CardTitle className="text-2xl text-western-wood">{name}</CardTitle>
-        <CardDescription className="text-western-wood/70 mt-1 w-full">
+        <CardTitle className="text-2xl text-western-wood font-wanted">{name}</CardTitle>
+        <CardDescription className="text-western-wood/70 mt-1 w-full font-serif">
           Accused of: {accusedOf}
         </CardDescription>
         {bountyAmount > 0 && (
           <div className="mt-2 flex items-center">
-            <span className="text-sm text-western-accent font-medium">
+            <span className="text-sm text-western-accent font-medium font-western">
               Total Bounty: <SolAmount amount={bountyAmount} className="font-bold" showIcon={true} />
             </span>
           </div>
@@ -101,16 +101,16 @@ export function ScammerHeader({
             </AlertDialogTrigger>
             <AlertDialogContent className="bg-western-parchment border-western-wood/40">
               <AlertDialogHeader>
-                <AlertDialogTitle className="text-western-accent">Archive Listing</AlertDialogTitle>
-                <AlertDialogDescription className="text-western-wood/80">
+                <AlertDialogTitle className="text-western-accent font-wanted">Archive Listing</AlertDialogTitle>
+                <AlertDialogDescription className="text-western-wood/80 font-serif">
                   Are you sure you want to archive this listing? The listing will be hidden but can be recovered by an administrator if needed.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel className="bg-western-sand/20 border-western-wood/20 text-western-wood hover:bg-western-sand/30">Cancel</AlertDialogCancel>
+                <AlertDialogCancel className="bg-western-sand/20 border-western-wood/20 text-western-wood hover:bg-western-sand/30 font-western">Cancel</AlertDialogCancel>
                 <AlertDialogAction 
                   onClick={handleDeleteScammer}
-                  className="bg-red-500/80 text-white hover:bg-red-600"
+                  className="bg-red-500/80 text-white hover:bg-red-600 font-western"
                 >
                   Archive
                 </AlertDialogAction>

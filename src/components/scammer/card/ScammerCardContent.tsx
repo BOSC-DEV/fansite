@@ -31,10 +31,10 @@ export function ScammerCardContent({
     <div className="p-4 space-y-3">
       <div className="flex justify-between items-start">
         <div className="w-3/5">
-          <p className="text-xs text-western-wood/70">Accused of</p>
-          <p className="text-sm font-medium line-clamp-2 text-western-wood">{accusedOf}</p>
+          <p className="text-xs text-western-wood/70 font-western">Accused of</p>
+          <p className="text-sm font-medium line-clamp-2 text-western-wood font-serif">{accusedOf}</p>
         </div>
-        <div className="text-xs text-western-wood/70 text-right">
+        <div className="text-xs text-western-wood/70 text-right font-serif">
           Added {formattedDate}
         </div>
       </div>
@@ -51,12 +51,12 @@ export function ScammerCardContent({
       {aliasesArray.length > 0 && (
         <div className="flex flex-wrap gap-1">
           {aliasesArray.slice(0, 2).map((alias, i) => (
-            <Badge key={i} variant="outline" className="text-xs bg-western-sand/20 border-western-wood/30 text-western-wood">
+            <Badge key={i} variant="outline" className="text-xs bg-western-sand/20 border-western-wood/30 text-western-wood font-serif">
               {alias}
             </Badge>
           ))}
           {aliasesArray.length > 2 && (
-            <Badge variant="outline" className="text-xs bg-western-sand/20 border-western-wood/30 text-western-wood">
+            <Badge variant="outline" className="text-xs bg-western-sand/20 border-western-wood/30 text-western-wood font-serif">
               +{aliasesArray.length - 2} more
             </Badge>
           )}
@@ -68,7 +68,7 @@ export function ScammerCardContent({
           <Button 
             variant="outline" 
             size="sm" 
-            className="w-full border-western-wood text-western-accent hover:bg-western-wood hover:text-western-parchment transition-colors"
+            className="w-full border-western-wood text-western-accent hover:bg-western-wood hover:text-western-parchment transition-colors font-western"
           >
             View Details
             <ExternalLink className="ml-2 h-3 w-3" />
