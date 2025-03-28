@@ -60,7 +60,7 @@ const MostWanted = () => {
   };
 
   return (
-    <div className="min-h-screen old-paper flex flex-col">
+    <div className="min-h-screen bg-hacker-bg matrix-pattern flex flex-col relative crt-scanline">
       <Header />
       <main className="py-1 md:py-4 pb-20 flex-grow">
         <div className="container mx-auto max-w-6xl px-4">
@@ -79,10 +79,10 @@ const MostWanted = () => {
               {isMobile ? (
                 <div className="flex items-center">
                   <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && handleViewChange(value as "grid" | "table" | "compact")}>
-                    <ToggleGroupItem value="grid" aria-label="Grid view">
+                    <ToggleGroupItem value="grid" aria-label="Grid view" className="border-hacker-border bg-hacker-dark data-[state=on]:bg-hacker-accent/20 data-[state=on]:text-hacker-accent">
                       <Grid className="h-4 w-4" />
                     </ToggleGroupItem>
-                    <ToggleGroupItem value="compact" aria-label="List view">
+                    <ToggleGroupItem value="compact" aria-label="List view" className="border-hacker-border bg-hacker-dark data-[state=on]:bg-hacker-accent/20 data-[state=on]:text-hacker-accent">
                       <List className="h-4 w-4" />
                     </ToggleGroupItem>
                   </ToggleGroup>
@@ -92,7 +92,7 @@ const MostWanted = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className={`border-western-wood ${viewType === 'table' ? 'bg-western-wood text-western-parchment' : 'bg-western-parchment text-western-wood'}`}
+                    className={`border-hacker-border ${viewType === 'table' ? 'bg-hacker-accent/20 text-hacker-accent' : 'bg-transparent text-hacker-text'}`}
                     onClick={() => handleViewChange('table')}
                   >
                     <Table className="h-4 w-4" />
@@ -100,7 +100,7 @@ const MostWanted = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className={`border-western-wood ${viewType === 'grid' ? 'bg-western-wood text-western-parchment' : 'bg-western-parchment text-western-wood'}`}
+                    className={`border-hacker-border ${viewType === 'grid' ? 'bg-hacker-accent/20 text-hacker-accent' : 'bg-transparent text-hacker-text'}`}
                     onClick={() => handleViewChange('grid')}
                   >
                     <Grid className="h-4 w-4" />

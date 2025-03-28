@@ -1,5 +1,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Rye&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,87 +8,46 @@
 
 @layer base {
   :root {
-    --background: 39 38% 95%;
-    --foreground: 20 30% 20%;
+    --background: 120 100% 3%;
+    --foreground: 120 100% 75%;
 
-    --card: 36 40% 97%;
-    --card-foreground: 20 30% 20%;
+    --card: 120 30% 7%;
+    --card-foreground: 120 100% 75%;
 
-    --popover: 36 40% 97%;
-    --popover-foreground: 20 30% 20%;
+    --popover: 120 30% 7%;
+    --popover-foreground: 120 100% 75%;
 
-    --primary: 22 90% 50%;
-    --primary-foreground: 39 38% 95%;
+    --primary: 120 100% 50%;
+    --primary-foreground: 120 100% 3%;
 
-    --secondary: 30 70% 30%;
-    --secondary-foreground: 39 38% 95%;
+    --secondary: 120 70% 30%;
+    --secondary-foreground: 120 100% 95%;
 
-    --muted: 30 15% 85%;
-    --muted-foreground: 20 10% 40%;
+    --muted: 120 15% 15%;
+    --muted-foreground: 120 10% 60%;
 
-    --accent: 10 80% 35%;
-    --accent-foreground: 39 38% 95%;
+    --accent: 120 80% 35%;
+    --accent-foreground: 120 100% 95%;
 
     --destructive: 0 85% 45%;
-    --destructive-foreground: 39 38% 95%;
+    --destructive-foreground: 120 100% 95%;
 
-    --border: 30 15% 80%;
-    --input: 30 15% 80%;
-    --ring: 22 90% 50%;
+    --border: 120 50% 20%;
+    --input: 120 50% 20%;
+    --ring: 120 100% 50%;
 
-    --radius: 0.5rem;
+    --radius: 0.125rem;
 
-    --sidebar-background: 30 30% 90%;
-    --sidebar-foreground: 20 30% 20%;
-    --sidebar-primary: 22 90% 50%;
-    --sidebar-primary-foreground: 39 38% 95%;
-    --sidebar-accent: 30 15% 85%;
-    --sidebar-accent-foreground: 20 30% 20%;
-    --sidebar-border: 30 15% 80%;
-    --sidebar-ring: 22 90% 50%;
+    --sidebar-background: 120 30% 5%;
+    --sidebar-foreground: 120 100% 75%;
+    --sidebar-primary: 120 100% 50%;
+    --sidebar-primary-foreground: 120 100% 3%;
+    --sidebar-accent: 120 30% 10%;
+    --sidebar-accent-foreground: 120 100% 75%;
+    --sidebar-border: 120 50% 20%;
+    --sidebar-ring: 120 100% 50%;
   }
 
-  .dark {
-    --background: 20 30% 10%;
-    --foreground: 39 38% 90%;
-
-    --card: 20 25% 15%;
-    --card-foreground: 39 38% 90%;
-
-    --popover: 20 30% 10%;
-    --popover-foreground: 39 38% 90%;
-
-    --primary: 22 90% 50%;
-    --primary-foreground: 20 30% 10%;
-
-    --secondary: 30 70% 30%;
-    --secondary-foreground: 39 38% 90%;
-
-    --muted: 20 25% 20%;
-    --muted-foreground: 39 10% 70%;
-
-    --accent: 10 80% 35%;
-    --accent-foreground: 39 38% 90%;
-
-    --destructive: 0 70% 45%;
-    --destructive-foreground: 39 38% 90%;
-
-    --border: 20 25% 25%;
-    --input: 20 25% 25%;
-    --ring: 22 90% 50%;
-    
-    --sidebar-background: 20 30% 12%;
-    --sidebar-foreground: 39 38% 90%;
-    --sidebar-primary: 22 90% 50%;
-    --sidebar-primary-foreground: 39 38% 95%;
-    --sidebar-accent: 20 20% 20%;
-    --sidebar-accent-foreground: 39 38% 90%;
-    --sidebar-border: 20 20% 20%;
-    --sidebar-ring: 22 90% 50%;
-  }
-}
-
-@layer base {
   * {
     @apply border-border;
   }
@@ -97,24 +57,127 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased selection:bg-accent/25;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    @apply bg-hacker-bg text-hacker-text font-mono antialiased selection:bg-hacker-accent/25;
+    background-image: 
+      radial-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px),
+      radial-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px);
+    background-size: 35px 35px;
+    background-position: 0 0, 17.5px 17.5px;
   }
   
-  /* Wild West text styles */
-  .wanted-poster {
-    @apply font-wanted uppercase tracking-wide text-western-accent;
-    text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+  /* Matrix-style text */
+  .matrix-text {
+    @apply font-matrix text-matrix-text tracking-wider;
+    text-shadow: 0 0 5px rgba(0, 255, 65, 0.7);
   }
 
-  .western-card {
-    @apply border-4 border-western-wood rounded-sm shadow-lg transform transition-transform hover:scale-105;
+  .hacker-text {
+    @apply font-hacker text-hacker-text;
+  }
+
+  .glitch-text {
+    @apply relative;
+    text-shadow: 
+      0.05em 0 0 rgba(255, 0, 0, 0.5),
+      -0.05em -0.025em 0 rgba(0, 255, 0, 0.5),
+      0.025em 0.05em 0 rgba(0, 0, 255, 0.5);
+    animation: glitch 0.5s infinite;
   }
   
-  .western-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-western-leather via-western-accent to-bosc;
+  .card-hacker {
+    @apply bg-hacker-card border border-hacker-border/30 shadow-lg shadow-hacker-accent/10 rounded-sm;
+  }
+
+  .terminal-text {
+    position: relative;
+    display: inline-block;
   }
   
+  .terminal-text::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -10px;
+    height: 100%;
+    width: 5px;
+    background-color: #33FF33;
+    animation: blink 1s step-end infinite;
+  }
+  
+  /* Matrix rain effect */
+  .matrix-rain {
+    @apply font-mono text-matrix-text opacity-70 animate-matrix-rain;
+  }
+  
+  .glass-panel {
+    @apply bg-hacker-card/80 backdrop-blur-md border border-hacker-border/20 rounded-sm shadow-lg;
+  }
+  
+  /* Matrix code background */
+  .matrix-bg::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' font-family='monospace' font-size='10' fill='rgba(0, 255, 65, 0.1)' text-anchor='middle' dominant-baseline='middle'%3E01%3C/text%3E%3C/svg%3E");
+    opacity: 0.1;
+  }
+  
+  /* CRT scan line effect */
+  .crt-scanline::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      rgba(0, 255, 65, 0),
+      rgba(0, 255, 65, 0) 50%,
+      rgba(0, 0, 0, 0.1) 50%,
+      rgba(0, 0, 0, 0.1)
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* Form elements with matrix style */
+  input, textarea, select {
+    @apply bg-hacker-dark border-hacker-border text-hacker-text;
+  }
+
+  /* Neon glow effect */
+  .neon-glow {
+    text-shadow: 0 0 5px #33FF33, 0 0 10px #33FF33, 0 0 15px #33FF33;
+  }
+
+  /* Code blocks */
+  pre, code {
+    @apply bg-hacker-dark text-hacker-text p-2 rounded-sm border border-hacker-border/30;
+  }
+
+  /* Matrix buttons */
+  .matrix-button {
+    @apply relative bg-hacker-dark border border-hacker-border text-hacker-text 
+           hover:bg-hacker-accent/10 hover:border-hacker-accent transition-all duration-300
+           focus:outline-none focus:ring-2 focus:ring-hacker-accent/50 focus:ring-offset-0;
+  }
+
+  .matrix-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(0, 255, 65, 0.1), transparent);
+    pointer-events: none;
+  }
+
   /* Page transition effects */
   .page-transition-enter {
     opacity: 0;
@@ -138,76 +201,23 @@
     transition: opacity 300ms, transform 300ms;
   }
   
-  /* Glass card effect */
-  .glass-card {
-    @apply bg-western-parchment/80 dark:bg-western-leather/80 backdrop-blur-md border border-western-sand/20 dark:border-western-sand/10;
-  }
-  
   /* Shimmer effect for loading states */
   .shimmer {
     background: linear-gradient(90deg, 
-      rgba(255, 255, 255, 0) 0%, 
-      rgba(255, 255, 255, 0.2) 50%, 
-      rgba(255, 255, 255, 0) 100%
+      rgba(0, 255, 65, 0) 0%, 
+      rgba(0, 255, 65, 0.1) 50%, 
+      rgba(0, 255, 65, 0) 100%
     );
     background-size: 200% 100%;
     animation: shimmer 2s infinite linear;
   }
 
-  /* Book view specific styles */
-  .perspective-1000 {
-    perspective: 1000px;
-  }
-  
-  .book-shadow {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-  }
-  
-  .book-page {
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
-  }
-  
-  .page-curl {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 50px;
-    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.05));
-    border-radius: 0 0 5px 5px;
-  }
-  
-  /* Western themed elements */
-  .parchment-bg {
-    background-color: #FEF7CD;
-    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23e0d5c0' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
-  }
-  
-  .wood-texture {
-    background-color: #6B4226;
-    background-image: url("data:image/svg+xml,%3Csvg width='12' height='16' viewBox='0 0 12 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 .99C4 .445 4.444 0 5 0c.552 0 1 .45 1 .99v4.02C6 5.555 5.556 6 5 6c-.552 0-1-.45-1-.99V.99zm6 8c0-.546.444-.99 1-.99.552 0 1 .45 1 .99v4.02c0 .546-.444.99-1 .99-.552 0-1-.45-1-.99V8.99z' fill='%23553517' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
-  }
-  
-  .dust-overlay::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23e0d5c0' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
-    z-index: -1;
-    pointer-events: none;
-  }
-  
   /* Mobile specific fixes */
   @media (max-width: 768px) {
     .container {
-      padding-bottom: 80px; /* Ensure content doesn't get hidden behind navbar */
+      padding-bottom: 80px;
     }
     
-    /* Make sure pages have proper scrolling */
     .min-h-screen {
       min-height: 100vh;
     }
@@ -217,4 +227,25 @@
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: #33FF33 }
+}
+
+@keyframes text-flicker {
+  0% { opacity: 0.8; }
+  2% { opacity: 1; }
+  4% { opacity: 0.3; }
+  6% { opacity: 1; }
+  8% { opacity: 0.2; }
+  10% { opacity: 1; }
+  99% { opacity: 1; }
+  100% { opacity: 0.8; }
 }

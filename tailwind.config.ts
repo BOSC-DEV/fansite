@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -25,6 +26,8 @@ export default {
 				impact: ['Impact', 'Haettenschweiler', 'sans-serif'],
 				western: ['"Playfair Display"', 'serif'],
 				wanted: ['"Rye"', 'cursive'],
+				matrix: ['"Courier New"', 'monospace'],
+				hacker: ['"VT323"', 'monospace'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -84,13 +87,29 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				western: {
-					leather: '#8B4513',
-					sand: '#FEC6A1',
-					parchment: '#FEF7CD',
-					wood: '#6B4226',
-					dust: '#E8D4B7',
-					accent: '#862E1B',
+				matrix: {
+					bg: '#000000',
+					text: '#00FF41',
+					accent: '#0CFF0C',
+					dark: '#002800',
+					light: '#39FF14',
+					code: '#00FF00',
+					highlight: '#32CD32',
+					muted: '#003B00',
+					border: '#008F11',
+					hover: '#00FF41',
+				},
+				hacker: {
+					bg: '#0D0D0D',
+					card: '#1A1A1A',
+					text: '#33FF33',
+					accent: '#0CFF0C',
+					highlight: '#00FF41',
+					muted: '#264426',
+					border: '#33FF33',
+					dark: '#002200',
+					error: '#FF0000',
+					warning: '#FFFF00',
 				}
 			},
 			borderRadius: {
@@ -143,9 +162,31 @@ export default {
 					'0%, 100%': { transform: 'translateY(0)' },
 					'50%': { transform: 'translateY(-10px)' }
 				},
-				'tumbleweed': {
-					'0%': { transform: 'translateX(0) rotate(0deg)' },
-					'100%': { transform: 'translateX(100vw) rotate(360deg)' }
+				'matrix-rain': {
+					'0%': { transform: 'translateY(-100%)' },
+					'100%': { transform: 'translateY(1000%)' }
+				},
+				'blink': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0' }
+				},
+				'glitch': {
+					'0%, 5%, 10%, 15%, 20%, 25%, 30%, 35%, 40%, 45%, 50%, 55%, 60%, 65%, 70%, 75%, 80%, 85%, 90%, 95%, 100%': {
+						transform: 'translate(0)',
+						filter: 'blur(0)'
+					},
+					'2.5%, 22.5%, 42.5%, 62.5%, 82.5%': {
+						transform: 'translate(-2px, 0)',
+						filter: 'blur(1px)'
+					},
+					'7.5%, 27.5%, 47.5%, 67.5%, 87.5%': {
+						transform: 'translate(2px, 0)',
+						filter: 'blur(1px)'
+					},
+					'12.5%, 32.5%, 52.5%, 72.5%, 92.5%': {
+						transform: 'translate(0, -2px)',
+						filter: 'blur(1px)'
+					}
 				}
 			},
 			animation: {
@@ -158,7 +199,9 @@ export default {
 				'wiggle': 'wiggle 1s ease-in-out infinite',
 				'spin-slow': 'spin-slow 3s linear infinite',
 				'bounce-slight': 'bounce-slight 2s infinite',
-				'tumbleweed': 'tumbleweed 15s linear infinite'
+				'matrix-rain': 'matrix-rain 10s linear infinite',
+				'blink': 'blink 1s step-end infinite',
+				'glitch': 'glitch 3s infinite',
 			},
 			backdropFilter: {
 				'none': 'none',
