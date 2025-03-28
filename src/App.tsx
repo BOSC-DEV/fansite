@@ -18,6 +18,7 @@ import MyReportsPage from './pages/MyReportsPage';
 import MyBountiesPage from './pages/MyBountiesPage';
 import { WalletProvider } from './context/wallet';
 import { useIsMobile } from './hooks/use-mobile';
+import { SiteFooter } from './components/layout/SiteFooter';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ function AppContent() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
+      {!isMobile && <SiteFooter />}
       <Toaster />
       <Sonner position="bottom-center" expand={true} closeButton={true} />
     </div>

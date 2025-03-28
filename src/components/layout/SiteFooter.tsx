@@ -13,7 +13,7 @@ export const SiteFooter = () => {
   }
 
   return (
-    <footer className="py-1 border-t border-western-wood wood-texture mt-auto">
+    <footer className="py-1 border-t border-western-wood wood-texture w-full mt-auto">
       <div className="container mx-auto max-w-6xl px-2">
         <div className="flex flex-row gap-2 justify-between items-center">
           <div className="flex items-center">
