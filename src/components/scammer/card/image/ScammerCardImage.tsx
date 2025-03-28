@@ -38,9 +38,8 @@ const ScammerCardImageComponent = ({
   const isMobile = useIsMobile();
   const location = useLocation();
   
-  // Don't show interaction bar on homepage when on mobile
-  const isHomePage = location.pathname === "/";
-  const showInteractions = !(isMobile && isHomePage);
+  // Always show interactions on mobile regardless of page
+  const showInteractions = true;
 
   // Reset component state on mount and updates
   useEffect(() => {
