@@ -17,12 +17,12 @@ export function ProfilePage() {
   return (
     <div className="min-h-screen old-paper flex flex-col">
       <Header />
-      <main className="container mx-auto px-4 py-4 flex-grow">
+      <main className="container mx-auto px-4 py-1 md:py-4 flex-grow">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl font-wanted text-western-accent text-center mb-8">Your Profile</h1>
+          <h1 className="text-3xl font-wanted text-western-accent text-center mb-6 md:mb-8">Your Profile</h1>
           
           {!supabaseReady && (
-            <Alert variant="destructive" className="mb-8">
+            <Alert variant="destructive" className="mb-6 md:mb-8">
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Configuration Error</AlertTitle>
               <AlertDescription>

@@ -21,7 +21,7 @@ const EditListing = () => {
     return (
       <div className="min-h-screen flex flex-col old-paper">
         <Header />
-        <main className="flex-1 py-2 md:py-4 overflow-y-auto">
+        <main className="flex-1 py-1 md:py-4 overflow-y-auto">
           <div className="container mx-auto px-4">
             <LoadingState />
           </div>
@@ -39,7 +39,7 @@ const EditListing = () => {
     return (
       <div className="min-h-screen flex flex-col old-paper">
         <Header />
-        <main className="flex-1 py-2 md:py-4 overflow-y-auto">
+        <main className="flex-1 py-1 md:py-4 overflow-y-auto">
           <div className="container mx-auto px-4">
             <UnauthorizedAccess scammerId={id || ""} />
           </div>
@@ -53,13 +53,13 @@ const EditListing = () => {
     <div className="min-h-screen flex flex-col old-paper">
       <Header />
 
-      <main className={`flex-1 py-2 md:py-4 overflow-y-auto ${isMobile ? 'pb-32' : 'pb-16'}`}>
+      <main className={`flex-1 py-1 md:py-4 overflow-y-auto ${isMobile ? 'pb-32' : 'pb-16'}`}>
         <div className="container mx-auto px-4">
           <Button
             variant="ghost"
             size="sm"
             asChild
-            className="mb-8 hover:bg-western-sand/20 text-western-wood"
+            className="mb-6 md:mb-8 hover:bg-western-sand/20 text-western-wood"
           >
             <Link to={`/scammer/${id}`}>
               <ArrowLeft className="h-4 w-4 mr-2" />

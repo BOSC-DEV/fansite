@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { ScammerTable } from "@/components/scammer/ScammerTable";
@@ -61,7 +62,7 @@ const MostWanted = () => {
   return (
     <div className="min-h-screen old-paper flex flex-col">
       <Header />
-      <main className="py-4 pb-20 flex-grow">
+      <main className="py-1 md:py-4 pb-20 flex-grow">
         <div className="container mx-auto max-w-6xl px-4">
           <MostWantedHeader />
           

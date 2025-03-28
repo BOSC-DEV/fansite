@@ -30,7 +30,7 @@ function AppContent() {
   const isHomePage = location.pathname === '/';
   const contentPadding = isHomePage 
     ? "pt-20 md:pt-24 py-[8px]" 
-    : "pt-16 md:pt-28 pb-[8px]"; // Reduced top padding on mobile from 24 to 16
+    : "pt-10 md:pt-28 pb-[8px]"; // Reduced top padding on mobile from 16 to 10
   
   return (
     <div className="flex flex-col min-h-screen">
