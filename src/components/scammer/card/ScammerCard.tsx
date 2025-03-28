@@ -39,6 +39,12 @@ export const ScammerCard = React.memo(({
     }).format(dateAdded);
   }, [dateAdded]);
 
+  // Ensure comments is an array before trying to get its length
+  const commentsCount = useMemo(() => {
+    if (!scammer.comments) return 0;
+    return Array.isArray(scammer.comments) ? scammer.comments.length : 0;
+  }, [scammer.comments]);
+
   return (
     <div className={`rounded-sm overflow-hidden ${className} matrix-card`}>
       <Link to={`/scammer/${scammer.id}`} className="block">
@@ -82,7 +88,7 @@ export const ScammerCard = React.memo(({
             />
             <InteractionButton 
               icon={MessageSquare} 
-              count={(scammer.comments && Array.isArray(scammer.comments)) ? scammer.comments.length : 0}
+              count={commentsCount}
               title="Comments"
               isViewOrComment={true}
             />

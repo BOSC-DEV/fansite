@@ -18,7 +18,7 @@ export interface ScammerListing {
   walletAddress: string;
   dateAdded: string; // ISO string
   addedBy: string;
-  comments: string[]; // Now required to match localStorage version
+  comments: string[] | null; // Updated to allow null
   likes: number;
   dislikes: number;
   views: number;
@@ -30,7 +30,7 @@ export interface ScammerStats {
   dislikes?: number;
   views?: number;
   shares?: number;
-  comments?: string[];
+  comments?: string[] | null;
 }
 
 export interface ScammerDbRecord {

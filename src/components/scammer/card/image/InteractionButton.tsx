@@ -22,7 +22,7 @@ export function InteractionButton({
   count, 
   onClick, 
   active = false, 
-  activeColor = 'bg-western-wood',
+  activeColor = 'bg-hacker-accent',
   className,
   title,
   iconSize,
@@ -38,9 +38,9 @@ export function InteractionButton({
   
   const buttonClasses = cn(
     "flex items-center",
-    active ? activeColor : "bg-western-wood", // Removed opacity for solid background
-    "text-western-parchment py-1 px-2 rounded-full text-xs font-western",
-    onClick && !isDisabled ? "cursor-pointer hover:bg-western-wood/90 transition-colors" : "cursor-default",
+    active ? activeColor : "bg-hacker-card",
+    "text-hacker-text py-1 px-2 rounded-full text-xs font-mono border border-hacker-border/30",
+    onClick && !isDisabled ? "cursor-pointer hover:bg-hacker-accent/20 transition-colors" : "cursor-default",
     isDisabled ? "opacity-70" : "",
     isMobile ? "py-0.5 px-1.5" : "",
     className
@@ -48,6 +48,8 @@ export function InteractionButton({
   
   const handleClick = (e: React.MouseEvent) => {
     if (onClick && !isDisabled) {
+      e.preventDefault();
+      e.stopPropagation();
       onClick(e);
     }
   };
@@ -57,6 +59,8 @@ export function InteractionButton({
       className={buttonClasses}
       onClick={handleClick} 
       title={title}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
     >
       <Icon className={`h-${actualIconSize} w-${actualIconSize} mr-1 ${isMobile ? 'h-3 w-3' : ''}`} />
       <span>{count || 0}</span>
