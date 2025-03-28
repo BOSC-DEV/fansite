@@ -34,13 +34,14 @@ export const SearchAndFilterControls = ({
               <SearchBar 
                 onSearch={handleSearch} 
                 initialQuery={searchQuery}
+                placeholder="Search..."
               />
             </div>
             <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && handleViewChange(value as "grid" | "table")}>
-              <ToggleGroupItem value="grid" aria-label="Toggle grid view">
+              <ToggleGroupItem value="grid" aria-label="Grid view">
                 <Grid className="h-4 w-4" />
               </ToggleGroupItem>
-              <ToggleGroupItem value="table" aria-label="Toggle list view">
+              <ToggleGroupItem value="table" aria-label="List view">
                 <List className="h-4 w-4" />
               </ToggleGroupItem>
             </ToggleGroup>

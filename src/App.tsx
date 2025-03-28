@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -28,9 +27,11 @@ function AppContent() {
   
   // Only apply custom padding to non-home pages
   const isHomePage = location.pathname === '/';
+  
+  // Don't apply top padding to homepage on mobile, but keep desktop padding
   const contentPadding = isHomePage 
-    ? "pt-20 md:pt-24 py-[8px]" 
-    : "pt-10 md:pt-28 pb-[8px]"; // Reduced top padding on mobile from 16 to 10
+    ? (isMobile ? "pt-0" : "pt-20 md:pt-24") + " py-[8px]"
+    : "pt-6 md:pt-28 pb-[8px]"; // Reduced top padding on mobile from 10 to 6
   
   return (
     <div className="flex flex-col min-h-screen">

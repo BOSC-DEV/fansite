@@ -1,4 +1,3 @@
-
 import { useState, useEffect, memo } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -25,7 +24,6 @@ const FeaturedScammersComponent = ({ limit = 3 }: FeaturedScammersProps) => {
   const isMobile = useIsMobile();
   const [viewType, setViewType] = useState<"grid" | "compact">("grid");
   
-  // Use the same sorting hook as the Most Wanted page
   const {
     sortedScammers,
     handleSort,
@@ -33,14 +31,11 @@ const FeaturedScammersComponent = ({ limit = 3 }: FeaturedScammersProps) => {
     sortDirection
   } = useSortableScammers(filteredScammers);
   
-  // Take only the first 'limit' scammers for display
   const limitedScammers = sortedScammers.slice(0, limit);
   
-  // For pagination used by ScammerGrid component
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 1; // Since we're only showing limited items, we don't need pagination
+  const totalPages = 1;
 
-  // Debug the scammer data
   useEffect(() => {
     if (!isLoading && limitedScammers.length > 0) {
       console.log("FeaturedScammers - Scammers to display:", limitedScammers);
@@ -70,14 +65,14 @@ const FeaturedScammersComponent = ({ limit = 3 }: FeaturedScammersProps) => {
         {isMobile && limitedScammers.length > 0 && (
           <div className="flex items-center w-full mb-4">
             <div className="flex-1">
-              <SearchBar onSearch={() => {}} initialQuery="" placeholder="Search most wanted..." />
+              <SearchBar onSearch={() => {}} initialQuery="" placeholder="Search..." />
             </div>
             <div className="ml-2">
               <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && setViewType(value as "grid" | "compact")}>
-                <ToggleGroupItem value="grid" aria-label="Toggle grid view">
+                <ToggleGroupItem value="grid" aria-label="Grid view">
                   <Grid className="h-4 w-4" />
                 </ToggleGroupItem>
-                <ToggleGroupItem value="compact" aria-label="Toggle list view">
+                <ToggleGroupItem value="compact" aria-label="List view">
                   <List className="h-4 w-4" />
                 </ToggleGroupItem>
               </ToggleGroup>
@@ -126,8 +121,6 @@ const FeaturedScammersComponent = ({ limit = 3 }: FeaturedScammersProps) => {
   );
 };
 
-// Add the missing import
 import { SearchBar } from "@/components/search/SearchBar";
 
-// Memoize the component to prevent unnecessary re-renders
 export const FeaturedScammers = memo(FeaturedScammersComponent);
