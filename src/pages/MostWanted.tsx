@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { ScammerTable } from "@/components/scammer/ScammerTable";
@@ -66,13 +67,17 @@ const MostWanted = () => {
           <MostWantedHeader />
           
           <div className="space-y-4 md:space-y-6">
-            <div className="flex flex-row items-center gap-2 relative">
-              <div className="flex-1">
-                <SearchBar onSearch={handleSearch} initialQuery={searchQuery} className={isMobile ? "pr-16" : ""} />
+            <div className="flex items-center gap-2">
+              <div className={isMobile ? "flex-1 max-w-[75%]" : "flex-1 max-w-[85%]"}>
+                <SearchBar 
+                  onSearch={handleSearch} 
+                  initialQuery={searchQuery} 
+                  placeholder="Search for scammer..." 
+                />
               </div>
               
               {isMobile ? (
-                <div className="absolute right-0">
+                <div className="flex items-center">
                   <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && handleViewChange(value as "grid" | "table" | "compact")}>
                     <ToggleGroupItem value="grid" aria-label="Grid view">
                       <Grid className="h-4 w-4" />

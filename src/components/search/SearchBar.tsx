@@ -21,7 +21,7 @@ export const SearchBar = ({
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const isMobile = useIsMobile();
   
-  const defaultPlaceholder = isMobile ? "Search..." : "Search by name, aliases or accusation...";
+  const defaultPlaceholder = isMobile ? "Search..." : "Search by name or accusation...";
   const searchPlaceholder = placeholder || defaultPlaceholder;
 
   const handleSearch = (value: string) => {
