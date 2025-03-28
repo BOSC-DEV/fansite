@@ -38,7 +38,7 @@ const ScammerCardImageComponent = ({
   const isMobile = useIsMobile();
   const location = useLocation();
   
-  // Always show interactions on mobile regardless of page
+  // Always show interactions
   const showInteractions = true;
 
   // Reset component state on mount and updates
@@ -105,25 +105,7 @@ const ScammerCardImageComponent = ({
           onImageLoaded={handleImageLoaded} 
         />
         
-        {!isMobile && (
-          <InteractionsBar 
-            scammerId={scammerId}
-            likes={likes}
-            dislikes={dislikes}
-            views={views}
-            shares={shares}
-            comments={comments}
-            onScrollToComments={scrollToComments}
-          />
-        )}
-        
-        <ScammerCardBadge 
-          name={name} 
-          rank={rank} 
-        />
-      </Link>
-      
-      {isMobile && showInteractions && (
+        {/* Always show interaction buttons on top right, regardless of device */}
         <InteractionsBar 
           scammerId={scammerId}
           likes={likes}
@@ -133,7 +115,12 @@ const ScammerCardImageComponent = ({
           comments={comments}
           onScrollToComments={scrollToComments}
         />
-      )}
+        
+        <ScammerCardBadge 
+          name={name} 
+          rank={rank} 
+        />
+      </Link>
     </div>
   );
 };

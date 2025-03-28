@@ -26,7 +26,7 @@ export function InteractionButton({
   iconSize
 }: InteractionButtonProps) {
   const isMobile = useIsMobile();
-  const defaultIconSize = isMobile ? 2.5 : 3;
+  const defaultIconSize = 3;
   const actualIconSize = iconSize || defaultIconSize;
   
   const buttonClasses = cn(
@@ -34,7 +34,7 @@ export function InteractionButton({
     active ? activeColor : "bg-black/60",
     "text-white py-1 px-2 rounded-full text-xs",
     onClick ? "cursor-pointer hover:bg-black/80 transition-colors" : "",
-    isMobile ? "px-1.5 py-0.5" : "",
+    isMobile ? "py-0.5 px-1.5" : "",
     className
   );
   
@@ -44,7 +44,7 @@ export function InteractionButton({
       onClick={onClick} 
       title={title}
     >
-      <Icon className={`h-${actualIconSize} w-${actualIconSize} ${isMobile ? 'h-3 w-3' : ''} mr-1`} />
+      <Icon className={`h-${actualIconSize} w-${actualIconSize} mr-1 ${isMobile ? 'h-3 w-3' : ''}`} />
       <span>{count || 0}</span>
     </div>
   );
