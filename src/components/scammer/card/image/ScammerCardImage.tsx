@@ -94,7 +94,7 @@ const ScammerCardImageComponent = ({
   }, [scammerId]);
   
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col font-western">
       <Link 
         to={scammerId ? `/scammer/${scammerId}` : "#"} 
         className="block relative aspect-square overflow-hidden bg-muted cursor-pointer w-full"

@@ -61,7 +61,7 @@ export const InteractionsBar = ({
   return (
     <div 
       className={cn(
-        "absolute bottom-0 left-0 right-0 flex justify-between items-center bg-black/40 backdrop-blur-sm p-1 gap-1",
+        "absolute bottom-0 left-0 right-0 flex justify-between items-center bg-black/40 backdrop-blur-sm p-1 gap-1 font-western",
         className
       )}
     >

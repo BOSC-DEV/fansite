@@ -34,7 +34,7 @@ export function InteractionButton({
   const buttonClasses = cn(
     "flex items-center",
     active ? activeColor : "bg-black/60",
-    "text-white py-1 px-2 rounded-full text-xs",
+    "text-white py-1 px-2 rounded-full text-xs font-western",
     onClick && !disabled ? "cursor-pointer hover:bg-black/80 transition-colors" : "cursor-default",
     disabled ? "opacity-70" : "",
     isMobile ? "py-0.5 px-1.5" : "",

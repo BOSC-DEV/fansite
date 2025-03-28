@@ -1,19 +1,28 @@
 
-import { Badge } from "@/components/ui/badge";
+import React from "react";
+import { cn } from "@/lib/utils";
 
 interface ScammerCardBadgeProps {
   name: string;
   rank?: number;
+  className?: string;
 }
 
-export function ScammerCardBadge({ name, rank }: ScammerCardBadgeProps) {
+export function ScammerCardBadge({ name, rank, className }: ScammerCardBadgeProps) {
   return (
-    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-      <div className="flex justify-between items-center">
-        <h3 className="font-bold text-lg text-white truncate">{name}</h3>
-        <Badge variant="destructive" className="ml-2 text-sm shrink-0">
-          {rank ? `#${rank} Most Wanted` : 'Wanted'}
-        </Badge>
+    <div className={cn(
+      "absolute top-0 left-0 right-0 p-2 bg-gradient-to-b from-black/70 to-transparent",
+      className
+    )}>
+      <div className="flex items-center">
+        {rank && (
+          <div className="mr-2 bg-western-accent text-western-parchment font-wanted text-xs px-1.5 py-0.5 rounded-sm">
+            #{rank}
+          </div>
+        )}
+        <h3 className="text-white text-sm truncate font-western">
+          {name}
+        </h3>
       </div>
     </div>
   );
