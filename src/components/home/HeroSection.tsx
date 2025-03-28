@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { BookOpen } from "lucide-react";
@@ -6,7 +5,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 export const HeroSection = () => {
   const isMobile = useIsMobile();
   return <section className={`pb-10 md:pt-24 md:pb-20 sm:px-4 old-paper py-0 px-[12px] ${isMobile ? 'pt-2' : 'pt-12'}`}>
-      <div className="container mx-auto max-w-6xl">
+      <div className="container mx-auto max-w-6xl py-[40px]">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
           <div className="space-y-3 md:space-y-4 md:pr-8 animate-fade-in flex flex-col items-center md:items-start text-center md:text-left">
             <h1 className="font-wanted uppercase tracking-wide wanted-poster mx-auto md:mx-0 my-0 py-[15px] px-0 text-western-accent">
