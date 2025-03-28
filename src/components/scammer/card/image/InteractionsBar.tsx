@@ -16,6 +16,7 @@ interface InteractionsBarProps {
   comments?: number;
   onScrollToComments?: () => void;
   className?: string;
+  position?: "topRight" | "bottomRight";
 }
 
 export const InteractionsBar = ({
@@ -26,7 +27,8 @@ export const InteractionsBar = ({
   shares,
   comments = 0,
   onScrollToComments,
-  className
+  className,
+  position = "topRight"
 }: InteractionsBarProps) => {
   const location = useLocation();
   const { handleInteraction } = useProfileInteraction();
@@ -57,11 +59,17 @@ export const InteractionsBar = ({
     
     // Show toast notification (handled elsewhere)
   };
+
+  // Position styling based on the position prop
+  const positionClass = position === "bottomRight" 
+    ? "absolute bottom-2 right-2" 
+    : "absolute top-2 right-2";
   
   return (
     <div 
       className={cn(
-        "absolute top-2 right-2 flex items-center gap-1 font-western",
+        positionClass,
+        "flex items-center gap-1 font-western",
         className
       )}
     >

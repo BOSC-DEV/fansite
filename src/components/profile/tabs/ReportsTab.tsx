@@ -23,6 +23,7 @@ export function ReportsTab({ scammers }: ReportsTabProps) {
                 key={scammer.id} 
                 scammer={scammer} 
                 rank={index + 1} // Add ranking number to match the main grid
+                inProfileSection={true}
               />
             ))}
           </div>

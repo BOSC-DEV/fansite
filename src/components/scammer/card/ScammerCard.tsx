@@ -1,77 +1,49 @@
 
-import { useMemo, useEffect } from "react";
-import { Scammer } from "@/lib/types";
+import React from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
+import { Scammer } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { formatCurrency, formatDate } from "@/utils/formatters";
 import { ScammerCardImage } from "./image/ScammerCardImage";
 import { ScammerCardContent } from "./ScammerCardContent";
-import { commentService } from "@/services/storage/localStorageService";
+import { formatDate } from "@/utils/formatters";
 
 interface ScammerCardProps {
   scammer: Scammer;
-  className?: string;
   rank?: number;
+  className?: string;
+  inProfileSection?: boolean;
 }
 
-export function ScammerCard({ scammer, className, rank }: ScammerCardProps) {
-  // Handle potential invalid scammer data
-  if (!scammer || !scammer.id) {
-    console.error("Invalid scammer data:", scammer);
-    return null;
-  }
-
-  // Debug the scammer data
-  useEffect(() => {
-    console.log(`ScammerCard rendering for ${scammer.name}:`, {
-      id: scammer.id,
-      photoUrl: scammer.photoUrl,
-      hasPhoto: Boolean(scammer.photoUrl)
-    });
-  }, [scammer]);
-
-  const formattedBounty = useMemo(() => 
-    formatCurrency(scammer.bountyAmount), 
-  [scammer.bountyAmount]);
-  
-  const formattedDate = useMemo(() => 
-    formatDate(scammer.dateAdded), 
-  [scammer.dateAdded]);
-  
-  // Get comments count from comment service
-  const commentsCount = useMemo(() => {
-    const scammerComments = commentService.getCommentsForScammer(scammer.id);
-    return scammerComments.length;
-  }, [scammer.id]);
+export const ScammerCard: React.FC<ScammerCardProps> = ({ 
+  scammer, 
+  rank, 
+  className = "",
+  inProfileSection = false
+}) => {
+  const { id, name, photoUrl, description, bountyAmount, dateAdded, likes, dislikes, views, shares } = scammer;
   
   return (
-    <Card className={cn(
-      "overflow-hidden transition-all duration-300 hover:shadow-md h-full border border-western-wood bg-western-parchment/80 w-full",
-      className
-    )}>
-      <ScammerCardImage 
-        name={scammer.name}
-        photoUrl={scammer.photoUrl || ""}
-        likes={scammer.likes || 0}
-        dislikes={scammer.dislikes || 0}
-        views={scammer.views || 0}
-        shares={scammer.shares || 0}
-        comments={commentsCount}
-        scammerId={scammer.id}
+    <Card className={cn("overflow-hidden border-western-wood bg-western-parchment/80", className)}>
+      <ScammerCardImage
+        name={name}
+        photoUrl={photoUrl}
+        likes={likes || 0}
+        dislikes={dislikes || 0}
+        views={views || 0}
+        shares={shares || 0}
+        comments={0} // We don't show comments count in cards yet
+        scammerId={id}
         rank={rank}
+        interactionsPosition={inProfileSection ? "bottomRight" : "topRight"}
       />
-      
-      <CardContent className="p-0">
-        <ScammerCardContent 
-          id={scammer.id}
-          accusedOf={scammer.accusedOf}
-          bountyAmount={scammer.bountyAmount}
-          dateAdded={scammer.dateAdded.toString()}
-          aliases={scammer.aliases}
-          formattedBounty={formattedBounty}
-          formattedDate={formattedDate}
-        />
-      </CardContent>
+      <ScammerCardContent
+        name={name}
+        description={description}
+        bountyAmount={bountyAmount}
+        dateAdded={formatDate(dateAdded)}
+        scammerId={id}
+      />
     </Card>
   );
-}
+};

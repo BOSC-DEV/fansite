@@ -11,6 +11,7 @@ interface ScammerGridProps {
   totalPages: number;
   setCurrentPage: (page: number) => void;
   isLoading?: boolean;
+  inProfileSection?: boolean;
 }
 
 export const ScammerGrid = ({
@@ -18,7 +19,8 @@ export const ScammerGrid = ({
   currentPage,
   totalPages,
   setCurrentPage,
-  isLoading = false
+  isLoading = false,
+  inProfileSection = false
 }: ScammerGridProps) => {
   if (isLoading) {
     return (
@@ -54,6 +56,7 @@ export const ScammerGrid = ({
               scammer={scammer}
               rank={absolutePosition}
               className="w-full"
+              inProfileSection={inProfileSection}
             />
           );
         })}

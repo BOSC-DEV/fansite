@@ -118,6 +118,7 @@ export function LikesTab({ address }: LikesTabProps) {
               key={scammer.id}
               scammer={scammer}
               rank={index + 1}
+              inProfileSection={true}
             />
           ))}
         </div>

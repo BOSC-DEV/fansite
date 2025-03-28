@@ -17,6 +17,7 @@ interface ScammerCardImageProps {
   comments?: number;
   scammerId?: string;
   rank?: number;
+  interactionsPosition?: "topRight" | "bottomRight";
 }
 
 const ScammerCardImageComponent = ({ 
@@ -28,7 +29,8 @@ const ScammerCardImageComponent = ({
   shares,
   comments = 0,
   scammerId,
-  rank
+  rank,
+  interactionsPosition = "topRight"
 }: ScammerCardImageProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -105,7 +107,7 @@ const ScammerCardImageComponent = ({
           onImageLoaded={handleImageLoaded} 
         />
         
-        {/* Interactions bar at top right */}
+        {/* Interactions bar with dynamic position */}
         <InteractionsBar 
           scammerId={scammerId}
           likes={likes}
@@ -115,6 +117,7 @@ const ScammerCardImageComponent = ({
           comments={comments}
           onScrollToComments={scrollToComments}
           className=""
+          position={interactionsPosition}
         />
         
         {/* Only show rank badge if rank is provided */}
