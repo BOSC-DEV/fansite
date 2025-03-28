@@ -29,22 +29,25 @@ export const SearchAndFilterControls = ({
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-col gap-4">
         {isMobile ? (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 relative">
             <div className="flex-1">
               <SearchBar 
                 onSearch={handleSearch} 
                 initialQuery={searchQuery}
                 placeholder="Search..."
+                className="pr-16"
               />
             </div>
-            <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && handleViewChange(value as "grid" | "table")}>
-              <ToggleGroupItem value="grid" aria-label="Grid view">
-                <Grid className="h-4 w-4" />
-              </ToggleGroupItem>
-              <ToggleGroupItem value="table" aria-label="List view">
-                <List className="h-4 w-4" />
-              </ToggleGroupItem>
-            </ToggleGroup>
+            <div className="absolute right-0">
+              <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && handleViewChange(value as "grid" | "table")}>
+                <ToggleGroupItem value="grid" aria-label="Grid view">
+                  <Grid className="h-4 w-4" />
+                </ToggleGroupItem>
+                <ToggleGroupItem value="table" aria-label="List view">
+                  <List className="h-4 w-4" />
+                </ToggleGroupItem>
+              </ToggleGroup>
+            </div>
           </div>
         ) : (
           <>

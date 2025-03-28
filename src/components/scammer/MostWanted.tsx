@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { ScammerTable } from "@/components/scammer/ScammerTable";
@@ -69,16 +68,16 @@ const MostWanted = () => {
           <div className="space-y-4 md:space-y-6">
             <div className="flex flex-row items-center gap-2">
               <div className="flex-1">
-                <SearchBar onSearch={handleSearch} initialQuery={searchQuery} />
+                <SearchBar onSearch={handleSearch} initialQuery={searchQuery} className={isMobile ? "pr-16" : ""} />
               </div>
               
               {isMobile ? (
-                <div className="flex">
+                <div className="absolute right-6">
                   <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && handleViewChange(value as "grid" | "compact")}>
-                    <ToggleGroupItem value="grid" aria-label="Toggle grid view">
+                    <ToggleGroupItem value="grid" aria-label="Grid view">
                       <Grid className="h-4 w-4" />
                     </ToggleGroupItem>
-                    <ToggleGroupItem value="compact" aria-label="Toggle list view">
+                    <ToggleGroupItem value="compact" aria-label="List view">
                       <List className="h-4 w-4" />
                     </ToggleGroupItem>
                   </ToggleGroup>
@@ -91,8 +90,7 @@ const MostWanted = () => {
                     className={`border-western-wood ${viewType === 'table' ? 'bg-western-wood text-western-parchment' : 'bg-western-parchment text-western-wood'}`}
                     onClick={() => handleViewChange('table')}
                   >
-                    <Table className="h-4 w-4 mr-1" />
-                    Table
+                    <Table className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="outline"
@@ -100,8 +98,7 @@ const MostWanted = () => {
                     className={`border-western-wood ${viewType === 'grid' ? 'bg-western-wood text-western-parchment' : 'bg-western-parchment text-western-wood'}`}
                     onClick={() => handleViewChange('grid')}
                   >
-                    <Grid className="h-4 w-4 mr-1" />
-                    Grid
+                    <Grid className="h-4 w-4" />
                   </Button>
                 </div>
               )}
