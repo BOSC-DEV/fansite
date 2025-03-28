@@ -26,7 +26,7 @@ function AppContent() {
   const isMobile = useIsMobile();
   
   return (
-    <div className={`flex flex-col min-h-screen ${isMobile ? 'pb-24' : ''}`}>
+    <div className={`flex flex-col min-h-screen ${isMobile ? 'pb-20' : ''}`}>
       <div className="flex-grow overflow-auto">
         <Routes>
           <Route path="/" element={<Index />} />
