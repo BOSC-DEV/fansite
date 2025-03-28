@@ -65,8 +65,9 @@ export function ScammerDetailsCard({
         />
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Image and sidebar info */}
+        {/* All content in a vertical stack */}
         <div className="flex flex-col space-y-6 w-full">
+          {/* Image and interaction buttons */}
           <ScammerSidebar 
             name={scammer.name}
             photoUrl={scammer.photoUrl}

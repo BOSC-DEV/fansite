@@ -50,8 +50,8 @@ export function ScammerSidebar({
 }: ScammerSidebarProps) {
   return (
     <div className="flex flex-col w-full space-y-4">
-      <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
-        <div className="w-full sm:w-auto max-w-[250px]">
+      <div className="flex flex-col items-center sm:items-start">
+        <div className="w-full max-w-[250px] mx-auto">
           <ScammerAvatar 
             name={name}
             photoUrl={photoUrl}
@@ -77,7 +77,7 @@ export function ScammerSidebar({
           )}
         </div>
         
-        <div className="rounded-lg border bg-western-parchment p-4 w-full">
+        <div className="rounded-lg border bg-western-parchment p-4 w-full mt-4">
           <h3 className="font-semibold text-western-wood mb-3">Listing Info</h3>
           
           <div className="space-y-3">
