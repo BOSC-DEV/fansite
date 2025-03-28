@@ -90,9 +90,13 @@ export function ScammerDetailsCard({
             />
           </div>
           
-          <div className="flex-1 w-full">
-            <div className="rounded-lg border bg-western-parchment p-4 mb-4">
+          <div className="flex-1 w-full space-y-6">
+            <div className="rounded-lg border bg-western-parchment p-4">
               <h3 className="font-semibold text-western-wood mb-3">Details</h3>
+              <p className="text-sm text-western-wood">{scammer.accusedOf}</p>
+            </div>
+            
+            <div className="rounded-lg border bg-western-parchment p-4">
               <ScammerContent 
                 aliases={scammer.aliases}
                 links={scammer.links}
