@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -13,6 +14,9 @@ import { CommentsTab } from "@/components/profile/tabs/CommentsTab";
 import { BountiesTab } from "@/components/profile/tabs/BountiesTab";
 import { BookOpen, User, Heart, MessageSquare, Coins } from "lucide-react";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { WalletDisconnect } from "@/components/wallet/WalletDisconnect";
+import { useWallet } from "@/context/WalletContext";
+
 export function UserProfilePage() {
   const {
     username
@@ -26,14 +30,38 @@ export function UserProfilePage() {
     error
   } = useUserProfile(username);
   const [activeTab, setActiveTab] = useState("reports");
+  const { address } = useWallet();
+  
   const handleTabChange = (value: string) => {
     setActiveTab(value);
   };
+  
+  // Check if this is the current user's profile
+  const isCurrentUserProfile = profile?.walletAddress === address;
+  
   return <div className="min-h-screen old-paper flex flex-col">
       <Header />
       <main className="container mx-auto px-4 py-4 flex-grow">
         {isLoading ? <ProfileSkeleton /> : error ? <ProfileError error={error} /> : profile ? <div className="max-w-4xl mx-auto">
-            <ProfileHeader username={profile.username || ''} name={profile.displayName} bio={profile.bio} avatarUrl={profile.profilePicUrl} location={''} website={profile.websiteLink} joinDate={profile.createdAt ? new Date(profile.createdAt) : undefined} isCurrentUser={false} address={profile.walletAddress} points={profile.points} />
+            <ProfileHeader 
+              username={profile.username || ''} 
+              name={profile.displayName} 
+              bio={profile.bio} 
+              avatarUrl={profile.profilePicUrl} 
+              location={''} 
+              website={profile.websiteLink} 
+              joinDate={profile.createdAt ? new Date(profile.createdAt) : undefined} 
+              isCurrentUser={isCurrentUserProfile} 
+              address={profile.walletAddress} 
+              points={profile.points} 
+            />
+            
+            {/* Show wallet disconnect button if this is the current user's profile */}
+            {isCurrentUserProfile && (
+              <div className="mt-4">
+                <WalletDisconnect />
+              </div>
+            )}
             
             {/* Tabs Section - Aligned with content above */}
             <Tabs value={activeTab} onValueChange={handleTabChange} className="mb-8">
