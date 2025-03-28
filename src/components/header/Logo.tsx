@@ -5,10 +5,9 @@ import { cn } from "@/lib/utils";
 
 interface LogoProps {
   className?: string;
-  showText?: boolean;
 }
 
-export const Logo = ({ className, showText = false }: LogoProps) => {
+export const Logo = ({ className }: LogoProps) => {
   return (
     <div className={cn("flex-shrink-0", className)}>
       <Link to="/" className="flex items-center space-x-2">
@@ -18,9 +17,7 @@ export const Logo = ({ className, showText = false }: LogoProps) => {
           className="h-8 w-8"
           style={{ objectFit: "contain" }}
         />
-        {showText && (
-          <span className="font-wanted text-western-leather dark:text-western-parchment text-sm">Book of Scams</span>
-        )}
+        <span className="font-wanted text-western-leather dark:text-western-parchment text-sm">Book of Scams</span>
       </Link>
     </div>
   );

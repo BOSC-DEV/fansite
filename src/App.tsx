@@ -29,7 +29,7 @@ function AppContent() {
   return (
     <div className={`flex flex-col min-h-screen ${isMobile ? 'pb-24' : ''}`}>
       <ThinBanner />
-      <div className="flex-grow overflow-auto pt-8">
+      <div className="flex-grow overflow-auto pt-10">
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/most-wanted" element={<MostWanted />} />

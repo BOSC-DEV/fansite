@@ -34,7 +34,7 @@ const Index = () => {
   const siteUrl = "https://bookofscams.lol/";
 
   return (
-    <div className="min-h-screen flex flex-col old-paper cowboy-pattern pt-8">
+    <div className="min-h-screen flex flex-col old-paper cowboy-pattern pt-10">
       <Helmet>
         <title>BOSC - Book of Scams</title>
         <meta name="description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
