@@ -44,7 +44,7 @@ function AppContent() {
         </Routes>
       </div>
       <Toaster />
-      <Sonner position="top-center" expand={true} closeButton={true} />
+      <Sonner position="bottom-center" expand={true} closeButton={true} />
     </div>
   );
 }
