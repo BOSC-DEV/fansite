@@ -16,6 +16,7 @@ import { List, Grid, Table } from "lucide-react";
 import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { GlowingEffectDemo } from "@/components/ui/glowing-effect-demo";
 
 const MostWanted = () => {
   const { 
@@ -66,6 +67,11 @@ const MostWanted = () => {
         <div className="container mx-auto max-w-6xl px-4">
           <MostWantedHeader />
           
+          {/* Add GlowingEffectDemo for demonstration */}
+          <div className="mb-8">
+            <GlowingEffectDemo />
+          </div>
+          
           <div className="space-y-4 md:space-y-6">
             <div className="flex items-center gap-2">
               <div className={isMobile ? "flex-1 max-w-[75%]" : "flex-1 max-w-[85%]"}>
@@ -92,18 +98,38 @@ const MostWanted = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className={`border-hacker-border ${viewType === 'table' ? 'bg-hacker-accent/20 text-hacker-accent' : 'bg-transparent text-hacker-text'}`}
+                    className={`border-hacker-border relative ${viewType === 'table' ? 'bg-hacker-accent/20 text-hacker-accent' : 'bg-transparent text-hacker-text'}`}
                     onClick={() => handleViewChange('table')}
                   >
                     <Table className="h-4 w-4" />
+                    {viewType === 'table' && (
+                      <GlowingEffect 
+                        glow={true}
+                        disabled={false}
+                        spread={30}
+                        borderWidth={1}
+                        variant="matrix"
+                        blur={3}
+                      />
+                    )}
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
-                    className={`border-hacker-border ${viewType === 'grid' ? 'bg-hacker-accent/20 text-hacker-accent' : 'bg-transparent text-hacker-text'}`}
+                    className={`border-hacker-border relative ${viewType === 'grid' ? 'bg-hacker-accent/20 text-hacker-accent' : 'bg-transparent text-hacker-text'}`}
                     onClick={() => handleViewChange('grid')}
                   >
                     <Grid className="h-4 w-4" />
+                    {viewType === 'grid' && (
+                      <GlowingEffect 
+                        glow={true}
+                        disabled={false}
+                        spread={30}
+                        borderWidth={1}
+                        variant="matrix"
+                        blur={3}
+                      />
+                    )}
                   </Button>
                 </div>
               )}

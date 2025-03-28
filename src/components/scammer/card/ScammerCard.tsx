@@ -9,6 +9,7 @@ import { formatCurrency } from "@/utils/formatters";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Badge } from "@/components/ui/badge";
 import { useMemo } from "react";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 export interface ScammerCardProps {
   scammer: Scammer;
@@ -46,7 +47,15 @@ export const ScammerCard = React.memo(({
   }, [scammer.comments]);
 
   return (
-    <div className={`rounded-sm overflow-hidden ${className} matrix-card`}>
+    <div className={`rounded-sm overflow-hidden relative ${className} matrix-card`}>
+      <GlowingEffect 
+        glow={true}
+        disabled={false}
+        spread={20}
+        borderWidth={1}
+        variant="matrix"
+        blur={0}
+      />
       <Link to={`/scammer/${scammer.id}`} className="block">
         <div className="relative">
           <ScammerImageLoader 
