@@ -41,7 +41,7 @@ export const Header = () => {
   return (
     <>
       <header className={cn("fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out wood-texture", 
-        isScrolled ? "py-3 shadow-md" : "py-5")}>
+        isScrolled ? "py-1.5 shadow-md" : "py-2.5")}>
         <div className="container mx-auto px-4 flex items-center">
           <Logo />
           
@@ -49,7 +49,7 @@ export const Header = () => {
 
           <div className="flex items-center ml-auto">
             {isConnected ? (
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-3">
                 {address && !isMobile && <WalletInfo address={address} balance={balance} />}
                 <ProfileButton />
               </div>
@@ -59,9 +59,9 @@ export const Header = () => {
                 size="sm" 
                 onClick={handleConnectClick} 
                 disabled={connecting} 
-                className="h-9 animate-pulse-subtle bg-western-accent text-western-parchment hover:bg-western-accent/80"
+                className="h-7 text-xs animate-pulse-subtle bg-western-accent text-western-parchment hover:bg-western-accent/80"
               >
-                <Wallet className="h-4 w-4 mr-2" />
+                <Wallet className="h-3.5 w-3.5 mr-1.5" />
                 {connecting ? "Connecting..." : isMobile ? "Connect" : "Connect Wallet"}
               </Button>
             )}

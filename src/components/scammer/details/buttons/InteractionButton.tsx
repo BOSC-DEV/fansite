@@ -36,7 +36,7 @@ export function InteractionButton({
       variant="outline"
       size="sm"
       className={cn(
-        'flex items-center gap-1 px-2 py-1 h-8 text-xs font-medium shadow-sm',
+        'flex items-center gap-1 px-2 py-1 h-7 text-xs font-medium shadow-sm',
         isActive ? activeClassName : 'bg-western-wood text-western-parchment border-western-wood/80',
         className
       )}
@@ -44,7 +44,7 @@ export function InteractionButton({
       title={title}
       aria-label={ariaLabel}
     >
-      <Icon className="h-3.5 w-3.5" />
+      <Icon className="h-3 w-3" />
       <span>{count || 0}</span>
       {showLabel && label && <span className="hidden sm:inline">{label}</span>}
     </Button>
