@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -175,7 +174,7 @@ export const ScammerTableCompact = ({
         </div>
       </ScrollArea>
       <div className="text-center py-3 text-xs text-western-wood/70">
-        Swipe sideways to see more details {isSortable && "— Tap column headers to sort"}
+        Swipe for more details {isSortable && "— Tap headers to sort"}
       </div>
     </div>
   );
