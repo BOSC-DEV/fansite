@@ -11,6 +11,7 @@ import { ArrowLeft } from "lucide-react";
 import { useScammerDetail } from "@/hooks/useScammerDetail";
 import { AgreementRatioBar } from "@/components/scammer/details/AgreementRatioBar";
 import { Helmet } from "react-helmet-async";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 
 const ScammerDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -106,6 +107,7 @@ const ScammerDetail = () => {
           </div>
         </div>
       </div>
+      <SiteFooter />
     </div>
   );
 }

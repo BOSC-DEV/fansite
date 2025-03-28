@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { ScammerTable } from "@/components/scammer/ScammerTable";
@@ -15,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { List, Grid, Table } from "lucide-react";
 import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 
 const MostWanted = () => {
   const { 
@@ -59,9 +59,9 @@ const MostWanted = () => {
   };
 
   return (
-    <div className="min-h-screen old-paper">
+    <div className="min-h-screen old-paper flex flex-col">
       <Header />
-      <main className="py-4 pb-20">
+      <main className="py-4 pb-20 flex-grow">
         <div className="container mx-auto max-w-6xl px-4">
           <MostWantedHeader />
           
@@ -164,6 +164,7 @@ const MostWanted = () => {
           </div>
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 };

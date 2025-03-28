@@ -8,6 +8,7 @@ import { Trophy } from "lucide-react";
 import { leaderboardService } from "@/services/storage/leaderboardService";
 import type { LeaderboardUser } from "@/services/storage/leaderboardService";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 
 const ITEMS_PER_PAGE = 50;
 
@@ -97,6 +98,7 @@ export default function Leaderboard() {
           </div>
         )}
       </main>
+      <SiteFooter />
     </div>
   );
 };

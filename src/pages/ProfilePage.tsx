@@ -7,6 +7,7 @@ import { isSupabaseConfigured } from "@/lib/supabase";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 
 export function ProfilePage() {
   const { isConnected, address } = useWallet();
@@ -14,9 +15,9 @@ export function ProfilePage() {
   const supabaseReady = isSupabaseConfigured();
   
   return (
-    <div className="min-h-screen old-paper">
+    <div className="min-h-screen old-paper flex flex-col">
       <Header />
-      <main className="container mx-auto px-4 py-4">
+      <main className="container mx-auto px-4 py-4 flex-grow">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl font-wanted text-western-accent text-center mb-8">Your Profile</h1>
           
@@ -54,6 +55,7 @@ export function ProfilePage() {
           )}
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 }

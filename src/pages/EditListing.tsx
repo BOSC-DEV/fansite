@@ -10,6 +10,7 @@ import { ScammerNotFound } from "@/components/scammer/ScammerNotFound";
 import { UnauthorizedAccess } from "@/components/scammer/UnauthorizedAccess";
 import { EditScammerForm } from "@/components/scammer/EditScammerForm";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 
 const EditListing = () => {
   const { id } = useParams<{ id: string }>();
@@ -25,6 +26,7 @@ const EditListing = () => {
             <LoadingState />
           </div>
         </main>
+        <SiteFooter />
       </div>
     );
   }
@@ -42,6 +44,7 @@ const EditListing = () => {
             <UnauthorizedAccess scammerId={id || ""} />
           </div>
         </main>
+        <SiteFooter />
       </div>
     );
   }
@@ -76,6 +79,8 @@ const EditListing = () => {
           </div>
         </div>
       </main>
+      
+      <SiteFooter />
     </div>
   );
 };

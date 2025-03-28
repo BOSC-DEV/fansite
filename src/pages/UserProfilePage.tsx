@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -13,6 +12,7 @@ import { LikesTab } from "@/components/profile/tabs/LikesTab";
 import { CommentsTab } from "@/components/profile/tabs/CommentsTab";
 import { BountiesTab } from "@/components/profile/tabs/BountiesTab";
 import { BookOpen, User, Heart, MessageSquare, Coins } from "lucide-react";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 
 export function UserProfilePage() {
   const { username } = useParams<{ username: string }>();
@@ -24,9 +24,9 @@ export function UserProfilePage() {
   };
   
   return (
-    <div className="min-h-screen old-paper">
+    <div className="min-h-screen old-paper flex flex-col">
       <Header />
-      <main className="container mx-auto px-4 py-4">
+      <main className="container mx-auto px-4 py-4 flex-grow">
         {isLoading ? (
           <ProfileSkeleton />
         ) : error ? (
@@ -94,6 +94,7 @@ export function UserProfilePage() {
           </div>
         ) : null}
       </main>
+      <SiteFooter />
     </div>
   );
 }
