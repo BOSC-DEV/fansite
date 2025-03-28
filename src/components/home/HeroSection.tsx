@@ -13,7 +13,7 @@ export const HeroSection = () => {
               <span className="block text-[4.2rem] md:text-[4.9rem] lg:text-[5.6rem] -mt-2">SCAMS</span>
             </h1>
             
-            <p className="text-western-wood max-w-lg font-western text-xl mt-0 md:mt-0 mb-0 mx-auto md:mx-0 sm:text-xl px-[5px] py-0 font-normal my-px">A decentralised criminal registry bringing accountability to The Wild West of crypto.</p>
+            <p className="text-western-wood max-w-lg font-western text-xl mt-0 md:mt-0 mb-0 mx-auto md:mx-0 sm:text-xl py-0 font-normal my-px px-0">A decentralised criminal registry bringing accountability to The Wild West of crypto.</p>
             
             <div className="flex flex-col sm:flex-row gap-3 pt-4 w-full justify-center md:justify-start">
               <Button asChild size="default" className="western-btn gap-2 hover:animate-wiggle bg-western-leather hover:bg-western-accent text-western-parchment">
