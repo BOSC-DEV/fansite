@@ -32,20 +32,27 @@ function AppContent() {
   
   return (
     <div className="flex flex-col min-h-screen">
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/most-wanted" element={<MostWanted />} />
-        <Route path="/leaderboard" element={<Leaderboard />} />
-        <Route path="/create-listing" element={<CreateListing />} />
-        <Route path="/edit-listing/:id" element={<EditListing />} />
-        <Route path="/scammer/:id" element={<ScammerDetail />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/:username" element={<UserProfilePage />} />
-        <Route path="/user/:walletAddress" element={<UserProfilePage />} />
-        <Route path="/my-reports" element={<MyReportsPage />} />
-        <Route path="/my-bounties" element={<MyBountiesPage />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      {isIndexPage && (
+        <Routes>
+          <Route path="/" element={<Index />} />
+        </Routes>
+      )}
+      
+      {!isIndexPage && (
+        <Routes>
+          <Route path="/most-wanted" element={<MostWanted />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/create-listing" element={<CreateListing />} />
+          <Route path="/edit-listing/:id" element={<EditListing />} />
+          <Route path="/scammer/:id" element={<ScammerDetail />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/:username" element={<UserProfilePage />} />
+          <Route path="/user/:walletAddress" element={<UserProfilePage />} />
+          <Route path="/my-reports" element={<MyReportsPage />} />
+          <Route path="/my-bounties" element={<MyBountiesPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      )}
       
       {isMobile && <MobileNavigation />}
       
