@@ -69,7 +69,7 @@ export const InteractionsBar = ({
     <div 
       className={cn(
         positionClass,
-        "flex items-center gap-1 font-western",
+        "flex items-center gap-1 font-western drop-shadow-md", // Added drop-shadow for better visibility
         className
       )}
     >
@@ -112,4 +112,4 @@ export const InteractionsBar = ({
       />
     </div>
   );
-};
+}

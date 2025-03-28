@@ -24,7 +24,7 @@ export function InteractionButton({
   label,
   onClick,
   isActive = false,
-  activeClassName = 'bg-green-100 border-green-300 text-green-700',
+  activeClassName = 'bg-green-600 border-green-700 text-white',
   className,
   title,
   showLabel = false,
@@ -36,8 +36,8 @@ export function InteractionButton({
       variant="outline"
       size="sm"
       className={cn(
-        'flex items-center gap-1 px-2 py-1 h-8 text-xs',
-        isActive ? activeClassName : '',
+        'flex items-center gap-1 px-2 py-1 h-8 text-xs font-medium shadow-sm',
+        isActive ? activeClassName : 'bg-western-wood text-western-parchment border-western-wood/80',
         className
       )}
       onClick={onClick}

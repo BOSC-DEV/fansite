@@ -38,9 +38,9 @@ export function InteractionButton({
   
   const buttonClasses = cn(
     "flex items-center",
-    active ? activeColor : "bg-western-wood/80",
+    active ? activeColor : "bg-western-wood", // Removed opacity for solid background
     "text-western-parchment py-1 px-2 rounded-full text-xs font-western",
-    onClick && !isDisabled ? "cursor-pointer hover:bg-western-wood transition-colors" : "cursor-default",
+    onClick && !isDisabled ? "cursor-pointer hover:bg-western-wood/90 transition-colors" : "cursor-default",
     isDisabled ? "opacity-70" : "",
     isMobile ? "py-0.5 px-1.5" : "",
     className
