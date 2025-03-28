@@ -18,6 +18,9 @@ import MyReportsPage from './pages/MyReportsPage';
 import MyBountiesPage from './pages/MyBountiesPage';
 import { WalletProvider } from './context/wallet';
 import { useIsMobile } from './hooks/use-mobile';
+import { Header } from './components/header/Header';
+import { SiteFooter } from './components/layout/SiteFooter';
+import { MobileNavigation } from './components/layout/MobileNavigation';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -26,17 +29,11 @@ function AppContent() {
   const isMobile = useIsMobile();
   const location = useLocation();
   
-  // Only apply custom padding to non-home pages
-  const isHomePage = location.pathname === '/';
-  
-  // Different padding for mobile vs desktop
-  const contentPadding = isHomePage 
-    ? isMobile ? "pt-14 pb-12" : "pt-20 md:pt-24 pb-[8px]"
-    : isMobile ? "pt-12 pb-12" : "pt-16 md:pt-20 pb-[8px]";
-  
   return (
     <div className="flex flex-col min-h-screen">
-      <div className={`flex-grow ${contentPadding}`}>
+      <Header />
+      
+      <div className={`flex-grow pt-10 ${isMobile ? 'pb-14' : 'pb-6'}`}>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/most-wanted" element={<MostWanted />} />
@@ -52,6 +49,10 @@ function AppContent() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
+      
+      <SiteFooter />
+      {isMobile && <MobileNavigation />}
+      
       <Toaster />
       <Sonner position="bottom-center" expand={true} closeButton={true} />
     </div>

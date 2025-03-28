@@ -16,7 +16,7 @@ interface InteractionButtonProps {
   title?: string;
   showLabel?: boolean;
   'aria-label'?: string;
-  isViewOrComment?: boolean; // New prop to identify view or comment buttons
+  isViewOrComment?: boolean;
 }
 
 export function InteractionButton({
@@ -34,7 +34,7 @@ export function InteractionButton({
 }: InteractionButtonProps) {
   const isMobile = useIsMobile();
   const buttonHeight = isMobile ? 'h-6' : 'h-7';
-  const iconSize = isMobile ? 'h-2.5 w-2.5' : 'h-3 w-3';
+  const iconSize = isMobile ? 'h-3 w-3' : 'h-3 w-3';
   const textSize = isMobile ? 'text-[10px]' : 'text-xs';
 
   return (
