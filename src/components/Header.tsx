@@ -38,40 +38,39 @@ export const Header = () => {
     }
   };
 
-  // Don't render the header on mobile
-  if (isMobile) {
-    return <MobileNavigation menuItems={menuItems} connecting={connecting} />;
-  }
-
   return (
-    <header className={cn("fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out wood-texture", 
-      isScrolled ? "py-3 shadow-md" : "py-5")}>
-      <div className="container mx-auto px-4 flex items-center">
-        <Logo />
-        
-        <DesktopNavigation menuItems={menuItems} />
+    <>
+      <header className={cn("fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out wood-texture", 
+        isScrolled ? "py-3 shadow-md" : "py-5")}>
+        <div className="container mx-auto px-4 flex items-center">
+          <Logo />
+          
+          {!isMobile && <DesktopNavigation menuItems={menuItems} />}
 
-        <div className="flex items-center ml-auto">
-          {isConnected ? (
-            <div className="flex items-center space-x-4">
-              {address && <WalletInfo address={address} balance={balance} />}
-              <ProfileButton />
-            </div>
-          ) : (
-            <Button 
-              variant="default" 
-              size="sm" 
-              onClick={handleConnectClick} 
-              disabled={connecting} 
-              className="h-9 animate-pulse-subtle bg-western-accent text-western-parchment hover:bg-western-accent/80"
-            >
-              <Wallet className="h-4 w-4 mr-2" />
-              {connecting ? "Connecting..." : "Connect Wallet"}
-            </Button>
-          )}
+          <div className="flex items-center ml-auto">
+            {isConnected ? (
+              <div className="flex items-center space-x-4">
+                {address && !isMobile && <WalletInfo address={address} balance={balance} />}
+                <ProfileButton />
+              </div>
+            ) : (
+              <Button 
+                variant="default" 
+                size="sm" 
+                onClick={handleConnectClick} 
+                disabled={connecting} 
+                className="h-9 animate-pulse-subtle bg-western-accent text-western-parchment hover:bg-western-accent/80"
+              >
+                <Wallet className="h-4 w-4 mr-2" />
+                {connecting ? "Connecting..." : isMobile ? "Connect" : "Connect Wallet"}
+              </Button>
+            )}
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+      
+      {isMobile && <MobileNavigation menuItems={menuItems} connecting={connecting} />}
+    </>
   );
 };
 
