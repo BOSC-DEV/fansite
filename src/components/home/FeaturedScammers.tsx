@@ -68,17 +68,20 @@ const FeaturedScammersComponent = ({ limit = 3 }: FeaturedScammersProps) => {
         )}
         
         {isMobile && limitedScammers.length > 0 && (
-          <div className="flex justify-center w-full mb-4">
-            <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && setViewType(value as "grid" | "compact")}>
-              <ToggleGroupItem value="grid" aria-label="Toggle grid view">
-                <Grid className="h-4 w-4 mr-1" />
-                Grid
-              </ToggleGroupItem>
-              <ToggleGroupItem value="compact" aria-label="Toggle list view">
-                <List className="h-4 w-4 mr-1" />
-                List
-              </ToggleGroupItem>
-            </ToggleGroup>
+          <div className="flex items-center w-full mb-4">
+            <div className="flex-1">
+              <SearchBar onSearch={() => {}} initialQuery="" placeholder="Search most wanted..." />
+            </div>
+            <div className="ml-2">
+              <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && setViewType(value as "grid" | "compact")}>
+                <ToggleGroupItem value="grid" aria-label="Toggle grid view">
+                  <Grid className="h-4 w-4" />
+                </ToggleGroupItem>
+                <ToggleGroupItem value="compact" aria-label="Toggle list view">
+                  <List className="h-4 w-4" />
+                </ToggleGroupItem>
+              </ToggleGroup>
+            </div>
           </div>
         )}
         
@@ -122,6 +125,9 @@ const FeaturedScammersComponent = ({ limit = 3 }: FeaturedScammersProps) => {
     </section>
   );
 };
+
+// Add the missing import
+import { SearchBar } from "@/components/search/SearchBar";
 
 // Memoize the component to prevent unnecessary re-renders
 export const FeaturedScammers = memo(FeaturedScammersComponent);

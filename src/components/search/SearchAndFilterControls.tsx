@@ -3,6 +3,8 @@ import { SearchBar } from "@/components/search/SearchBar";
 import { SortAndViewControls } from "@/components/sort/SortAndViewControls";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Grid, List } from "lucide-react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface SearchAndFilterControlsProps {
   searchQuery: string;
@@ -26,18 +28,36 @@ export const SearchAndFilterControls = ({
   return (
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-col gap-4">
-        <SearchBar 
-          onSearch={handleSearch} 
-          initialQuery={searchQuery}
-        />
-        
-        {!isMobile && (
-          <SortAndViewControls
-            viewType={viewType}
-            sortBy={sortBy}
-            onViewChange={handleViewChange}
-            onSortChange={handleSortChange}
-          />
+        {isMobile ? (
+          <div className="flex items-center gap-2">
+            <div className="flex-1">
+              <SearchBar 
+                onSearch={handleSearch} 
+                initialQuery={searchQuery}
+              />
+            </div>
+            <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && handleViewChange(value as "grid" | "table")}>
+              <ToggleGroupItem value="grid" aria-label="Toggle grid view">
+                <Grid className="h-4 w-4" />
+              </ToggleGroupItem>
+              <ToggleGroupItem value="table" aria-label="Toggle list view">
+                <List className="h-4 w-4" />
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </div>
+        ) : (
+          <>
+            <SearchBar 
+              onSearch={handleSearch} 
+              initialQuery={searchQuery}
+            />
+            <SortAndViewControls
+              viewType={viewType}
+              sortBy={sortBy}
+              onViewChange={handleViewChange}
+              onSortChange={handleSortChange}
+            />
+          </>
         )}
         
         {isMobile && (
