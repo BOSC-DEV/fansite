@@ -13,6 +13,7 @@ interface InteractionButtonProps {
   className?: string;
   title?: string;
   iconSize?: number;
+  disabled?: boolean;
 }
 
 export function InteractionButton({ 
@@ -23,7 +24,8 @@ export function InteractionButton({
   activeColor = 'bg-black/60',
   className,
   title,
-  iconSize
+  iconSize,
+  disabled = false
 }: InteractionButtonProps) {
   const isMobile = useIsMobile();
   const defaultIconSize = 3;
@@ -33,15 +35,22 @@ export function InteractionButton({
     "flex items-center",
     active ? activeColor : "bg-black/60",
     "text-white py-1 px-2 rounded-full text-xs",
-    onClick ? "cursor-pointer hover:bg-black/80 transition-colors" : "",
+    onClick && !disabled ? "cursor-pointer hover:bg-black/80 transition-colors" : "cursor-default",
+    disabled ? "opacity-70" : "",
     isMobile ? "py-0.5 px-1.5" : "",
     className
   );
   
+  const handleClick = (e: React.MouseEvent) => {
+    if (onClick && !disabled) {
+      onClick(e);
+    }
+  };
+  
   return (
     <div 
       className={buttonClasses}
-      onClick={onClick} 
+      onClick={handleClick} 
       title={title}
     >
       <Icon className={`h-${actualIconSize} w-${actualIconSize} mr-1 ${isMobile ? 'h-3 w-3' : ''}`} />
