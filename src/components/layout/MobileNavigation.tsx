@@ -30,22 +30,22 @@ export const MobileNavigation = () => {
     {
       path: "/",
       label: "Home",
-      icon: <Home className="h-4 w-4" />
+      icon: <Home className="h-3.5 w-3.5" />
     },
     {
       path: "/most-wanted",
       label: "Most Wanted",
-      icon: <Award className="h-4 w-4" />
+      icon: <Award className="h-3.5 w-3.5" />
     },
     {
       path: "/leaderboard",
       label: "Leaderboard",
-      icon: <Trophy className="h-4 w-4" />
+      icon: <Trophy className="h-3.5 w-3.5" />
     },
     {
       path: "/create-listing",
       label: "Report",
-      icon: <BookOpen className="h-4 w-4" />
+      icon: <BookOpen className="h-3.5 w-3.5" />
     }
   ];
 
@@ -53,12 +53,12 @@ export const MobileNavigation = () => {
     menuItems.push({
       path: username ? `/${username}` : address ? `/user/${address}` : "/profile",
       label: "Profile",
-      icon: <User className="h-4 w-4" />
+      icon: <User className="h-3.5 w-3.5" />
     });
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-western-wood/90 backdrop-blur-sm border-t border-western-wood/50">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-western-wood/90 backdrop-blur-sm border-t border-western-wood/50">
       <div className="flex justify-around">
         {menuItems.map(item => (
           <Link 

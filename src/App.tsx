@@ -33,7 +33,7 @@ function AppContent() {
     <div className="flex flex-col min-h-screen">
       <Header />
       
-      <div className={`flex-grow pt-10 ${isMobile ? 'pb-14' : 'pb-6'}`}>
+      <div className={`flex-grow ${isMobile ? 'pt-8 pb-14' : 'pt-16 pb-6'}`}>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/most-wanted" element={<MostWanted />} />
