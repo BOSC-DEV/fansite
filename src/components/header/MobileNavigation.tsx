@@ -3,7 +3,6 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Wallet, Home, Award, Trophy, BookOpen } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
 
 interface MenuItem {
@@ -68,18 +67,20 @@ export const MobileNavigation = ({ menuItems, connecting }: MobileNavigationProp
       ))}
       
       {!isConnected && (
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={handleConnectClick} 
-          disabled={connecting} 
-          className="flex flex-col items-center justify-center p-2 h-auto text-western-sand hover:text-western-parchment flex-1 mx-1"
+        <div 
+          className="flex flex-col items-center justify-center p-2 rounded-lg transition-colors flex-1 mx-1 text-western-sand hover:text-western-parchment"
         >
-          <Wallet className="h-4 w-4" />
+          <button 
+            onClick={handleConnectClick} 
+            disabled={connecting} 
+            className="flex items-center justify-center bg-transparent border-0 p-0 cursor-pointer"
+          >
+            <Wallet className="h-4 w-4" />
+          </button>
           <span className="text-xs mt-1 font-western">
             {connecting ? "..." : "Connect"}
           </span>
-        </Button>
+        </div>
       )}
     </div>
   );
