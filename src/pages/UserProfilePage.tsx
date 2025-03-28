@@ -47,48 +47,53 @@ export function UserProfilePage() {
               points={profile.points}
             />
             
-            {/* Tabs Section */}
+            {/* Tabs Section - Aligned with content above */}
             <Tabs value={activeTab} onValueChange={handleTabChange} className="mb-8">
-              <TabsList className="grid grid-cols-5 w-full max-w-md ml-0 bg-western-parchment/10">
-                <TabsTrigger value="reports" className="flex items-center gap-2">
+              <TabsList className="grid grid-cols-5 w-full max-w-none ml-0 bg-western-parchment/10 mt-6 border-b border-western-wood/20">
+                <TabsTrigger value="reports" className="flex items-center gap-2 font-western text-western-wood">
                   <BookOpen className="h-4 w-4" />
                   <span className="hidden sm:inline">Reports</span>
                 </TabsTrigger>
-                <TabsTrigger value="bounties" className="flex items-center gap-2">
+                <TabsTrigger value="bounties" className="flex items-center gap-2 font-western text-western-wood">
                   <Coins className="h-4 w-4" />
                   <span className="hidden sm:inline">Bounties</span>
                 </TabsTrigger>
-                <TabsTrigger value="info" className="flex items-center gap-2">
+                <TabsTrigger value="info" className="flex items-center gap-2 font-western text-western-wood">
                   <User className="h-4 w-4" />
                   <span className="hidden sm:inline">Info</span>
                 </TabsTrigger>
-                <TabsTrigger value="likes" className="flex items-center gap-2">
+                <TabsTrigger value="likes" className="flex items-center gap-2 font-western text-western-wood">
                   <Heart className="h-4 w-4" />
                   <span className="hidden sm:inline">Likes</span>
                 </TabsTrigger>
-                <TabsTrigger value="comments" className="flex items-center gap-2">
+                <TabsTrigger value="comments" className="flex items-center gap-2 font-western text-western-wood">
                   <MessageSquare className="h-4 w-4" />
                   <span className="hidden sm:inline">Comments</span>
                 </TabsTrigger>
               </TabsList>
               
-              <TabsContent value="reports" className="mt-6">
+              <TabsContent value="reports" className="mt-6 px-0">
+                <h2 className="text-2xl font-western text-western-wood mb-4">Scammer Reports</h2>
                 <ReportsTab scammers={scammers} />
               </TabsContent>
               
-              <TabsContent value="bounties" className="mt-6">
+              <TabsContent value="bounties" className="mt-6 px-0">
+                <h2 className="text-2xl font-western text-western-wood mb-4">Bounties</h2>
                 <BountiesTab />
               </TabsContent>
               
-              <TabsContent value="info" className="mt-6">
+              <TabsContent value="info" className="mt-6 px-0">
+                <h2 className="text-2xl font-western text-western-wood mb-4">User Information</h2>
                 <InfoTab profile={profile} />
               </TabsContent>
               
-              <TabsContent value="likes" className="mt-6">
+              <TabsContent value="likes" className="mt-6 px-0">
+                <h2 className="text-2xl font-western text-western-wood mb-4">Liked Reports</h2>
                 <LikesTab address={profile.walletAddress} />
               </TabsContent>
               
-              <TabsContent value="comments" className="mt-6">
+              <TabsContent value="comments" className="mt-6 px-0">
+                <h2 className="text-2xl font-western text-western-wood mb-4">Comments</h2>
                 <CommentsTab />
               </TabsContent>
             </Tabs>
