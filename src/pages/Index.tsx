@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { Header } from "@/components/Header";
@@ -34,7 +33,7 @@ const Index = () => {
   const siteUrl = "https://bookofscams.lol/";
 
   return (
-    <div className="min-h-screen flex flex-col old-paper cowboy-pattern">
+    <div className="flex flex-col min-h-screen old-paper cowboy-pattern">
       <Helmet>
         <title>BOSC - Book of Scams</title>
         <meta name="description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
@@ -79,8 +78,7 @@ const Index = () => {
       
       <SiteFooter />
       
-      {/* Remove the absolute positioning and just use regular layout for tumbleweed */}
-      <div className="h-16 w-16 mx-auto opacity-30 tumbleweed">
+      <div className="h-16 w-16 mx-auto opacity-30 tumbleweed mb-0">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="#8B4513" fillOpacity="0.5"/>
           <path d="M8 9C10 7 15 7 16 9" stroke="#6B4226" strokeWidth="1"/>
