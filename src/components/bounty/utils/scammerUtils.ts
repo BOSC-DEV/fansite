@@ -1,5 +1,7 @@
+
 // Import any necessary dependencies here
 import { storageService } from "@/services/storage/localStorageService";
+import { ScammerListing } from "@/services/storage/localStorage/scammerService";
 
 export const getOrCreateScammer = async (
   scammerId: string,
@@ -11,15 +13,26 @@ export const getOrCreateScammer = async (
   const scammer = await storageService.getScammer(scammerId);
   
   if (!scammer) {
-    // If the scammer doesn't exist, create a new one
-    const newScammer = {
+    // If the scammer doesn't exist, create a new one with all required properties
+    const newScammer: ScammerListing = {
       id: scammerId,
       name: scammerName,
       bountyAmount: currentBounty || 0,
       accusedOf: "Scamming",
-      dateAdded: new Date(),
+      dateAdded: new Date().toISOString(), // Convert Date to ISO string to match ScammerListing type
       addedBy: contributorAddress || "",
-      // Add other required fields for your scammer object
+      // Add all other required fields with default values
+      photoUrl: "",
+      links: [],
+      aliases: [],
+      accomplices: [],
+      officialResponse: "",
+      walletAddress: "",
+      comments: [],
+      likes: 0,
+      dislikes: 0,
+      views: 0,
+      shares: 0
     };
     
     await storageService.saveScammer(newScammer);
@@ -30,7 +43,7 @@ export const getOrCreateScammer = async (
 };
 
 export const updateScammerBounty = async (
-  scammer: any,
+  scammer: ScammerListing,
   contributionAmount: number,
   message?: string
 ) => {
