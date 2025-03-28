@@ -14,6 +14,7 @@ export function useBountyContribution(
 ) {
   const { isConnected, address, connectWallet } = useWallet();
   const [amount, setAmount] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -23,6 +24,10 @@ export function useBountyContribution(
     if (value === "" || /^\d*\.?\d*$/.test(value)) {
       setAmount(value);
     }
+  };
+
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setMessage(e.target.value);
   };
 
   const copyToClipboard = () => {
@@ -83,12 +88,13 @@ export function useBountyContribution(
         toast.success("Transaction confirmed!");
         
         // Update the scammer record with new bounty amount
-        await updateScammerBounty(scammer, solAmount);
+        await updateScammerBounty(scammer, solAmount, message);
         
         toast.success(`Successfully contributed ${amount} SOL to the bounty!`);
         
         // Reset the form
         setAmount("");
+        setMessage("");
         
         // Reload the page after a short delay to show the updated bounty
         setTimeout(() => {
@@ -108,8 +114,11 @@ export function useBountyContribution(
 
   return {
     amount,
+    message,
     setAmount,
+    setMessage,
     handleAmountChange,
+    handleMessageChange,
     isSubmitting,
     copied,
     copyToClipboard,
