@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus, Info, Terminal } from "lucide-react";
+import { Plus, Info } from "lucide-react";
 import { 
   Tooltip,
   TooltipContent,
@@ -16,11 +16,8 @@ export const MostWantedHeader = () => {
   return (
     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 md:mb-8 gap-4">
       <div>
-        <h1 className="text-3xl font-hacker text-hacker-accent neon-glow mb-2">Terminal_Access: Most_Wanted</h1>
-        <p className="text-hacker-text/80 max-w-xl font-mono">
-          <Terminal className="inline-block h-4 w-4 mr-1 text-hacker-accent" />
-          <span className="terminal-text">Browse registry of identified malicious actors</span>
-        </p>
+        <h1 className="text-3xl font-wanted text-western-wood mb-2">Most Wanted List</h1>
+        <p className="text-western-wood/80 max-w-xl">Browse the list of reported scammers in the crypto space</p>
       </div>
       
       <TooltipProvider>
@@ -28,7 +25,7 @@ export const MostWantedHeader = () => {
           <TooltipTrigger asChild>
             <Button 
               asChild={isConnected} 
-              className="w-full sm:w-auto bg-hacker-accent text-hacker-bg hover:bg-hacker-accent/90 flex items-center justify-center border border-hacker-border/20"
+              className="w-full sm:w-auto bg-western-leather hover:bg-western-accent text-western-parchment flex items-center justify-center border border-western-wood/20"
               onClick={!isConnected ? () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               } : undefined}
@@ -48,9 +45,9 @@ export const MostWantedHeader = () => {
             </Button>
           </TooltipTrigger>
           {!isConnected && (
-            <TooltipContent className="bg-hacker-card border-hacker-border text-hacker-text">
+            <TooltipContent>
               <p className="flex items-center">
-                <Info className="h-4 w-4 mr-2 text-hacker-accent" />
+                <Info className="h-4 w-4 mr-2" />
                 Connect your wallet to report a scammer
               </p>
             </TooltipContent>

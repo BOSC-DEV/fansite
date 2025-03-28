@@ -15,7 +15,6 @@ export interface Scammer {
   dislikes?: number;
   views?: number;
   shares?: number;
-  comments?: string[]; // Add comments property to match ScammerListing
 }
 
 export interface ScammerInput {
@@ -47,8 +46,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     likes: 100,
     dislikes: 50,
     views: 200,
-    shares: 35,
-    comments: []
+    shares: 35
   },
   {
     id: '2',
@@ -65,8 +63,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xDeF456...',
     likes: 150,
     dislikes: 75,
-    views: 300,
-    comments: []
+    views: 300
   },
   {
     id: '3',
@@ -83,8 +80,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xGhI789...',
     likes: 200,
     dislikes: 100,
-    views: 400,
-    comments: []
+    views: 400
   },
   {
     id: '4',
@@ -101,8 +97,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xJkL101...',
     likes: 250,
     dislikes: 150,
-    views: 500,
-    comments: []
+    views: 500
   },
   {
     id: '5',
@@ -119,8 +114,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xMnO234...',
     likes: 300,
     dislikes: 200,
-    views: 600,
-    comments: []
+    views: 600
   },
   {
     id: '6',
@@ -137,8 +131,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xPqR567...',
     likes: 350,
     dislikes: 250,
-    views: 700,
-    comments: []
+    views: 700
   },
   {
     id: '7',
@@ -155,8 +148,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xStU890...',
     likes: 400,
     dislikes: 300,
-    views: 800,
-    comments: []
+    views: 800
   },
   {
     id: '8',
@@ -173,8 +165,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xVwX123...',
     likes: 450,
     dislikes: 350,
-    views: 900,
-    comments: []
+    views: 900
   },
   {
     id: '9',
@@ -191,8 +182,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xYzA456...',
     likes: 500,
     dislikes: 400,
-    views: 1000,
-    comments: []
+    views: 1000
   },
   {
     id: '10',
@@ -209,7 +199,6 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xBcD789...',
     likes: 550,
     dislikes: 450,
-    views: 1100,
-    comments: []
+    views: 1100
   }
 ];
