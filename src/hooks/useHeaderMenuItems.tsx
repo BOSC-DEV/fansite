@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Home, Award, BookOpen, User, Trophy } from "lucide-react";
+import { Home, Award, Trophy, BookOpen, User, Wallet } from "lucide-react";
 import { useWallet } from "@/context/WalletContext";
 
 export const useHeaderMenuItems = () => {
@@ -29,26 +29,26 @@ export const useHeaderMenuItems = () => {
   const menuItems = [{
     path: "/",
     label: "Home",
-    icon: <Home className="h-4 w-4" />
+    icon: <Home className="h-5 w-5" />
   }, {
     path: "/most-wanted",
     label: "Most Wanted",
-    icon: <Award className="h-4 w-4" />
+    icon: <Award className="h-5 w-5" />
   }, {
     path: "/leaderboard",
     label: "Leaderboard",
-    icon: <Trophy className="h-4 w-4" />
+    icon: <Trophy className="h-5 w-5" />
   }, {
     path: "/create-listing",
     label: "Report",
-    icon: <BookOpen className="h-4 w-4" />
+    icon: <BookOpen className="h-5 w-5" />
   }];
 
   if (isConnected) {
     menuItems.push({
       path: username ? `/${username}` : address ? `/user/${address}` : "/profile",
       label: "Profile",
-      icon: <User className="h-4 w-4" />
+      icon: <User className="h-5 w-5" />
     });
   }
 

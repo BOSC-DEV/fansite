@@ -58,16 +58,18 @@ export const Header = () => {
               <ProfileButton />
             </div>
           ) : (
-            <Button 
-              variant="default" 
-              size="sm" 
-              onClick={handleConnectClick} 
-              disabled={connecting} 
-              className="h-9 animate-pulse-subtle bg-western-accent text-western-parchment hover:bg-western-accent/80"
-            >
-              <Wallet className="h-4 w-4 mr-2" />
-              {connecting ? "Connecting..." : "Connect Wallet"}
-            </Button>
+            <div className="flex flex-col items-center">
+              <Button 
+                variant="default" 
+                size="sm" 
+                onClick={handleConnectClick} 
+                disabled={connecting} 
+                className="h-10 animate-pulse-subtle bg-western-accent text-western-parchment hover:bg-western-accent/80 flex items-center"
+              >
+                <Wallet className="h-5 w-5" />
+              </Button>
+              <span className="text-western-sand font-western text-sm mt-1">Connect</span>
+            </div>
           )}
         </div>
       </div>
