@@ -11,7 +11,7 @@ export const SiteFooter = () => {
     <footer className={`py-1 border-t border-western-wood wood-texture mt-auto ${isMobile ? 'mb-16' : ''}`}>
       <div className="container mx-auto max-w-6xl px-2">
         {isMobile ? (
-          <div className="flex justify-center items-center gap-8 py-1">
+          <div className="flex justify-between items-center w-full py-1">
             <a 
               href="https://github.com/BOSC-DEV/BOSC-APP" 
               target="_blank" 
