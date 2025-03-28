@@ -44,10 +44,10 @@ export const Header = () => {
   }
 
   return (
-    <header className={cn("fixed top-10 left-0 right-0 z-40 transition-all duration-300 ease-in-out wood-texture", 
+    <header className={cn("fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out wood-texture", 
       isScrolled ? "py-3 shadow-md" : "py-5")}>
       <div className="container mx-auto px-4 flex items-center">
-        <Logo className="mr-8" />
+        <Logo />
         
         <DesktopNavigation menuItems={menuItems} />
 
