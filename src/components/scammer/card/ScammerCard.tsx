@@ -35,7 +35,7 @@ export const ScammerCard: React.FC<ScammerCardProps> = ({
         comments={0} // We don't show comments count in cards yet
         scammerId={id}
         rank={rank}
-        interactionsPosition={inProfileSection ? "bottomRight" : "topRight"}
+        // Remove the conditional position since we want all cards to have the interactions at the bottom
       />
       <ScammerCardContent
         id={id}

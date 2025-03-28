@@ -30,7 +30,7 @@ const ScammerCardImageComponent = ({
   comments = 0,
   scammerId,
   rank,
-  interactionsPosition = "topRight"
+  interactionsPosition = "bottomRight" // Changed default from "topRight" to "bottomRight"
 }: ScammerCardImageProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);

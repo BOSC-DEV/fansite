@@ -28,7 +28,7 @@ export const InteractionsBar = ({
   comments = 0,
   onScrollToComments,
   className,
-  position = "topRight"
+  position = "bottomRight" // Changed default from "topRight" to "bottomRight"
 }: InteractionsBarProps) => {
   const location = useLocation();
   const { handleInteraction } = useProfileInteraction();
