@@ -15,7 +15,7 @@ export const Logo = () => {
       />
       
       {!isMobile && (
-        <span className="ml-2 text-western-parchment font-western text-sm">
+        <span className="ml-2 text-western-parchment font-wanted text-sm uppercase tracking-wide">
           Book of Scams
         </span>
       )}
