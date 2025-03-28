@@ -25,7 +25,7 @@ export function CommentList({ comments, showScammerLinks = false }: CommentListP
   });
 
   return (
-    <div>
+    <div className="font-serif">
       {/* Comments list */}
       <div className="space-y-4">
         {sortedComments.map((comment) => {

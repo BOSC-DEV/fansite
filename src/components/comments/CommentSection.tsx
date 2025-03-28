@@ -65,16 +65,16 @@ export function CommentSection({ scammerId }: CommentSectionProps) {
       <Card>
         <CardHeader>
           <div className="flex justify-between items-center">
-            <CardTitle className="flex items-center gap-2 text-xl">
+            <CardTitle className="flex items-center gap-2 text-xl font-wanted text-western-accent">
               <MessageSquare className="h-5 w-5" />
               Comments
             </CardTitle>
-            <Badge variant="outline">
+            <Badge variant="outline" className="font-western">
               {comments.length} {comments.length === 1 ? "comment" : "comments"}
             </Badge>
           </div>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 font-serif">
           {error && (
             <Alert variant="destructive" className="mb-4">
               <AlertCircle className="h-4 w-4" />
@@ -116,7 +116,7 @@ export function CommentSection({ scammerId }: CommentSectionProps) {
                 variant={sortMethod === 'newest' ? "default" : "outline"} 
                 size="sm"
                 onClick={() => setSortMethod('newest')}
-                className="text-xs"
+                className={`text-xs font-western ${sortMethod === 'newest' ? 'bg-western-leather hover:bg-western-leather/90' : ''}`}
               >
                 Newest <ArrowDown className="ml-1 h-3 w-3" />
               </Button>
@@ -124,7 +124,7 @@ export function CommentSection({ scammerId }: CommentSectionProps) {
                 variant={sortMethod === 'oldest' ? "default" : "outline"} 
                 size="sm"
                 onClick={() => setSortMethod('oldest')}
-                className="text-xs"
+                className={`text-xs font-western ${sortMethod === 'oldest' ? 'bg-western-leather hover:bg-western-leather/90' : ''}`}
               >
                 Oldest <ArrowUp className="ml-1 h-3 w-3" />
               </Button>
@@ -132,7 +132,7 @@ export function CommentSection({ scammerId }: CommentSectionProps) {
                 variant={sortMethod === 'mostLiked' ? "default" : "outline"} 
                 size="sm"
                 onClick={() => setSortMethod('mostLiked')}
-                className="text-xs"
+                className={`text-xs font-western ${sortMethod === 'mostLiked' ? 'bg-western-leather hover:bg-western-leather/90' : ''}`}
               >
                 Most Liked
               </Button>

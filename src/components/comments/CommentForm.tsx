@@ -42,7 +42,7 @@ export function CommentForm({
 
   if (!isConnected) {
     return (
-      <div className="bg-muted/30 rounded-lg p-4 text-center">
+      <div className="bg-muted/30 rounded-lg p-4 text-center font-serif">
         <p className="text-sm text-muted-foreground mb-2">
           Connect your wallet to comment on this listing
         </p>
@@ -51,6 +51,7 @@ export function CommentForm({
           variant="outline" 
           size="sm"
           disabled={connecting}
+          className="font-western"
         >
           {connecting ? "Connecting..." : "Connect Wallet"}
         </Button>
@@ -65,7 +66,7 @@ export function CommentForm({
         value={content}
         onChange={(e) => setContent(e.target.value)}
         rows={3}
-        className="resize-none w-full"
+        className="resize-none w-full font-serif"
         disabled={isSubmitting}
       />
       <div className="flex justify-end">
@@ -73,6 +74,7 @@ export function CommentForm({
           type="submit" 
           disabled={isSubmitting || !content.trim()}
           size="sm"
+          className="bg-western-leather hover:bg-western-leather/90 font-western"
         >
           {isSubmitting ? "Posting..." : "Post Comment"}
         </Button>

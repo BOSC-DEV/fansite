@@ -64,7 +64,7 @@ export function CommentsTab() {
   if (isLoading) {
     return (
       <>
-        <h2 className="text-xl font-bold mb-4 font-western text-western-accent">Comments</h2>
+        <h2 className="text-xl font-bold mb-4 font-wanted text-western-accent">Comments</h2>
         <Card className="p-6">
           <Skeleton className="h-24 w-full mb-4" />
           <Skeleton className="h-24 w-full" />
@@ -76,9 +76,9 @@ export function CommentsTab() {
   if (!comments.length) {
     return (
       <>
-        <h2 className="text-xl font-bold mb-4 font-western text-western-accent">Comments</h2>
+        <h2 className="text-xl font-bold mb-4 font-wanted text-western-accent">Comments</h2>
         <Card className="p-6 text-center">
-          <p className="text-western-sand">You haven't posted any comments yet</p>
+          <p className="text-western-sand font-serif">You haven't posted any comments yet</p>
         </Card>
       </>
     );
@@ -86,7 +86,7 @@ export function CommentsTab() {
 
   return (
     <>
-      <h2 className="text-xl font-bold mb-4 font-western text-western-accent">Comments</h2>
+      <h2 className="text-xl font-bold mb-4 font-wanted text-western-accent">Comments</h2>
       <Card className="p-6">
         <CommentList comments={comments} showScammerLinks={true} />
       </Card>
