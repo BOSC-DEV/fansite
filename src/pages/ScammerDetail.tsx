@@ -1,115 +1,62 @@
 
-import { useParams, Link } from "react-router-dom";
-import { Header } from "@/components/Header";
+import React, { useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { ScammerDetailsCard } from "@/components/scammer/ScammerDetailsCard";
 import { ScammerDetailSkeleton } from "@/components/scammer/ScammerDetailSkeleton";
 import { ScammerNotFound } from "@/components/scammer/ScammerNotFound";
-import { BountyContribution } from "@/components/BountyContribution";
-import { CommentSection } from "@/components/comments/CommentSection";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import { useScammerDetail } from "@/hooks/useScammerDetail";
-import { AgreementRatioBar } from "@/components/scammer/details/AgreementRatioBar";
-import { Helmet } from "react-helmet-async";
+import { BountyFooter } from "@/components/bounty/BountyFooter";
+import { CommentSection } from "@/components/comments/CommentSection";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 
 const ScammerDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const { 
-    scammer, 
-    isLoading, 
-    imageLoaded, 
-    setImageLoaded, 
-    scammerStats,
-    handleLikeScammer,
-    handleDislikeScammer
-  } = useScammerDetail(id);
+  const navigate = useNavigate();
+  const { scammer, loading, error } = useScammerDetail(id);
+  const isMobile = useIsMobile();
 
-  // Update formatDate to accept a string parameter
-  const formatDate = (date: string) => {
-    // Convert string to Date
-    const dateObj = new Date(date);
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    }).format(dateObj);
-  };
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
 
-  if (isLoading) {
+  if (loading) {
     return <ScammerDetailSkeleton />;
   }
 
-  if (!scammer) {
-    return <ScammerNotFound />;
+  if (error || !scammer) {
+    return <ScammerNotFound onBackClick={() => navigate("/most-wanted")} />;
   }
 
-  // Ensure we have absolute URLs for social media sharing
-  const getAbsoluteUrl = (url: string) => {
-    if (url.startsWith('http')) {
-      return url;
-    }
-    return `${window.location.origin}${url.startsWith('/') ? '' : '/'}${url}`;
-  };
-
-  // Construct canonical URL
-  const canonicalUrl = `https://bookofscams.lol/scammer/${scammer.id}`;
-  
-  // Ensure image URL is absolute
-  const imageUrl = getAbsoluteUrl(scammer.photoUrl);
-
   return (
-    <div className="min-h-screen old-paper flex flex-col">
-      <Header />
-      <div className="container mx-auto max-w-6xl px-4 py-1 md:py-4 flex-1 overflow-y-auto pb-16">
-        <Button
-          variant="ghost"
-          size="sm"
-          asChild
-          className="mb-3 md:mb-8 hover:bg-western-sand/30 text-western-wood hover:text-western-wood font-western"
-        >
-          <Link to="/most-wanted">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Most Wanted
-          </Link>
-        </Button>
+    <div className="flex flex-col min-h-screen">
+      <Helmet>
+        <title>{`${scammer.name || "Scammer"} | BOSC`}</title>
+        <meta
+          name="description"
+          content={`Details about ${scammer.name || "a scammer"} reported on Book of Scams.`}
+        />
+      </Helmet>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <ScammerDetailsCard
-              scammer={scammer}
-              bountyAmount={scammer.bountyAmount}
-              imageLoaded={imageLoaded}
-              setImageLoaded={setImageLoaded}
-              formatDate={formatDate}
-              scammerStats={scammerStats}
-              onLikeScammer={handleLikeScammer}
-              onDislikeScammer={handleDislikeScammer}
-            />
-            
-            <div className="mt-8">
-              <AgreementRatioBar 
-                likes={scammerStats.likes} 
-                dislikes={scammerStats.dislikes} 
-                onLike={handleLikeScammer}
-                onDislike={handleDislikeScammer}
-              />
-              <CommentSection scammerId={scammer.id} />
-            </div>
-          </div>
-
-          <div>
-            <BountyContribution 
-              scammerId={scammer.id}
-              currentBounty={scammer.bountyAmount}
-              scammerName={scammer.name}
-            />
-          </div>
-        </div>
+      <div className="container mx-auto px-4 max-w-7xl flex-grow">
+        <ScammerDetailsCard scammer={scammer} />
+        
+        {/* Show bounty footer if wallet addresses are available */}
+        {scammer.walletAddresses && scammer.walletAddresses.length > 0 && (
+          <BountyFooter
+            scammerId={scammer.id}
+            walletAddresses={scammer.walletAddresses}
+          />
+        )}
+        
+        {/* Comments section */}
+        <CommentSection scammerId={scammer.id} />
       </div>
-      <SiteFooter />
+
+      {!isMobile && <SiteFooter />}
     </div>
   );
-}
+};
 
 export default ScammerDetail;
