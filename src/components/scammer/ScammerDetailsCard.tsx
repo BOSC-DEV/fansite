@@ -65,45 +65,44 @@ export function ScammerDetailsCard({
         />
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex flex-col md:flex-row gap-6">
-          <div className="w-full md:w-auto">
-            <ScammerSidebar
-              name={scammer.name}
-              photoUrl={scammer.photoUrl}
-              dateAdded={scammer.dateAdded.toString()}
-              addedBy={scammer.addedBy}
-              addedByUsername={addedByUsername}
-              addedByPhotoUrl={addedByPhotoUrl}
-              isProfileLoading={isProfileLoading}
-              profileId={profileId}
-              formatDate={formatDate}
-              scammerStats={scammerStats ? {
-                ...scammerStats,
-                comments: commentCount,
-                shares: scammerStats.shares || 0,
-              } : undefined}
-              isLiked={isLiked}
-              isDisliked={isDisliked}
-              onLike={onLikeScammer}
-              onDislike={onDislikeScammer}
-              scammerId={scammer.id}
-            />
+        {/* Image and sidebar info */}
+        <div className="flex flex-col space-y-6 w-full">
+          <ScammerSidebar 
+            name={scammer.name}
+            photoUrl={scammer.photoUrl}
+            dateAdded={scammer.dateAdded.toString()}
+            addedBy={scammer.addedBy}
+            addedByUsername={addedByUsername}
+            addedByPhotoUrl={addedByPhotoUrl}
+            isProfileLoading={isProfileLoading}
+            profileId={profileId}
+            formatDate={formatDate}
+            scammerStats={scammerStats ? {
+              ...scammerStats,
+              comments: commentCount,
+              shares: scammerStats.shares || 0,
+            } : undefined}
+            isLiked={isLiked}
+            isDisliked={isDisliked}
+            onLike={onLikeScammer}
+            onDislike={onDislikeScammer}
+            scammerId={scammer.id}
+          />
+          
+          {/* Details section */}
+          <div className="w-full rounded-lg border bg-western-parchment p-4">
+            <h3 className="font-semibold text-western-wood mb-3">Details</h3>
+            <p className="text-sm text-western-wood">{scammer.accusedOf}</p>
           </div>
           
-          <div className="flex-1 w-full space-y-6">
-            <div className="rounded-lg border bg-western-parchment p-4">
-              <h3 className="font-semibold text-western-wood mb-3">Details</h3>
-              <p className="text-sm text-western-wood">{scammer.accusedOf}</p>
-            </div>
-            
-            <div className="rounded-lg border bg-western-parchment p-4">
-              <ScammerContent 
-                aliases={scammer.aliases}
-                links={scammer.links}
-                accomplices={scammer.accomplices}
-                officialResponse={scammer.officialResponse}
-              />
-            </div>
+          {/* Tabs for scammer content below the details */}
+          <div className="w-full rounded-lg border bg-western-parchment p-4">
+            <ScammerContent 
+              aliases={scammer.aliases}
+              links={scammer.links}
+              accomplices={scammer.accomplices}
+              officialResponse={scammer.officialResponse}
+            />
           </div>
         </div>
       </CardContent>

@@ -49,67 +49,71 @@ export function ScammerSidebar({
   scammerId
 }: ScammerSidebarProps) {
   return (
-    <div className="flex flex-col md:sticky md:top-4 w-full sm:w-auto space-y-4">
-      <ScammerAvatar 
-        name={name}
-        photoUrl={photoUrl}
-      />
-      
-      {/* Interaction buttons below the image */}
-      {scammerStats && scammerId && onLike && onDislike && (
-        <div className="w-full">
-          <ScammerInteractionButtons
-            scammerId={scammerId}
-            likes={scammerStats.likes}
-            dislikes={scammerStats.dislikes}
-            views={scammerStats.views}
-            shares={scammerStats.shares}
-            comments={scammerStats.comments}
-            isLiked={isLiked}
-            isDisliked={isDisliked}
-            onLike={onLike}
-            onDislike={onDislike}
-            className="justify-center mt-2"
+    <div className="flex flex-col w-full space-y-4">
+      <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
+        <div className="w-full sm:w-auto max-w-[250px]">
+          <ScammerAvatar 
+            name={name}
+            photoUrl={photoUrl}
           />
-        </div>
-      )}
-      
-      <div className="rounded-lg border bg-western-parchment p-4">
-        <h3 className="font-semibold text-western-wood mb-3">Listing Info</h3>
-        
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <CalendarIcon className="h-4 w-4 text-western-wood/70" />
-            <div className="text-sm">
-              <span className="block text-western-wood/70">Added on</span>
-              <span className="font-medium text-western-wood">{formatDate(dateAdded)}</span>
-            </div>
-          </div>
           
-          <div className="flex items-center gap-2">
-            <UserRound className="h-4 w-4 text-western-wood/70" />
-            <div className="text-sm">
-              <span className="block text-western-wood/70">Added by</span>
-              {isProfileLoading ? (
-                <Skeleton className="h-5 w-24" />
-              ) : profileId ? (
-                <Link 
-                  to={`/profile/${profileId}`} 
-                  className="font-medium text-western-accent hover:underline"
-                >
-                  <div className="flex items-center gap-2">
-                    <Avatar className="h-4 w-4">
-                      <AvatarImage src={addedByPhotoUrl} alt={addedByUsername} />
-                      <AvatarFallback className="text-[10px]">
-                        {addedByUsername?.substring(0, 2).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span>{addedByUsername}</span>
-                  </div>
-                </Link>
-              ) : (
-                <span className="font-medium text-western-wood">{addedByUsername}</span>
-              )}
+          {/* Interaction buttons below the image */}
+          {scammerStats && scammerId && onLike && onDislike && (
+            <div className="w-full">
+              <ScammerInteractionButtons
+                scammerId={scammerId}
+                likes={scammerStats.likes}
+                dislikes={scammerStats.dislikes}
+                views={scammerStats.views}
+                shares={scammerStats.shares}
+                comments={scammerStats.comments}
+                isLiked={isLiked}
+                isDisliked={isDisliked}
+                onLike={onLike}
+                onDislike={onDislike}
+                className="justify-center mt-2"
+              />
+            </div>
+          )}
+        </div>
+        
+        <div className="rounded-lg border bg-western-parchment p-4 w-full">
+          <h3 className="font-semibold text-western-wood mb-3">Listing Info</h3>
+          
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <CalendarIcon className="h-4 w-4 text-western-wood/70" />
+              <div className="text-sm">
+                <span className="block text-western-wood/70">Added on</span>
+                <span className="font-medium text-western-wood">{formatDate(dateAdded)}</span>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <UserRound className="h-4 w-4 text-western-wood/70" />
+              <div className="text-sm">
+                <span className="block text-western-wood/70">Added by</span>
+                {isProfileLoading ? (
+                  <Skeleton className="h-5 w-24" />
+                ) : profileId ? (
+                  <Link 
+                    to={`/profile/${profileId}`} 
+                    className="font-medium text-western-accent hover:underline"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Avatar className="h-4 w-4">
+                        <AvatarImage src={addedByPhotoUrl} alt={addedByUsername} />
+                        <AvatarFallback className="text-[10px]">
+                          {addedByUsername?.substring(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span>{addedByUsername}</span>
+                    </div>
+                  </Link>
+                ) : (
+                  <span className="font-medium text-western-wood">{addedByUsername}</span>
+                )}
+              </div>
             </div>
           </div>
         </div>
