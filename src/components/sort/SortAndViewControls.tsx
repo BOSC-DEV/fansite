@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { BookOpen, List, SortDesc } from "lucide-react";
+import { BookOpen, List, Scroll, SortDesc } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SortAndViewControlsProps {
@@ -53,7 +53,7 @@ export const SortAndViewControls = ({
           onCheckedChange={toggleViewMode} 
           aria-label="Toggle view mode"
         />
-        <BookOpen className={`h-4 w-4 ${viewType === 'grid' ? 'text-primary' : 'text-muted-foreground'}`} />
+        <Scroll className={`h-4 w-4 ${viewType === 'grid' ? 'text-primary' : 'text-muted-foreground'}`} />
       </div>
     </div>
   );

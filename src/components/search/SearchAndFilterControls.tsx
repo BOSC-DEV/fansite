@@ -3,7 +3,7 @@ import { SearchBar } from "@/components/search/SearchBar";
 import { SortAndViewControls } from "@/components/sort/SortAndViewControls";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Grid, List } from "lucide-react";
+import { List, Scroll } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface SearchAndFilterControlsProps {
@@ -41,7 +41,7 @@ export const SearchAndFilterControls = ({
             <div className="absolute right-0">
               <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && handleViewChange(value as "grid" | "table")}>
                 <ToggleGroupItem value="grid" aria-label="Grid view">
-                  <Grid className="h-4 w-4" />
+                  <Scroll className="h-4 w-4" />
                 </ToggleGroupItem>
                 <ToggleGroupItem value="table" aria-label="List view">
                   <List className="h-4 w-4" />

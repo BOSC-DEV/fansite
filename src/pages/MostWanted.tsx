@@ -12,7 +12,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { formatCurrency, formatDate } from "@/utils/formatters";
 import { useSortableScammers } from "@/hooks/useSortableScammers";
 import { Button } from "@/components/ui/button";
-import { List, Grid, Table } from "lucide-react";
+import { List, Scroll, Table } from "lucide-react";
 import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -80,7 +80,7 @@ const MostWanted = () => {
                 <div className="flex items-center">
                   <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && handleViewChange(value as "grid" | "table" | "compact")}>
                     <ToggleGroupItem value="grid" aria-label="Grid view">
-                      <Grid className="h-4 w-4" />
+                      <Scroll className="h-4 w-4" />
                     </ToggleGroupItem>
                     <ToggleGroupItem value="compact" aria-label="List view">
                       <List className="h-4 w-4" />
@@ -103,7 +103,7 @@ const MostWanted = () => {
                     className={`border-western-wood ${viewType === 'grid' ? 'bg-western-wood text-western-parchment' : 'bg-western-parchment text-western-wood'}`}
                     onClick={() => handleViewChange('grid')}
                   >
-                    <Grid className="h-4 w-4" />
+                    <Scroll className="h-4 w-4" />
                   </Button>
                 </div>
               )}
