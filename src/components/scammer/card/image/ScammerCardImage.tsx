@@ -105,7 +105,7 @@ const ScammerCardImageComponent = ({
           onImageLoaded={handleImageLoaded} 
         />
         
-        {/* Always show interaction buttons with full width on mobile */}
+        {/* Interactions bar at top right */}
         <InteractionsBar 
           scammerId={scammerId}
           likes={likes}
@@ -114,13 +114,13 @@ const ScammerCardImageComponent = ({
           shares={shares}
           comments={comments}
           onScrollToComments={scrollToComments}
-          className="w-full px-0"
+          className=""
         />
         
-        <ScammerCardBadge 
-          name={name} 
-          rank={rank} 
-        />
+        {/* Only show rank badge if rank is provided */}
+        {rank && (
+          <ScammerCardBadge rank={rank} />
+        )}
       </Link>
     </div>
   );
