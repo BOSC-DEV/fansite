@@ -66,27 +66,29 @@ export function ScammerDetailsCard({
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex flex-col md:flex-row gap-6">
-          <ScammerSidebar
-            name={scammer.name}
-            photoUrl={scammer.photoUrl}
-            dateAdded={scammer.dateAdded.toString()}
-            addedBy={scammer.addedBy}
-            addedByUsername={addedByUsername}
-            addedByPhotoUrl={addedByPhotoUrl}
-            isProfileLoading={isProfileLoading}
-            profileId={profileId}
-            formatDate={formatDate}
-            scammerStats={scammerStats ? {
-              ...scammerStats,
-              comments: commentCount,
-              shares: scammerStats.shares || 0,
-            } : undefined}
-            isLiked={isLiked}
-            isDisliked={isDisliked}
-            onLike={onLikeScammer}
-            onDislike={onDislikeScammer}
-            scammerId={scammer.id}
-          />
+          <div className="w-full md:w-auto">
+            <ScammerSidebar
+              name={scammer.name}
+              photoUrl={scammer.photoUrl}
+              dateAdded={scammer.dateAdded.toString()}
+              addedBy={scammer.addedBy}
+              addedByUsername={addedByUsername}
+              addedByPhotoUrl={addedByPhotoUrl}
+              isProfileLoading={isProfileLoading}
+              profileId={profileId}
+              formatDate={formatDate}
+              scammerStats={scammerStats ? {
+                ...scammerStats,
+                comments: commentCount,
+                shares: scammerStats.shares || 0,
+              } : undefined}
+              isLiked={isLiked}
+              isDisliked={isDisliked}
+              onLike={onLikeScammer}
+              onDislike={onDislikeScammer}
+              scammerId={scammer.id}
+            />
+          </div>
           
           <div className="flex-1 w-full">
             <ScammerContent 

@@ -18,7 +18,7 @@ export function ScammerContent({ aliases, links, accomplices, officialResponse }
   console.log('ScammerContent props:', { aliases, links, accomplices, officialResponse });
   
   return (
-    <Tabs defaultValue="identity" className="w-full mt-4">
+    <Tabs defaultValue="identity" className="w-full">
       <TabsList className="grid grid-cols-4 mb-6 bg-western-sand/20 p-1 border border-western-wood/30 rounded-md">
         <TabsTrigger 
           value="identity" 
