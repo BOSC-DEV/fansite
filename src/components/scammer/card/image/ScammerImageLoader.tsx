@@ -1,7 +1,8 @@
 
 import { useState, useEffect, memo, useRef, useCallback } from "react";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ScammerImageLoaderProps {
   name: string;
@@ -86,8 +87,19 @@ const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerI
   return (
     <>
       {!imageLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-muted">
-          <AlertCircle className="h-8 w-8 text-muted-foreground/50" />
+        <div className="absolute inset-0 flex items-center justify-center bg-muted animate-pulse">
+          <div className="flex flex-col items-center">
+            <ImageIcon className="h-8 w-8 text-muted-foreground/70 animate-pulse" />
+            <div className="mt-2 bg-western-wood/50 h-1 w-16 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-western-wood shimmer" 
+                style={{ 
+                  width: `${Math.min(100, retryCount * 33)}%`,
+                  transition: 'width 0.5s ease-in-out' 
+                }}
+              />
+            </div>
+          </div>
         </div>
       )}
       
