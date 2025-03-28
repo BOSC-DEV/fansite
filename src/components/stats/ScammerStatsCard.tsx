@@ -103,7 +103,7 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
               <p className="text-sm font-medium text-western-wood/70">Recently Added</p>
               {stats.recentScammer && (
                 <div className="flex items-center gap-2">
-                  <h4 className="text-2xl font-bold text-western-accent">
+                  <h4 className="text-2xl font-bold text-western-accent truncate max-w-32">
                     <Link to={`/scammer/${stats.recentScammer?.id}`} className="hover:underline">
                       {truncateText(stats.recentScammer?.name, 12)}
                     </Link>
@@ -127,4 +127,4 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
       </CardContent>
     </Card>
   );
-};
+}

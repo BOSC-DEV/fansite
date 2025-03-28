@@ -77,10 +77,10 @@ export function LikesTab({ address }: LikesTabProps) {
     return (
       <>
         <h2 className="text-xl font-bold mb-4 font-western text-western-accent">Likes</h2>
-        <Card className="p-6">
+        <div className="w-full">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3].map((_, index) => (
-              <Card key={index} className="overflow-hidden border-western-wood bg-western-parchment/80">
+              <Card key={index} className="overflow-hidden border-western-wood bg-western-parchment/80 w-full">
                 <div className="aspect-square relative">
                   <Skeleton className="w-full h-full absolute inset-0" />
                 </div>
@@ -92,7 +92,7 @@ export function LikesTab({ address }: LikesTabProps) {
               </Card>
             ))}
           </div>
-        </Card>
+        </div>
       </>
     );
   }
@@ -111,7 +111,7 @@ export function LikesTab({ address }: LikesTabProps) {
   return (
     <>
       <h2 className="text-xl font-bold mb-4 font-western text-western-accent">Likes</h2>
-      <Card className="p-6">
+      <div className="w-full">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {likedScammers.map((scammer, index) => (
             <ScammerCard 
@@ -121,7 +121,7 @@ export function LikesTab({ address }: LikesTabProps) {
             />
           ))}
         </div>
-      </Card>
+      </div>
     </>
   );
 }
