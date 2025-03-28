@@ -1,5 +1,5 @@
 
-import { Header } from "@/components/Header";
+import { Header } from "@/components/header/Header";
 import { CreateListingForm } from "@/components/CreateListingForm";
 import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";

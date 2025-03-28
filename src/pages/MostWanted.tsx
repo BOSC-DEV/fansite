@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from "react";
-import { Header } from "@/components/Header";
+import { Header } from "@/components/header/Header";
 import { ScammerTable } from "@/components/scammer/ScammerTable";
 import { ScammerGrid } from "@/components/scammer/ScammerGrid";
 import { NoResults } from "@/components/scammer/NoResults";
