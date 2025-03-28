@@ -27,7 +27,7 @@ function AppContent() {
   
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="flex-grow">
+      <div className="flex-grow pt-20 md:pt-24">
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/most-wanted" element={<MostWanted />} />
