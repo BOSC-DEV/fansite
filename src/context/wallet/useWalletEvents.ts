@@ -1,61 +1,44 @@
 
 import { useEffect } from 'react';
 import { toast } from 'sonner';
-import { ensureStorageBucketExists } from '@/utils/supabaseHelpers';
 
-/**
- * Hook to set up wallet event listeners
- */
 export function useWalletEvents() {
-  // Set up wallet event listeners on mount
   useEffect(() => {
-    if (window.phantom?.solana) {
-      // Store references to event handlers so we can remove them later
-      const connectHandler = (publicKey: any) => {
-        console.log('Wallet connected with public key:', publicKey.toString());
-        toast.success('Wallet connected successfully');
-
-        // Create necessary storage buckets when wallet connects
-        ensureStorageBucketExists('profile-images').catch(error => {
-          console.error('Error ensuring profile-images bucket exists:', error);
-        });
-      };
+    const handleDisconnect = () => {
+      console.log("External wallet disconnect detected");
       
-      const disconnectHandler = () => {
-        console.log('Wallet disconnected');
-        toast.info('Wallet disconnected');
-        
-        // Clear local wallet state on disconnect
-        localStorage.removeItem('walletData');
-        localStorage.removeItem('walletTimestamp');
-      };
+      // Clear any persisted wallet data
+      localStorage.removeItem('walletData');
+      localStorage.removeItem('walletTimestamp');
       
-      const accountChangeHandler = (publicKey: any) => {
-        if (publicKey) {
-          console.log('Wallet account changed to:', publicKey.toString());
-          toast.info('Wallet account changed');
-        } else {
-          console.log('Wallet account removed');
-          toast.warning('Wallet account removed');
-        }
-      };
-      
-      // Add event listeners
-      window.phantom.solana.on('connect', connectHandler);
-      window.phantom.solana.on('disconnect', disconnectHandler);
-      window.phantom.solana.on('accountChanged', accountChangeHandler);
+      // We won't show a toast here because the user triggered this disconnect
+    };
     
-      // Cleanup listeners on unmount using the off() method instead of removeAllListeners
-      return () => {
-        if (window.phantom?.solana) {
-          window.phantom.solana.off('connect', connectHandler);
-          window.phantom.solana.off('disconnect', disconnectHandler);
-          window.phantom.solana.off('accountChanged', accountChangeHandler);
-        }
-      };
+    const handleConnect = async (publicKey: string) => {
+      console.log("External wallet connect detected:", publicKey);
+    };
+    
+    const handleAccountChange = (publicKey: string) => {
+      console.log("Wallet account changed:", publicKey);
+      
+      // We'll reload the page to ensure the app state is updated properly
+      window.location.reload();
+    };
+    
+    // Set up event listeners
+    if (window.phantom?.solana) {
+      window.phantom.solana.on('connect', handleConnect);
+      window.phantom.solana.on('disconnect', handleDisconnect);
+      window.phantom.solana.on('accountChanged', handleAccountChange);
     }
     
-    // Return empty cleanup function if phantom is not available
-    return () => {};
+    // Clean up event listeners when component unmounts
+    return () => {
+      if (window.phantom?.solana) {
+        window.phantom.solana.off('connect', handleConnect);
+        window.phantom.solana.off('disconnect', handleDisconnect);
+        window.phantom.solana.off('accountChanged', handleAccountChange);
+      }
+    };
   }, []);
 }
