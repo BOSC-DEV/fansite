@@ -104,16 +104,7 @@ export class LeaderboardService extends BaseSupabaseService {
         
         // If there are no points already stored, calculate them
         if (points === 0) {
-          points = bountySpent + bountyGenerated + ageInDays;
-          
-          // Add the multiplication factor if there are reports with engagement
-          if (totalReports > 0 && (totalLikes > 0 || totalViews > 0)) {
-            const engagementMultiplier = Math.max(1, totalLikes * totalViews / 1000); // Scale down for reasonable numbers
-            points += totalReports * engagementMultiplier;
-          } else if (totalReports > 0) {
-            // If reports but no engagement, just add the reports
-            points += totalReports;
-          }
+          points = this.calculateUserPoints(bountySpent, bountyGenerated, ageInDays, totalReports, totalLikes, totalViews);
           
           // Update the points in the database for future use
           this.updateUserPoints(profile.id, Math.round(points)).catch(err => 
@@ -161,6 +152,89 @@ export class LeaderboardService extends BaseSupabaseService {
       return true;
     } catch (error) {
       console.error('[LeaderboardService] Unexpected error updating points:', error);
+      return false;
+    }
+  }
+
+  // Extract calculation logic to separate method
+  private calculateUserPoints(
+    bountySpent: number, 
+    bountyGenerated: number, 
+    ageInDays: number, 
+    totalReports: number, 
+    totalLikes: number, 
+    totalViews: number
+  ): number {
+    let points = bountySpent + bountyGenerated + ageInDays;
+    
+    // Add the multiplication factor if there are reports with engagement
+    if (totalReports > 0 && (totalLikes > 0 || totalViews > 0)) {
+      const engagementMultiplier = Math.max(1, totalLikes * totalViews / 1000); // Scale down for reasonable numbers
+      points += totalReports * engagementMultiplier;
+    } else if (totalReports > 0) {
+      // If reports but no engagement, just add the reports
+      points += totalReports;
+    }
+    
+    return points;
+  }
+  
+  // New method to update a user's points after submitting a new report
+  async updateUserPointsAfterReport(walletAddress: string): Promise<boolean> {
+    try {
+      console.log(`[LeaderboardService] Updating points for user ${walletAddress} after new report`);
+      
+      // Get the user profile
+      const { data: profileData, error: profileError } = await this.supabase
+        .from('profiles')
+        .select('*')
+        .eq('wallet_address', walletAddress)
+        .single();
+        
+      if (profileError || !profileData) {
+        console.error('[LeaderboardService] Error fetching profile for points update:', profileError);
+        return false;
+      }
+      
+      // Get all scammers reported by this user
+      const userScammers = await scammerService.getScammersByUser(walletAddress);
+      
+      if (!userScammers || userScammers.length === 0) {
+        console.log("[LeaderboardService] No scammers found for this user");
+        return false;
+      }
+      
+      // Calculate stats
+      const totalReports = userScammers.length;
+      const totalLikes = userScammers.reduce((sum, scammer) => sum + (scammer.likes || 0), 0);
+      const totalViews = userScammers.reduce((sum, scammer) => sum + (scammer.views || 0), 0);
+      const bountyGenerated = userScammers.reduce((sum, scammer) => sum + (scammer.bountyAmount || 0), 0);
+      const bountySpent = 0; // Keep at 0 until bounty system is ready
+      
+      // Calculate profile age in days
+      const profileCreatedDate = new Date(profileData.created_at);
+      const now = new Date();
+      const ageInMilliseconds = now.getTime() - profileCreatedDate.getTime();
+      const ageInDays = Math.floor(ageInMilliseconds / (1000 * 60 * 60 * 24));
+      
+      // Calculate new points
+      const newPoints = this.calculateUserPoints(
+        bountySpent,
+        bountyGenerated,
+        ageInDays,
+        totalReports,
+        totalLikes,
+        totalViews
+      );
+      
+      // Update points in database
+      const success = await this.updateUserPoints(profileData.id, Math.round(newPoints));
+      
+      console.log(`[LeaderboardService] User points updated: ${success ? 'success' : 'failed'}, new points: ${Math.round(newPoints)}`);
+      
+      return success;
+    } catch (error) {
+      console.error('[LeaderboardService] Error updating user points after report:', error);
       return false;
     }
   }

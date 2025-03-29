@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { storageService } from "@/services/storage";
 import { scammerService } from "@/services/storage";
 import { profileService } from "@/services/storage/profileService";
+import { leaderboardService } from "@/services/storage/leaderboardService";
 
 interface SubmitListingHandlerProps {
   name: string;
@@ -116,6 +117,17 @@ export function useSubmitListing() {
         console.warn("Failed to save to Supabase, but saved locally with ID:", nextId);
       }
       
+      // Update leaderboard points for the user
+      if (address) {
+        try {
+          await leaderboardService.updateUserPointsAfterReport(address);
+          console.log("Updated leaderboard points after report submission");
+        } catch (updateError) {
+          console.error("Error updating leaderboard points:", updateError);
+          // Don't block the submission flow if this fails
+        }
+      }
+      
       // Changed success message from "Scammer successfully added to the Book of Scams!" to "Report filed!"
       toast.success("Report filed!");
       
@@ -151,6 +163,16 @@ export function useSubmitListing() {
         localStorageService.saveScammer(scammerListing);
         console.log("Saved scammer to local storage as fallback after error");
         toast.success("Report saved locally");
+        
+        // Update leaderboard points for the user even for local saves
+        if (address) {
+          try {
+            await leaderboardService.updateUserPointsAfterReport(address);
+            console.log("Updated leaderboard points after local report submission");
+          } catch (updateError) {
+            console.error("Error updating leaderboard points after local save:", updateError);
+          }
+        }
         
         // Navigate to the scammer page
         setTimeout(() => navigate(`/scammer/${scammerListing.id}`), 1500);
