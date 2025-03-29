@@ -40,7 +40,7 @@ export function useInteractionHandlers({
     try {
       // Check if user is connected
       if (!isConnected || !address) {
-        toast.error("You must be connected with a wallet to like");
+        toast.error("You must be connected with a wallet to agree");
         await connectWallet();
         setState(prev => ({ ...prev, isInteractionLocked: false }));
         return;
@@ -209,6 +209,7 @@ export function useInteractionHandlers({
       await updateScammerStats(scammerId, newLikes, newDislikes);
     } catch (error) {
       console.error("Error handling dislike:", error);
+      toast.error("Failed to save interaction");
     } finally {
       setState(prev => ({ ...prev, isInteractionLocked: false }));
     }

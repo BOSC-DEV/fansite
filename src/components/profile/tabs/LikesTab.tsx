@@ -5,7 +5,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/lib/supabase";
 import { ScammerCard } from "@/components/scammer/card/ScammerCard";
 import { Scammer } from "@/lib/types";
-import { storageService } from "@/services/storage";
 import { toast } from "sonner";
 
 interface LikesTabProps {
@@ -25,6 +24,8 @@ export function LikesTab({ address }: LikesTabProps) {
 
       setIsLoading(true);
       try {
+        console.log("Fetching liked scammers for address:", address);
+        
         // Get the interactions where the user liked scammers
         const { data: interactions, error } = await supabase
           .from('user_scammer_interactions')
@@ -39,6 +40,8 @@ export function LikesTab({ address }: LikesTabProps) {
           return;
         }
 
+        console.log("Found interactions:", interactions?.length || 0);
+        
         if (!interactions || interactions.length === 0) {
           setLikedScammers([]);
           setIsLoading(false);
@@ -47,17 +50,42 @@ export function LikesTab({ address }: LikesTabProps) {
 
         // Get scammer IDs from interactions
         const scammerIds = interactions.map(interaction => interaction.scammer_id);
+        console.log("Scammer IDs to fetch:", scammerIds);
         
-        // Fetch scammer details for each ID
-        const allScammers = await storageService.getAllScammers();
-        const filteredScammers = allScammers.filter(scammer => 
-          scammerIds.includes(scammer.id)
-        );
+        // Fetch all scammers
+        const { data: scammers, error: scammersError } = await supabase
+          .from('scammers')
+          .select('*')
+          .in('id', scammerIds)
+          .is('deleted_at', null);
+          
+        if (scammersError) {
+          console.error("Error fetching scammers details:", scammersError);
+          toast.error("Failed to load scammer details");
+          setIsLoading(false);
+          return;
+        }
         
-        // Convert to Scammer type (with date conversion)
-        const convertedScammers = filteredScammers.map(scammer => ({
-          ...scammer,
-          dateAdded: new Date(scammer.dateAdded)
+        console.log("Fetched scammers:", scammers?.length || 0);
+        
+        // Convert to Scammer type
+        const convertedScammers = scammers.map(scammer => ({
+          id: scammer.id,
+          name: scammer.name,
+          photoUrl: scammer.photo_url,
+          accusedOf: scammer.accused_of,
+          addedBy: scammer.added_by,
+          dateAdded: new Date(scammer.date_added),
+          likes: scammer.likes || 0,
+          dislikes: scammer.dislikes || 0,
+          views: scammer.views || 0,
+          shares: scammer.shares || 0,
+          bountyAmount: scammer.bounty_amount || 0,
+          aliases: scammer.aliases || [],
+          links: scammer.links || [],
+          officialResponse: scammer.official_response,
+          accomplices: scammer.accomplices || [],
+          walletAddress: scammer.wallet_address
         }));
 
         setLikedScammers(convertedScammers);
