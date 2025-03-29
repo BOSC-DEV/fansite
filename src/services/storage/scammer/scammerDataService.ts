@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { ScammerBaseService } from './scammerBaseService';
 import { ScammerListing, ScammerDbRecord } from './scammerTypes';
@@ -23,10 +24,10 @@ export class ScammerDataService extends ScammerBaseService {
       }
       
       // Create a properly formatted object for upsert
-      // The upsert method can take either a single object or an array of objects
+      // The upsert method expects an array of objects for multiple records
       const { error } = await supabase
         .from('scammers')
-        .upsert({
+        .upsert([{
           id: dbRecord.id,
           name: dbRecord.name,
           photo_url: dbRecord.photo_url,
@@ -45,7 +46,7 @@ export class ScammerDataService extends ScammerBaseService {
           shares: dbRecord.shares || 0,
           comments: dbRecord.comments,
           deleted_at: null // Ensure new/updated records are not marked as deleted
-        })
+        }])
         .select();
 
       if (error) {
