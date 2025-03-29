@@ -8,7 +8,7 @@ import { leaderboardService } from './leaderboardService';
 import { UserProfile } from './profileService';
 import { ScammerListing } from './scammer/scammerTypes';
 import { LeaderboardUser } from './leaderboardService';
-import { uploadImage, ensureBucketExists } from './storageUtils';
+import { uploadImage, ensureBucketExists, storeImageLocally } from './storageUtils';
 
 export class StorageService extends BaseSupabaseService {
   // Storage bucket names
@@ -19,9 +19,40 @@ export class StorageService extends BaseSupabaseService {
     try {
       console.log('Uploading profile image for user:', userId);
       
-      if (!this.supabase.auth.getSession()) {
-        toast.error('Authentication required to upload images.');
+      // Validate inputs
+      if (!file) {
+        console.error('No file provided for upload');
+        toast.error('No file selected for upload');
         return null;
+      }
+      
+      if (!userId) {
+        console.error('No user ID provided for upload');
+        toast.error('User ID required for upload');
+        return null;
+      }
+      
+      // Check authentication (but continue with fallbacks if not authenticated)
+      const isAuthenticated = await this.checkAuthentication();
+      if (!isAuthenticated) {
+        console.warn('User not authenticated for profile upload, will try fallbacks');
+      }
+      
+      // Check if the bucket exists before attempting upload
+      const bucketExists = await ensureBucketExists(this.PROFILE_IMAGES_BUCKET);
+      
+      if (!bucketExists) {
+        console.warn('Profile images bucket does not exist, using local storage fallback');
+        try {
+          // Fall back to localStorage
+          const dataUrl = await storeImageLocally(file, userId);
+          toast.success('Image saved locally (offline mode)');
+          return dataUrl;
+        } catch (localError) {
+          console.error('Error storing image locally:', localError);
+          toast.error('Failed to save image');
+          return null;
+        }
       }
       
       // Use the uploadImage utility with profile images bucket
@@ -37,7 +68,28 @@ export class StorageService extends BaseSupabaseService {
     } catch (error) {
       console.error('Error in uploadProfileImage:', error);
       toast.error('Failed to upload profile image');
-      return null;
+      
+      // Try local storage as last resort
+      try {
+        console.log('Attempting localStorage as last resort...');
+        const dataUrl = await storeImageLocally(file, userId);
+        toast.success('Image saved locally (offline mode)');
+        return dataUrl;
+      } catch (localError) {
+        console.error('Error storing image locally:', localError);
+        return null;
+      }
+    }
+  }
+  
+  // Helper method to check authentication
+  private async checkAuthentication(): Promise<boolean> {
+    try {
+      const { data } = await this.supabase.auth.getSession();
+      return !!data.session;
+    } catch (error) {
+      console.error('Error checking authentication:', error);
+      return false;
     }
   }
 
@@ -46,8 +98,15 @@ export class StorageService extends BaseSupabaseService {
     try {
       console.log('Uploading scammer image for scammer:', scammerId);
       
-      if (!this.supabase.auth.getSession()) {
-        toast.error('Authentication required to upload images.');
+      if (!file || !scammerId) {
+        toast.error('Missing file or scammer ID for upload');
+        return null;
+      }
+      
+      // Check authentication (required for scammer uploads)
+      const isAuthenticated = await this.checkAuthentication();
+      if (!isAuthenticated) {
+        toast.error('Authentication required to upload scammer images');
         return null;
       }
       

@@ -1,11 +1,12 @@
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserCircle2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useProfileImage } from "@/hooks/profile/useProfileImage";
 import { useWallet } from "@/context/WalletContext";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ProfilePictureUploadProps {
   displayName: string;
@@ -26,7 +27,23 @@ export function ProfilePictureUpload({
     isUploading
   } = useProfileImage();
   const [imageError, setImageError] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Check authentication status on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        setIsAuthenticated(!!data.session);
+      } catch (error) {
+        console.error("Error checking authentication:", error);
+        setIsAuthenticated(false);
+      }
+    };
+    
+    checkAuth();
+  }, []);
 
   const handleUploadClick = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent form submission
@@ -34,6 +51,10 @@ export function ProfilePictureUpload({
     if (!isConnected) {
       toast.error("Please connect your wallet before uploading a profile picture");
       return;
+    }
+    
+    if (isAuthenticated === false) {
+      toast.warning("You're not fully authenticated. Profile image may not be saved permanently.");
     }
     
     fileInputRef.current?.click();
@@ -69,18 +90,22 @@ export function ProfilePictureUpload({
     }
 
     try {
+      // Clear any previous input value so user can upload same file again if needed
+      e.target.value = '';
+      
       const url = await uploadProfileImage(file, userId);
       if (url) {
         console.log("[ProfilePictureUpload] Upload successful, updating profile with URL:", url);
         onProfilePicChange(url);
-        toast.success("Profile picture updated");
+        setImageError(false);
       } else {
         console.error("[ProfilePictureUpload] Upload failed, no URL returned");
-        toast.error("Failed to upload profile picture");
+        setImageError(true);
       }
     } catch (error) {
       console.error("[ProfilePictureUpload] Error during upload:", error);
       toast.error("Failed to upload profile picture");
+      setImageError(true);
     }
   };
 
@@ -95,11 +120,19 @@ export function ProfilePictureUpload({
   // Fallback URL when image fails to load
   const fallbackUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName || 'User')}&background=random&size=200`;
   
+  // Check if profilePicUrl is a local data URL (localStorage fallback)
+  const isLocalImage = profilePicUrl && profilePicUrl.startsWith('data:image');
+  const displayUrl = imageError ? fallbackUrl : (profilePicUrl || '');
+  
   return (
     <div className="flex flex-col items-center space-y-4">
       <div className="relative">
         <Avatar className="w-24 h-24">
-          <AvatarImage src={imageError ? fallbackUrl : profilePicUrl} alt={displayName || "User"} onError={handleImageError} />
+          <AvatarImage 
+            src={displayUrl} 
+            alt={displayName || "User"} 
+            onError={handleImageError} 
+          />
           <AvatarFallback className="bg-western-sand text-lg">
             {initials || <UserCircle2 className="w-12 h-12 text-western-wood" />}
           </AvatarFallback>
@@ -127,7 +160,13 @@ export function ProfilePictureUpload({
         onChange={handleFileChange} 
         disabled={isUploading} 
       />
+      {isLocalImage && <p className="text-xs text-amber-500">(Saved locally)</p>}
       <p className="text-xs text-center text-muted-foreground max-w-[200px]">(max 2MB)</p>
+      {isAuthenticated === false && (
+        <p className="text-xs text-amber-500 text-center max-w-[200px]">
+          Sign in to enable permanent storage
+        </p>
+      )}
     </div>
   );
 }
