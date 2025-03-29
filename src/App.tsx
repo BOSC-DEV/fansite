@@ -1,13 +1,16 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Header } from './components/Header';
 import { SiteFooter } from './components/layout/SiteFooter';
-import HomePage from './pages/HomePage';
+import Index from './pages/Index';
 import ProfilePage from './pages/ProfilePage';
 import CreateListingForm from './components/CreateListingForm';
-import ScammerDetailsPage from './pages/ScammerDetailsPage';
-import EditScammerPage from './pages/EditScammerPage';
-import UserDetailsPage from './pages/UserDetailsPage';
+import ScammerDetail from './pages/ScammerDetail';
+import EditListing from './pages/EditListing';
+import UserProfilePage from './pages/UserProfilePage';
+import MostWanted from './pages/MostWanted';
+import CreateListing from './pages/CreateListing';
 import { WalletProvider } from './context/WalletContext';
 import { Toaster } from "sonner"
 
@@ -19,13 +22,14 @@ function App() {
           <Header />
           <main className="container mx-auto px-4 py-6">
             <Routes>
-              <Route path="/" element={<HomePage />} />
+              <Route path="/" element={<Index />} />
               <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/create-listing" element={<CreateListingForm />} />
-              <Route path="/scammer/:scammerId" element={<ScammerDetailsPage />} />
-              <Route path="/edit-scammer/:scammerId" element={<EditScammerPage />} />
-              <Route path="/user/:walletAddress" element={<UserDetailsPage />} />
-              <Route path="/:username" element={<UserDetailsPage />} />
+              <Route path="/create-listing" element={<CreateListing />} />
+              <Route path="/scammer/:id" element={<ScammerDetail />} />
+              <Route path="/edit-scammer/:id" element={<EditListing />} />
+              <Route path="/user/:username" element={<UserProfilePage />} />
+              <Route path="/:username" element={<UserProfilePage />} />
+              <Route path="/most-wanted" element={<MostWanted />} />
             </Routes>
           </main>
           <SiteFooter />
