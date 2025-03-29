@@ -1,152 +1,156 @@
 
-import { useState, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Upload, Image as ImageIcon, X } from "lucide-react";
-import { storageService } from "@/services/storage";
-import { v4 as uuidv4 } from "uuid";
+import React, { useState, useRef } from "react";
 import { toast } from "sonner";
-import { ensureBucketExists } from "@/services/storage/storageUtils";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Camera, Image, Trash2, FileX, Upload } from "lucide-react";
+import { storageService } from "@/services/storage";
+import { useWallet } from "@/context/WalletContext";
 
 interface ImageUploadProps {
-  onImageChange: (url: string) => void;
+  onImageUpload: (url: string) => void;
+  scammerId: string;
   currentImage?: string;
 }
 
-export function ImageUpload({ onImageChange, currentImage }: ImageUploadProps) {
-  const [isUploading, setIsUploading] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(currentImage || null);
+export function ImageUpload({ onImageUpload, scammerId, currentImage }: ImageUploadProps) {
+  const [imageUrl, setImageUrl] = useState<string | null>(currentImage || null);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { address } = useWallet();
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Image size exceeds 5MB limit");
+      toast.error("Image size exceeds 5MB limit");
+      return;
+    }
+
     // Validate file type
-    if (!file.type.startsWith('image/')) {
-      toast.error('File must be an image');
+    if (!file.type.startsWith("image/")) {
+      setError("Only image files are allowed");
+      toast.error("Only image files are allowed");
       return;
     }
-
-    // Validate file size (max 10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error('File must be smaller than 10MB');
-      return;
-    }
-
-    // Create a preview URL for immediate feedback
-    const objectUrl = URL.createObjectURL(file);
-    setPreviewUrl(objectUrl);
 
     setIsUploading(true);
+    setError(null);
+
     try {
-      console.log("Starting scammer image upload...");
+      // Use either the provided scammerId or a temporary id based on user address
+      const effectiveId = scammerId || `temp-${address?.substring(0, 8)}`;
       
-      // Ensure bucket exists before upload
-      await ensureBucketExists('most-wanted-images', true);
+      const url = await storageService.uploadScammerImage(file, effectiveId);
       
-      // Generate a unique ID for the image
-      const uniqueId = uuidv4();
-      
-      // Upload the file using the storage service
-      const imageUrl = await storageService.uploadScammerImage(file, uniqueId);
-      
-      if (imageUrl) {
-        console.log("Scammer image uploaded successfully:", imageUrl);
-        onImageChange(imageUrl);
+      if (url) {
+        setImageUrl(url);
+        onImageUpload(url);
         toast.success("Image uploaded successfully");
       } else {
-        console.error("Failed to upload scammer image, using placeholder");
-        // If upload fails, use a placeholder
-        const placeholderUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(file.name)}&background=random`;
-        onImageChange(placeholderUrl);
-        toast.warning("Using placeholder image due to upload issues");
+        setError("Failed to upload image. Please try again.");
+        toast.error("Failed to upload image");
       }
-    } catch (error: any) {
-      console.error("Error uploading scammer image:", error);
-      // Fallback to a generated avatar
-      const placeholderUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(file.name)}&background=random`;
-      onImageChange(placeholderUrl);
-      toast.warning("Using placeholder image due to upload issues");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      setError("Error uploading image. Please try again.");
+      toast.error("Error uploading image");
     } finally {
       setIsUploading(false);
     }
   };
 
-  const clearImage = () => {
-    setPreviewUrl(null);
-    onImageChange("");
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
-
-  const triggerFileInput = () => {
+  const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
 
+  const handleRemoveImage = () => {
+    setImageUrl(null);
+    onImageUpload("");
+  };
+
+  const handleImageError = () => {
+    setError("Failed to load image");
+    // Don't clear the URL here as it might be a temporary network issue
+  };
+
   return (
-    <div className="space-y-2">
-      <Input
-        ref={fileInputRef}
+    <div className="space-y-4">
+      <input
         type="file"
-        accept="image/*"
-        onChange={handleFileChange}
         className="hidden"
-        aria-label="Upload scammer image"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        accept="image/*"
       />
 
-      {previewUrl ? (
-        <div className="relative">
-          <img
-            src={previewUrl}
-            alt="Scammer preview"
-            className="rounded-md border border-western-wood/20 object-cover max-h-48 mx-auto"
-          />
-          <Button
-            type="button"
-            size="icon"
-            variant="destructive"
-            className="absolute top-2 right-2 h-8 w-8 bg-western-wood/80 hover:bg-western-wood text-western-parchment"
-            onClick={clearImage}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
+      {imageUrl ? (
+        // Image preview
+        <Card className="overflow-hidden border-dashed">
+          <CardContent className="p-2 relative">
+            <div className="relative aspect-square w-full overflow-hidden rounded-md">
+              <img
+                src={imageUrl}
+                alt="Most wanted"
+                className="h-full w-full object-cover"
+                onError={handleImageError}
+              />
+              
+              {/* Overlay with remove button */}
+              <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                <Button 
+                  variant="destructive" 
+                  size="sm" 
+                  className="absolute top-2 right-2"
+                  onClick={handleRemoveImage}
+                >
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  Remove
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       ) : (
-        <div
-          onClick={triggerFileInput}
-          className="border-2 border-dashed border-western-wood/30 rounded-md p-6 text-center cursor-pointer hover:border-western-wood/50 transition-colors"
+        // Upload placeholder
+        <Card 
+          className={`border-dashed border-2 ${error ? 'border-destructive' : 'border-muted-foreground/25'} hover:border-muted-foreground/50 transition-colors`}
         >
-          <div className="flex flex-col items-center justify-center gap-2">
-            <ImageIcon className="h-10 w-10 text-western-wood/40" />
-            <p className="text-western-wood font-medium text-sm">
-              Click to upload an image
-            </p>
-            <p className="text-western-wood/60 text-xs">
-              JPG, PNG or GIF (max. 10MB)
-            </p>
-          </div>
-        </div>
+          <CardContent className="p-0">
+            <Button 
+              variant="ghost" 
+              className="relative h-40 w-full rounded-md flex flex-col items-center justify-center gap-1 text-xs"
+              onClick={handleUploadClick}
+              disabled={isUploading}
+            >
+              {isUploading ? (
+                <>
+                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
+                  <span className="text-muted-foreground">Uploading...</span>
+                </>
+              ) : error ? (
+                <>
+                  <FileX className="h-12 w-12 text-destructive/60" />
+                  <span className="text-destructive font-medium">{error}</span>
+                  <span className="text-muted-foreground">Click to try again</span>
+                </>
+              ) : (
+                <>
+                  <Upload className="h-10 w-10 text-muted-foreground/70" />
+                  <span className="font-medium">Click to upload image</span>
+                  <span className="text-muted-foreground">JPG, PNG, GIF up to 5MB</span>
+                </>
+              )}
+            </Button>
+          </CardContent>
+        </Card>
       )}
-
-      {isUploading && (
-        <div className="text-center py-2">
-          <div className="animate-spin h-5 w-5 border-2 border-western-accent border-t-transparent rounded-full mx-auto"></div>
-          <p className="text-western-wood/70 text-xs mt-1">Uploading image...</p>
-        </div>
-      )}
-
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        className="w-full mt-2 border-western-wood/30 text-western-wood hover:bg-western-sand/20"
-        onClick={triggerFileInput}
-        disabled={isUploading}
-      >
-        <Upload className="h-4 w-4 mr-2" /> {isUploading ? "Uploading..." : "Upload image"}
-      </Button>
     </div>
   );
 }
+
+export default ImageUpload;

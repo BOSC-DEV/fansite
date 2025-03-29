@@ -19,11 +19,14 @@ export class StorageService extends BaseSupabaseService {
     try {
       console.log('Uploading profile image for user:', userId);
       
-      // Ensure the bucket exists before attempting upload
-      const bucketExists = await ensureBucketExists(this.PROFILE_IMAGES_BUCKET, true);
+      // Check if bucket exists
+      const bucketExists = await ensureBucketExists(this.PROFILE_IMAGES_BUCKET);
       if (!bucketExists) {
-        toast.error("Storage configuration error. Please try again later.");
-        return null;
+        console.log("Profile images bucket doesn't exist, using fallback method");
+        // Fallback to local storage or temporary URL for development
+        const objectUrl = URL.createObjectURL(file);
+        toast.warning("Using temporary image URL. In production, please ensure the storage bucket exists.");
+        return objectUrl;
       }
       
       // Use the uploadImage utility with profile images bucket
@@ -47,11 +50,14 @@ export class StorageService extends BaseSupabaseService {
     try {
       console.log('Uploading scammer image for scammer:', scammerId);
       
-      // Ensure the bucket exists before attempting upload
-      const bucketExists = await ensureBucketExists(this.MOST_WANTED_IMAGES_BUCKET, true);
+      // Check if bucket exists
+      const bucketExists = await ensureBucketExists(this.MOST_WANTED_IMAGES_BUCKET);
       if (!bucketExists) {
-        toast.error("Storage configuration error. Please try again later.");
-        return null;
+        console.log("Most wanted images bucket doesn't exist, using fallback method");
+        // Fallback to local storage or temporary URL for development
+        const objectUrl = URL.createObjectURL(file);
+        toast.warning("Using temporary image URL. In production, please ensure the storage bucket exists.");
+        return objectUrl;
       }
       
       // Use the uploadImage utility with most wanted images bucket

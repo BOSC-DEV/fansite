@@ -4,11 +4,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'sonner';
 
 /**
- * Helper function to check if a storage bucket exists and create it if it doesn't
+ * Helper function to check if a storage bucket exists
+ * Modified to not attempt to create buckets which fails due to RLS policies
  */
 export async function ensureBucketExists(bucketName: string, isPublic: boolean = true): Promise<boolean> {
   try {
-    // First, check if the bucket exists
+    // Check if the bucket exists
     const { data: existingBuckets, error: bucketError } = await supabase.storage.listBuckets();
     
     if (bucketError) {
@@ -20,24 +21,13 @@ export async function ensureBucketExists(bucketName: string, isPublic: boolean =
     const bucketExists = existingBuckets.some(bucket => bucket.name === bucketName);
     
     if (!bucketExists) {
-      console.log(`Bucket ${bucketName} not found, creating it...`);
-      // Create the bucket if it doesn't exist
-      const { error: createError } = await supabase.storage.createBucket(bucketName, {
-        public: isPublic,
-        fileSizeLimit: 2 * 1024 * 1024, // 2MB limit for profile images
-      });
-      
-      if (createError) {
-        console.error(`Error creating bucket ${bucketName}:`, createError);
-        return false;
-      }
-      
-      console.log(`Successfully created bucket ${bucketName}`);
+      console.log(`Bucket ${bucketName} not found`);
+      // We no longer attempt to create the bucket here - it should be created via SQL migrations
+      return false;
     } else {
       console.log(`Bucket ${bucketName} already exists`);
+      return true;
     }
-    
-    return true;
   } catch (error) {
     console.error(`Unexpected error in ensureBucketExists for ${bucketName}:`, error);
     return false;
@@ -56,8 +46,8 @@ export async function uploadImage(file: File, bucketName: string, fileName: stri
     const bucketExists = await ensureBucketExists(bucketName);
     
     if (!bucketExists) {
-      console.error(`Bucket ${bucketName} does not exist and could not be created`);
-      toast.error(`Storage bucket not available`);
+      console.error(`Bucket ${bucketName} does not exist. Please ensure the bucket is created via SQL migrations.`);
+      toast.error(`Storage configuration error. Please try again later.`);
       return null;
     }
     
