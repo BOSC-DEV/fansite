@@ -167,8 +167,11 @@ export class LeaderboardService extends BaseSupabaseService {
     // Initial points: bounty spent + bounty generated
     let points = bountySpent + bountyGenerated;
     
+    // Ensure ageInDays is at least 1 to guarantee minimum points
+    const adjustedAgeDays = Math.max(1, ageInDays);
+    
     // Add the engagement factor: days old x likes x views x comments
-    const engagementMultiplier = ageInDays * Math.max(1, totalLikes) * Math.max(1, totalViews) * Math.max(1, totalComments);
+    const engagementMultiplier = adjustedAgeDays * Math.max(1, totalLikes) * Math.max(1, totalViews) * Math.max(1, totalComments);
     
     // Scale the engagement multiplier to avoid extremely large numbers
     // We divide by a large number to keep the points in a reasonable range

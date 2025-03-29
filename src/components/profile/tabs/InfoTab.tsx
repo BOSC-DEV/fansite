@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { UserProfile } from "@/services/storage";
@@ -78,9 +79,9 @@ export function InfoTab({ profile }: InfoTabProps) {
                       <p className="text-xs mb-2">Your score is calculated based on:</p>
                       <ul className="text-xs list-disc pl-4 space-y-1">
                         <li>Bounty spent + bounty generated</li>
-                        <li>Profile age (days) × likes × views × comments</li>
+                        <li>(Max of 1, days old) × likes × views × comments</li>
                       </ul>
-                      <p className="text-xs mt-2">Higher engagement and more contributions lead to a higher score!</p>
+                      <p className="text-xs mt-2">Everyone starts with at least 1 point. Higher engagement and more contributions lead to a higher score!</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
