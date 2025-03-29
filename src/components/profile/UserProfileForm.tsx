@@ -54,7 +54,8 @@ export function UserProfileForm({
   handleSubmit,
   error
 }: UserProfileFormProps) {
-  return <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
+  return (
+    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
       <ProfileFormHeader hasProfile={hasProfile} address={address} />
       
       {error && (
@@ -67,27 +68,59 @@ export function UserProfileForm({
       )}
       
       <div className="p-6 space-y-6 py-0">
-        <ProfilePictureUpload displayName={formData.displayName} profilePicUrl={formData.profilePicUrl} onProfilePicChange={setProfilePicUrl} userId={address || ""} />
+        <ProfilePictureUpload
+          displayName={formData.displayName}
+          profilePicUrl={formData.profilePicUrl}
+          onProfilePicChange={setProfilePicUrl}
+          userId={address || ""}
+        />
         
         <div className="space-y-4">
           <div className="grid grid-cols-1 gap-4">
             <div>
               <Label htmlFor="displayName">Display Name</Label>
-              <Input id="displayName" placeholder="Enter your display name" value={formData.displayName} onChange={e => setDisplayName(e.target.value)} className="mt-1" />
+              <Input 
+                id="displayName" 
+                placeholder="Enter your display name" 
+                value={formData.displayName} 
+                onChange={e => setDisplayName(e.target.value)} 
+                className="mt-1" 
+              />
             </div>
             
-            <UsernameInput username={formData.username} setUsername={setUsername} isAvailable={usernameAvailable} checkingUsername={checkingUsername} />
+            <UsernameInput 
+              username={formData.username} 
+              setUsername={setUsername} 
+              isAvailable={usernameAvailable} 
+              checkingUsername={checkingUsername} 
+            />
           </div>
           
           <div>
             <Label htmlFor="bio">Bio</Label>
-            <Textarea id="bio" placeholder="Tell us about yourself" value={formData.bio} onChange={handleBioChange} className="mt-1 h-32" />
+            <Textarea 
+              id="bio" 
+              placeholder="Tell us about yourself" 
+              value={formData.bio} 
+              onChange={handleBioChange} 
+              className="mt-1 h-32" 
+            />
           </div>
           
-          <ProfileLinks xLink={formData.xLink} websiteLink={formData.websiteLink} onXLinkChange={setXLink} onWebsiteLinkChange={setWebsiteLink} />
+          <ProfileLinks 
+            xLink={formData.xLink}
+            websiteLink={formData.websiteLink}
+            onXLinkChange={setXLink}
+            onWebsiteLinkChange={setWebsiteLink}
+          />
         </div>
       </div>
       
-      <ProfileFormFooter isSubmitting={isSubmitting} hasProfile={hasProfile} usernameAvailable={usernameAvailable} />
-    </form>;
+      <ProfileFormFooter 
+        isSubmitting={isSubmitting} 
+        hasProfile={hasProfile} 
+        usernameAvailable={usernameAvailable} 
+      />
+    </form>
+  );
 }

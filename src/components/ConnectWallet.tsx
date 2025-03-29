@@ -40,7 +40,8 @@ export function ConnectWallet({
     }
   };
 
-  return <Card className={className}>
+  return (
+    <Card className={className}>
       <CardContent>
         {isConnected ? (
           <div className="my-4">
@@ -84,7 +85,8 @@ export function ConnectWallet({
           </div>
         )}
       </CardContent>
-    </Card>;
+    </Card>
+  );
 }
 
 export default ConnectWallet;
