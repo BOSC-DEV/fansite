@@ -32,7 +32,8 @@ export const getOrCreateScammer = async (
       likes: 0,
       dislikes: 0,
       views: 0,
-      shares: 0
+      shares: 0,
+      deletedAt: null // Add the deletedAt property with null value
     };
     
     await storageService.saveScammer(newScammer);
