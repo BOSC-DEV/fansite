@@ -63,7 +63,7 @@ export function ProfilePage() {
           )}
         </div>
       </main>
-      {/* SiteFooter is now rendered at the App level */}
+      {/* Removed SiteFooter - now only rendered at the App level */}
     </div>
   );
 }

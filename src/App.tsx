@@ -12,7 +12,7 @@ import CreateListing from './pages/CreateListing';
 import NotFound from './pages/NotFound';
 import Leaderboard from './pages/Leaderboard';
 import { WalletProvider } from './context/WalletContext';
-import { Toaster } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 import { HelmetProvider } from 'react-helmet-async';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -56,7 +56,7 @@ function App() {
             visibleToasts={3}
             toastOptions={{
               duration: 3000,
-              style: { background: 'var(--color-background)', color: 'var(--color-foreground)' }
+              style: { background: 'white', color: 'var(--color-foreground)' }
             }}
           />
         </WalletProvider>
