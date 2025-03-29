@@ -4,6 +4,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserCircle2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useProfileImage } from "@/hooks/profile/useProfileImage";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ProfilePictureUploadProps {
   displayName: string;
@@ -25,8 +27,16 @@ export function ProfilePictureUpload({
   const [imageError, setImageError] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  const handleUploadClick = (e: React.MouseEvent) => {
+  const handleUploadClick = async (e: React.MouseEvent) => {
     e.preventDefault();
+    
+    // Check authentication before attempting upload
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) {
+      toast.error("Please sign in to upload a profile picture");
+      return;
+    }
+    
     fileInputRef.current?.click();
   };
 

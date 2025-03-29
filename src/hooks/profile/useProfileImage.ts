@@ -1,9 +1,8 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { v4 as uuidv4 } from 'uuid';
 import { supabase } from "@/integrations/supabase/client";
-import { storageService } from "@/services/storage";
+import { safeSupabaseQuery } from "@/utils/supabaseHelpers";
 
 export function useProfileImage() {
   const [profilePicUrl, setProfilePicUrl] = useState("");
@@ -33,17 +32,49 @@ export function useProfileImage() {
         return null;
       }
       
+      // Check authentication
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) {
+        toast.error("Authentication required to upload images");
+        setImageError(true);
+        return null;
+      }
+      
       console.log("Uploading profile image to Supabase storage");
       
-      // Direct upload to Supabase storage using the storage service
-      const url = await storageService.uploadProfileImage(file, userId);
+      // Create a unique file path with timestamp and userId
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${userId}/${Date.now()}.${fileExt}`;
+      
+      // Upload to Supabase Storage
+      const { data, error } = await safeSupabaseQuery(() => 
+        supabase.storage
+          .from('profile-images')
+          .upload(filePath, file, {
+            cacheControl: '3600',
+            upsert: true
+          })
+      );
+      
+      if (error) {
+        console.error("Error uploading file to Supabase Storage:", error);
+        setImageError(true);
+        return null;
+      }
+      
+      // Get the public URL
+      const { data: urlData } = supabase.storage
+        .from('profile-images')
+        .getPublicUrl(data?.path || '');
+        
+      const url = urlData?.publicUrl;
       
       if (url) {
         console.log("Upload successful, URL:", url);
         setProfilePicUrl(url);
         return url;
       } else {
-        console.error("Upload failed with no error");
+        console.error("Upload succeeded but couldn't get public URL");
         setImageError(true);
         return null;
       }

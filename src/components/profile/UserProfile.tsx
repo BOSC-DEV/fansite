@@ -7,6 +7,7 @@ import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from "@/integrations/supabase/client";
+import { safeSupabaseQuery, validateAuth } from "@/utils/supabaseHelpers";
 
 export interface ProfileFormData {
   displayName: string;
@@ -47,12 +48,23 @@ export function UserProfile() {
       try {
         console.log("Fetching profile for wallet address:", address);
         
+        // Ensure user is authenticated with Supabase
+        const isAuthenticated = await validateAuth();
+        if (!isAuthenticated) {
+          console.warn("User not authenticated with Supabase");
+          toast.error("Authentication required. Please reconnect your wallet.");
+          setIsLoading(false);
+          return;
+        }
+        
         // Try to fetch profile from Supabase
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('wallet_address', address)
-          .maybeSingle();
+        const { data, error } = await safeSupabaseQuery(() => 
+          supabase
+            .from('profiles')
+            .select('*')
+            .eq('wallet_address', address)
+            .maybeSingle()
+        );
 
         if (error) {
           console.error("Error fetching profile from Supabase:", error);
@@ -72,33 +84,8 @@ export function UserProfile() {
           });
           setHasProfile(true);
         } else {
-          // Try localStorage as fallback
-          try {
-            const localData = localStorage.getItem(`profile_${address}`);
-            if (localData) {
-              console.log("Profile found in localStorage, will migrate to Supabase");
-              const parsed = JSON.parse(localData);
-              setFormData({
-                displayName: parsed.displayName || "",
-                username: parsed.username || "",
-                profilePicUrl: parsed.profilePicUrl || "",
-                xLink: parsed.xLink || "",
-                websiteLink: parsed.websiteLink || "",
-                bio: parsed.bio || ""
-              });
-              setHasProfile(true);
-              
-              // Migrate localStorage data to Supabase
-              const migrationResult = await migrateProfileToSupabase(parsed);
-              if (migrationResult) {
-                localStorage.removeItem(`profile_${address}`);
-                console.log("Profile migrated from localStorage to Supabase");
-                toast.success("Profile data migrated to our database");
-              }
-            }
-          } catch (localError) {
-            console.error("Error checking localStorage:", localError);
-          }
+          console.log("No profile found for address:", address);
+          setHasProfile(false);
         }
       } catch (err) {
         console.error("Failed to fetch profile data:", err);
@@ -123,41 +110,6 @@ export function UserProfile() {
     checkEmailVerification();
   }, [isConnected, address]);
 
-  // Migrate profile from localStorage to Supabase
-  const migrateProfileToSupabase = async (localProfile: any) => {
-    try {
-      const profileData = {
-        id: localProfile.id || uuidv4(),
-        display_name: localProfile.displayName,
-        username: localProfile.username,
-        profile_pic_url: localProfile.profilePicUrl,
-        wallet_address: address, // Use the current connected address
-        created_at: localProfile.createdAt || new Date().toISOString(),
-        x_link: localProfile.xLink || null,
-        website_link: localProfile.websiteLink || null,
-        bio: localProfile.bio || null
-      };
-      
-      console.log("Migrating profile to Supabase:", profileData);
-      
-      const { error } = await supabase
-        .from('profiles')
-        .upsert(profileData, { onConflict: 'wallet_address' });
-      
-      if (error) {
-        console.error("Error migrating profile to Supabase:", error);
-        toast.error("Failed to migrate profile data");
-        return false;
-      }
-      
-      return true;
-    } catch (error) {
-      console.error("Exception during profile migration:", error);
-      toast.error("Failed to migrate profile data");
-      return false;
-    }
-  };
-
   // Check if username is available
   const checkUsername = async (username: string) => {
     if (!username || username.trim() === '') {
@@ -167,11 +119,13 @@ export function UserProfile() {
     
     setCheckingUsername(true);
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('wallet_address')
-        .eq('username', username)
-        .maybeSingle();
+      const { data, error } = await safeSupabaseQuery(() => 
+        supabase
+          .from('profiles')
+          .select('wallet_address')
+          .eq('username', username)
+          .maybeSingle()
+      );
       
       if (error) {
         console.error("Error checking username:", error);
@@ -250,7 +204,16 @@ export function UserProfile() {
     toast.loading("Saving your profile...");
     
     try {
-      const profileId = uuidv4();
+      // Ensure user is authenticated with Supabase
+      const isAuthenticated = await validateAuth();
+      if (!isAuthenticated) {
+        toast.dismiss();
+        toast.error("Authentication required. Please reconnect your wallet.");
+        setIsSubmitting(false);
+        return;
+      }
+      
+      const profileId = hasProfile ? undefined : uuidv4();
       const profileData = {
         id: profileId,
         display_name: formData.displayName,
@@ -265,38 +228,24 @@ export function UserProfile() {
       
       console.log("Saving profile to Supabase:", profileData);
       
-      // Sign in with auth to ensure RLS policies apply correctly
-      if (!await supabase.auth.getSession()) {
-        console.log("No active session found, using fallback auth");
-      }
-      
       // Save to Supabase
-      const { error } = await supabase
-        .from('profiles')
-        .upsert(profileData, { onConflict: 'wallet_address' });
+      const { error } = await safeSupabaseQuery(() =>
+        supabase
+          .from('profiles')
+          .upsert(profileData, { 
+            onConflict: 'wallet_address',
+            ignoreDuplicates: false 
+          })
+      );
       
       if (error) {
         console.error("Error saving profile to Supabase:", error);
         toast.dismiss();
-        
-        if (error.message.includes("violates row-level security policy")) {
-          toast.error("Authentication error: Unable to save profile. Please reconnect your wallet.");
-        } else {
-          toast.error("Error saving profile: " + error.message);
-        }
         throw error;
       }
       
       toast.dismiss();
       toast.success("Profile saved successfully!");
-      
-      // Also save to localStorage as a backup
-      localStorage.setItem(`profile_${address}`, JSON.stringify({
-        ...formData,
-        id: profileId,
-        walletAddress: address,
-        createdAt: new Date().toISOString()
-      }));
       
       setTimeout(() => navigate(`/${formData.username}`), 1000);
     } catch (error) {
