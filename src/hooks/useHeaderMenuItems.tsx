@@ -45,8 +45,9 @@ export const useHeaderMenuItems = () => {
   }];
 
   if (isConnected) {
+    // If there's a username, use it for the profile path, otherwise use the profile page
     menuItems.push({
-      path: username ? `/${username}` : address ? `/user/${address}` : "/profile",
+      path: username ? `/${username}` : "/profile",
       label: "Profile",
       icon: <User className="h-5 w-5" />
     });

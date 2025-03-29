@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -36,8 +35,6 @@ export function ProfileButton() {
   const handleProfileClick = () => {
     if (username) {
       navigate(`/${username}`);
-    } else if (address) {
-      navigate(`/user/${address}`);
     } else {
       navigate('/profile');
     }

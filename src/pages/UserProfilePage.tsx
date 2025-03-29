@@ -46,7 +46,7 @@ export function UserProfilePage() {
         const localProfile = localStorage.getItem(`profile_${username}`);
         if (localProfile) {
           // If found in localStorage, redirect to profile page
-          console.log("Found profile in localStorage, redirecting to create it properly");
+          console.log("Found profile in localStorage, redirecting to complete it properly");
           toast.info("Let's complete your profile setup");
           setTimeout(() => {
             navigate("/profile");
