@@ -4,7 +4,7 @@ import { Header } from "@/components/Header";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { LeaderboardTable } from "@/components/leaderboard/LeaderboardTable";
 import { EmptyLeaderboard } from "@/components/leaderboard/EmptyLeaderboard";
-import { LeaderboardSkeleton } from "@/components/leaderboard/LeaderboardSkeleton";
+import { LeaderboardTableSkeleton } from "@/components/leaderboard/LeaderboardSkeleton";
 import { useLeaderboard } from "@/hooks/useLeaderboard";
 
 const Leaderboard = () => {
@@ -22,9 +22,12 @@ const Leaderboard = () => {
 
           <div className="paper-texture border-2 border-western-wood rounded-sm p-6">
             {isLoading ? (
-              <LeaderboardSkeleton />
+              <LeaderboardTableSkeleton />
             ) : leaderboardData && leaderboardData.length > 0 ? (
-              <LeaderboardTable leaderboardData={leaderboardData} />
+              <LeaderboardTable 
+                users={leaderboardData} 
+                isLoading={false} 
+              />
             ) : (
               <EmptyLeaderboard />
             )}
