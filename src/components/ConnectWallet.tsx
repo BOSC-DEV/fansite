@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from "@/components/ui/card";
 import { useWallet } from "@/context/wallet";
 import { Wallet, AlertCircle, X } from "lucide-react";

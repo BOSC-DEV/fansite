@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useWallet } from "@/context/WalletContext";
+import { useWallet } from "@/context/wallet";
 import { toast } from "sonner";
 import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
 import { copyAddressToClipboard } from "./utils/walletUtils";

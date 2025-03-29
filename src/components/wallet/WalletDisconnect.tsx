@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { LogOut, RefreshCw, Wallet, Copy, Check } from "lucide-react";
-import { useWallet } from "@/context/WalletContext";
+import { useWallet } from "@/context/wallet";
 import { toast } from "sonner";
 import { SolAmount } from '@/components/SolAmount';
 import { useNavigate } from 'react-router-dom';

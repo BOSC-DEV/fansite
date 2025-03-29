@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { WalletConnectionState } from "./WalletConnectionState";
 import { UserProfileForm } from "./UserProfileForm";
-import { useWallet } from "@/context/WalletContext";
+import { useWallet } from "@/context/wallet";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from "@/integrations/supabase/client";
@@ -52,6 +52,7 @@ export function UserProfile() {
           setAuthInitialized(true);
         } catch (err) {
           console.error("Error establishing auth:", err);
+          setAuthInitialized(true); // Set to true even on error to allow the component to proceed
         }
       } else {
         setAuthInitialized(true);
@@ -234,21 +235,6 @@ export function UserProfile() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!isConnected || !address) {
-      toast.error("Please connect your wallet first");
-      try {
-        await connectWallet();
-      } catch (error) {
-        console.error("Failed to connect wallet:", error);
-        return;
-      }
-      
-      if (!isConnected || !address) {
-        toast.error("Wallet connection required to save profile");
-        return;
-      }
-    }
     
     if (!validateForm()) {
       return;
