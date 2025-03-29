@@ -16,26 +16,24 @@ export function ProfileFormFooter({
   usernameAvailable
 }: ProfileFormFooterProps) {
   return (
-    <div className="border-t p-6 flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
+    <div className="p-6 flex flex-row justify-end items-center space-x-3">
       <Button 
         variant="outline" 
         type="button" 
         onClick={() => window.history.back()} 
-        className="w-full sm:w-auto"
+        className="w-auto"
       >
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back
       </Button>
       
-      <div className="flex w-full sm:w-auto space-x-2">
-        <Button 
-          type="submit" 
-          className="w-full sm:w-auto" 
-          disabled={isSubmitting || !usernameAvailable}
-        >
-          {isSubmitting ? "Saving..." : hasProfile ? "Update Profile" : "Save Profile"}
-        </Button>
-      </div>
+      <Button 
+        type="submit" 
+        className="w-auto" 
+        disabled={isSubmitting || !usernameAvailable}
+      >
+        {isSubmitting ? "Saving..." : hasProfile ? "Update Profile" : "Save Profile"}
+      </Button>
     </div>
   );
 }
