@@ -1,3 +1,4 @@
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
@@ -9,7 +10,7 @@ contract BookOfScams is Ownable {
     IERC20 public boscToken;
     
     // Developer wallet
-    address public developerWallet = A6X5A7ZSvez8BK82Z5tnZJC3qarGbsxRVv8Hc3DKBiZx;
+    address public developerWallet = 0xA6X5A7ZSvez8BK82Z5tnZJC3qarGbsxRVv8Hc3DKBiZx;
     
     struct Scammer {
         string name;
