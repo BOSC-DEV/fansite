@@ -5,6 +5,7 @@ import { useProfileFormSubmit } from "./useProfileFormSubmit";
 import { useProfileFetch } from "./useProfileFetch";
 import { useProfileUsername } from "./useProfileUsername";
 import { storageService } from "@/services/storage";
+import { toast } from "sonner";
 
 export function useProfileForm() {
   const { isConnected, address } = useWallet();
@@ -66,6 +67,7 @@ export function useProfileForm() {
           }
         } catch (error) {
           console.error("[useProfileForm] Error loading profile data:", error);
+          toast.error("Error loading profile data");
         }
       }
     };
@@ -83,7 +85,7 @@ export function useProfileForm() {
     const sanitizedUsername = username.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
     console.log("[useProfileForm] Setting username:", sanitizedUsername);
     setFormData(prev => ({ ...prev, username: sanitizedUsername }));
-    if (checkUsername) {
+    if (sanitizedUsername && checkUsername) {
       checkUsername(sanitizedUsername, address);
     }
   };
@@ -150,11 +152,21 @@ export function useProfileForm() {
   const saveProfile = async () => {
     if (!isConnected || !address) {
       console.error("[useProfileForm] Cannot save profile: wallet not connected");
+      toast.error("Wallet not connected");
       return false;
     }
     
     console.log("[useProfileForm] Saving profile with data:", formData);
-    return await submitProfileChanges(formData, usernameAvailable, urlValidation);
+    
+    try {
+      const result = await submitProfileChanges(formData, usernameAvailable, urlValidation);
+      console.log("[useProfileForm] Profile save result:", result);
+      return result;
+    } catch (error) {
+      console.error("[useProfileForm] Error in saveProfile:", error);
+      toast.error("Failed to save profile");
+      return false;
+    }
   };
 
   return {

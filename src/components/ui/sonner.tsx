@@ -25,7 +25,6 @@ const Toaster = ({ ...props }: ToasterProps) => {
           error: 
             "group-[.toaster]:bg-destructive group-[.toaster]:text-destructive-foreground",
         },
-        // Fixed TypeScript error by using proper type assertion for custom CSS variables
         style: {
           "--toast-success-bg": "#ea384c",
           "--toast-success-fg": "white",

@@ -64,10 +64,9 @@ export function UserProfile() {
         toast.success("Profile saved successfully!", {
           duration: 3000,
           style: {
-            backgroundColor: "#ea384c", // Bright red 
-            color: "#ffffff", // White text for contrast
-            fontWeight: "bold",
-            border: "none"
+            backgroundColor: "#ea384c", 
+            color: "#ffffff", 
+            fontWeight: "bold"
           },
         });
         
