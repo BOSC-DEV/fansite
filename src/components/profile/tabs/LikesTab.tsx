@@ -1,7 +1,8 @@
+
 import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { db } from "@/lib/supabase-helpers";
+import { supabase } from "@/lib/supabase";
 import { ScammerCard } from "@/components/scammer/card/ScammerCard";
 import { Scammer } from "@/lib/types";
 import { storageService } from "@/services/storage";
@@ -25,7 +26,8 @@ export function LikesTab({ address }: LikesTabProps) {
       setIsLoading(true);
       try {
         // Get the interactions where the user liked scammers
-        const { data: interactions, error } = await db.userScammerInteractions()
+        const { data: interactions, error } = await supabase
+          .from('user_scammer_interactions')
           .select('scammer_id')
           .eq('user_id', address)
           .eq('liked', true);
@@ -44,9 +46,7 @@ export function LikesTab({ address }: LikesTabProps) {
         }
 
         // Get scammer IDs from interactions
-        const scammerIds = interactions
-          .map(interaction => interaction?.scammer_id)
-          .filter(id => id !== undefined && id !== null);
+        const scammerIds = interactions.map(interaction => interaction.scammer_id);
         
         // Fetch scammer details for each ID
         const allScammers = await storageService.getAllScammers();

@@ -1,15 +1,14 @@
 
 import { supabase } from "@/lib/supabase";
-import { db } from "@/lib/supabase-helpers";
 import { toast } from "sonner";
-import { extractErrorMessage } from "@/utils/databaseHelpers";
 
 /**
  * Checks if a user has an interaction with a comment
  */
 export async function checkPreviousInteraction(commentId: string, userId: string) {
   try {
-    const { data, error } = await db.userCommentInteractions()
+    const { data, error } = await supabase
+      .from('user_comment_interactions')
       .select('liked, disliked')
       .eq('comment_id', commentId)
       .eq('user_id', userId)
@@ -21,8 +20,8 @@ export async function checkPreviousInteraction(commentId: string, userId: string
     }
 
     return {
-      isLiked: data ? Boolean(data.liked) : false,
-      isDisliked: data ? Boolean(data.disliked) : false
+      isLiked: data?.liked || false,
+      isDisliked: data?.disliked || false
     };
   } catch (error) {
     console.error("Error in checkPreviousInteraction:", error);
@@ -35,7 +34,8 @@ export async function checkPreviousInteraction(commentId: string, userId: string
  */
 export async function saveInteraction(commentId: string, userId: string, liked: boolean, disliked: boolean) {
   // Check if interaction exists
-  const { data: existingInteraction } = await db.userCommentInteractions()
+  const { data: existingInteraction } = await supabase
+    .from('user_comment_interactions')
     .select('id')
     .eq('comment_id', commentId)
     .eq('user_id', userId)
@@ -44,16 +44,19 @@ export async function saveInteraction(commentId: string, userId: string, liked: 
   try {
     if (existingInteraction) {
       // Update existing interaction
-      await db.userCommentInteractions()
+      await supabase
+        .from('user_comment_interactions')
         .update({ 
           liked,
           disliked,
           last_updated: new Date().toISOString()
         })
-        .eq('id', existingInteraction.id);
+        .eq('comment_id', commentId)
+        .eq('user_id', userId);
     } else {
       // Create new interaction
-      await db.userCommentInteractions()
+      await supabase
+        .from('user_comment_interactions')
         .insert({
           comment_id: commentId,
           user_id: userId,
@@ -64,7 +67,7 @@ export async function saveInteraction(commentId: string, userId: string, liked: 
     }
     return true;
   } catch (error) {
-    console.error("Error saving interaction:", extractErrorMessage(error));
+    console.error("Error saving interaction:", error);
     return false;
   }
 }
@@ -74,7 +77,8 @@ export async function saveInteraction(commentId: string, userId: string, liked: 
  */
 export async function updateCommentCounts(commentId: string, newLikes: number, newDislikes: number) {
   try {
-    await db.comments()
+    await supabase
+      .from('comments')
       .update({ 
         likes: newLikes,
         dislikes: newDislikes
@@ -82,7 +86,7 @@ export async function updateCommentCounts(commentId: string, newLikes: number, n
       .eq('id', commentId);
     return true;
   } catch (error) {
-    console.error("Error updating comment counts:", extractErrorMessage(error));
+    console.error("Error updating comment counts:", error);
     return false;
   }
 }
@@ -92,7 +96,8 @@ export async function updateCommentCounts(commentId: string, newLikes: number, n
  */
 export async function getCommentCounts(commentId: string) {
   try {
-    const { data, error } = await db.comments()
+    const { data, error } = await supabase
+      .from('comments')
       .select('likes, dislikes')
       .eq('id', commentId)
       .single();
@@ -103,11 +108,11 @@ export async function getCommentCounts(commentId: string) {
     }
     
     return {
-      likes: data ? (data.likes || 0) : 0,
-      dislikes: data ? (data.dislikes || 0) : 0
+      likes: data.likes || 0,
+      dislikes: data.dislikes || 0
     };
   } catch (error) {
-    console.error("Error in getCommentCounts:", extractErrorMessage(error));
+    console.error("Error in getCommentCounts:", error);
     return { likes: 0, dislikes: 0 };
   }
 }

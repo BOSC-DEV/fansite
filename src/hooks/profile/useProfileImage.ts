@@ -1,9 +1,7 @@
 
 import { useState } from "react";
-import { toast } from "sonner";
-import { v4 as uuidv4 } from 'uuid';
-import { supabase } from "@/integrations/supabase/client";
 import { storageService } from "@/services/storage";
+import { toast } from "sonner";
 
 export function useProfileImage() {
   const [profilePicUrl, setProfilePicUrl] = useState("");
@@ -11,44 +9,43 @@ export function useProfileImage() {
   const [imageError, setImageError] = useState(false);
 
   const uploadProfileImage = async (file: File, userId: string) => {
-    if (!file) {
+    if (!file || !userId) {
+      toast.error("Unable to upload: Missing file or user ID");
       return null;
     }
     
     setIsUploading(true);
-    setImageError(false);
-    
     try {
+      console.log("[useProfileImage] Uploading profile image for user:", userId);
+      
       // Validate file size (max 2MB)
       if (file.size > 2 * 1024 * 1024) {
         toast.error("Image size exceeds 2MB limit");
-        setImageError(true);
+        setIsUploading(false);
         return null;
       }
 
       // Validate file type
       if (!file.type.startsWith('image/')) {
         toast.error("Only image files are allowed");
-        setImageError(true);
+        setIsUploading(false);
         return null;
       }
       
-      console.log("Uploading profile image to Supabase storage");
-      
-      // Direct upload to Supabase storage using the storage service
       const url = await storageService.uploadProfileImage(file, userId);
-      
       if (url) {
-        console.log("Upload successful, URL:", url);
+        console.log("[useProfileImage] Image uploaded successfully:", url);
         setProfilePicUrl(url);
+        toast.success("Profile picture uploaded successfully");
         return url;
       } else {
-        console.error("Upload failed with no error");
+        toast.error("Failed to upload profile picture");
         setImageError(true);
         return null;
       }
     } catch (error) {
-      console.error("Error in upload process:", error);
+      console.error("[useProfileImage] Error uploading image:", error);
+      toast.error("Error uploading profile picture");
       setImageError(true);
       return null;
     } finally {

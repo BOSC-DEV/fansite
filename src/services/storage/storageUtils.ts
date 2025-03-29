@@ -1,100 +1,126 @@
 
-import { supabase } from '@/integrations/supabase/client';
 import { v4 as uuidv4 } from 'uuid';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 /**
- * Helper function to check if a storage bucket exists
+ * Upload an image to Supabase storage
  */
-export async function ensureBucketExists(bucketName: string): Promise<boolean> {
+export const uploadImage = async (
+  file: File,
+  bucket: string,
+  folder: string = ''
+): Promise<string | null> => {
   try {
-    // Check if the bucket exists
-    const { data: existingBuckets, error: bucketError } = await supabase.storage.listBuckets();
+    if (!file) return null;
     
-    if (bucketError) {
-      console.error(`Error checking if bucket ${bucketName} exists:`, bucketError);
-      return false;
-    }
-    
-    // Check if our bucket is in the list
-    const bucketExists = existingBuckets.some(bucket => bucket.name === bucketName);
-    
-    if (!bucketExists) {
-      console.warn(`Bucket ${bucketName} not found.`);
-      return false;
-    } else {
-      console.log(`Bucket ${bucketName} exists`);
-      return true;
-    }
-  } catch (error) {
-    console.error(`Unexpected error in ensureBucketExists for ${bucketName}:`, error);
-    return false;
-  }
-}
-
-/**
- * Helper function to upload images to Supabase Storage
- */
-export async function uploadImage(file: File, bucketName: string, fileName: string): Promise<string | null> {
-  try {
-    console.log(`Starting upload to ${bucketName} bucket with filename: ${fileName}`);
-    
-    // Create a unique file path to avoid collisions
+    // Generate a unique filename
     const fileExt = file.name.split('.').pop();
-    const uniqueFilePath = `${fileName.trim().replace(/\s+/g, '-')}-${uuidv4()}.${fileExt}`;
+    const fileName = `${folder ? `${folder}/` : ''}${uuidv4()}.${fileExt}`;
     
-    // Upload the file to the specified bucket
+    // Upload file
     const { data, error } = await supabase.storage
-      .from(bucketName)
-      .upload(uniqueFilePath, file, {
+      .from(bucket)
+      .upload(fileName, file, {
         cacheControl: '3600',
         upsert: true
       });
-    
+      
     if (error) {
-      console.error(`Error uploading to ${bucketName}:`, error);
+      console.error('Error uploading file:', error);
+      toast.error('Failed to upload image');
       return null;
     }
     
-    if (!data || !data.path) {
-      console.error(`Upload to ${bucketName} succeeded but no path returned`);
-      return null;
-    }
-    
-    // Generate a public URL for the uploaded file
+    // Get public URL
     const { data: publicUrlData } = supabase.storage
-      .from(bucketName)
-      .getPublicUrl(data.path);
-    
-    if (!publicUrlData || !publicUrlData.publicUrl) {
-      console.error(`Failed to get public URL for ${data.path}`);
-      return null;
-    }
-    
-    console.log(`Successfully uploaded to ${bucketName}, public URL:`, publicUrlData.publicUrl);
-    return publicUrlData.publicUrl;
-  } catch (error) {
-    console.error(`Unexpected error in uploadImage to ${bucketName}:`, error);
+      .from(bucket)
+      .getPublicUrl(data?.path || '');
+      
+    return publicUrlData.publicUrl || null;
+  } catch (err) {
+    console.error('Error in uploadImage:', err);
+    toast.error('Failed to upload image');
     return null;
   }
-}
+};
 
 /**
- * Helper function to store images locally (as a fallback)
+ * Delete an image from Supabase storage
  */
-export async function storeImageLocally(file: File, userId: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        // Return the data URL which can be used as the src for an image
-        resolve(reader.result);
-      } else {
-        reject(new Error('Failed to convert image to data URL'));
+export const deleteImage = async (
+  url: string,
+  bucket: string
+): Promise<boolean> => {
+  try {
+    if (!url) return false;
+    
+    // Extract the path from the URL
+    const urlObj = new URL(url);
+    const path = urlObj.pathname.split(`/storage/v1/object/public/${bucket}/`)[1];
+    
+    if (!path) {
+      console.error('Invalid storage URL:', url);
+      return false;
+    }
+    
+    // Delete the file
+    const { error } = await supabase.storage
+      .from(bucket)
+      .remove([path]);
+      
+    if (error) {
+      console.error('Error deleting file:', error);
+      return false;
+    }
+    
+    return true;
+  } catch (err) {
+    console.error('Error in deleteImage:', err);
+    return false;
+  }
+};
+
+/**
+ * Generate a placeholder image URL
+ */
+export const getPlaceholderImage = (text: string = 'Unknown'): string => {
+  const encodedText = encodeURIComponent(text);
+  return `https://ui-avatars.com/api/?name=${encodedText}&background=random&color=fff&size=128`;
+};
+
+/**
+ * Check if Supabase storage bucket exists, create if not
+ */
+export const ensureBucketExists = async (bucketName: string, isPublic: boolean = true): Promise<boolean> => {
+  try {
+    // Check if bucket exists
+    const { data: buckets, error: listError } = await supabase.storage.listBuckets();
+    
+    if (listError) {
+      console.error('Error listing buckets:', listError);
+      return false;
+    }
+    
+    const bucketExists = buckets?.some(bucket => bucket.name === bucketName);
+    
+    if (!bucketExists) {
+      // Create bucket if it doesn't exist
+      const { error } = await supabase.storage.createBucket(bucketName, {
+        public: isPublic
+      });
+      
+      if (error) {
+        console.error(`Error creating ${bucketName} bucket:`, error);
+        return false;
       }
-    };
-    reader.onerror = () => {
-      reject(new Error('Failed to read image file'));
-    };
-    reader.readAsDataURL(file);
-  });
-}
+      
+      console.log(`Created ${bucketName} bucket successfully`);
+    }
+    
+    return true;
+  } catch (error) {
+    console.error(`Error ensuring ${bucketName} bucket exists:`, error);
+    return false;
+  }
+};
