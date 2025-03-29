@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 import { toast } from 'sonner';
@@ -18,6 +19,11 @@ export class StorageService extends BaseSupabaseService {
     try {
       console.log('Uploading profile image for user:', userId);
       
+      if (!this.supabase.auth.getSession()) {
+        toast.error('Authentication required to upload images.');
+        return null;
+      }
+      
       // Use the uploadImage utility with profile images bucket
       const imageUrl = await uploadImage(file, this.PROFILE_IMAGES_BUCKET, userId);
       
@@ -30,6 +36,7 @@ export class StorageService extends BaseSupabaseService {
       return imageUrl;
     } catch (error) {
       console.error('Error in uploadProfileImage:', error);
+      toast.error('Failed to upload profile image');
       return null;
     }
   }
@@ -38,6 +45,11 @@ export class StorageService extends BaseSupabaseService {
   async uploadScammerImage(file: File, scammerId: string): Promise<string | null> {
     try {
       console.log('Uploading scammer image for scammer:', scammerId);
+      
+      if (!this.supabase.auth.getSession()) {
+        toast.error('Authentication required to upload images.');
+        return null;
+      }
       
       // Use the uploadImage utility with most wanted images bucket
       const imageUrl = await uploadImage(file, this.MOST_WANTED_IMAGES_BUCKET, `scammer-${scammerId}`);
@@ -51,6 +63,7 @@ export class StorageService extends BaseSupabaseService {
       return imageUrl;
     } catch (error) {
       console.error('Error in uploadScammerImage:', error);
+      toast.error('Failed to upload scammer image');
       return null;
     }
   }

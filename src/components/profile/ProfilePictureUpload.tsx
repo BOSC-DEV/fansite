@@ -5,6 +5,7 @@ import { UserCircle2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useProfileImage } from "@/hooks/profile/useProfileImage";
+import { useWallet } from "@/context/WalletContext";
 
 interface ProfilePictureUploadProps {
   displayName: string;
@@ -19,6 +20,7 @@ export function ProfilePictureUpload({
   onProfilePicChange,
   userId
 }: ProfilePictureUploadProps) {
+  const { isConnected } = useWallet();
   const {
     uploadProfileImage,
     isUploading
@@ -28,6 +30,12 @@ export function ProfilePictureUpload({
 
   const handleUploadClick = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent form submission
+    
+    if (!isConnected) {
+      toast.error("Please connect your wallet before uploading a profile picture");
+      return;
+    }
+    
     fileInputRef.current?.click();
   };
 
@@ -40,6 +48,11 @@ export function ProfilePictureUpload({
     
     if (!userId) {
       toast.error("User ID is required to upload a profile picture");
+      return;
+    }
+
+    if (!isConnected) {
+      toast.error("Please connect your wallet before uploading a profile picture");
       return;
     }
 
@@ -60,7 +73,9 @@ export function ProfilePictureUpload({
       if (url) {
         console.log("[ProfilePictureUpload] Upload successful, updating profile with URL:", url);
         onProfilePicChange(url);
+        toast.success("Profile picture updated");
       } else {
+        console.error("[ProfilePictureUpload] Upload failed, no URL returned");
         toast.error("Failed to upload profile picture");
       }
     } catch (error) {

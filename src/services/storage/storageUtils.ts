@@ -20,7 +20,7 @@ export async function ensureBucketExists(bucketName: string): Promise<boolean> {
     const bucketExists = existingBuckets.some(bucket => bucket.name === bucketName);
     
     if (!bucketExists) {
-      console.error(`Bucket ${bucketName} not found. Please ensure it's created via migrations.`);
+      console.error(`Bucket ${bucketName} not found. This bucket must be created by an admin.`);
       return false;
     } else {
       console.log(`Bucket ${bucketName} exists`);
@@ -43,7 +43,7 @@ export async function uploadImage(file: File, bucketName: string, fileName: stri
     const bucketExists = await ensureBucketExists(bucketName);
     
     if (!bucketExists) {
-      console.error(`Bucket ${bucketName} does not exist. Please ensure the bucket is created via migrations.`);
+      console.error(`Bucket ${bucketName} does not exist. Please contact your administrator.`);
       toast.error(`Storage configuration error. Please contact support.`);
       return null;
     }
@@ -62,7 +62,11 @@ export async function uploadImage(file: File, bucketName: string, fileName: stri
     
     if (error) {
       console.error(`Error uploading to ${bucketName}:`, error);
-      toast.error(`Error uploading image: ${error.message}`);
+      if (error.message.includes('auth/insufficient_permissions')) {
+        toast.error('Insufficient permissions. Please sign in first.');
+      } else {
+        toast.error(`Upload failed: ${error.message}`);
+      }
       return null;
     }
     
@@ -84,6 +88,7 @@ export async function uploadImage(file: File, bucketName: string, fileName: stri
     }
     
     console.log(`Successfully uploaded to ${bucketName}, public URL:`, publicUrlData.publicUrl);
+    toast.success('Image uploaded successfully');
     return publicUrlData.publicUrl;
   } catch (error) {
     console.error(`Unexpected error in uploadImage to ${bucketName}:`, error);

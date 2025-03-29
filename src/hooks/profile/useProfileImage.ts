@@ -2,15 +2,28 @@
 import { useState } from "react";
 import { storageService } from "@/services/storage";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 export function useProfileImage() {
   const [profilePicUrl, setProfilePicUrl] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [imageError, setImageError] = useState(false);
 
+  const checkAuthentication = async () => {
+    const { data: session } = await supabase.auth.getSession();
+    return !!session?.session;
+  };
+
   const uploadProfileImage = async (file: File, userId: string) => {
     if (!file || !userId) {
       toast.error("Unable to upload: Missing file or user ID");
+      return null;
+    }
+    
+    // Check if user is authenticated
+    const isAuthenticated = await checkAuthentication();
+    if (!isAuthenticated) {
+      toast.error("Please sign in to upload profile images");
       return null;
     }
     

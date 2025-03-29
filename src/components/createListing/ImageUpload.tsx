@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Camera, Image, Trash2, FileX, Upload } from "lucide-react";
 import { storageService } from "@/services/storage";
 import { useWallet } from "@/context/WalletContext";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ImageUploadProps {
   onImageUpload: (url: string) => void;
@@ -18,7 +19,12 @@ export function ImageUpload({ onImageUpload, scammerId, currentImage }: ImageUpl
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { address } = useWallet();
+  const { address, isConnected } = useWallet();
+
+  const checkAuthentication = async () => {
+    const { data: session } = await supabase.auth.getSession();
+    return !!session?.session;
+  };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -35,6 +41,14 @@ export function ImageUpload({ onImageUpload, scammerId, currentImage }: ImageUpl
     if (!file.type.startsWith("image/")) {
       setError("Only image files are allowed");
       toast.error("Only image files are allowed");
+      return;
+    }
+    
+    // Check if user is authenticated
+    const isAuthenticated = await checkAuthentication();
+    if (!isAuthenticated) {
+      setError("Authentication required to upload images");
+      toast.error("Please sign in to upload images");
       return;
     }
 
@@ -65,6 +79,10 @@ export function ImageUpload({ onImageUpload, scammerId, currentImage }: ImageUpl
   };
 
   const handleUploadClick = () => {
+    if (!isConnected) {
+      toast.error("Please connect your wallet before uploading an image");
+      return;
+    }
     fileInputRef.current?.click();
   };
 
