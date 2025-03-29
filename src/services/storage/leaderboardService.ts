@@ -1,3 +1,4 @@
+
 import { BaseSupabaseService } from './baseSupabaseService';
 import { scammerService } from './scammer/scammerService';
 import { v4 as uuidv4 } from 'uuid';
@@ -100,7 +101,7 @@ export class LeaderboardService extends BaseSupabaseService {
         // total spent on bounty + total bounty generated from reports + days old x likes x views x comments
         let points = profile.points || 0;
         
-        // If there are no points already stored, calculate them
+        // If there are no points already stored or points are 0, calculate them
         if (points === 0) {
           points = this.calculateUserPoints(bountySpent, bountyGenerated, ageInDays, totalReports, totalLikes, totalViews, totalComments);
           
@@ -109,6 +110,9 @@ export class LeaderboardService extends BaseSupabaseService {
             console.error("[LeaderboardService] Failed to update points:", err)
           );
         }
+        
+        // Ensure points value is logged
+        console.log(`[LeaderboardService] User ${profile.username || profile.wallet_address} points:`, points);
         
         return {
           id: profile.id,
@@ -137,6 +141,7 @@ export class LeaderboardService extends BaseSupabaseService {
   // Add a method to update user points in the database
   private async updateUserPoints(userId: string, points: number): Promise<boolean> {
     try {
+      console.log(`[LeaderboardService] Updating points for user ${userId} to ${points}`);
       const { error } = await this.supabase
         .from('profiles')
         .update({ points })
@@ -178,6 +183,23 @@ export class LeaderboardService extends BaseSupabaseService {
     const scaledEngagement = engagementMultiplier / 1000000;
     
     points += scaledEngagement;
+    
+    // Ensure all users get at least 1 point so they're not showing as 0
+    points = Math.max(1, points);
+    
+    console.log(`[LeaderboardService] Calculated points details:`, {
+      bountySpent,
+      bountyGenerated,
+      ageInDays,
+      adjustedAgeDays,
+      totalReports,
+      totalLikes,
+      totalViews,
+      totalComments,
+      engagementMultiplier,
+      scaledEngagement,
+      finalPoints: points
+    });
     
     return points;
   }

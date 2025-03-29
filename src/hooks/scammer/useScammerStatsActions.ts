@@ -22,7 +22,7 @@ export function useScammerStatsActions(scammer: Scammer | null) {
         // Unlike - decrement likes
         updateStats({ likes: stats.likes - 1 });
         setInteractions(prev => ({ ...prev, isLiked: false }));
-        toast.info("Like removed");
+        toast.info("Agreement removed");
       } else {
         // Like - increment likes
         updateStats({ likes: stats.likes + 1 });
@@ -33,7 +33,7 @@ export function useScammerStatsActions(scammer: Scammer | null) {
           updateStats({ dislikes: stats.dislikes - 1 });
           setInteractions(prev => ({ ...prev, isDisliked: false }));
         }
-        toast.success("Liked scammer");
+        toast.success("Agreed");
       }
       
       // Save to storage
@@ -47,7 +47,7 @@ export function useScammerStatsActions(scammer: Scammer | null) {
       }));
     } catch (error) {
       console.error("Error liking scammer:", error);
-      toast.error("Failed to like scammer");
+      toast.error("Failed to update agreement");
     }
   };
 
@@ -60,7 +60,7 @@ export function useScammerStatsActions(scammer: Scammer | null) {
         // Undislike - decrement dislikes
         updateStats({ dislikes: stats.dislikes - 1 });
         setInteractions(prev => ({ ...prev, isDisliked: false }));
-        toast.info("Dislike removed");
+        toast.info("Disagreement removed");
       } else {
         // Dislike - increment dislikes
         updateStats({ dislikes: stats.dislikes + 1 });
@@ -71,7 +71,7 @@ export function useScammerStatsActions(scammer: Scammer | null) {
           updateStats({ likes: stats.likes - 1 });
           setInteractions(prev => ({ ...prev, isLiked: false }));
         }
-        toast.success("Disliked scammer");
+        toast.success("Disagreed");
       }
       
       // Save to storage
@@ -85,7 +85,7 @@ export function useScammerStatsActions(scammer: Scammer | null) {
       }));
     } catch (error) {
       console.error("Error disliking scammer:", error);
-      toast.error("Failed to dislike scammer");
+      toast.error("Failed to update disagreement");
     }
   };
 

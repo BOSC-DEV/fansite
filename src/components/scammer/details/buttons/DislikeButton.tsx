@@ -13,8 +13,15 @@ interface DislikeButtonProps {
 export function DislikeButton({ count, isActive, onDislike }: DislikeButtonProps) {
   const { handleInteraction } = useProfileInteraction();
 
-  const handleDislike = () => {
+  const handleDislike = (event: React.MouseEvent) => {
+    // Prevent event bubbling
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Use the handler from props
     handleInteraction(onDislike);
+    
+    console.log("Disagree button clicked", { count, isActive });
   };
 
   return (
@@ -24,7 +31,7 @@ export function DislikeButton({ count, isActive, onDislike }: DislikeButtonProps
       isActive={isActive}
       activeClassName="bg-red-100 border-red-300 text-red-700"
       onClick={handleDislike}
-      title="Dislike this scammer"
+      title="Disagree with this scammer report"
     />
   );
 }

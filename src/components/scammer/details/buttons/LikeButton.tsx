@@ -21,7 +21,7 @@ export function LikeButton({ count, isActive, onLike }: LikeButtonProps) {
     // Use the handler from props
     handleInteraction(onLike);
     
-    console.log("Like button clicked", { count, isActive });
+    console.log("Agree button clicked", { count, isActive });
   };
 
   return (
@@ -30,7 +30,7 @@ export function LikeButton({ count, isActive, onLike }: LikeButtonProps) {
       count={count}
       isActive={isActive}
       onClick={handleLike}
-      title="Like this scammer"
+      title="Agree with this scammer report"
     />
   );
 }

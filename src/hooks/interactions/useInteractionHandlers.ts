@@ -55,7 +55,7 @@ export function useInteractionHandlers({
       
       // Check if user has a profile once profile check is done
       if (!hasProfile) {
-        toast.error("You need to create a profile before liking", {
+        toast.error("You need to create a profile before agreeing", {
           description: "Go to your profile page to create one",
           action: {
             label: "Create Profile",
@@ -75,7 +75,7 @@ export function useInteractionHandlers({
         // Unlike
         newLikes = state.localLikes - 1;
         newIsLiked = false;
-        toast.info("Like removed");
+        toast.info("Agreement removed");
       } else {
         // Like
         newLikes = state.localLikes + 1;
@@ -87,7 +87,7 @@ export function useInteractionHandlers({
           newIsDisliked = false;
         }
         
-        toast.success("Liked scammer");
+        toast.success("Agreed");
       }
       
       // Update local state FIRST before any async operations
@@ -137,7 +137,7 @@ export function useInteractionHandlers({
     try {
       // Check if user is connected
       if (!isConnected || !address) {
-        toast.error("You must be connected with a wallet to dislike");
+        toast.error("You must be connected with a wallet to disagree");
         await connectWallet();
         setState(prev => ({ ...prev, isInteractionLocked: false }));
         return;
@@ -152,7 +152,7 @@ export function useInteractionHandlers({
       
       // Check if user has a profile once profile check is done
       if (!hasProfile) {
-        toast.error("You need to create a profile before disliking", {
+        toast.error("You need to create a profile before disagreeing", {
           description: "Go to your profile page to create one",
           action: {
             label: "Create Profile",
@@ -172,7 +172,7 @@ export function useInteractionHandlers({
         // Remove dislike
         newDislikes = state.localDislikes - 1;
         newIsDisliked = false;
-        toast.info("Dislike removed");
+        toast.info("Disagreement removed");
       } else {
         // Dislike
         newDislikes = state.localDislikes + 1;
@@ -184,7 +184,7 @@ export function useInteractionHandlers({
           newIsLiked = false;
         }
         
-        toast.success("Disliked scammer");
+        toast.success("Disagreed");
       }
       
       // Update local state
