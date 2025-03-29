@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { ScammerTable } from "@/components/scammer/ScammerTable";
@@ -12,16 +11,18 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { formatCurrency, formatDate } from "@/utils/formatters";
 import { useSortableScammers } from "@/hooks/useSortableScammers";
 import { Button } from "@/components/ui/button";
-import { Grid, Scroll } from "lucide-react";
+import { Grid, Scroll, RefreshCw } from "lucide-react";
 import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { toast } from "sonner";
 
 const MostWanted = () => {
   const { 
     filteredScammers, 
     isLoading, 
     searchQuery,
-    handleSearch
+    handleSearch,
+    refreshScammers
   } = useScammers();
   
   const {
@@ -48,7 +49,10 @@ const MostWanted = () => {
   const paginatedScammers = sortedScammers.slice(startIndex, endIndex);
 
   useEffect(() => {
-    // Only reset to grid if on desktop
+    refreshScammers();
+  }, [refreshScammers]);
+
+  useEffect(() => {
     if (!isMobile && viewType === "compact") {
       setViewType("grid");
     }
@@ -56,6 +60,11 @@ const MostWanted = () => {
 
   const handleViewChange = (view: "grid" | "table" | "compact") => {
     setViewType(view);
+  };
+
+  const handleRefresh = () => {
+    refreshScammers();
+    toast.success("Refreshed scammer listings");
   };
 
   return (
@@ -67,7 +76,7 @@ const MostWanted = () => {
           
           <div className="space-y-4 md:space-y-6">
             <div className="flex items-center gap-2">
-              <div className={isMobile ? "flex-1 max-w-[85%]" : "flex-1 max-w-[90%]"}>
+              <div className={isMobile ? "flex-1 max-w-[75%]" : "flex-1 max-w-[90%]"}>
                 <SearchBar 
                   onSearch={handleSearch} 
                   initialQuery={searchQuery} 
@@ -76,7 +85,16 @@ const MostWanted = () => {
               </div>
               
               {isMobile ? (
-                <div className="flex items-center">
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-western-wood bg-western-parchment text-western-wood"
+                    onClick={handleRefresh}
+                    title="Refresh listings"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                  </Button>
                   <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && handleViewChange(value as "grid" | "table" | "compact")}>
                     <ToggleGroupItem value="compact" aria-label="List view">
                       <Scroll className="h-4 w-4" />
@@ -88,6 +106,16 @@ const MostWanted = () => {
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-western-wood bg-western-parchment text-western-wood"
+                    onClick={handleRefresh}
+                    title="Refresh listings"
+                  >
+                    <RefreshCw className="h-4 w-4 mr-1" />
+                    Refresh
+                  </Button>
                   <Button
                     variant="outline"
                     size="sm"

@@ -41,7 +41,9 @@ export const useScammers = () => {
           dateAdded: new Date(s.dateAdded),
           addedBy: s.addedBy || '',
           likes: s.likes || 0,
-          views: s.views || 0
+          dislikes: s.dislikes || 0,
+          views: s.views || 0,
+          shares: s.shares || 0
         }));
       } catch (err) {
         console.error("[useScammers] Error loading from Supabase:", err);
@@ -65,19 +67,32 @@ export const useScammers = () => {
         dateAdded: new Date(s.dateAdded),
         addedBy: s.addedBy || '',
         likes: s.likes || 0,
-        views: s.views || 0
+        dislikes: s.dislikes || 0,
+        views: s.views || 0,
+        shares: s.shares || 0
       }));
 
       // Merge the scammers, preferring Supabase versions but including local-only ones
-      const supabaseIds = supabaseScammers.map(s => s.id);
-      const uniqueLocalScammers = mappedLocalScammers.filter(s => !supabaseIds.includes(s.id));
+      // Use a Map to handle merging with id as the key
+      const mergedScammersMap = new Map<string, Scammer>();
       
-      const allScammers = [...supabaseScammers, ...uniqueLocalScammers];
+      // Add all local scammers first
+      mappedLocalScammers.forEach(scammer => {
+        mergedScammersMap.set(scammer.id, scammer);
+      });
+      
+      // Override with Supabase scammers (which take precedence)
+      supabaseScammers.forEach(scammer => {
+        mergedScammersMap.set(scammer.id, scammer);
+      });
+      
+      // Convert map to array
+      const allScammers = Array.from(mergedScammersMap.values());
       
       if (allScammers.length === 0) {
         console.log("[useScammers] No scammers found in either Supabase or localStorage");
       } else {
-        console.log(`[useScammers] Total loaded: ${allScammers.length} scammers (${supabaseScammers.length} from Supabase, ${uniqueLocalScammers.length} local-only)`);
+        console.log(`[useScammers] Total loaded: ${allScammers.length} scammers`);
       }
       
       // Sort by date, most recent first
@@ -85,6 +100,7 @@ export const useScammers = () => {
         b.dateAdded.getTime() - a.dateAdded.getTime()
       );
       
+      console.log("[useScammers] Sorted scammers by date:", sortedScammers.map(s => s.id));
       setScammers(sortedScammers);
       setFilteredScammers(sortedScammers);
     } catch (error) {
