@@ -30,7 +30,8 @@ export const useLeaderboard = () => {
             totalBountyGenerated: 15.5,
             totalBountySpent: 5.2,
             createdAt: '2023-05-15T10:30:00Z',
-            points: 500
+            points: 500,
+            walletAddress: '0x1234567890abcdef1234567890abcdef12345678'
           },
           {
             id: '2',
@@ -46,7 +47,8 @@ export const useLeaderboard = () => {
             totalBountyGenerated: 12.3,
             totalBountySpent: 4.1,
             createdAt: '2023-06-20T14:45:00Z',
-            points: 420
+            points: 420,
+            walletAddress: '0x2345678901abcdef2345678901abcdef23456789'
           },
           {
             id: '3',
@@ -62,7 +64,8 @@ export const useLeaderboard = () => {
             totalBountyGenerated: 20.7,
             totalBountySpent: 7.3,
             createdAt: '2023-04-10T09:15:00Z',
-            points: 650
+            points: 650,
+            walletAddress: '0x3456789012abcdef3456789012abcdef34567890'
           }
         ];
         

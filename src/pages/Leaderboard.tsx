@@ -13,7 +13,7 @@ const Leaderboard = () => {
   return (
     <div className="min-h-screen old-paper flex flex-col">
       <Header />
-      <main className="flex-grow py-1 md:py-4">
+      <main className="flex-grow py-1 md:py-4 mt-16 md:mt-24">
         <div className="container mx-auto max-w-6xl px-4">
           <PageHeader 
             title="Bounty Leaderboard" 

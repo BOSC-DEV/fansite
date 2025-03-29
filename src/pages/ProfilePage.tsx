@@ -25,7 +25,7 @@ export function ProfilePage() {
   return (
     <div className="min-h-screen old-paper flex flex-col">
       <Header />
-      <main className="container mx-auto px-4 py-1 md:py-4 flex-grow">
+      <main className="container mx-auto px-4 py-1 md:py-4 flex-grow mt-16 md:mt-24">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl font-wanted text-western-accent text-center mb-6 md:mb-8">Your Profile</h1>
           
