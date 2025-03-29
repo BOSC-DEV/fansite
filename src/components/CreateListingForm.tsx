@@ -1,3 +1,4 @@
+
 import { FormContainer } from "./createListing/FormContainer";
 import { useWallet } from "@/context/WalletContext";
 import { useEffect, useState } from "react";
@@ -6,11 +7,15 @@ import { profileService } from "@/services/storage/localStorageService";
 import { toast } from "sonner";
 import { db } from "@/lib/supabase-helpers";
 import ConnectWallet from "@/components/ConnectWallet";
+import { Button } from "@/components/ui/button";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export function CreateListingForm() {
   const { isConnected, address } = useWallet();
   const navigate = useNavigate();
   const [isCheckingProfile, setIsCheckingProfile] = useState(true);
+  const [hasProfile, setHasProfile] = useState(true);
   const [hasToastBeenShown, setHasToastBeenShown] = useState(false);
 
   useEffect(() => {
@@ -29,19 +34,26 @@ export function CreateListingForm() {
             console.error("Error checking profile:", error);
             // Fallback to localStorage check if Supabase fails
             const hasLocalProfile = profileService.hasProfile(address);
+            setHasProfile(hasLocalProfile);
+            
             if (!hasLocalProfile && !hasToastBeenShown) {
               toast.info("You need to create a profile before reporting a scammer");
               setHasToastBeenShown(true);
-              navigate("/profile");
             }
-          } else if (!profile && !hasToastBeenShown) {
+          } else if (!profile) {
             // No profile found in Supabase
-            toast.info("You need to create a profile before reporting a scammer");
-            setHasToastBeenShown(true);
-            navigate("/profile");
+            setHasProfile(false);
+            
+            if (!hasToastBeenShown) {
+              toast.info("You need to create a profile before reporting a scammer");
+              setHasToastBeenShown(true);
+            }
+          } else {
+            setHasProfile(true);
           }
         } catch (error) {
           console.error("Error checking profile:", error);
+          setHasProfile(false);
         } finally {
           setIsCheckingProfile(false);
         }
@@ -52,6 +64,10 @@ export function CreateListingForm() {
 
     checkProfile();
   }, [isConnected, address, navigate, hasToastBeenShown]);
+
+  const handleCreateProfile = () => {
+    navigate("/profile");
+  };
 
   if (isCheckingProfile) {
     return (
@@ -70,6 +86,29 @@ export function CreateListingForm() {
         <ConnectWallet 
           redirectPath="/create-listing"
         />
+      </div>
+    );
+  }
+
+  if (!hasProfile) {
+    return (
+      <div className="space-y-6">
+        <Alert variant="warning" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Profile Required</AlertTitle>
+          <AlertDescription>
+            You need to create a profile before you can report a scammer. Creating a profile helps maintain accountability in our community.
+          </AlertDescription>
+        </Alert>
+        
+        <div className="text-center">
+          <Button 
+            onClick={handleCreateProfile}
+            className="bg-western-accent hover:bg-western-accent/80 text-western-parchment"
+          >
+            Create Your Profile
+          </Button>
+        </div>
       </div>
     );
   }

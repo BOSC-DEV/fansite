@@ -1,6 +1,6 @@
 
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUserProfile } from "@/hooks/useUserProfile";
@@ -16,6 +16,8 @@ import { BookOpen, User, Heart, MessageSquare, Coins } from "lucide-react";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { WalletDisconnect } from "@/components/wallet/WalletDisconnect";
 import { useWallet } from "@/context/WalletContext";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export function UserProfilePage() {
   const {
@@ -30,7 +32,8 @@ export function UserProfilePage() {
     error
   } = useUserProfile(username);
   const [activeTab, setActiveTab] = useState("reports");
-  const { address } = useWallet();
+  const { address, isConnected } = useWallet();
+  const navigate = useNavigate();
   
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -39,10 +42,38 @@ export function UserProfilePage() {
   // Check if this is the current user's profile
   const isCurrentUserProfile = profile?.walletAddress === address;
   
+  // Handle the creation of a profile
+  const handleCreateProfile = () => {
+    if (!isConnected) {
+      toast.error("Please connect your wallet first");
+      return;
+    }
+    
+    navigate("/profile");
+  };
+  
   return <div className="min-h-screen old-paper flex flex-col">
       <Header />
       <main className="container mx-auto px-4 py-4 flex-grow">
-        {isLoading ? <ProfileSkeleton /> : error ? <ProfileError error={error} /> : profile ? <div className="max-w-4xl mx-auto">
+        {isLoading ? <ProfileSkeleton /> : error ? (
+          <div className="max-w-4xl mx-auto">
+            <ProfileError error={error} />
+            
+            {/* Add a prompt to create profile if the error is about non-existent profile */}
+            {(error.includes("Profile not found") || error.includes("Invalid username")) && (
+              <div className="mt-8 p-6 border border-western-wood/20 rounded-lg bg-western-sand/10 text-center">
+                <h3 className="text-xl font-western text-western-wood mb-3">Want to create your profile?</h3>
+                <p className="text-western-sand mb-4">Join the community by creating your own profile</p>
+                <Button 
+                  onClick={handleCreateProfile}
+                  className="bg-western-accent hover:bg-western-accent/80 text-western-parchment"
+                >
+                  Create Profile
+                </Button>
+              </div>
+            )}
+          </div>
+        ) : profile ? <div className="max-w-4xl mx-auto">
             <ProfileHeader 
               username={profile.username || ''} 
               name={profile.displayName} 
