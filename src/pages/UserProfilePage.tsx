@@ -113,7 +113,6 @@ export function UserProfilePage() {
           </div>
         ) : null}
       </main>
-      {/* Removed the SiteFooter as it's now rendered at the App level */}
     </div>
   );
 }

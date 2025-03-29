@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Pencil } from "lucide-react";
 import { useWallet } from "@/context/WalletContext";
-import { formatWalletAddress } from "@/utils/formatters";
 
 interface EditProfileButtonProps {
   profileAddress?: string;

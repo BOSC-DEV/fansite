@@ -2,8 +2,7 @@
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { CalendarDays, MapPin, Link2, Coins, Award, Gift, HelpCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Coins, Gift, HelpCircle } from "lucide-react";
 import { EditProfileButton } from "./EditProfileButton";
 import { ShareProfileButton } from "./ShareProfileButton";
 import { useWallet } from "@/context/WalletContext";
@@ -109,49 +108,35 @@ export function ProfileHeader({
         </div>
         
         <div className="flex items-center gap-2">
-          {isCurrentUser ? (
-            <EditProfileButton profileAddress={address} size="sm" />
-          ) : (
+          <EditProfileButton profileAddress={address} size="sm" />
+          {!isCurrentUser && address && (
             <ShareProfileButton username={username} walletAddress={address} />
           )}
         </div>
       </div>
       
       {bio && (
-        <p className="text-sm text-western-wood/90 max-w-2xl">
-          {bio}
-        </p>
+        <p className="text-sm text-western-wood">{bio}</p>
       )}
       
-      <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-western-wood/70">
-        {location && (
-          <div className="flex items-center">
-            <MapPin className="h-4 w-4 mr-1" />
-            <span>{location}</span>
-          </div>
-        )}
-        
-        {website && (
-          <div className="flex items-center">
-            <Link2 className="h-4 w-4 mr-1" />
-            <a 
-              href={website.startsWith('http') ? website : `https://${website}`} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="hover:text-western-accent hover:underline"
-            >
-              {formatWebsiteUrl(website)}
-            </a>
-          </div>
-        )}
-        
-        {joinDate && (
-          <div className="flex items-center">
-            <CalendarDays className="h-4 w-4 mr-1" />
-            <span>Joined {formattedDate}</span>
-          </div>
-        )}
-      </div>
+      {joinDate && (
+        <div className="flex items-center text-sm text-western-wood/70">
+          <p>Joined {formattedDate}</p>
+        </div>
+      )}
+      
+      {website && (
+        <div className="flex items-center text-sm">
+          <a 
+            href={website.startsWith('http') ? website : `https://${website}`}
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-western-accent hover:underline"
+          >
+            {formatWebsiteUrl(website)}
+          </a>
+        </div>
+      )}
     </div>
   );
 }

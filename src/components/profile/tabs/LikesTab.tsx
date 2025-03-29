@@ -36,7 +36,7 @@ export function LikesTab({ address }: LikesTabProps) {
           .from('user_scammer_interactions')
           .select(`
             scammer_id,
-            scammer:scammers!inner(*)
+            scammers:scammers(*)
           `)
           .eq('user_id', effectiveAddress)
           .eq('liked', true)
@@ -59,7 +59,7 @@ export function LikesTab({ address }: LikesTabProps) {
 
         // Convert to Scammer type
         const convertedScammers = data.map(item => {
-          const scammer = item.scammer;
+          const scammer = item.scammers;
           return {
             id: scammer.id,
             name: scammer.name,
