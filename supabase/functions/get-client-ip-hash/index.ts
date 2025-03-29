@@ -1,41 +1,62 @@
 
-import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
-import { createHash } from 'https://deno.land/std@0.177.0/crypto/mod.ts'
+// Create a Supabase Edge Function to hash client IP addresses for view tracking
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.21.0";
+import { encode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
 
-// This edge function securely hashes the client's IP address to track unique views
-// without storing actual IP addresses for privacy reasons
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+// Simple hash function to anonymize IP addresses
+async function hashIp(ip: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(`${ip}-Book-of-Scams-salt-key`);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+  
   try {
-    // Get the client IP from the request headers
+    // Get client IP from request headers
     const clientIp = req.headers.get('x-real-ip') || 
                     req.headers.get('x-forwarded-for') || 
-                    'unknown';
+                    "unknown";
     
-    // Add a secret salt to the IP before hashing to make it more secure
-    // In a production app, you'd store this salt in Supabase secrets
-    const salt = Deno.env.get('IP_HASH_SALT') || 'default-salt-for-development';
+    // Generate a hash of the IP address
+    const ipHash = await hashIp(clientIp);
     
-    // Create a SHA-256 hash of the IP+salt
-    const hash = createHash('sha256')
-      .update(`${clientIp}:${salt}`)
-      .toString('hex');
+    console.log(`Hashed IP address for tracking: ${ipHash.substring(0, 8)}...`);
     
-    // Return the hashed value
+    // Return the hashed IP
     return new Response(
-      JSON.stringify({
-        ipHash: hash,
-      }),
+      JSON.stringify({ ipHash }),
       { 
-        headers: { 'Content-Type': 'application/json' },
-        status: 200 
-      },
-    )
+        headers: { 
+          ...corsHeaders,
+          'Content-Type': 'application/json' 
+        } 
+      }
+    );
   } catch (error) {
-    console.error("Error hashing IP:", error);
+    console.error("Error in get-client-ip-hash function:", error);
     
     return new Response(
-      JSON.stringify({ error: "Failed to generate IP hash" }),
-      { headers: { 'Content-Type': 'application/json' }, status: 500 }
-    )
+      JSON.stringify({ error: "Failed to process request" }),
+      { 
+        status: 500,
+        headers: { 
+          ...corsHeaders,
+          'Content-Type': 'application/json' 
+        }
+      }
+    );
   }
-})
+});
