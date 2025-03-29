@@ -26,7 +26,7 @@ export class ScammerDataService extends ScammerBaseService {
       // Use explicit object with all required fields to avoid type errors
       const { error } = await supabase
         .from('scammers')
-        .upsert([{  // Wrap the object in an array since upsert expects an array of records
+        .upsert({
           id: dbRecord.id,
           name: dbRecord.name,
           photo_url: dbRecord.photo_url,
@@ -45,7 +45,7 @@ export class ScammerDataService extends ScammerBaseService {
           shares: dbRecord.shares || 0,
           comments: dbRecord.comments,
           deleted_at: null // Ensure new/updated records are not marked as deleted
-        }])
+        })
         .select();
 
       if (error) {
