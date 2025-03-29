@@ -1,4 +1,3 @@
-
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 
@@ -217,48 +216,60 @@ export class ProfileService extends BaseSupabaseService {
     const profileId = profile.id || uuidv4();
     
     try {
-      // Use the RPC function to bypass RLS policies
-      const { error } = await this.supabase.rpc('upsert_profile', {
-        profile_id: profileId,
-        profile_display_name: profile.displayName,
-        profile_username: profile.username || '',
+      // Prepare data object for direct INSERT/UPDATE instead of using RPC
+      // This avoids column ambiguity issues
+      const dbProfile = {
+        id: profileId,
+        display_name: profile.displayName,
+        username: profile.username || '',
         profile_pic_url: profile.profilePicUrl || '',
-        profile_wallet_address: profile.walletAddress,
-        profile_created_at: profile.createdAt || new Date().toISOString(),
-        profile_x_link: profile.xLink || '',
-        profile_website_link: profile.websiteLink || '',
-        profile_bio: profile.bio || ''
-      });
+        wallet_address: profile.walletAddress,
+        created_at: profile.createdAt || new Date().toISOString(),
+        x_link: profile.xLink || '',
+        website_link: profile.websiteLink || '',
+        bio: profile.bio || ''
+      };
       
-      if (error) {
-        console.error('[ProfileService] Error saving profile via RPC:', error);
+      // Attempt direct upsert first
+      const { error: upsertError } = await this.supabase
+        .from('profiles')
+        .upsert(dbProfile, { 
+          onConflict: 'wallet_address', 
+          ignoreDuplicates: false 
+        });
         
-        // Fallback to regular upsert if RPC doesn't work
-        console.log("[ProfileService] Falling back to regular upsert");
+      if (upsertError) {
+        console.error('[ProfileService] Error with upsert operation:', upsertError);
         
-        // Convert from camelCase to snake_case for database
-        const dbProfile = {
-          id: profileId,
-          display_name: profile.displayName,
-          username: profile.username || '',
-          profile_pic_url: profile.profilePicUrl || '',
-          wallet_address: profile.walletAddress,
-          created_at: profile.createdAt || new Date().toISOString(),
-          x_link: profile.xLink || '',
-          website_link: profile.websiteLink || '',
-          bio: profile.bio || ''
-        };
-        
-        const { error: upsertError } = await this.supabase
-          .from('profiles')
-          .upsert(dbProfile, { 
-            onConflict: 'id', 
-            ignoreDuplicates: false 
-          });
-          
-        if (upsertError) {
-          console.error('[ProfileService] Error with fallback upsert:', upsertError);
-          return false;
+        // Second attempt - INSERT if no profile exists, otherwise UPDATE
+        if (!existingProfile) {
+          // Try INSERT
+          const { error: insertError } = await this.supabase
+            .from('profiles')
+            .insert(dbProfile);
+            
+          if (insertError) {
+            console.error('[ProfileService] Error with insert fallback:', insertError);
+            return false;
+          }
+        } else {
+          // Try UPDATE
+          const { error: updateError } = await this.supabase
+            .from('profiles')
+            .update({
+              display_name: profile.displayName,
+              username: profile.username || '',
+              profile_pic_url: profile.profilePicUrl || '',
+              x_link: profile.xLink || '',
+              website_link: profile.websiteLink || '',
+              bio: profile.bio || ''
+            })
+            .eq('id', profileId);
+            
+          if (updateError) {
+            console.error('[ProfileService] Error with update fallback:', updateError);
+            return false;
+          }
         }
       }
       
