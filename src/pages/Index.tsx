@@ -8,7 +8,6 @@ import { HowItWorksSection } from "@/components/home/HowItWorksSection";
 import { WarningSection } from "@/components/home/WarningSection";
 import { Helmet } from "react-helmet-async";
 import { useSolanaPrice } from "@/utils/priceUtils";
-import { SiteFooter } from "@/components/layout/SiteFooter";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
@@ -75,7 +74,7 @@ const Index = () => {
         <WarningSection />
       </main>
       
-      <SiteFooter />
+      {/* Removed SiteFooter from here since it's already included in App.tsx */}
     </div>
   );
 };

@@ -7,7 +7,6 @@ import { isSupabaseConfigured } from "@/lib/supabase";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SiteFooter } from "@/components/layout/SiteFooter";
 import { useNavigate } from "react-router-dom";
 
 export function ProfilePage() {
@@ -64,7 +63,7 @@ export function ProfilePage() {
           )}
         </div>
       </main>
-      <SiteFooter />
+      {/* SiteFooter is now rendered at the App level */}
     </div>
   );
 }

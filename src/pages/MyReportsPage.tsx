@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -7,7 +8,6 @@ import { Scammer } from "@/lib/types";
 import { ScammerGrid } from "@/components/scammer/ScammerGrid";
 import { Button } from "@/components/ui/button";
 import { FileText, Plus } from "lucide-react";
-import { SiteFooter } from "@/components/layout/SiteFooter";
 
 export function MyReportsPage() {
   const { isConnected, address } = useWallet();
@@ -102,7 +102,7 @@ export function MyReportsPage() {
           </div>
         )}
       </main>
-      <SiteFooter />
+      {/* SiteFooter is now rendered at the App level */}
     </div>
   );
 }

@@ -10,7 +10,6 @@ import { ScammerNotFound } from "@/components/scammer/ScammerNotFound";
 import { UnauthorizedAccess } from "@/components/scammer/UnauthorizedAccess";
 import { EditScammerForm } from "@/components/scammer/EditScammerForm";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { SiteFooter } from "@/components/layout/SiteFooter";
 import { WalletDisconnect } from "@/components/wallet/WalletDisconnect";
 import { useWallet } from "@/context/WalletContext";
 
@@ -37,7 +36,7 @@ const EditListing = () => {
             <LoadingState />
           </div>
         </main>
-        <SiteFooter />
+        {/* SiteFooter is now rendered at the App level */}
       </div>
     );
   }
@@ -55,7 +54,7 @@ const EditListing = () => {
             <UnauthorizedAccess scammerId={id || ""} />
           </div>
         </main>
-        <SiteFooter />
+        {/* SiteFooter is now rendered at the App level */}
       </div>
     );
   }
@@ -97,7 +96,7 @@ const EditListing = () => {
         </div>
       </main>
       
-      <SiteFooter />
+      {/* SiteFooter is now rendered at the App level */}
     </div>
   );
 };

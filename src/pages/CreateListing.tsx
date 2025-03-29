@@ -3,7 +3,6 @@ import { Header } from "@/components/Header";
 import { CreateListingForm } from "@/components/CreateListingForm";
 import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { SiteFooter } from "@/components/layout/SiteFooter";
 
 const CreateListing = () => {
   const isMobile = useIsMobile();
@@ -26,7 +25,7 @@ const CreateListing = () => {
         </div>
       </main>
       
-      <SiteFooter />
+      {/* SiteFooter is now rendered at the App level */}
     </div>
   );
 };

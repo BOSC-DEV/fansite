@@ -3,7 +3,6 @@ import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
 import { ArrowLeft, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SiteFooter } from "@/components/layout/SiteFooter";
 
 const NotFound = () => {
   const location = useLocation();
@@ -33,7 +32,7 @@ const NotFound = () => {
           </Button>
         </div>
       </div>
-      <SiteFooter />
+      {/* SiteFooter is now rendered at the App level */}
     </div>
   );
 };
