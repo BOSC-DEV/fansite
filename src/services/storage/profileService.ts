@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 
@@ -201,12 +202,9 @@ export class ProfileService extends BaseSupabaseService {
     // Normalize wallet address
     profile.walletAddress = profile.walletAddress.trim();
     
-    // Use wallet address as the ID to ensure consistency
-    const profileId = profile.walletAddress;
-    
     // Convert from camelCase to snake_case for database
     const dbProfile = {
-      id: profileId, // Use wallet address as ID
+      id: uuidv4(), // Generate a proper UUID instead of using wallet address as ID
       display_name: profile.displayName,
       username: profile.username,
       profile_pic_url: profile.profilePicUrl,
@@ -234,15 +232,20 @@ export class ProfileService extends BaseSupabaseService {
     let result;
     
     if (existingProfile) {
-      console.log("[ProfileService] Updating existing profile");
-      // Update
+      console.log("[ProfileService] Updating existing profile with ID:", existingProfile.id);
+      // Update existing profile - use the existing ID
+      const updateProfile = {
+        ...dbProfile,
+        id: existingProfile.id // Keep the existing ID
+      };
+      
       result = await this.supabase
         .from('profiles')
-        .update(dbProfile)
-        .eq('wallet_address', profile.walletAddress);
+        .update(updateProfile)
+        .eq('id', existingProfile.id);
     } else {
-      console.log("[ProfileService] Creating new profile");
-      // Insert
+      console.log("[ProfileService] Creating new profile with generated UUID");
+      // Insert new profile with the generated UUID
       result = await this.supabase
         .from('profiles')
         .insert(dbProfile);
