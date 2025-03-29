@@ -99,6 +99,9 @@ export function useProfileFormSubmit() {
 
     if (!validateForm(formData, usernameAvailable, urlValidation)) return false;
 
+    // Prevent multiple submissions
+    if (isSubmitting) return false;
+    
     setIsSubmitting(true);
     console.log("[useProfileFormSubmit] Starting profile save for address:", address);
     
@@ -122,7 +125,7 @@ export function useProfileFormSubmit() {
         username: formData.username,
         profilePicUrl: formData.profilePicUrl,
         walletAddress: address,
-        createdAt: new Date().toISOString(),
+        createdAt: existingProfile?.createdAt || new Date().toISOString(),
         xLink: formData.xLink || '',
         websiteLink: formData.websiteLink || '',
         bio: formData.bio || ''
@@ -131,12 +134,11 @@ export function useProfileFormSubmit() {
       console.log("[useProfileFormSubmit] Prepared profile data:", profileData);
       
       // Use the storage service to save the profile data
-      // This will handle the database operations and bypass RLS issues
       const success = await storageService.saveProfile(profileData);
       
       if (success) {
         console.log("[useProfileFormSubmit] Profile saved successfully");
-        toast.success("Profile saved successfully");
+        // Only show toast from this component, not both here and in UserProfile
         setHasProfile(true);
         setProfileId(profileId);
         return true;

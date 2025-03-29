@@ -1,77 +1,49 @@
-
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import Index from './pages/Index';
-import MostWanted from './pages/MostWanted';
-import CreateListing from './pages/CreateListing';
-import ScammerDetail from './pages/ScammerDetail';
-import EditListing from './pages/EditListing';
-import NotFound from './pages/NotFound';
-import { Toaster } from './components/ui/toaster';
-import { Toaster as Sonner } from 'sonner';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Header } from './components/Header';
+import { SiteFooter } from './components/layout/SiteFooter';
+import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
-import UserProfilePage from './pages/UserProfilePage';
-import Leaderboard from './pages/Leaderboard';
-import MyReportsPage from './pages/MyReportsPage';
-import MyBountiesPage from './pages/MyBountiesPage';
-import { WalletProvider } from './context/wallet';
-import { useIsMobile } from './hooks/use-mobile';
-
-// Create a client
-const queryClient = new QueryClient();
-
-function AppContent() {
-  const isMobile = useIsMobile();
-  const location = useLocation();
-  
-  // Only apply custom padding to non-home pages
-  const isHomePage = location.pathname === '/';
-  
-  // Add top padding for the social media header on mobile
-  const contentPadding = isHomePage 
-    ? (isMobile ? "pt-12" : "pt-20 md:pt-24") + " py-[8px]" // Add padding for social icons
-    : (isMobile ? "pt-16" : "pt-6 md:pt-28") + " pb-[8px]"; // Add padding for social icons
-  
-  return (
-    <div className="flex flex-col min-h-screen">
-      <div className={`flex-grow ${contentPadding}`}>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/most-wanted" element={<MostWanted />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
-          <Route path="/create-listing" element={<CreateListing />} />
-          <Route path="/edit-listing/:id" element={<EditListing />} />
-          <Route path="/scammer/:id" element={<ScammerDetail />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/:username" element={<UserProfilePage />} />
-          <Route path="/user/:walletAddress" element={<UserProfilePage />} />
-          <Route path="/my-reports" element={<MyReportsPage />} />
-          <Route path="/my-bounties" element={<MyBountiesPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </div>
-      <Toaster />
-      <Sonner position="bottom-center" expand={true} closeButton={true} />
-    </div>
-  );
-}
+import CreateListingForm from './components/CreateListingForm';
+import ScammerDetailsPage from './pages/ScammerDetailsPage';
+import EditScammerPage from './pages/EditScammerPage';
+import UserDetailsPage from './pages/UserDetailsPage';
+import { WalletProvider } from './context/WalletContext';
+import { Toaster } from "sonner"
 
 function App() {
   return (
-    <React.StrictMode>
-      <HelmetProvider>
-        <QueryClientProvider client={queryClient}>
-          <WalletProvider>
-            <Router>
-              <AppContent />
-            </Router>
-          </WalletProvider>
-        </QueryClientProvider>
-      </HelmetProvider>
-    </React.StrictMode>
-  );
+    <>
+      <WalletProvider>
+        <Router>
+          <Header />
+          <main className="container mx-auto px-4 py-6">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/create-listing" element={<CreateListingForm />} />
+              <Route path="/scammer/:scammerId" element={<ScammerDetailsPage />} />
+              <Route path="/edit-scammer/:scammerId" element={<EditScammerPage />} />
+              <Route path="/user/:walletAddress" element={<UserDetailsPage />} />
+              <Route path="/:username" element={<UserDetailsPage />} />
+            </Routes>
+          </main>
+          <SiteFooter />
+        </Router>
+      </WalletProvider>
+      
+      <Toaster 
+        position="top-center"
+        richColors
+        closeButton
+        visibleToasts={3}
+        toastOptions={{
+          duration: 3000,
+          style: { background: 'var(--color-background)', color: 'var(--color-foreground)' }
+        }}
+      />
+    </>
+  )
 }
 
-export default App;
+export default App

@@ -62,7 +62,8 @@ export function UserProfile() {
       if (success) {
         console.log("Profile saved successfully, navigating back");
         toast.success("Profile saved successfully!");
-        navigate(-1);
+        // Add a small delay before navigating to ensure the toast is visible
+        setTimeout(() => navigate(-1), 300);
       } else {
         console.error("Profile save returned false");
         setSaveError("Failed to save profile. Please try again.");
