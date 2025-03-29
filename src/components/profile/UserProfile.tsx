@@ -62,10 +62,12 @@ export function UserProfile() {
       if (success) {
         console.log("Profile saved successfully, navigating back");
         toast.success("Profile saved successfully!", {
+          duration: 3000,
           style: {
             backgroundColor: "#ea384c", // Bright red 
             color: "#ffffff", // White text for contrast
-            fontWeight: "bold"
+            fontWeight: "bold",
+            border: "none"
           },
         });
         

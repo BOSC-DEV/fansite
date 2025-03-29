@@ -128,35 +128,10 @@ export function useProfileFormSubmit() {
       let success = false;
       
       try {
-        // Use the Supabase function for more reliable profile updates
-        const { data, error } = await supabase.rpc('upsert_profile', {
-          profile_id: currentProfileId,
-          profile_display_name: profileData.displayName,
-          profile_username: profileData.username,
-          profile_pic_url: profileData.profilePicUrl,
-          profile_wallet_address: profileData.walletAddress,
-          profile_created_at: profileData.createdAt,
-          profile_x_link: profileData.xLink,
-          profile_website_link: profileData.websiteLink,
-          profile_bio: profileData.bio
-        });
-        
-        if (error) {
-          console.error("[useProfileFormSubmit] Error with upsert_profile function:", error);
-          throw new Error(error.message);
-        }
-        
-        success = true;
-        console.log("[useProfileFormSubmit] Profile upserted via function successfully");
-      } catch (rpcError) {
-        console.error("[useProfileFormSubmit] RPC function failed:", rpcError);
-        
-        // Fall back to direct updates
-        if (hasProfile && currentProfileId) {
-          console.log("[useProfileFormSubmit] Falling back to direct update for existing profile with ID:", currentProfileId);
-          
-          // First try with direct update
-          const { error } = await supabase
+        // Direct approach: Use insert, update, or upsert based on whether profile exists
+        if (hasProfile && profileId) {
+          console.log("[useProfileFormSubmit] Updating existing profile with ID:", profileId);
+          const { error: updateError } = await supabase
             .from('profiles')
             .update({
               display_name: profileData.displayName,
@@ -166,39 +141,17 @@ export function useProfileFormSubmit() {
               website_link: profileData.websiteLink,
               bio: profileData.bio
             })
-            .eq('id', currentProfileId);
-            
-          if (error) {
-            console.error("[useProfileFormSubmit] Error updating profile with Supabase direct update:", error);
-            
-            // Try with the upsert method as fallback
-            const { error: upsertError } = await supabase
-              .from('profiles')
-              .upsert({
-                id: currentProfileId,
-                display_name: profileData.displayName,
-                username: profileData.username,
-                profile_pic_url: profileData.profilePicUrl,
-                wallet_address: address,
-                x_link: profileData.xLink,
-                website_link: profileData.websiteLink,
-                bio: profileData.bio
-              }, { onConflict: 'id' });
-              
-            if (upsertError) {
-              console.error("[useProfileFormSubmit] Error updating profile with Supabase upsert:", upsertError);
-              // As last resort, try the storage service
-              success = await storageService.saveProfile(profileData);
-            } else {
-              success = true;
-            }
-          } else {
-            success = true;
-          }
-        } else {
-          // For new profiles, try direct insert first
-          console.log("[useProfileFormSubmit] Creating new profile");
+            .eq('id', profileId);
           
+          if (updateError) {
+            console.error("[useProfileFormSubmit] Error updating profile:", updateError);
+            throw new Error(updateError.message);
+          }
+          
+          success = true;
+          console.log("[useProfileFormSubmit] Profile updated successfully with direct update");
+        } else {
+          console.log("[useProfileFormSubmit] Creating new profile with ID:", currentProfileId);
           const { error: insertError } = await supabase
             .from('profiles')
             .insert({
@@ -212,14 +165,27 @@ export function useProfileFormSubmit() {
               website_link: profileData.websiteLink,
               bio: profileData.bio
             });
-            
+          
           if (insertError) {
-            console.error("[useProfileFormSubmit] Error creating profile with direct insert:", insertError);
-            // Fallback to storage service
-            success = await storageService.saveProfile(profileData);
-          } else {
-            success = true;
+            console.error("[useProfileFormSubmit] Error creating profile:", insertError);
+            throw new Error(insertError.message);
           }
+          
+          success = true;
+          console.log("[useProfileFormSubmit] Profile created successfully with direct insert");
+        }
+      } catch (directError) {
+        console.error("[useProfileFormSubmit] Direct database operation failed:", directError);
+        
+        // Final fallback: Use the storage service's saveProfile method
+        console.log("[useProfileFormSubmit] Attempting to save profile using storage service");
+        success = await storageService.saveProfile(profileData);
+        
+        if (success) {
+          console.log("[useProfileFormSubmit] Profile saved successfully via storage service");
+        } else {
+          console.error("[useProfileFormSubmit] Failed to save profile even with storage service");
+          throw new Error("Failed to save profile with all methods");
         }
       }
       
