@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 
@@ -192,6 +193,7 @@ export class ProfileService extends BaseSupabaseService {
 
   async saveProfile(profile: UserProfile): Promise<boolean> {
     console.log("[ProfileService] Saving profile for wallet:", profile.walletAddress);
+    console.log("[ProfileService] Profile data being saved:", profile);
     
     if (!profile.walletAddress) {
       console.error("[ProfileService] Error: Attempted to save profile with empty wallet address");
@@ -220,7 +222,7 @@ export class ProfileService extends BaseSupabaseService {
       const dbProfile = {
         id: profileId,
         display_name: profile.displayName,
-        username: profile.username || '',
+        username: profile.username || '', // Ensure username is included
         profile_pic_url: profile.profilePicUrl || '',
         wallet_address: profile.walletAddress,
         created_at: profile.createdAt || new Date().toISOString(),
@@ -229,6 +231,8 @@ export class ProfileService extends BaseSupabaseService {
         bio: profile.bio || ''
       };
       
+      console.log("[ProfileService] Prepared DB profile:", dbProfile);
+      
       if (existingProfile) {
         // Update existing profile
         console.log("[ProfileService] Updating existing profile with ID:", existingProfile.id);
@@ -236,7 +240,7 @@ export class ProfileService extends BaseSupabaseService {
           .from('profiles')
           .update({
             display_name: profile.displayName,
-            username: profile.username || '',
+            username: profile.username || '', // Ensure username is updated
             profile_pic_url: profile.profilePicUrl || '',
             x_link: profile.xLink || '',
             website_link: profile.websiteLink || '',

@@ -22,6 +22,7 @@ function Toaster({ ...props }: ToasterProps) {
             "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
           cancelButton:
             "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
+          success: "group-[.toast]:bg-destructive group-[.toast]:text-white group-[.toast]:font-bold",
         },
       }}
       // Add a richColors option to enhance the visual feedback
@@ -30,6 +31,11 @@ function Toaster({ ...props }: ToasterProps) {
       closeButton
       // Group similar toasts together
       visibleToasts={3}
+      // Custom styles for better contrast
+      style={{
+        '--toast-success-bg': '#ea384c', // Bright red for success
+        '--toast-success-text': '#ffffff', // White text for contrast
+      }}
       {...props}
     />
   )

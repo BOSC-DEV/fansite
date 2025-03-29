@@ -104,28 +104,20 @@ export function useProfileFormSubmit() {
     
     setIsSubmitting(true);
     console.log("[useProfileFormSubmit] Starting profile save for address:", address);
+    console.log("[useProfileFormSubmit] Form data being saved:", formData);
     
     try {
       // Generate a new ID if none exists or use existing one
-      let profileId = uuidv4();
-      
-      // Check for existing profile first
-      const existingProfile = await storageService.getProfile(address);
-      if (existingProfile && existingProfile.id) {
-        profileId = existingProfile.id;
-        console.log("[useProfileFormSubmit] Using existing profile ID:", profileId);
-      } else {
-        console.log("[useProfileFormSubmit] Generated new profile ID:", profileId);
-      }
+      let currentProfileId = profileId || uuidv4();
       
       // Prepare the profile data
       const profileData = {
-        id: profileId,
+        id: currentProfileId,
         displayName: formData.displayName,
         username: formData.username,
         profilePicUrl: formData.profilePicUrl,
         walletAddress: address,
-        createdAt: existingProfile?.createdAt || new Date().toISOString(),
+        createdAt: new Date().toISOString(),
         xLink: formData.xLink || '',
         websiteLink: formData.websiteLink || '',
         bio: formData.bio || ''
@@ -133,38 +125,53 @@ export function useProfileFormSubmit() {
       
       console.log("[useProfileFormSubmit] Prepared profile data:", profileData);
       
-      // Use direct update for existing profiles to avoid the RPC column ambiguity issue
-      if (existingProfile && existingProfile.id) {
-        console.log("[useProfileFormSubmit] Using direct update for existing profile");
-        const { error: updateError } = await supabase
+      let success = false;
+      
+      // Direct update for existing profiles to avoid the RPC column ambiguity issue
+      if (hasProfile && currentProfileId) {
+        console.log("[useProfileFormSubmit] Updating existing profile with ID:", currentProfileId);
+        const { error } = await supabase
           .from('profiles')
           .update({
             display_name: profileData.displayName,
-            username: profileData.username,
+            username: profileData.username, // Ensure username is included
             profile_pic_url: profileData.profilePicUrl,
             x_link: profileData.xLink,
             website_link: profileData.websiteLink,
             bio: profileData.bio
           })
-          .eq('id', profileId);
+          .eq('id', currentProfileId);
           
-        if (updateError) {
-          console.error("[useProfileFormSubmit] Error updating profile:", updateError);
-          throw new Error("Failed to update profile");
+        if (error) {
+          console.error("[useProfileFormSubmit] Error updating profile:", error);
+          // Try fallback storage service
+          success = await storageService.saveProfile(profileData);
+        } else {
+          success = true;
         }
       } else {
         // For new profiles, use the storage service
-        console.log("[useProfileFormSubmit] Using storage service for new profile");
-        const success = await storageService.saveProfile(profileData);
-        
-        if (!success) {
-          throw new Error("Failed to save new profile");
-        }
+        console.log("[useProfileFormSubmit] Creating new profile");
+        success = await storageService.saveProfile(profileData);
+      }
+      
+      if (!success) {
+        throw new Error("Failed to save profile");
       }
       
       console.log("[useProfileFormSubmit] Profile saved successfully");
       setHasProfile(true);
-      setProfileId(profileId);
+      setProfileId(currentProfileId);
+      
+      // High contrast, themed success toast
+      toast.success("Profile saved successfully!", {
+        style: {
+          backgroundColor: "#ea384c", // Bright red
+          color: "#ffffff", // White text for contrast
+          fontWeight: "bold"
+        },
+      });
+      
       return true;
       
     } catch (error) {
