@@ -2,12 +2,14 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { safeSupabaseQuery } from "@/utils/supabaseHelpers";
+import { useWallet } from "@/context/WalletContext";
+import { validateAuth, establishAuth, ensureStorageBucketExists } from "@/utils/supabaseHelpers";
 
 export function useProfileImage() {
   const [profilePicUrl, setProfilePicUrl] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const { connectWallet } = useWallet();
 
   const uploadProfileImage = async (file: File, userId: string) => {
     if (!file) {
@@ -32,6 +34,22 @@ export function useProfileImage() {
         return null;
       }
       
+      // Ensure profile-images bucket exists
+      const bucketExists = await ensureStorageBucketExists('profile-images');
+      if (!bucketExists) {
+        toast.error("Failed to ensure storage bucket exists");
+        setImageError(true);
+        return null;
+      }
+      
+      // Check authentication
+      const isAuthenticated = await establishAuth(connectWallet);
+      if (!isAuthenticated) {
+        toast.error("Authentication required to upload images");
+        setImageError(true);
+        return null;
+      }
+      
       console.log("Uploading profile image to Supabase storage");
       
       // Create a unique file path with timestamp and userId
@@ -39,17 +57,16 @@ export function useProfileImage() {
       const filePath = `${userId}/${Date.now()}.${fileExt}`;
       
       // Upload to Supabase Storage
-      const { data, error } = await safeSupabaseQuery(() => 
-        supabase.storage
-          .from('profile-images')
-          .upload(filePath, file, {
-            cacheControl: '3600',
-            upsert: true
-          })
-      );
+      const { data, error } = await supabase.storage
+        .from('profile-images')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
       
       if (error) {
         console.error("Error uploading file to Supabase Storage:", error);
+        toast.error("Failed to upload image: " + (error.message || "Unknown error"));
         setImageError(true);
         return null;
       }
@@ -67,11 +84,13 @@ export function useProfileImage() {
         return url;
       } else {
         console.error("Upload succeeded but couldn't get public URL");
+        toast.error("Upload succeeded but couldn't get public URL");
         setImageError(true);
         return null;
       }
     } catch (error) {
       console.error("Error in upload process:", error);
+      toast.error("Error uploading image: " + (error instanceof Error ? error.message : "Unknown error"));
       setImageError(true);
       return null;
     } finally {
