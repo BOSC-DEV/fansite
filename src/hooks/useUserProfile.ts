@@ -7,7 +7,7 @@ export interface UserProfile {
   id?: string;
   displayName: string;
   username?: string;
-  profilePicUrl?: string;
+  profilePicUrl: string;  // Changed from optional to required
   walletAddress: string;
   createdAt: string;
   xLink?: string;
@@ -54,7 +54,7 @@ export function useUserProfile(username: string | undefined) {
               id: data.id,
               displayName: data.display_name,
               username: data.username,
-              profilePicUrl: data.profile_pic_url,
+              profilePicUrl: data.profile_pic_url || '',  // Ensure this is never null/undefined
               walletAddress: data.wallet_address,
               createdAt: data.created_at,
               xLink: data.x_link,
@@ -76,7 +76,7 @@ export function useUserProfile(username: string | undefined) {
               id: data.id,
               displayName: data.display_name,
               username: data.username,
-              profilePicUrl: data.profile_pic_url,
+              profilePicUrl: data.profile_pic_url || '',  // Ensure this is never null/undefined
               walletAddress: data.wallet_address,
               createdAt: data.created_at,
               xLink: data.x_link,
@@ -103,9 +103,13 @@ export function useUserProfile(username: string | undefined) {
               const parsed = JSON.parse(storedData);
               
               if (isWalletAddress && parsed.walletAddress === username) {
+                // Ensure profilePicUrl is never null/undefined
+                parsed.profilePicUrl = parsed.profilePicUrl || '';
                 profileData = parsed;
                 break;
               } else if (!isWalletAddress && parsed.username === username) {
+                // Ensure profilePicUrl is never null/undefined
+                parsed.profilePicUrl = parsed.profilePicUrl || '';
                 profileData = parsed;
                 break;
               }
