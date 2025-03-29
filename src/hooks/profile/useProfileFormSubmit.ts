@@ -33,10 +33,16 @@ export function useProfileFormSubmit() {
     const checkProfile = async () => {
       if (isConnected && address && supabaseReady) {
         try {
+          console.log("[useProfileFormSubmit] Checking if user has profile:", address);
           const exists = await storageService.hasProfile(address);
           setHasProfile(exists);
           if (exists) {
-            setProfileId(address);
+            // Get the profile to retrieve its ID
+            const profile = await storageService.getProfile(address);
+            if (profile && profile.id) {
+              setProfileId(profile.id);
+              console.log("[useProfileFormSubmit] Found existing profile with ID:", profile.id);
+            }
           }
         } catch (error) {
           console.error("[useProfileFormSubmit] Error checking profile:", error);
@@ -97,15 +103,31 @@ export function useProfileFormSubmit() {
     console.log("[useProfileFormSubmit] Starting profile save for address:", address);
     
     try {
-      // Check if profile exists to get the ID if it does
-      let existingId: string | undefined;
-      const existingProfile = await storageService.getProfile(address);
-      if (existingProfile && existingProfile.id) {
-        existingId = existingProfile.id;
+      // Attempt to directly query Supabase first to check for existing profile
+      const { data: existingData, error: lookupError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('wallet_address', address)
+        .maybeSingle();
+        
+      if (lookupError) {
+        console.warn("[useProfileFormSubmit] Error checking for existing profile:", lookupError);
       }
-
-      // Use the existing ID or generate a new one
-      const profileId = existingId || uuidv4();
+      
+      // Either use existing ID, or check via service, or generate new one
+      let profileId = existingData?.id;
+      
+      if (!profileId) {
+        // Try via service as fallback
+        const existingProfile = await storageService.getProfile(address);
+        if (existingProfile && existingProfile.id) {
+          profileId = existingProfile.id;
+        } else {
+          // Generate a new ID if none exists
+          profileId = uuidv4();
+        }
+      }
+      
       console.log("[useProfileFormSubmit] Using profile ID:", profileId);
       
       // Prepare the profile data
@@ -123,15 +145,33 @@ export function useProfileFormSubmit() {
       
       console.log("[useProfileFormSubmit] Prepared profile data:", profileData);
       
-      const success = await storageService.saveProfile(profileData);
-      
-      if (!success) {
-        console.error('[useProfileFormSubmit] Error saving profile through service');
-        toast.error("Failed to save profile");
-        return false;
+      // Direct Supabase upsert to bypass any potential service issues
+      const { error: upsertError } = await supabase
+        .from('profiles')
+        .upsert(
+          {
+            id: profileData.id,
+            display_name: profileData.displayName,
+            username: profileData.username,
+            profile_pic_url: profileData.profilePicUrl,
+            wallet_address: profileData.walletAddress,
+            created_at: profileData.createdAt,
+            x_link: profileData.xLink,
+            website_link: profileData.websiteLink,
+            bio: profileData.bio
+          },
+          { 
+            onConflict: 'id',
+            ignoreDuplicates: false 
+          }
+        );
+        
+      if (upsertError) {
+        console.error('[useProfileFormSubmit] Error saving profile directly:', upsertError);
+        throw new Error(`Database error: ${upsertError.message}`);
       }
       
-      console.log("[useProfileFormSubmit] Profile saved successfully");
+      console.log("[useProfileFormSubmit] Profile saved successfully via direct upsert");
       toast.success("Profile saved successfully");
       setHasProfile(true);
       setProfileId(profileId);

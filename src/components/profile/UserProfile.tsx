@@ -39,7 +39,7 @@ export function UserProfile() {
     }
     
     try {
-      // Ensure we have required fields
+      // Validate required fields
       if (!formData.displayName.trim()) {
         toast.error("Display name is required");
         return;
@@ -50,8 +50,15 @@ export function UserProfile() {
         return;
       }
       
+      if (!usernameAvailable) {
+        toast.error("Username is not available");
+        return;
+      }
+      
       // Proceed with profile save
+      console.log("Attempting to save profile...");
       const success = await saveProfile();
+      
       if (success) {
         console.log("Profile saved successfully, navigating back");
         toast.success("Profile saved successfully!");
