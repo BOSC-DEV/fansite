@@ -23,15 +23,13 @@ export function ProfileFormFooter({
   };
   
   return (
-    <div className="px-6 py-4 flex justify-end">
-      <div className="flex items-center gap-3">
-        <Button type="button" variant="outline" onClick={() => navigate(-1)}>
-          Cancel
-        </Button>
-        <Button type="submit" disabled={isSubmitting || !usernameAvailable}>
-          {buttonText()}
-        </Button>
-      </div>
+    <div className="flex justify-end gap-3 px-6 py-4">
+      <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+        Cancel
+      </Button>
+      <Button type="submit" disabled={isSubmitting || !usernameAvailable}>
+        {buttonText()}
+      </Button>
     </div>
   );
 }

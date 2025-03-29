@@ -1,4 +1,3 @@
-
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 
@@ -204,7 +203,6 @@ export class ProfileService extends BaseSupabaseService {
     
     // Convert from camelCase to snake_case for database
     const dbProfile = {
-      id: uuidv4(), // Generate a proper UUID instead of using wallet address as ID
       display_name: profile.displayName,
       username: profile.username,
       profile_pic_url: profile.profilePicUrl,
@@ -212,8 +210,7 @@ export class ProfileService extends BaseSupabaseService {
       created_at: profile.createdAt || new Date().toISOString(),
       x_link: profile.xLink || null,
       website_link: profile.websiteLink || null,
-      bio: profile.bio || null,
-      points: profile.points || 0
+      bio: profile.bio || null
     };
     
     console.log("[ProfileService] Converted profile for database:", dbProfile);
@@ -231,33 +228,33 @@ export class ProfileService extends BaseSupabaseService {
 
     let result;
     
-    if (existingProfile) {
-      console.log("[ProfileService] Updating existing profile with ID:", existingProfile.id);
-      // Update existing profile - use the existing ID
-      const updateProfile = {
-        ...dbProfile,
-        id: existingProfile.id // Keep the existing ID
-      };
-      
-      result = await this.supabase
-        .from('profiles')
-        .update(updateProfile)
-        .eq('id', existingProfile.id);
-    } else {
-      console.log("[ProfileService] Creating new profile with generated UUID");
-      // Insert new profile with the generated UUID
-      result = await this.supabase
-        .from('profiles')
-        .insert(dbProfile);
-    }
+    try {
+      if (existingProfile) {
+        console.log("[ProfileService] Updating existing profile with ID:", existingProfile.id);
+        // Update existing profile - use the existing ID
+        result = await this.supabase
+          .from('profiles')
+          .update(dbProfile)
+          .eq('id', existingProfile.id);
+      } else {
+        console.log("[ProfileService] Creating new profile");
+        // Insert new profile with auto-generated UUID
+        result = await this.supabase
+          .from('profiles')
+          .insert(dbProfile);
+      }
 
-    if (result.error) {
-      console.error('[ProfileService] Error saving profile:', result.error);
+      if (result.error) {
+        console.error('[ProfileService] Error saving profile:', result.error);
+        return false;
+      }
+      
+      console.log("[ProfileService] Profile saved successfully");
+      return true;
+    } catch (error) {
+      console.error('[ProfileService] Unexpected error saving profile:', error);
       return false;
     }
-    
-    console.log("[ProfileService] Profile saved successfully");
-    return true;
   }
 
   async hasProfile(walletAddress: string): Promise<boolean> {
