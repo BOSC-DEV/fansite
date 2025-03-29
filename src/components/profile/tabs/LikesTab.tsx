@@ -40,7 +40,7 @@ export function LikesTab({ address }: LikesTabProps) {
           return;
         }
 
-        console.log("Found interactions:", interactions?.length || 0);
+        console.log("Found liked interactions:", interactions?.length || 0);
         
         if (!interactions || interactions.length === 0) {
           setLikedScammers([]);
@@ -52,7 +52,7 @@ export function LikesTab({ address }: LikesTabProps) {
         const scammerIds = interactions.map(interaction => interaction.scammer_id);
         console.log("Scammer IDs to fetch:", scammerIds);
         
-        // Fetch all scammers
+        // Fetch all scammers with these IDs
         const { data: scammers, error: scammersError } = await supabase
           .from('scammers')
           .select('*')
@@ -130,7 +130,7 @@ export function LikesTab({ address }: LikesTabProps) {
       <>
         <h2 className="text-xl font-bold mb-4 font-western text-western-accent">Likes</h2>
         <Card className="p-6 text-center">
-          <p className="text-western-sand">No liked scammer listings yet</p>
+          <p className="text-western-wood">No liked scammer listings yet</p>
         </Card>
       </>
     );

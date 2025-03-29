@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -39,10 +40,12 @@ export function UserProfilePage() {
   const isCurrentUserProfile = profile?.walletAddress && address && 
     profile.walletAddress.toLowerCase() === address.toLowerCase();
   
-  return <div className="min-h-screen old-paper flex flex-col">
+  return (
+    <div className="min-h-screen old-paper flex flex-col">
       <Header />
       <main className="container mx-auto px-4 py-4 flex-grow mt-16 md:mt-24">
-        {isLoading ? <ProfileSkeleton /> : error ? <ProfileError error={error} /> : profile ? <div className="max-w-4xl mx-auto">
+        {isLoading ? <ProfileSkeleton /> : error ? <ProfileError error={error} /> : profile ? (
+          <div className="max-w-4xl mx-auto">
             <ProfileHeader 
               username={profile.username || ''} 
               name={profile.displayName} 
@@ -89,33 +92,31 @@ export function UserProfilePage() {
               </TabsList>
               
               <TabsContent value="reports" className="mt-6 px-0">
-                <h2 className="text-2xl font-western text-western-wood mb-4"></h2>
                 <ReportsTab scammers={scammers} />
               </TabsContent>
               
               <TabsContent value="bounties" className="mt-6 px-0">
-                <h2 className="text-2xl font-western text-western-wood mb-4"></h2>
                 <BountiesTab />
               </TabsContent>
               
               <TabsContent value="info" className="mt-6 px-0">
-                <h2 className="text-2xl font-western text-western-wood mb-4"></h2>
                 <InfoTab profile={profile} />
               </TabsContent>
               
               <TabsContent value="likes" className="mt-6 px-0">
-                <h2 className="text-2xl font-western text-western-wood mb-4"></h2>
                 <LikesTab address={profile.walletAddress} />
               </TabsContent>
               
               <TabsContent value="comments" className="mt-6 px-0">
-                <h2 className="text-2xl font-western text-western-wood mb-4"></h2>
                 <CommentsTab />
               </TabsContent>
             </Tabs>
-          </div> : null}
+          </div>
+        ) : null}
       </main>
-      <SiteFooter />
-    </div>;
+      {/* SiteFooter is now rendered at the App level */}
+    </div>
+  );
 }
+
 export default UserProfilePage;
