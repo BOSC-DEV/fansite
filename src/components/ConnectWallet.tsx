@@ -1,6 +1,5 @@
-
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { useWallet } from "@/context/WalletContext";
+import { Card, CardContent } from "@/components/ui/card";
+import { useWallet } from "@/context/wallet";
 import { Wallet, AlertCircle, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";

@@ -46,6 +46,7 @@ export function ProfilePictureUpload({
         setAuthChecked(true);
       } catch (err) {
         console.error("Error checking auth in ProfilePictureUpload:", err);
+        setAuthChecked(true); // Set to true even on error to allow the component to proceed
       }
     };
     

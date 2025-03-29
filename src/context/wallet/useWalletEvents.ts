@@ -13,8 +13,8 @@ export function useWalletEvents() {
       // Clear any persisted wallet data
       localStorage.removeItem('walletData');
       localStorage.removeItem('walletTimestamp');
+      localStorage.removeItem('lastSignatureTime');
       
-      // We won't show a toast here because the user triggered this disconnect
       // Force page reload to clear the app state
       window.location.reload();
     };
