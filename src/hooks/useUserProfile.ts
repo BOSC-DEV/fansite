@@ -1,8 +1,20 @@
 
 import { useState, useEffect } from "react";
-import { storageService, UserProfile, ScammerListing } from "@/services/storage";
-import { Scammer } from "@/lib/types";
 import { supabase } from "@/integrations/supabase/client";
+import { Scammer } from "@/lib/types";
+
+export interface UserProfile {
+  id?: string;
+  displayName: string;
+  username?: string;
+  profilePicUrl?: string;
+  walletAddress: string;
+  createdAt: string;
+  xLink?: string;
+  websiteLink?: string;
+  bio?: string;
+  points?: number;
+}
 
 export function useUserProfile(username: string | undefined) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -12,61 +24,98 @@ export function useUserProfile(username: string | undefined) {
   
   useEffect(() => {
     const fetchProfileAndScammers = async () => {
+      if (!username) {
+        setError("Invalid username");
+        setIsLoading(false);
+        return;
+      }
+      
       setIsLoading(true);
       setError(null);
       
       try {
-        if (!username) {
-          setError("Invalid username");
-          setIsLoading(false);
-          return;
-        }
-        
         console.log("Fetching profile for:", username);
         
-        // Check if input looks like a wallet address (simple check)
+        // Check if input looks like a wallet address
         const isWalletAddress = username.length > 30;
         let profileData = null;
         
+        // Try Supabase first
         if (isWalletAddress) {
-          console.log("Input looks like a wallet address, trying to fetch by address");
-          profileData = await storageService.getProfile(username);
+          // Query by wallet address
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('wallet_address', username)
+            .maybeSingle();
+            
+          if (data) {
+            profileData = {
+              id: data.id,
+              displayName: data.display_name,
+              username: data.username,
+              profilePicUrl: data.profile_pic_url,
+              walletAddress: data.wallet_address,
+              createdAt: data.created_at,
+              xLink: data.x_link,
+              websiteLink: data.website_link,
+              bio: data.bio,
+              points: data.points
+            };
+          }
         } else {
-          console.log("Input looks like a username, trying to fetch by username");
-          profileData = await storageService.getProfileByUsername(username);
+          // Query by username
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('username', username)
+            .maybeSingle();
+            
+          if (data) {
+            profileData = {
+              id: data.id,
+              displayName: data.display_name,
+              username: data.username,
+              profilePicUrl: data.profile_pic_url,
+              walletAddress: data.wallet_address,
+              createdAt: data.created_at,
+              xLink: data.x_link,
+              websiteLink: data.website_link,
+              bio: data.bio,
+              points: data.points
+            };
+          }
         }
         
+        // If not found in Supabase, try localStorage
         if (!profileData) {
-          console.log("Profile not found, checking localStorage as fallback");
-          try {
-            // Check localStorage for this wallet/username as fallback
-            const storageKey = `profile_${username}`;
-            const localData = localStorage.getItem(storageKey);
-            
-            if (localData) {
-              console.log("Found profile in localStorage:", localData);
-              profileData = JSON.parse(localData);
-            } else if (isWalletAddress) {
-              // Last resort: try local storage with different key format
-              const allStorageKeys = Object.keys(localStorage);
-              const profileKeys = allStorageKeys.filter(key => key.startsWith('profile_'));
+          console.log("Profile not found in Supabase, checking localStorage");
+          
+          // Check all localStorage keys
+          const allStorageKeys = Object.keys(localStorage);
+          const profileKeys = allStorageKeys.filter(key => key.startsWith('profile_'));
+          
+          for (const key of profileKeys) {
+            try {
+              const storedData = localStorage.getItem(key);
+              if (!storedData) continue;
               
-              for (const key of profileKeys) {
-                const storedProfile = JSON.parse(localStorage.getItem(key) || '{}');
-                if (storedProfile.walletAddress === username) {
-                  console.log("Found profile by wallet address in localStorage");
-                  profileData = storedProfile;
-                  break;
-                }
+              const parsed = JSON.parse(storedData);
+              
+              if (isWalletAddress && parsed.walletAddress === username) {
+                profileData = parsed;
+                break;
+              } else if (!isWalletAddress && parsed.username === username) {
+                profileData = parsed;
+                break;
               }
+            } catch (e) {
+              console.error("Error parsing localStorage item:", e);
             }
-          } catch (e) {
-            console.error("Error checking localStorage:", e);
           }
         }
         
         if (!profileData) {
-          console.log("Profile not found in any data source");
           setError("Profile not found");
           setIsLoading(false);
           return;
@@ -76,18 +125,21 @@ export function useUserProfile(username: string | undefined) {
         setProfile(profileData);
         
         // Fetch scammers added by this user
-        const allScammers = await storageService.getAllScammers();
-        const userScammers = allScammers.filter(
-          scammer => scammer.addedBy === profileData.walletAddress
-        );
-        
-        console.log(`Found ${userScammers.length} scammers by this user`);
-        // Convert ScammerListing to Scammer (with date conversion)
-        const convertedScammers = userScammers.map(scammer => ({
-          ...scammer,
-          dateAdded: new Date(scammer.dateAdded)
-        }));
-        setScammers(convertedScammers);
+        const { data: scammerData, error: scammerError } = await supabase
+          .from('scammers')
+          .select('*')
+          .eq('added_by', profileData.walletAddress)
+          .is('deleted_at', null);
+          
+        if (scammerError) {
+          console.error("Error fetching scammers:", scammerError);
+        } else if (scammerData) {
+          const convertedScammers = scammerData.map(scammer => ({
+            ...scammer,
+            dateAdded: new Date(scammer.date_added)
+          }));
+          setScammers(convertedScammers);
+        }
       } catch (err) {
         console.error("Error fetching profile data:", err);
         setError("Failed to load profile data");

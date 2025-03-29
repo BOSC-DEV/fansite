@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { profileService } from "@/services/storage";
+import { supabase } from "@/integrations/supabase/client";
 
 export function useScammerProfile(addedBy: string | undefined) {
   const [addedByUsername, setAddedByUsername] = useState<string | null>(null);
@@ -16,18 +16,76 @@ export function useScammerProfile(addedBy: string | undefined) {
       }
       
       try {
-        const profile = await profileService.getProfile(addedBy);
-        if (profile) {
-          if (profile.username) {
-            setAddedByUsername(profile.username);
-            setProfileId(profile.username);
+        // Try Supabase first
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('username, profile_pic_url, id, wallet_address')
+          .eq('wallet_address', addedBy)
+          .maybeSingle();
+          
+        if (data) {
+          if (data.username) {
+            setAddedByUsername(data.username);
+            setProfileId(data.username);
           } else {
-            setProfileId(profile.walletAddress);
+            setProfileId(data.wallet_address);
           }
-          if (profile.profilePicUrl) {
-            setAddedByPhotoUrl(profile.profilePicUrl);
+          
+          if (data.profile_pic_url) {
+            setAddedByPhotoUrl(data.profile_pic_url);
           }
         } else {
+          // Try localStorage fallback
+          try {
+            const localData = localStorage.getItem(`profile_${addedBy}`);
+            if (localData) {
+              const parsed = JSON.parse(localData);
+              if (parsed.username) {
+                setAddedByUsername(parsed.username);
+                setProfileId(parsed.username);
+              } else {
+                setProfileId(addedBy);
+              }
+              
+              if (parsed.profilePicUrl) {
+                setAddedByPhotoUrl(parsed.profilePicUrl);
+              }
+              
+              return;
+            }
+            
+            // Check all localStorage keys
+            const allStorageKeys = Object.keys(localStorage);
+            const profileKeys = allStorageKeys.filter(key => key.startsWith('profile_'));
+            
+            for (const key of profileKeys) {
+              try {
+                const storedData = localStorage.getItem(key);
+                if (!storedData) continue;
+                
+                const parsed = JSON.parse(storedData);
+                if (parsed.walletAddress === addedBy) {
+                  if (parsed.username) {
+                    setAddedByUsername(parsed.username);
+                    setProfileId(parsed.username);
+                  } else {
+                    setProfileId(addedBy);
+                  }
+                  
+                  if (parsed.profilePicUrl) {
+                    setAddedByPhotoUrl(parsed.profilePicUrl);
+                  }
+                  
+                  return;
+                }
+              } catch (e) {
+                console.error("Error parsing localStorage item:", e);
+              }
+            }
+          } catch (localError) {
+            console.error("Error checking localStorage:", localError);
+          }
+          
           setProfileId(addedBy);
         }
       } catch (error) {
