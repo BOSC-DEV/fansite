@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { UserProfile } from "@/services/storage";
@@ -78,10 +77,8 @@ export function InfoTab({ profile }: InfoTabProps) {
                       <p className="font-medium mb-1">Score Algorithm</p>
                       <p className="text-xs mb-2">Your score is calculated based on:</p>
                       <ul className="text-xs list-disc pl-4 space-y-1">
-                        <li>Profile age (days on BOSC)</li>
-                        <li>Number of scammer reports submitted</li>
-                        <li>Engagement on your reports (likes and views)</li>
-                        <li>Bounties generated and spent</li>
+                        <li>Bounty spent + bounty generated</li>
+                        <li>Profile age (days) × likes × views × comments</li>
                       </ul>
                       <p className="text-xs mt-2">Higher engagement and more contributions lead to a higher score!</p>
                     </TooltipContent>

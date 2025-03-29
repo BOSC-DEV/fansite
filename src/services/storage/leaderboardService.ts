@@ -1,4 +1,3 @@
-
 import { BaseSupabaseService } from './baseSupabaseService';
 import { scammerService } from './scammer/scammerService';
 import { v4 as uuidv4 } from 'uuid';
@@ -95,16 +94,15 @@ export class LeaderboardService extends BaseSupabaseService {
         // Calculate profile age in days
         const profileCreatedDate = new Date(profile.created_at);
         const now = new Date();
-        const ageInMilliseconds = now.getTime() - profileCreatedDate.getTime();
-        const ageInDays = Math.floor(ageInMilliseconds / (1000 * 60 * 60 * 24));
+        const ageInDays = Math.floor((now.getTime() - profileCreatedDate.getTime()) / (1000 * 60 * 60 * 24));
         
-        // Calculate points using the algorithm:
-        // total spent on bounty + total generated + profile total days old + total generated bounties from reports x likes x views
+        // Calculate points using the updated algorithm:
+        // total spent on bounty + total bounty generated from reports + days old x likes x views x comments
         let points = profile.points || 0;
         
         // If there are no points already stored, calculate them
         if (points === 0) {
-          points = this.calculateUserPoints(bountySpent, bountyGenerated, ageInDays, totalReports, totalLikes, totalViews);
+          points = this.calculateUserPoints(bountySpent, bountyGenerated, ageInDays, totalReports, totalLikes, totalViews, totalComments);
           
           // Update the points in the database for future use
           this.updateUserPoints(profile.id, Math.round(points)).catch(err => 
@@ -156,25 +154,27 @@ export class LeaderboardService extends BaseSupabaseService {
     }
   }
 
-  // Extract calculation logic to separate method
+  // Updated calculation logic with the new formula
   private calculateUserPoints(
     bountySpent: number, 
     bountyGenerated: number, 
     ageInDays: number, 
     totalReports: number, 
     totalLikes: number, 
-    totalViews: number
+    totalViews: number,
+    totalComments: number
   ): number {
-    let points = bountySpent + bountyGenerated + ageInDays;
+    // Initial points: bounty spent + bounty generated
+    let points = bountySpent + bountyGenerated;
     
-    // Add the multiplication factor if there are reports with engagement
-    if (totalReports > 0 && (totalLikes > 0 || totalViews > 0)) {
-      const engagementMultiplier = Math.max(1, totalLikes * totalViews / 1000); // Scale down for reasonable numbers
-      points += totalReports * engagementMultiplier;
-    } else if (totalReports > 0) {
-      // If reports but no engagement, just add the reports
-      points += totalReports;
-    }
+    // Add the engagement factor: days old x likes x views x comments
+    const engagementMultiplier = ageInDays * Math.max(1, totalLikes) * Math.max(1, totalViews) * Math.max(1, totalComments);
+    
+    // Scale the engagement multiplier to avoid extremely large numbers
+    // We divide by a large number to keep the points in a reasonable range
+    const scaledEngagement = engagementMultiplier / 1000000;
+    
+    points += scaledEngagement;
     
     return points;
   }
@@ -208,23 +208,32 @@ export class LeaderboardService extends BaseSupabaseService {
       const totalReports = userScammers.length;
       const totalLikes = userScammers.reduce((sum, scammer) => sum + (scammer.likes || 0), 0);
       const totalViews = userScammers.reduce((sum, scammer) => sum + (scammer.views || 0), 0);
+      
+      // Count comments
+      let totalComments = 0;
+      userScammers.forEach(scammer => {
+        if (scammer.comments && Array.isArray(scammer.comments)) {
+          totalComments += scammer.comments.length;
+        }
+      });
+      
       const bountyGenerated = userScammers.reduce((sum, scammer) => sum + (scammer.bountyAmount || 0), 0);
       const bountySpent = 0; // Keep at 0 until bounty system is ready
       
       // Calculate profile age in days
       const profileCreatedDate = new Date(profileData.created_at);
       const now = new Date();
-      const ageInMilliseconds = now.getTime() - profileCreatedDate.getTime();
-      const ageInDays = Math.floor(ageInMilliseconds / (1000 * 60 * 60 * 24));
+      const ageInDays = Math.floor((now.getTime() - profileCreatedDate.getTime()) / (1000 * 60 * 60 * 24));
       
-      // Calculate new points
+      // Calculate new points with the updated formula
       const newPoints = this.calculateUserPoints(
         bountySpent,
         bountyGenerated,
         ageInDays,
         totalReports,
         totalLikes,
-        totalViews
+        totalViews,
+        totalComments
       );
       
       // Update points in database

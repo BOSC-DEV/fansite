@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -45,7 +44,6 @@ export function ProfileHeader({
   const { balance } = useWallet();
   const displayBalance = walletBalance !== undefined ? walletBalance : balance;
 
-  // Format the join date nicely
   const formattedDate = joinDate 
     ? new Intl.DateTimeFormat('en-US', { 
         year: 'numeric', 
@@ -54,7 +52,6 @@ export function ProfileHeader({
       }).format(joinDate) 
     : 'Unknown join date';
 
-  // Format website URL for display
   const formatWebsiteUrl = (url: string) => {
     if (!url) return '';
     return url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
@@ -89,10 +86,8 @@ export function ProfileHeader({
                     <p className="font-medium mb-1">Score Algorithm</p>
                     <p className="text-xs mb-2">Score is calculated based on:</p>
                     <ul className="text-xs list-disc pl-4 space-y-1">
-                      <li>Profile age (days)</li>
-                      <li>Number of reports submitted</li>
-                      <li>Engagement (likes × views)</li>
-                      <li>Bounties generated and spent</li>
+                      <li>Bounty spent + bounty generated</li>
+                      <li>Profile age (days) × likes × views × comments</li>
                     </ul>
                     <p className="text-xs mt-2">Higher engagement and more contributions lead to a higher score!</p>
                   </TooltipContent>
