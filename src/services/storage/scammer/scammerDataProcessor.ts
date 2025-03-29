@@ -33,22 +33,29 @@ export class ScammerDataProcessor {
 
   /**
    * Convert a client-facing listing to a database record
+   * Ensures arrays are always string[] for Supabase compatibility
    */
   static listingToDbRecord(listing: ScammerListing): ScammerDbRecord {
+    // Safely convert any arrays to string arrays
+    const ensureStringArray = (arr: any[] | undefined): string[] => {
+      if (!arr) return [];
+      return arr.map(item => String(item)); // Convert each item to string
+    };
+    
     return {
       id: listing.id,
       name: listing.name,
       photo_url: listing.photoUrl,
       accused_of: listing.accusedOf,
-      links: listing.links,
-      aliases: listing.aliases,
-      accomplices: listing.accomplices,
+      links: ensureStringArray(listing.links),
+      aliases: ensureStringArray(listing.aliases),
+      accomplices: ensureStringArray(listing.accomplices),
       official_response: listing.officialResponse,
       bounty_amount: listing.bountyAmount,
       wallet_address: listing.walletAddress,
       date_added: listing.dateAdded,
       added_by: listing.addedBy,
-      comments: listing.comments,
+      comments: ensureStringArray(listing.comments),
       likes: listing.likes,
       dislikes: listing.dislikes,
       views: listing.views,

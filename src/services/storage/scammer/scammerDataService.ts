@@ -31,9 +31,9 @@ export class ScammerDataService extends ScammerBaseService {
         photo_url: dbRecord.photo_url,
         accused_of: dbRecord.accused_of,
         // Ensure these are proper string arrays for Supabase
-        links: Array.isArray(dbRecord.links) ? dbRecord.links : [],
-        aliases: Array.isArray(dbRecord.aliases) ? dbRecord.aliases : [],
-        accomplices: Array.isArray(dbRecord.accomplices) ? dbRecord.accomplices : [],
+        links: Array.isArray(dbRecord.links) ? dbRecord.links as string[] : [],
+        aliases: Array.isArray(dbRecord.aliases) ? dbRecord.aliases as string[] : [],
+        accomplices: Array.isArray(dbRecord.accomplices) ? dbRecord.accomplices as string[] : [],
         official_response: dbRecord.official_response,
         bounty_amount: dbRecord.bounty_amount || 0,
         wallet_address: dbRecord.wallet_address || '',
@@ -43,15 +43,16 @@ export class ScammerDataService extends ScammerBaseService {
         dislikes: dbRecord.dislikes || 0,
         views: dbRecord.views || 0,
         shares: dbRecord.shares || 0,
-        comments: Array.isArray(dbRecord.comments) ? dbRecord.comments : [],
+        comments: Array.isArray(dbRecord.comments) ? dbRecord.comments as string[] : [],
         deleted_at: null // Ensure new/updated records are not marked as deleted
       };
       
       console.log("[ScammerDataService] Formatted scammer data for Supabase:", scammerData);
       
+      // Use upsert with an array containing a single object
       const { error } = await supabase
         .from('scammers')
-        .upsert([scammerData]) // Wrap in array since upsert expects array of objects
+        .upsert([scammerData]) // Correctly pass an array with one object
         .select();
 
       if (error) {
@@ -60,7 +61,7 @@ export class ScammerDataService extends ScammerBaseService {
         // Try an insert if upsert fails
         const { error: insertError } = await supabase
           .from('scammers')
-          .insert([scammerData])
+          .insert([scammerData]) // Also pass an array here
           .select();
           
         if (insertError) {
