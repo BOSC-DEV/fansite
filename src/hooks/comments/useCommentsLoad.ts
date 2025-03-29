@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from "react";
-import { db, Comment } from "@/lib/supabase-helpers";
+import { db, Comment, safeSpread, safeGetWithDefault } from "@/lib/supabase-helpers";
 import { toast } from "sonner";
 
 export function useCommentsLoad(scammerId: string) {
@@ -28,15 +28,14 @@ export function useCommentsLoad(scammerId: string) {
         
         // Ensure all comments have a valid created_at field and views field
         const validatedComments = supabaseComments.map(comment => {
-          const created_at = comment.created_at && comment.created_at !== 'Invalid Date' 
-            ? comment.created_at 
-            : new Date().toISOString();
+          const created_at = safeGetWithDefault(comment, 'created_at', new Date().toISOString());
+          created_at !== 'Invalid Date' ? created_at : new Date().toISOString();
           
           // Ensure views property exists with a default value
-          const views = typeof comment.views === 'number' ? comment.views : 0;
+          const views = safeGetWithDefault(comment, 'views', 0);
           
           return {
-            ...comment,
+            ...safeSpread(comment),
             created_at,
             views
           };

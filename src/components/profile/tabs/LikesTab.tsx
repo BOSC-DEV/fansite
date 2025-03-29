@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { db } from "@/lib/supabase-helpers";
+import { db, safeGet } from "@/lib/supabase-helpers";
 import { ScammerCard } from "@/components/scammer/card/ScammerCard";
 import { Scammer } from "@/lib/types";
 import { storageService } from "@/services/storage";
@@ -45,7 +45,7 @@ export function LikesTab({ address }: LikesTabProps) {
         }
 
         // Get scammer IDs from interactions
-        const scammerIds = interactions.map(interaction => interaction.scammer_id);
+        const scammerIds = interactions.map(interaction => safeGet(interaction, 'scammer_id')).filter(Boolean) as string[];
         
         // Fetch scammer details for each ID
         const allScammers = await storageService.getAllScammers();

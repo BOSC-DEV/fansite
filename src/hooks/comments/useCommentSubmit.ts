@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
-import { db } from "@/lib/supabase-helpers";
+import { db, safeGet } from "@/lib/supabase-helpers";
 import { commentService, profileService } from "@/services/storage/localStorageService";
 
 interface NormalizedProfile {
@@ -51,8 +51,8 @@ export function useCommentSubmit(
           
         if (!error && supabaseProfile) {
           normalizedProfile = {
-            name: supabaseProfile.display_name || "Anonymous",
-            profilePic: supabaseProfile.profile_pic_url || ""
+            name: safeGet(supabaseProfile, 'display_name') || "Anonymous",
+            profilePic: safeGet(supabaseProfile, 'profile_pic_url') || ""
           };
         } else {
           // Fallback to localStorage

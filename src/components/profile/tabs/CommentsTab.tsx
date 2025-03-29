@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { db, Comment } from "@/lib/supabase-helpers";
+import { db, Comment, safeSpread } from "@/lib/supabase-helpers";
 import { useWallet } from "@/context/WalletContext";
 import { CommentList } from "@/components/comments/CommentList";
 import { toast } from "sonner";
@@ -38,7 +38,7 @@ export function CommentsTab() {
             const validatedComments = userComments.map(comment => {
               if (!comment.created_at || comment.created_at === 'Invalid Date') {
                 // Use current timestamp if the date is invalid
-                return { ...comment, created_at: new Date().toISOString() };
+                return { ...safeSpread(comment), created_at: new Date().toISOString() };
               }
               return comment;
             }) as Comment[];

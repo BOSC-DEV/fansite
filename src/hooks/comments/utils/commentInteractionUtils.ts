@@ -1,5 +1,6 @@
 
 import { supabase } from "@/lib/supabase";
+import { safeGet } from "@/lib/supabase-helpers";
 import { toast } from "sonner";
 
 /**
@@ -20,8 +21,8 @@ export async function checkPreviousInteraction(commentId: string, userId: string
     }
 
     return {
-      isLiked: data?.liked || false,
-      isDisliked: data?.disliked || false
+      isLiked: data ? Boolean(safeGet(data, 'liked')) : false,
+      isDisliked: data ? Boolean(safeGet(data, 'disliked')) : false
     };
   } catch (error) {
     console.error("Error in checkPreviousInteraction:", error);
@@ -108,8 +109,8 @@ export async function getCommentCounts(commentId: string) {
     }
     
     return {
-      likes: data.likes || 0,
-      dislikes: data.dislikes || 0
+      likes: data ? safeGet(data, 'likes') || 0 : 0,
+      dislikes: data ? safeGet(data, 'dislikes') || 0 : 0
     };
   } catch (error) {
     console.error("Error in getCommentCounts:", error);

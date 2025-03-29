@@ -1,6 +1,7 @@
 
 import { useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import { safeGet } from '@/lib/supabase-helpers';
 
 export function useCommentsViewTracking(commentId: string) {
   useEffect(() => {
@@ -35,7 +36,7 @@ export function useCommentsViewTracking(commentId: string) {
           return;
         }
         
-        const currentViews = comment?.views || 0;
+        const currentViews = comment ? safeGet(comment, 'views') || 0 : 0;
         
         await supabase
           .from('comments')
