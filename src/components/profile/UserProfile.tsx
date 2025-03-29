@@ -7,7 +7,7 @@ import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from "@/integrations/supabase/client";
-import { safeSupabaseQuery, validateAuth } from "@/utils/supabaseHelpers";
+import { validateAuth } from "@/utils/supabaseHelpers";
 import type { Database } from '@/integrations/supabase/database.types';
 
 type ProfileRow = Database['public']['Tables']['profiles']['Row'];
@@ -23,7 +23,7 @@ export interface ProfileFormData {
 
 export function UserProfile() {
   const navigate = useNavigate();
-  const { isConnected, address } = useWallet();
+  const { isConnected, address, connectWallet } = useWallet();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [hasProfile, setHasProfile] = useState(false);
@@ -55,9 +55,16 @@ export function UserProfile() {
         const isAuthenticated = await validateAuth();
         if (!isAuthenticated) {
           console.warn("User not authenticated with Supabase");
-          toast.error("Authentication required. Please reconnect your wallet.");
-          setIsLoading(false);
-          return;
+          // Try to reconnect wallet
+          await connectWallet();
+          
+          // Check again after reconnect attempt
+          const retryAuth = await validateAuth();
+          if (!retryAuth) {
+            toast.error("Authentication required. Please reconnect your wallet.");
+            setIsLoading(false);
+            return;
+          }
         }
         
         // Try to fetch profile from Supabase
@@ -113,7 +120,7 @@ export function UserProfile() {
     };
     
     checkEmailVerification();
-  }, [isConnected, address]);
+  }, [isConnected, address, connectWallet]);
 
   // Check if username is available
   const checkUsername = async (username: string) => {
@@ -197,7 +204,17 @@ export function UserProfile() {
     
     if (!isConnected || !address) {
       toast.error("Please connect your wallet first");
-      return;
+      try {
+        await connectWallet();
+      } catch (error) {
+        console.error("Failed to connect wallet:", error);
+        return;
+      }
+      
+      if (!isConnected || !address) {
+        toast.error("Wallet connection required to save profile");
+        return;
+      }
     }
     
     if (!validateForm()) {
@@ -213,8 +230,24 @@ export function UserProfile() {
       if (!isAuthenticated) {
         toast.dismiss();
         toast.error("Authentication required. Please reconnect your wallet.");
-        setIsSubmitting(false);
-        return;
+        
+        // Try to reconnect wallet
+        try {
+          await connectWallet();
+          
+          // Check authentication again
+          const retryAuth = await validateAuth();
+          if (!retryAuth) {
+            toast.error("Could not authenticate with your wallet. Please try again.");
+            setIsSubmitting(false);
+            return;
+          }
+        } catch (error) {
+          console.error("Failed to reconnect wallet:", error);
+          toast.error("Failed to reconnect wallet. Please try again manually.");
+          setIsSubmitting(false);
+          return;
+        }
       }
       
       const profileId = hasProfile ? undefined : uuidv4();

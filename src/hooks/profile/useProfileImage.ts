@@ -2,12 +2,13 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { safeSupabaseQuery } from "@/utils/supabaseHelpers";
+import { useWallet } from "@/context/WalletContext";
 
 export function useProfileImage() {
   const [profilePicUrl, setProfilePicUrl] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const { connectWallet } = useWallet();
 
   const uploadProfileImage = async (file: File, userId: string) => {
     if (!file) {
@@ -36,8 +37,23 @@ export function useProfileImage() {
       const { data: sessionData } = await supabase.auth.getSession();
       if (!sessionData.session) {
         toast.error("Authentication required to upload images");
-        setImageError(true);
-        return null;
+        
+        // Try to reconnect wallet
+        try {
+          await connectWallet();
+          
+          // Check if reconnect worked
+          const { data: retryData } = await supabase.auth.getSession();
+          if (!retryData.session) {
+            toast.error("Please reconnect your wallet to upload images");
+            setImageError(true);
+            return null;
+          }
+        } catch (error) {
+          console.error("Failed to reconnect wallet:", error);
+          setImageError(true);
+          return null;
+        }
       }
       
       console.log("Uploading profile image to Supabase storage");

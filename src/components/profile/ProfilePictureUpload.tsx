@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useProfileImage } from "@/hooks/profile/useProfileImage";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useWallet } from "@/context/WalletContext";
 
 interface ProfilePictureUploadProps {
   displayName: string;
@@ -24,6 +25,7 @@ export function ProfilePictureUpload({
     uploadProfileImage,
     isUploading
   } = useProfileImage();
+  const { connectWallet } = useWallet();
   const [imageError, setImageError] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
@@ -33,8 +35,22 @@ export function ProfilePictureUpload({
     // Check authentication before attempting upload
     const { data } = await supabase.auth.getSession();
     if (!data.session) {
-      toast.error("Please sign in to upload a profile picture");
-      return;
+      toast.error("Authentication required to upload a profile picture");
+      
+      // Try to reconnect wallet
+      try {
+        await connectWallet();
+        
+        // Check if reconnect worked
+        const { data: retryData } = await supabase.auth.getSession();
+        if (!retryData.session) {
+          toast.error("Please reconnect your wallet to upload images");
+          return;
+        }
+      } catch (error) {
+        console.error("Failed to reconnect wallet:", error);
+        return;
+      }
     }
     
     fileInputRef.current?.click();
@@ -48,6 +64,13 @@ export function ProfilePictureUpload({
     try {
       // Clear any previous input value so user can upload same file again if needed
       e.target.value = '';
+      
+      // Check authentication before attempting upload
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) {
+        toast.error("Authentication required to upload a profile picture");
+        return;
+      }
       
       console.log("Uploading profile image:", file.name);
       const url = await uploadProfileImage(file, userId || 'anonymous');
