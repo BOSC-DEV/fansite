@@ -13,7 +13,7 @@ export class ScammerDataService extends ScammerBaseService {
    */
   async saveScammer(scammer: ScammerListing): Promise<boolean> {
     try {
-      console.log("Saving scammer to Supabase:", scammer.name);
+      console.log("[ScammerDataService] Saving scammer to Supabase:", scammer.name);
       
       // Create database record from ScammerListing
       const dbRecord = ScammerDataProcessor.listingToDbRecord(scammer);
@@ -31,21 +31,23 @@ export class ScammerDataService extends ScammerBaseService {
         photo_url: dbRecord.photo_url,
         accused_of: dbRecord.accused_of,
         // Ensure these are proper string arrays for Supabase
-        links: dbRecord.links as string[],
-        aliases: dbRecord.aliases as string[],
-        accomplices: dbRecord.accomplices as string[],
+        links: Array.isArray(dbRecord.links) ? dbRecord.links : [],
+        aliases: Array.isArray(dbRecord.aliases) ? dbRecord.aliases : [],
+        accomplices: Array.isArray(dbRecord.accomplices) ? dbRecord.accomplices : [],
         official_response: dbRecord.official_response,
-        bounty_amount: dbRecord.bounty_amount,
-        wallet_address: dbRecord.wallet_address,
+        bounty_amount: dbRecord.bounty_amount || 0,
+        wallet_address: dbRecord.wallet_address || '',
         date_added: dbRecord.date_added,
-        added_by: dbRecord.added_by,
+        added_by: dbRecord.added_by || '',
         likes: dbRecord.likes || 0,
         dislikes: dbRecord.dislikes || 0,
         views: dbRecord.views || 0,
         shares: dbRecord.shares || 0,
-        comments: dbRecord.comments as string[],
+        comments: Array.isArray(dbRecord.comments) ? dbRecord.comments : [],
         deleted_at: null // Ensure new/updated records are not marked as deleted
       };
+      
+      console.log("[ScammerDataService] Formatted scammer data for Supabase:", scammerData);
       
       const { error } = await supabase
         .from('scammers')
@@ -53,14 +55,24 @@ export class ScammerDataService extends ScammerBaseService {
         .select();
 
       if (error) {
-        console.error("Error saving scammer:", error);
-        return false;
+        console.error("[ScammerDataService] Error saving scammer:", error);
+        
+        // Try an insert if upsert fails
+        const { error: insertError } = await supabase
+          .from('scammers')
+          .insert([scammerData])
+          .select();
+          
+        if (insertError) {
+          console.error("[ScammerDataService] Insert also failed:", insertError);
+          return false;
+        }
       }
       
-      console.log("Scammer saved successfully:", scammer.name);
+      console.log("[ScammerDataService] Scammer saved successfully:", scammer.name);
       return true;
     } catch (error) {
-      console.error("Error in saveScammer:", error);
+      console.error("[ScammerDataService] Error in saveScammer:", error);
       return false;
     }
   }
@@ -70,16 +82,18 @@ export class ScammerDataService extends ScammerBaseService {
    */
   async getScammer(id: string): Promise<ScammerListing | null> {
     try {
+      console.log("[ScammerDataService] Getting scammer with ID:", id);
       const data = await this.getScammerRecord(id);
 
       if (!data) {
+        console.log("[ScammerDataService] No scammer found with ID:", id);
         return null;
       }
 
       const scammer = ScammerDataProcessor.dbRecordToListing(data as ScammerDbRecord);
       return scammer;
     } catch (error) {
-      console.error("Error in getScammer:", error);
+      console.error("[ScammerDataService] Error in getScammer:", error);
       return null;
     }
   }
@@ -89,6 +103,7 @@ export class ScammerDataService extends ScammerBaseService {
    */
   async getAllScammers(): Promise<ScammerListing[]> {
     try {
+      console.log("[ScammerDataService] Fetching all scammers");
       const { data, error } = await supabase
         .from('scammers')
         .select('*')
@@ -96,15 +111,17 @@ export class ScammerDataService extends ScammerBaseService {
         .order('date_added', { ascending: false });
 
       if (error) {
-        console.error("Error fetching all scammers:", error);
-        return [];
+        console.error("[ScammerDataService] Error fetching all scammers:", error);
+        throw error;
       }
 
       if (!data || data.length === 0) {
-        console.log("No scammers found in database");
+        console.log("[ScammerDataService] No scammers found in database");
         return [];
       }
 
+      console.log("[ScammerDataService] Found", data.length, "scammers");
+      
       const scammers = data.map(record => {
         // Add shares property if it doesn't exist
         const recordWithShares = {
@@ -116,7 +133,7 @@ export class ScammerDataService extends ScammerBaseService {
       
       return scammers;
     } catch (error) {
-      console.error("Error in getAllScammers:", error);
+      console.error("[ScammerDataService] Error in getAllScammers:", error);
       return [];
     }
   }

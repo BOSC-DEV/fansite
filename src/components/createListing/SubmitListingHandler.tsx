@@ -110,7 +110,8 @@ export function useSubmitListing() {
         console.warn("Failed to save to Supabase, but saved locally with ID:", nextId);
       }
       
-      toast.success("Scammer successfully added to the Book of Scams!");
+      // Changed success message from "Scammer successfully added to the Book of Scams!" to "Report filed!"
+      toast.success("Report filed!");
       
       // Wait briefly for toast to be visible then navigate
       setTimeout(() => navigate(`/scammer/${nextId}`), 1500);
