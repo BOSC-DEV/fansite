@@ -62,7 +62,7 @@ export function InfoTab({ profile }: InfoTabProps) {
               <h3 className="text-sm font-medium text-western-wood flex items-center gap-1">
                 Score
                 <TooltipProvider>
-                  <Tooltip delayDuration={0}>
+                  <Tooltip>
                     <TooltipTrigger asChild>
                       <button className="inline-flex cursor-help">
                         <HelpCircle className="h-3.5 w-3.5 text-western-accent/70" />
