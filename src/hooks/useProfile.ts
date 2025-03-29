@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
+import { v4 as uuidv4 } from 'uuid';
 
 export interface ProfileFormData {
   displayName: string;
@@ -29,6 +30,7 @@ export const useProfile = () => {
   const [error, setError] = useState<string | null>(null);
   const [usernameAvailable, setUsernameAvailable] = useState(true);
   const [checkingUsername, setCheckingUsername] = useState(false);
+  const [profileId, setProfileId] = useState<string | null>(null);
 
   // Load profile data
   useEffect(() => {
@@ -61,6 +63,7 @@ export const useProfile = () => {
             websiteLink: data.website_link || ""
           });
           setHasProfile(true);
+          setProfileId(data.id);
           
           // If we have a username, verify it's still available (it should be)
           if (data.username) {
@@ -68,6 +71,7 @@ export const useProfile = () => {
           }
         } else {
           setHasProfile(false);
+          setProfileId(null);
         }
       } catch (err) {
         console.error("Error loading profile:", err);
@@ -177,7 +181,11 @@ export const useProfile = () => {
     setError(null);
     
     try {
+      // Generate a profile ID if one doesn't exist
+      const id = profileId || uuidv4();
+      
       const profileData = {
+        id: id,
         display_name: profile.displayName,
         username: profile.username,
         profile_pic_url: profile.profilePicUrl,
@@ -196,7 +204,7 @@ export const useProfile = () => {
         result = await supabase
           .from('profiles')
           .update(profileData)
-          .eq('wallet_address', address);
+          .eq('id', id);
       } else {
         // Insert new profile
         result = await supabase
@@ -207,6 +215,7 @@ export const useProfile = () => {
       if (result.error) throw result.error;
       
       setHasProfile(true);
+      setProfileId(id);
       toast.success("Profile saved successfully!");
       return true;
     } catch (err) {
