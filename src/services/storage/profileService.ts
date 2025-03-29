@@ -201,6 +201,17 @@ export class ProfileService extends BaseSupabaseService {
     // Normalize wallet address
     profile.walletAddress = profile.walletAddress.trim();
     
+    // Check if profile exists
+    const { data: existingProfile, error: lookupError } = await this.supabase
+      .from('profiles')
+      .select('id')
+      .eq('wallet_address', profile.walletAddress)
+      .maybeSingle();
+    
+    if (lookupError) {
+      console.error('[ProfileService] Error checking if profile exists:', lookupError);
+    }
+
     // Convert from camelCase to snake_case for database
     const dbProfile = {
       display_name: profile.displayName,
@@ -215,17 +226,6 @@ export class ProfileService extends BaseSupabaseService {
     
     console.log("[ProfileService] Converted profile for database:", dbProfile);
     
-    // Check if profile exists
-    const { data: existingProfile, error: lookupError } = await this.supabase
-      .from('profiles')
-      .select('id')
-      .eq('wallet_address', profile.walletAddress)
-      .maybeSingle();
-    
-    if (lookupError) {
-      console.error('[ProfileService] Error checking if profile exists:', lookupError);
-    }
-
     let result;
     
     try {
@@ -238,10 +238,15 @@ export class ProfileService extends BaseSupabaseService {
           .eq('id', existingProfile.id);
       } else {
         console.log("[ProfileService] Creating new profile");
-        // Insert new profile with auto-generated UUID
+        // Insert new profile with auto-generated UUID - include id field
+        const newProfile = {
+          ...dbProfile,
+          id: uuidv4() // Generate a new UUID for the id field
+        };
+        
         result = await this.supabase
           .from('profiles')
-          .insert(dbProfile);
+          .insert(newProfile);
       }
 
       if (result.error) {
