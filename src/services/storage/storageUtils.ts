@@ -73,16 +73,10 @@ export async function uploadImage(file: File, bucketName: string, fileName: stri
     if (!bucketExists) {
       console.warn(`Bucket ${bucketName} does not exist. Trying localStorage fallback...`);
       
-      if (bucketName.includes('profile')) {
-        // For profile images, we can use localStorage as fallback
-        const localUrl = await storeImageLocally(file, fileName);
-        toast.success('Image saved locally (offline mode)');
-        return localUrl;
-      } else {
-        console.error(`Cannot store ${bucketName} images locally. Storage not available.`);
-        toast.error(`Storage configuration error. Please try again later.`);
-        return null;
-      }
+      // For profile images, we can use localStorage as fallback
+      const localUrl = await storeImageLocally(file, fileName);
+      toast.success('Image saved locally (offline mode)');
+      return localUrl;
     }
     
     // Create a unique file path to avoid collisions
@@ -99,16 +93,6 @@ export async function uploadImage(file: File, bucketName: string, fileName: stri
     
     if (error) {
       console.error(`Error uploading to ${bucketName}:`, error);
-      
-      // Check for specific error types
-      if (error.message.includes('auth/insufficient_permissions') || 
-          error.message.includes('JWT')) {
-        toast.error('Authentication error. Please sign in again.');
-      } else if (error.message.includes('network')) {
-        toast.error('Network error. Please check your connection.');
-      } else {
-        toast.error(`Upload failed: ${error.message}`);
-      }
       
       // Try localStorage fallback for profile images
       if (bucketName.includes('profile')) {
