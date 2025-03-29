@@ -31,8 +31,8 @@ export function ShareButton({ scammerId, count = 0 }: ShareButtonProps) {
     <InteractionButton
       icon={Share2}
       count={count}
-      label="Share"
       showLabel={true}
+      label="Share"
       onClick={shareScammer}
       title="Share this scammer"
     />

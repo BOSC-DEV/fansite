@@ -7,9 +7,13 @@ interface InteractionButtonProps {
   icon: LucideIcon;
   count: number;
   isActive?: boolean;
-  onClick: (event: React.MouseEvent) => void;
+  onClick?: (event: React.MouseEvent) => void;
   title?: string;
   activeClassName?: string;
+  showLabel?: boolean;
+  label?: string;
+  isViewOrComment?: boolean;
+  "aria-label"?: string;
 }
 
 export function InteractionButton({ 
@@ -18,13 +22,18 @@ export function InteractionButton({
   isActive = false, 
   onClick, 
   title, 
-  activeClassName = "bg-green-100 border-green-300 text-green-700" 
+  activeClassName = "bg-green-100 border-green-300 text-green-700",
+  showLabel = false,
+  label,
+  isViewOrComment = false,
+  "aria-label": ariaLabel
 }: InteractionButtonProps) {
   return (
     <button
       type="button"
       onClick={onClick}
       title={title}
+      aria-label={ariaLabel}
       className={cn(
         "flex items-center space-x-1 px-3 py-1 rounded-full border text-sm",
         isActive
@@ -34,6 +43,7 @@ export function InteractionButton({
     >
       <Icon className="h-4 w-4" />
       <span>{count}</span>
+      {showLabel && label && <span className="ml-1">{label}</span>}
     </button>
   );
 }
