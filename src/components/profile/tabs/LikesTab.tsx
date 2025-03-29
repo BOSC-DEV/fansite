@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase";
 import { ScammerCard } from "@/components/scammer/card/ScammerCard";
 import { Scammer } from "@/lib/types";
 import { toast } from "sonner";
+import { useWallet } from "@/context/WalletContext";
 
 interface LikesTabProps {
   address?: string;
@@ -14,23 +15,27 @@ interface LikesTabProps {
 export function LikesTab({ address }: LikesTabProps) {
   const [likedScammers, setLikedScammers] = useState<Scammer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { address: connectedAddress } = useWallet();
+  
+  // Ensure we have a valid address to work with - use current wallet address if none provided
+  const effectiveAddress = address || connectedAddress;
 
   useEffect(() => {
     const fetchLikedScammers = async () => {
-      if (!address) {
+      if (!effectiveAddress) {
         setIsLoading(false);
         return;
       }
 
       setIsLoading(true);
       try {
-        console.log("Fetching liked scammers for address:", address);
+        console.log("Fetching liked scammers for address:", effectiveAddress);
         
         // Get the interactions where the user liked scammers
         const { data: interactions, error } = await supabase
           .from('user_scammer_interactions')
           .select('scammer_id')
-          .eq('user_id', address)
+          .eq('user_id', effectiveAddress)
           .eq('liked', true);
 
         if (error) {
@@ -99,7 +104,7 @@ export function LikesTab({ address }: LikesTabProps) {
     };
 
     fetchLikedScammers();
-  }, [address]);
+  }, [effectiveAddress]);
 
   if (isLoading) {
     return (
