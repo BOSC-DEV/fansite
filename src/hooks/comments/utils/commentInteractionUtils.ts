@@ -2,14 +2,14 @@
 import { supabase } from "@/lib/supabase";
 import { safeGet } from "@/lib/supabase-helpers";
 import { toast } from "sonner";
+import { db } from "@/lib/supabase-helpers";
 
 /**
  * Checks if a user has an interaction with a comment
  */
 export async function checkPreviousInteraction(commentId: string, userId: string) {
   try {
-    const { data, error } = await supabase
-      .from('user_comment_interactions')
+    const { data, error } = await db.userCommentInteractions()
       .select('liked, disliked')
       .eq('comment_id', commentId)
       .eq('user_id', userId)
@@ -35,8 +35,7 @@ export async function checkPreviousInteraction(commentId: string, userId: string
  */
 export async function saveInteraction(commentId: string, userId: string, liked: boolean, disliked: boolean) {
   // Check if interaction exists
-  const { data: existingInteraction } = await supabase
-    .from('user_comment_interactions')
+  const { data: existingInteraction } = await db.userCommentInteractions()
     .select('id')
     .eq('comment_id', commentId)
     .eq('user_id', userId)
@@ -45,8 +44,7 @@ export async function saveInteraction(commentId: string, userId: string, liked: 
   try {
     if (existingInteraction) {
       // Update existing interaction
-      await supabase
-        .from('user_comment_interactions')
+      await db.userCommentInteractions()
         .update({ 
           liked,
           disliked,
@@ -56,8 +54,7 @@ export async function saveInteraction(commentId: string, userId: string, liked: 
         .eq('user_id', userId);
     } else {
       // Create new interaction
-      await supabase
-        .from('user_comment_interactions')
+      await db.userCommentInteractions()
         .insert({
           comment_id: commentId,
           user_id: userId,
@@ -78,8 +75,7 @@ export async function saveInteraction(commentId: string, userId: string, liked: 
  */
 export async function updateCommentCounts(commentId: string, newLikes: number, newDislikes: number) {
   try {
-    await supabase
-      .from('comments')
+    await db.comments()
       .update({ 
         likes: newLikes,
         dislikes: newDislikes
@@ -97,8 +93,7 @@ export async function updateCommentCounts(commentId: string, newLikes: number, n
  */
 export async function getCommentCounts(commentId: string) {
   try {
-    const { data, error } = await supabase
-      .from('comments')
+    const { data, error } = await db.comments()
       .select('likes, dislikes')
       .eq('id', commentId)
       .single();

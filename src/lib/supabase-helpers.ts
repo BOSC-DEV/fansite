@@ -1,90 +1,15 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import type { Database } from '@/integrations/supabase/types';
+import type { Database } from '@/integrations/supabase/database.types';
 
 // Type definitions for our database schema
-export type Profile = {
-  id: string;
-  wallet_address: string;
-  display_name: string;
-  username?: string;
-  profile_pic_url?: string;
-  created_at: string;
-  x_link?: string;
-  website_link?: string;
-  bio?: string;
-}
-
-export type Scammer = {
-  id: string;
-  name: string;
-  photo_url?: string;
-  accused_of?: string;
-  links: string[];
-  aliases: string[];
-  accomplices: string[];
-  official_response?: string;
-  bounty_amount: number;
-  wallet_address?: string;
-  date_added: string;
-  added_by?: string;
-  likes: number;
-  dislikes: number;
-  views: number;
-  shares: number;
-  comments: any[];
-  deleted_at?: string;
-  active: boolean;
-}
-
-export type Comment = {
-  id: string;
-  scammer_id: string;
-  content: string;
-  author: string;
-  author_name: string;
-  author_profile_pic?: string;
-  created_at: string;
-  likes: number;
-  dislikes: number;
-  views: number;
-}
-
-export type ScammerView = {
-  id: string;
-  scammer_id: string;
-  ip_hash: string;
-  created_at: string;
-}
-
-export type UserScammerInteraction = {
-  id: string;
-  user_id: string;
-  scammer_id: string;
-  liked: boolean;
-  disliked: boolean;
-  last_updated: string;
-}
-
-export type UserCommentInteraction = {
-  id: string;
-  user_id: string;
-  comment_id: string;
-  liked: boolean;
-  disliked: boolean;
-  last_updated: string;
-}
-
-export type LeaderboardStats = {
-  id: string;
-  wallet_address: string;
-  total_reports: number;
-  total_views: number;
-  total_likes: number;
-  total_comments: number;
-  total_bounty: number;
-  last_updated: string;
-}
+export type Profile = Database['public']['Tables']['profiles']['Row'];
+export type Comment = Database['public']['Tables']['comments']['Row'];
+export type Scammer = Database['public']['Tables']['scammers']['Row'];
+export type ScammerView = Database['public']['Tables']['scammer_views']['Row'];
+export type UserScammerInteraction = Database['public']['Tables']['user_scammer_interactions']['Row'];
+export type UserCommentInteraction = Database['public']['Tables']['user_comment_interactions']['Row'];
+export type LeaderboardStats = Database['public']['Tables']['leaderboard_stats']['Row'];
 
 // Type-safe table accessors using the Database type
 export const db = {

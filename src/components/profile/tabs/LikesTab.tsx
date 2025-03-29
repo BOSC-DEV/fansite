@@ -7,6 +7,7 @@ import { ScammerCard } from "@/components/scammer/card/ScammerCard";
 import { Scammer } from "@/lib/types";
 import { storageService } from "@/services/storage";
 import { toast } from "sonner";
+import { isNotNullOrUndefined, safeSpreader } from "@/utils/databaseHelpers";
 
 interface LikesTabProps {
   address?: string;
@@ -45,7 +46,9 @@ export function LikesTab({ address }: LikesTabProps) {
         }
 
         // Get scammer IDs from interactions
-        const scammerIds = interactions.map(interaction => safeGet(interaction, 'scammer_id')).filter(Boolean) as string[];
+        const scammerIds = interactions
+          .map(interaction => interaction?.scammer_id)
+          .filter(isNotNullOrUndefined);
         
         // Fetch scammer details for each ID
         const allScammers = await storageService.getAllScammers();

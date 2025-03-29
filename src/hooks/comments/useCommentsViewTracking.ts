@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { safeGet } from '@/lib/supabase-helpers';
+import { db, Comment } from '@/lib/supabase-helpers';
 
 export function useCommentsViewTracking(commentId: string) {
   useEffect(() => {
@@ -25,8 +26,7 @@ export function useCommentsViewTracking(commentId: string) {
         localStorage.setItem(localStorageKey, 'true');
         
         // Increment the view count in the database
-        const { data: comment, error } = await supabase
-          .from('comments')
+        const { data: comment, error } = await db.comments()
           .select('views')
           .eq('id', commentId)
           .maybeSingle();
@@ -38,8 +38,7 @@ export function useCommentsViewTracking(commentId: string) {
         
         const currentViews = comment ? safeGet(comment, 'views') || 0 : 0;
         
-        await supabase
-          .from('comments')
+        await db.comments()
           .update({ views: currentViews + 1 })
           .eq('id', commentId);
       } catch (error) {
