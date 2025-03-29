@@ -1,3 +1,4 @@
+
 import { ScammerStats } from './scammerTypes';
 import { ScammerBaseService } from './scammerBaseService';
 import { supabase } from '@/lib/supabase';
@@ -34,6 +35,14 @@ export class ScammerStatsService extends ScammerBaseService {
    */
   async incrementScammerViews(scammerId: string): Promise<boolean> {
     try {
+      // Get the current scammer record first to verify it exists
+      const scammer = await this.getScammerRecord(scammerId);
+      
+      if (!scammer) {
+        console.error("Scammer not found for incrementing views:", scammerId);
+        return false;
+      }
+      
       // Create an anonymous hash of the IP to protect privacy while tracking uniqueness
       const ipHash = await this.getAnonymousIpHash();
       
@@ -51,29 +60,28 @@ export class ScammerStatsService extends ScammerBaseService {
         return true; // Return true to indicate successful check, but no increment
       }
       
-      // Record the new view
-      const { error: insertError } = await supabase
-        .from('scammer_views')
-        .insert({
-          scammer_id: scammerId,
-          ip_hash: ipHash
-        });
-      
-      if (insertError) {
-        console.error("Error recording scammer view:", insertError);
-        return false;
-      }
-      
       // Increment the view count
-      const scammer = await this.getScammerRecord(scammerId);
-      
-      if (!scammer) {
-        console.error("Scammer not found for incrementing views:", scammerId);
-        return false;
-      }
-      
       const currentViews = scammer.views || 0;
       
+      // Record the new view first
+      try {
+        const { error: insertError } = await supabase
+          .from('scammer_views')
+          .insert({
+            scammer_id: scammerId,
+            ip_hash: ipHash
+          });
+        
+        if (insertError) {
+          // If there's an error inserting the view, log it but continue with incrementing
+          console.error("Error recording scammer view:", insertError);
+        }
+      } catch (viewError) {
+        console.error("Error recording view:", viewError);
+        // Continue with increment even if view recording fails
+      }
+      
+      // Update the actual view count
       const { error } = await supabase
         .from('scammers')
         .update({ views: currentViews + 1 })

@@ -2,40 +2,36 @@
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
 import { createHash } from 'https://deno.land/std@0.177.0/crypto/mod.ts'
 
-// This edge function securely hashes the client's IP address to track unique views
-// without storing actual IP addresses for privacy reasons
+// Handle request to get a hash of the client's IP address
 serve(async (req) => {
   try {
     // Get the client IP from the request headers
-    const clientIp = req.headers.get('x-real-ip') || 
-                    req.headers.get('x-forwarded-for') || 
-                    'unknown';
+    const clientIp = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown'
     
-    // Add a secret salt to the IP before hashing to make it more secure
-    // In a production app, you'd store this salt in Supabase secrets
-    const salt = Deno.env.get('IP_HASH_SALT') || 'default-salt-for-development';
-    
-    // Create a SHA-256 hash of the IP+salt
+    // Create a SHA-256 hash of the IP to protect privacy
     const hash = createHash('sha256')
-      .update(`${clientIp}:${salt}`)
-      .toString('hex');
+    hash.update(clientIp)
+    const ipHash = hash.toString('hex')
     
-    // Return the hashed value
+    // Return the hashed IP
     return new Response(
       JSON.stringify({
-        ipHash: hash,
+        ipHash,
+      }),
+      { headers: { 'Content-Type': 'application/json' } }
+    )
+  } catch (error) {
+    console.error('Error processing get-client-ip-hash request:', error)
+    
+    return new Response(
+      JSON.stringify({
+        error: 'Failed to process request',
+        message: error.message,
       }),
       { 
         headers: { 'Content-Type': 'application/json' },
-        status: 200 
-      },
-    )
-  } catch (error) {
-    console.error("Error hashing IP:", error);
-    
-    return new Response(
-      JSON.stringify({ error: "Failed to generate IP hash" }),
-      { headers: { 'Content-Type': 'application/json' }, status: 500 }
+        status: 500,
+      }
     )
   }
 })

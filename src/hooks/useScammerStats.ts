@@ -57,6 +57,13 @@ export function useScammerStats(scammer: Scammer) {
     checkPreviousInteraction();
   }, [scammer.id, address]);
 
+  useEffect(() => {
+    // Update state when scammer prop changes
+    setLikes(scammer.likes || 0);
+    setDislikes(scammer.dislikes || 0);
+    setViews(scammer.views || 0);
+  }, [scammer]);
+
   const handleLike = async () => {
     if (!address) {
       toast.error("Please connect your wallet to interact");
@@ -68,15 +75,15 @@ export function useScammerStats(scammer: Scammer) {
     // Optimistically update UI state
     if (isLiked) {
       setIsLiked(false);
-      setLikes(likes - 1);
+      setLikes(prev => Math.max(0, prev - 1));
       toast.info("Agreement removed");
     } else {
       if (isDisliked) {
         setIsDisliked(false);
-        setDislikes(dislikes - 1);
+        setDislikes(prev => Math.max(0, prev - 1));
       }
       setIsLiked(true);
-      setLikes(likes + 1);
+      setLikes(prev => prev + 1);
       toast.success("Agreed");
     }
 
@@ -170,15 +177,15 @@ export function useScammerStats(scammer: Scammer) {
     // Optimistically update UI
     if (isDisliked) {
       setIsDisliked(false);
-      setDislikes(dislikes - 1);
+      setDislikes(prev => Math.max(0, prev - 1));
       toast.info("Disagreement removed");
     } else {
       if (isLiked) {
         setIsLiked(false);
-        setLikes(likes - 1);
+        setLikes(prev => Math.max(0, prev - 1));
       }
       setIsDisliked(true);
-      setDislikes(dislikes + 1);
+      setDislikes(prev => prev + 1);
       toast.success("Disagreed");
     }
 
