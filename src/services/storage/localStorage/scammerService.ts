@@ -19,6 +19,7 @@ export interface ScammerListing {
   dislikes: number;
   views: number;
   shares: number;
+  deletedAt: string | null; // Add this property to match the Supabase schema
 }
 
 /**

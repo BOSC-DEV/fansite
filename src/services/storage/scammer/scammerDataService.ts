@@ -1,4 +1,3 @@
-
 import { ScammerListing } from './scammerTypes';
 import { ScammerBaseService } from './scammerBaseService';
 import { v4 as uuidv4 } from 'uuid';
@@ -8,7 +7,7 @@ import { BaseSupabaseService } from '../baseSupabaseService';
  * Service for managing scammer data operations
  * This handles CRUD operations for scammer listings
  */
-export class ScammerDataService extends BaseSupabaseService {
+export class ScammerDataService extends ScammerBaseService {
   /**
    * Save a scammer listing to the database
    */
@@ -206,7 +205,13 @@ export class ScammerDataService extends BaseSupabaseService {
   private async getLocalScammers(): Promise<ScammerListing[]> {
     try {
       const localStorageService = (await import('@/services/storage/localStorage/scammerService')).scammerService;
-      return localStorageService.getAllScammers();
+      const localScammers = localStorageService.getAllScammers();
+      
+      // Ensure each scammer has the deletedAt property
+      return localScammers.map(scammer => ({
+        ...scammer,
+        deletedAt: scammer.deletedAt || null
+      }));
     } catch (error) {
       console.error("Error getting local scammers:", error);
       return [];

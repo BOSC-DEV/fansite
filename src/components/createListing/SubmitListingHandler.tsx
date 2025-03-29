@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@/context/WalletContext";
@@ -99,7 +98,8 @@ export function useSubmitListing() {
         likes: 0,
         dislikes: 0,
         views: 0,
-        shares: 0
+        shares: 0,
+        deletedAt: null
       };
       
       console.log("[SubmitListingHandler] Saving scammer listing:", scammerListing);
@@ -157,9 +157,11 @@ export function useSubmitListing() {
           likes: 0,
           dislikes: 0,
           views: 0,
-          shares: 0
+          shares: 0,
+          deletedAt: null
         };
         
+        // Save to local storage as a fallback
         localStorageService.saveScammer(scammerListing);
         console.log("Saved scammer to local storage as fallback after error");
         toast.success("Report saved locally");
