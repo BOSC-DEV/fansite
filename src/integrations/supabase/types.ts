@@ -295,7 +295,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      upsert_profile: {
+        Args: {
+          profile_id: string
+          profile_display_name: string
+          profile_username: string
+          profile_pic_url: string
+          profile_wallet_address: string
+          profile_created_at: string
+          profile_x_link: string
+          profile_website_link: string
+          profile_bio: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

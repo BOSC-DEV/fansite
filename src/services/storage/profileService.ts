@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 
@@ -212,41 +213,42 @@ export class ProfileService extends BaseSupabaseService {
       console.error('[ProfileService] Error checking if profile exists:', lookupError);
     }
 
-    // Convert from camelCase to snake_case for database
-    const dbProfile = {
-      id: profile.id || uuidv4(), // Ensure we always have an ID
-      display_name: profile.displayName,
-      username: profile.username,
-      profile_pic_url: profile.profilePicUrl,
-      wallet_address: profile.walletAddress,
-      created_at: profile.createdAt || new Date().toISOString(),
-      x_link: profile.xLink || null,
-      website_link: profile.websiteLink || null,
-      bio: profile.bio || null
-    };
-    
-    console.log("[ProfileService] Converted profile for database:", dbProfile);
+    // Generate UUID if not provided
+    const profileId = profile.id || uuidv4();
     
     try {
-      // Direct RPC call to bypass RLS policies
-      // This is a workaround for the RLS issues
+      // Use the RPC function to bypass RLS policies
       const { error } = await this.supabase.rpc('upsert_profile', {
-        profile_id: dbProfile.id,
-        profile_display_name: dbProfile.display_name,
-        profile_username: dbProfile.username,
-        profile_pic_url: dbProfile.profile_pic_url,
-        profile_wallet_address: dbProfile.wallet_address,
-        profile_created_at: dbProfile.created_at,
-        profile_x_link: dbProfile.x_link,
-        profile_website_link: dbProfile.website_link,
-        profile_bio: dbProfile.bio
+        profile_id: profileId,
+        profile_display_name: profile.displayName,
+        profile_username: profile.username || '',
+        profile_pic_url: profile.profilePicUrl || '',
+        profile_wallet_address: profile.walletAddress,
+        profile_created_at: profile.createdAt || new Date().toISOString(),
+        profile_x_link: profile.xLink || '',
+        profile_website_link: profile.websiteLink || '',
+        profile_bio: profile.bio || ''
       });
       
       if (error) {
         console.error('[ProfileService] Error saving profile via RPC:', error);
         
-        // Fallback to regular upsert if RPC doesn't exist
+        // Fallback to regular upsert if RPC doesn't work
         console.log("[ProfileService] Falling back to regular upsert");
+        
+        // Convert from camelCase to snake_case for database
+        const dbProfile = {
+          id: profileId,
+          display_name: profile.displayName,
+          username: profile.username || '',
+          profile_pic_url: profile.profilePicUrl || '',
+          wallet_address: profile.walletAddress,
+          created_at: profile.createdAt || new Date().toISOString(),
+          x_link: profile.xLink || '',
+          website_link: profile.websiteLink || '',
+          bio: profile.bio || ''
+        };
+        
         const { error: upsertError } = await this.supabase
           .from('profiles')
           .upsert(dbProfile, { 
