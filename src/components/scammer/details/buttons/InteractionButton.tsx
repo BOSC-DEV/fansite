@@ -8,14 +8,14 @@ interface InteractionButtonProps {
   icon: LucideIcon;
   count: number;
   label?: string;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent) => void;
   isActive?: boolean;
   activeClassName?: string;
   className?: string;
   title?: string;
   showLabel?: boolean;
   'aria-label'?: string;
-  isViewOrComment?: boolean; // New prop to identify view or comment buttons
+  isViewOrComment?: boolean;
 }
 
 export function InteractionButton({
