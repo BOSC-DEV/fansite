@@ -37,7 +37,8 @@ export class LeaderboardService extends BaseSupabaseService {
           profile_pic_url,
           created_at,
           x_link,
-          website_link
+          website_link,
+          points
         `)
         .order('created_at', { ascending: true });
 
@@ -97,19 +98,27 @@ export class LeaderboardService extends BaseSupabaseService {
         const ageInMilliseconds = now.getTime() - profileCreatedDate.getTime();
         const ageInDays = Math.floor(ageInMilliseconds / (1000 * 60 * 60 * 24));
         
-        // Calculate points using the new algorithm:
+        // Calculate points using the algorithm:
         // total spent on bounty + total generated + profile total days old + total generated bounties from reports x likes x views
-        let points = bountySpent + bountyGenerated + ageInDays;
+        let points = profile.points || 0;
         
-        // Add the multiplication factor if there are reports with engagement
-        if (totalReports > 0 && (totalLikes > 0 || totalViews > 0)) {
-          const engagementMultiplier = totalLikes * totalViews;
-          if (engagementMultiplier > 0) {
+        // If there are no points already stored, calculate them
+        if (points === 0) {
+          points = bountySpent + bountyGenerated + ageInDays;
+          
+          // Add the multiplication factor if there are reports with engagement
+          if (totalReports > 0 && (totalLikes > 0 || totalViews > 0)) {
+            const engagementMultiplier = Math.max(1, totalLikes * totalViews / 1000); // Scale down for reasonable numbers
             points += totalReports * engagementMultiplier;
-          } else {
-            // If either likes or views are 0, just add the reports
+          } else if (totalReports > 0) {
+            // If reports but no engagement, just add the reports
             points += totalReports;
           }
+          
+          // Update the points in the database for future use
+          this.updateUserPoints(profile.id, Math.round(points)).catch(err => 
+            console.error("[LeaderboardService] Failed to update points:", err)
+          );
         }
         
         return {
@@ -133,6 +142,26 @@ export class LeaderboardService extends BaseSupabaseService {
     } catch (error) {
       console.error('Unexpected error fetching leaderboard data:', error);
       return [];
+    }
+  }
+  
+  // Add a method to update user points in the database
+  private async updateUserPoints(userId: string, points: number): Promise<boolean> {
+    try {
+      const { error } = await this.supabase
+        .from('profiles')
+        .update({ points })
+        .eq('id', userId);
+        
+      if (error) {
+        console.error('[LeaderboardService] Error updating points:', error);
+        return false;
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('[LeaderboardService] Unexpected error updating points:', error);
+      return false;
     }
   }
 }
