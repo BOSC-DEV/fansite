@@ -105,13 +105,18 @@ export function ProfileHeader({
                 </Badge>
               )}
             </div>
+            
+            {/* Add Edit Profile button for current user */}
+            {isCurrentUser && (
+              <div className="mt-3">
+                <EditProfileButton profileAddress={address} />
+              </div>
+            )}
           </div>
         </div>
         
         <div className="flex items-center gap-2">
-          {isCurrentUser ? (
-            <EditProfileButton />
-          ) : (
+          {!isCurrentUser && (
             <ShareProfileButton username={username} walletAddress={address} />
           )}
         </div>
