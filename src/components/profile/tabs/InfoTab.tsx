@@ -75,13 +75,16 @@ export function InfoTab({ profile }: InfoTabProps) {
                       </button>
                     </TooltipTrigger>
                     <TooltipContent side="top" className="max-w-xs bg-western-parchment text-western-wood border-western-accent/50 p-4">
-                      <p className="font-medium mb-1">Score Algorithm</p>
+                      <p className="font-medium mb-1">Score Calculation</p>
                       <p className="text-xs mb-2">Your score is calculated based on:</p>
                       <ul className="text-xs list-disc pl-4 space-y-1">
-                        <li>Bounty spent + bounty generated</li>
-                        <li>(Max of 1, days old) × likes × views × comments</li>
+                        <li>Reports: 100 points each</li>
+                        <li>Likes: 15 points each</li>
+                        <li>Views: 5 points each</li>
+                        <li>Comments: 10 points each</li>
+                        <li>Bounty generated/spent: 1:1 ratio</li>
                       </ul>
-                      <p className="text-xs mt-2">Everyone starts with at least 1 point. Higher engagement and more contributions lead to a higher score!</p>
+                      <p className="text-xs mt-2">Everyone starts with at least 1 point!</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>

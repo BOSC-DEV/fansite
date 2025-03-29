@@ -95,24 +95,27 @@ export class LeaderboardService extends BaseSupabaseService {
         // Calculate profile age in days
         const profileCreatedDate = new Date(profile.created_at);
         const now = new Date();
-        const ageInDays = Math.floor((now.getTime() - profileCreatedDate.getTime()) / (1000 * 60 * 60 * 24));
+        const ageInDays = Math.max(0.01, (now.getTime() - profileCreatedDate.getTime()) / (1000 * 60 * 60 * 24));
         
-        // Calculate points using the updated algorithm:
-        // total spent on bounty + total bounty generated from reports + days old x likes x views x comments
-        let points = profile.points || 0;
+        // Calculate points using the fixed algorithm:
+        // We'll recalculate points always to ensure they're accurate
+        const points = this.calculateUserPoints(bountySpent, bountyGenerated, ageInDays, totalReports, totalLikes, totalViews, totalComments);
         
-        // If there are no points already stored or points are 0, calculate them
-        if (points === 0) {
-          points = this.calculateUserPoints(bountySpent, bountyGenerated, ageInDays, totalReports, totalLikes, totalViews, totalComments);
-          
-          // Update the points in the database for future use
-          this.updateUserPoints(profile.id, Math.round(points)).catch(err => 
-            console.error("[LeaderboardService] Failed to update points:", err)
-          );
-        }
+        // Update the points in the database for future use
+        this.updateUserPoints(profile.id, Math.round(points)).catch(err => 
+          console.error("[LeaderboardService] Failed to update points:", err)
+        );
         
         // Ensure points value is logged
-        console.log(`[LeaderboardService] User ${profile.username || profile.wallet_address} points:`, points);
+        console.log(`[LeaderboardService] User ${profile.username || profile.wallet_address} points:`, points, {
+          bountySpent,
+          bountyGenerated,
+          ageInDays,
+          totalReports,
+          totalLikes,
+          totalViews,
+          totalComments
+        });
         
         return {
           id: profile.id,
@@ -159,7 +162,7 @@ export class LeaderboardService extends BaseSupabaseService {
     }
   }
 
-  // Updated calculation logic with the new formula
+  // Fixed calculation logic with the correct formula implementation
   private calculateUserPoints(
     bountySpent: number, 
     bountyGenerated: number, 
@@ -169,35 +172,35 @@ export class LeaderboardService extends BaseSupabaseService {
     totalViews: number,
     totalComments: number
   ): number {
-    // Initial points: bounty spent + bounty generated
+    // Start with base points from bounty (if any)
     let points = bountySpent + bountyGenerated;
     
-    // Ensure ageInDays is at least 1 to guarantee minimum points
-    const adjustedAgeDays = Math.max(1, ageInDays);
+    // Direct contribution from reports - each report is worth 100 points
+    points += totalReports * 100;
     
-    // Add the engagement factor: days old x likes x views x comments
-    const engagementMultiplier = adjustedAgeDays * Math.max(1, totalLikes) * Math.max(1, totalViews) * Math.max(1, totalComments);
+    // Add points from engagement metrics
+    points += totalLikes * 15;
+    points += totalViews * 5;
+    points += totalComments * 10;
     
-    // Scale the engagement multiplier to avoid extremely large numbers
-    // We divide by a large number to keep the points in a reasonable range
-    const scaledEngagement = engagementMultiplier / 1000000;
-    
-    points += scaledEngagement;
-    
-    // Ensure all users get at least 1 point so they're not showing as 0
+    // Ensure all users get at least 1 point
     points = Math.max(1, points);
     
     console.log(`[LeaderboardService] Calculated points details:`, {
       bountySpent,
       bountyGenerated,
       ageInDays,
-      adjustedAgeDays,
       totalReports,
       totalLikes,
       totalViews,
       totalComments,
-      engagementMultiplier,
-      scaledEngagement,
+      formulaBreakdown: {
+        fromBounty: bountySpent + bountyGenerated,
+        fromReports: totalReports * 100,
+        fromLikes: totalLikes * 15,
+        fromViews: totalViews * 5,
+        fromComments: totalComments * 10
+      },
       finalPoints: points
     });
     
@@ -248,7 +251,7 @@ export class LeaderboardService extends BaseSupabaseService {
       // Calculate profile age in days
       const profileCreatedDate = new Date(profileData.created_at);
       const now = new Date();
-      const ageInDays = Math.floor((now.getTime() - profileCreatedDate.getTime()) / (1000 * 60 * 60 * 24));
+      const ageInDays = Math.max(0.01, (now.getTime() - profileCreatedDate.getTime()) / (1000 * 60 * 60 * 24));
       
       // Calculate new points with the updated formula
       const newPoints = this.calculateUserPoints(

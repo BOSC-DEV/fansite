@@ -35,26 +35,66 @@ export function useUserProfile(username: string | undefined) {
           if (usernameProfile) {
             console.log("Profile found by username in Supabase:", usernameProfile);
             
-            // Get the leaderboard data to get points
-            const { data: leaderboardData } = await supabase
-              .from('leaderboard_stats')
+            // Get the scammers added by this user to calculate stats directly
+            // This ensures we're using fresh stats directly from the database
+            const { data: userScammers, error: scammersError } = await supabase
+              .from('scammers')
               .select('*')
-              .eq('wallet_address', usernameProfile.wallet_address)
-              .maybeSingle();
+              .eq('added_by', usernameProfile.wallet_address)
+              .is('deleted_at', null);
               
-            // Calculate points - using the points formula directly if not available in DB
-            let points = 0;
-            if (leaderboardData) {
-              // If we have leaderboard data, use those stats to calculate points
-              const profileAge = Math.floor((new Date().getTime() - new Date(usernameProfile.created_at).getTime()) / (1000 * 60 * 60 * 24));
-              points = profileAge + 
-                      (leaderboardData.total_reports || 0) + 
-                      (leaderboardData.total_views || 0) + 
-                      (leaderboardData.total_likes || 0);
-                      
-              // Multiply by bounty if applicable
-              if (leaderboardData.total_bounty && leaderboardData.total_bounty > 0) {
-                points *= leaderboardData.total_bounty;
+            if (scammersError) {
+              console.error("Error fetching user's scammers:", scammersError);
+            }
+            
+            // Calculate points using the same formula as in leaderboardService
+            let points = usernameProfile.points || 0;
+            
+            // If points are 0 or not set, calculate them
+            if (!points || points <= 1) {
+              // If we have scammers data, use it to calculate points
+              if (userScammers && userScammers.length > 0) {
+                const totalReports = userScammers.length;
+                const totalLikes = userScammers.reduce((sum, scammer) => sum + (scammer.likes || 0), 0);
+                const totalViews = userScammers.reduce((sum, scammer) => sum + (scammer.views || 0), 0);
+                const totalComments = userScammers.reduce((sum, scammer) => {
+                  if (scammer.comments && Array.isArray(scammer.comments)) {
+                    return sum + scammer.comments.length;
+                  }
+                  return sum;
+                }, 0);
+                const bountyGenerated = userScammers.reduce((sum, scammer) => sum + (scammer.bounty_amount || 0), 0);
+                
+                // Calculate points directly
+                points = 0; // Start with base points
+                points += totalReports * 100; // Each report is worth 100 points
+                points += totalLikes * 15; // Each like is worth 15 points
+                points += totalViews * 5; // Each view is worth 5 points
+                points += totalComments * 10; // Each comment is worth 10 points
+                points += bountyGenerated; // Add bounty generated
+                points = Math.max(1, points); // Ensure minimum of 1 point
+                
+                console.log("Calculated points for user:", points, {
+                  reports: totalReports,
+                  likes: totalLikes,
+                  views: totalViews,
+                  comments: totalComments,
+                  bounty: bountyGenerated
+                });
+                
+                // Update the points in the database
+                try {
+                  const { error: updateError } = await supabase
+                    .from('profiles')
+                    .update({ points: Math.round(points) })
+                    .eq('id', usernameProfile.id);
+                    
+                  if (updateError) {
+                    console.error("Error updating points:", updateError);
+                  }
+                } catch (e) {
+                  console.error("Error during points update:", e);
+                }
               }
             }
             
@@ -68,22 +108,32 @@ export function useUserProfile(username: string | undefined) {
               xLink: usernameProfile.x_link || '',
               websiteLink: usernameProfile.website_link || '',
               bio: usernameProfile.bio || '',
-              points: points
+              points: Math.round(points)
             });
             
-            // Fetch scammers by this user's wallet address
-            const allScammers = await storageService.getAllScammers();
-            const userScammers = allScammers.filter(
-              scammer => scammer.addedBy === usernameProfile.wallet_address
-            );
-            
-            console.log(`Found ${userScammers.length} scammers by wallet address ${usernameProfile.wallet_address}`);
             // Convert ScammerListing to Scammer (with date conversion)
-            const convertedScammers = userScammers.map(scammer => ({
-              ...scammer,
-              dateAdded: new Date(scammer.dateAdded)
-            }));
-            setScammers(convertedScammers);
+            if (userScammers) {
+              const convertedScammers = userScammers.map(scammer => ({
+                id: scammer.id,
+                name: scammer.name,
+                photoUrl: scammer.photo_url || '',
+                accusedOf: scammer.accused_of || '',
+                links: Array.isArray(scammer.links) ? scammer.links : [],
+                aliases: Array.isArray(scammer.aliases) ? scammer.aliases : [],
+                accomplices: Array.isArray(scammer.accomplices) ? scammer.accomplices : [],
+                officialResponse: scammer.official_response || '',
+                bountyAmount: scammer.bounty_amount || 0,
+                walletAddress: scammer.wallet_address || '',
+                dateAdded: new Date(scammer.date_added),
+                addedBy: scammer.added_by || '',
+                likes: scammer.likes || 0,
+                dislikes: scammer.dislikes || 0,
+                views: scammer.views || 0,
+                shares: scammer.shares || 0
+              }));
+              setScammers(convertedScammers);
+            }
+            
             setIsLoading(false);
             return;
           }
@@ -98,26 +148,65 @@ export function useUserProfile(username: string | undefined) {
           if (walletProfile) {
             console.log("Profile found by wallet address in Supabase:", walletProfile);
             
-            // Get the leaderboard data to get points
-            const { data: leaderboardData } = await supabase
-              .from('leaderboard_stats')
+            // Get the scammers added by this user to calculate stats directly
+            const { data: userScammers, error: scammersError } = await supabase
+              .from('scammers')
               .select('*')
-              .eq('wallet_address', walletProfile.wallet_address)
-              .maybeSingle();
+              .eq('added_by', walletProfile.wallet_address)
+              .is('deleted_at', null);
               
-            // Calculate points - using the points formula directly if not available in DB
-            let points = 0;
-            if (leaderboardData) {
-              // If we have leaderboard data, use those stats to calculate points
-              const profileAge = Math.floor((new Date().getTime() - new Date(walletProfile.created_at).getTime()) / (1000 * 60 * 60 * 24));
-              points = profileAge + 
-                      (leaderboardData.total_reports || 0) + 
-                      (leaderboardData.total_views || 0) + 
-                      (leaderboardData.total_likes || 0);
-                      
-              // Multiply by bounty if applicable
-              if (leaderboardData.total_bounty && leaderboardData.total_bounty > 0) {
-                points *= leaderboardData.total_bounty;
+            if (scammersError) {
+              console.error("Error fetching user's scammers:", scammersError);
+            }
+            
+            // Calculate points using the same formula as in leaderboardService
+            let points = walletProfile.points || 0;
+            
+            // If points are 0 or not set, calculate them
+            if (!points || points <= 1) {
+              // If we have scammers data, use it to calculate points
+              if (userScammers && userScammers.length > 0) {
+                const totalReports = userScammers.length;
+                const totalLikes = userScammers.reduce((sum, scammer) => sum + (scammer.likes || 0), 0);
+                const totalViews = userScammers.reduce((sum, scammer) => sum + (scammer.views || 0), 0);
+                const totalComments = userScammers.reduce((sum, scammer) => {
+                  if (scammer.comments && Array.isArray(scammer.comments)) {
+                    return sum + scammer.comments.length;
+                  }
+                  return sum;
+                }, 0);
+                const bountyGenerated = userScammers.reduce((sum, scammer) => sum + (scammer.bounty_amount || 0), 0);
+                
+                // Calculate points directly
+                points = 0; // Start with base points
+                points += totalReports * 100; // Each report is worth 100 points
+                points += totalLikes * 15; // Each like is worth 15 points
+                points += totalViews * 5; // Each view is worth 5 points
+                points += totalComments * 10; // Each comment is worth 10 points
+                points += bountyGenerated; // Add bounty generated
+                points = Math.max(1, points); // Ensure minimum of 1 point
+                
+                console.log("Calculated points for user:", points, {
+                  reports: totalReports,
+                  likes: totalLikes,
+                  views: totalViews,
+                  comments: totalComments,
+                  bounty: bountyGenerated
+                });
+                
+                // Update the points in the database
+                try {
+                  const { error: updateError } = await supabase
+                    .from('profiles')
+                    .update({ points: Math.round(points) })
+                    .eq('id', walletProfile.id);
+                    
+                  if (updateError) {
+                    console.error("Error updating points:", updateError);
+                  }
+                } catch (e) {
+                  console.error("Error during points update:", e);
+                }
               }
             }
             
@@ -131,22 +220,32 @@ export function useUserProfile(username: string | undefined) {
               xLink: walletProfile.x_link || '',
               websiteLink: walletProfile.website_link || '',
               bio: walletProfile.bio || '',
-              points: points
+              points: Math.round(points)
             });
             
-            // Fetch scammers by this user's wallet address
-            const allScammers = await storageService.getAllScammers();
-            const userScammers = allScammers.filter(
-              scammer => scammer.addedBy === walletProfile.wallet_address
-            );
-            
-            console.log(`Found ${userScammers.length} scammers by wallet address ${walletProfile.wallet_address}`);
             // Convert ScammerListing to Scammer (with date conversion)
-            const convertedScammers = userScammers.map(scammer => ({
-              ...scammer,
-              dateAdded: new Date(scammer.dateAdded)
-            }));
-            setScammers(convertedScammers);
+            if (userScammers) {
+              const convertedScammers = userScammers.map(scammer => ({
+                id: scammer.id,
+                name: scammer.name,
+                photoUrl: scammer.photo_url || '',
+                accusedOf: scammer.accused_of || '',
+                links: Array.isArray(scammer.links) ? scammer.links : [],
+                aliases: Array.isArray(scammer.aliases) ? scammer.aliases : [],
+                accomplices: Array.isArray(scammer.accomplices) ? scammer.accomplices : [],
+                officialResponse: scammer.official_response || '',
+                bountyAmount: scammer.bounty_amount || 0,
+                walletAddress: scammer.wallet_address || '',
+                dateAdded: new Date(scammer.date_added),
+                addedBy: scammer.added_by || '',
+                likes: scammer.likes || 0,
+                dislikes: scammer.dislikes || 0,
+                views: scammer.views || 0,
+                shares: scammer.shares || 0
+              }));
+              setScammers(convertedScammers);
+            }
+            
             setIsLoading(false);
             return;
           }
