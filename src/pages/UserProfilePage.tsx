@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -13,9 +12,9 @@ import { LikesTab } from "@/components/profile/tabs/LikesTab";
 import { CommentsTab } from "@/components/profile/tabs/CommentsTab";
 import { BountiesTab } from "@/components/profile/tabs/BountiesTab";
 import { BookOpen, User, Heart, MessageSquare, Coins } from "lucide-react";
+import { useWallet } from "@/context/WalletContext";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { WalletDisconnect } from "@/components/wallet/WalletDisconnect";
-import { useWallet } from "@/context/WalletContext";
 
 export function UserProfilePage() {
   const {
@@ -42,7 +41,7 @@ export function UserProfilePage() {
   
   return <div className="min-h-screen old-paper flex flex-col">
       <Header />
-      <main className="container mx-auto px-4 py-4 flex-grow">
+      <main className="container mx-auto px-4 py-4 flex-grow mt-16 md:mt-24">
         {isLoading ? <ProfileSkeleton /> : error ? <ProfileError error={error} /> : profile ? <div className="max-w-4xl mx-auto">
             <ProfileHeader 
               username={profile.username || ''} 
