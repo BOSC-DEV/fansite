@@ -76,6 +76,8 @@ export async function validateAuth(): Promise<boolean> {
  */
 export async function ensureStorageBucketExists(bucketName: string): Promise<boolean> {
   try {
+    console.log(`Checking if bucket '${bucketName}' exists...`);
+    
     // Check if bucket exists
     const { data: buckets, error: listError } = await supabase.storage.listBuckets();
     
@@ -91,11 +93,14 @@ export async function ensureStorageBucketExists(bucketName: string): Promise<boo
       return true;
     }
     
+    console.log(`Bucket '${bucketName}' does not exist, creating it...`);
+    
     // Create bucket if it doesn't exist
-    const { error: createError } = await supabase.storage.createBucket(bucketName, {
-      public: true,
-      fileSizeLimit: 2 * 1024 * 1024 // 2MB
-    });
+    const { error: createError } = await supabase.storage
+      .createBucket(bucketName, {
+        public: true,
+        fileSizeLimit: 2 * 1024 * 1024 // 2MB
+      });
     
     if (createError) {
       console.error(`Error creating bucket '${bucketName}':`, createError);
@@ -120,21 +125,35 @@ export async function establishAuth(connectWalletFn: () => Promise<boolean>): Pr
     // First check if we're already authenticated
     const isAuthenticated = await validateAuth();
     if (isAuthenticated) {
+      console.log("Already authenticated with Supabase");
       return true;
     }
     
     console.log("Not authenticated, attempting to reconnect wallet...");
     
     // Try to reconnect wallet to establish auth
-    const reconnectSuccess = await connectWalletFn();
-    if (!reconnectSuccess) {
-      console.error("Failed to reconnect wallet");
+    try {
+      const reconnectSuccess = await connectWalletFn();
+      if (!reconnectSuccess) {
+        console.error("Failed to reconnect wallet");
+        return false;
+      }
+      
+      // Wait a moment for the auth to establish
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Check auth again after reconnect
+      const reconnectAuth = await validateAuth();
+      if (reconnectAuth) {
+        console.log("Successfully authenticated after wallet reconnect");
+      } else {
+        console.warn("Still not authenticated after wallet reconnect");
+      }
+      return reconnectAuth;
+    } catch (error) {
+      console.error("Error reconnecting wallet:", error);
       return false;
     }
-    
-    // Check auth again after reconnect
-    const reconnectAuth = await validateAuth();
-    return reconnectAuth;
   } catch (error) {
     console.error("Error establishing auth:", error);
     return false;

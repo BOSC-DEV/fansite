@@ -1,8 +1,11 @@
 
 import { useEffect } from 'react';
 import { toast } from 'sonner';
+import { useWallet } from './WalletContext';
 
 export function useWalletEvents() {
+  const { connectWallet } = useWallet();
+
   useEffect(() => {
     const handleDisconnect = () => {
       console.log("External wallet disconnect detected");
@@ -12,17 +15,33 @@ export function useWalletEvents() {
       localStorage.removeItem('walletTimestamp');
       
       // We won't show a toast here because the user triggered this disconnect
+      // Force page reload to clear the app state
+      window.location.reload();
     };
     
     const handleConnect = async (publicKey: string) => {
       console.log("External wallet connect detected:", publicKey);
+      
+      // Try to reconnect through our flow to establish auth
+      try {
+        await connectWallet();
+        console.log("Successfully established auth after external connect");
+      } catch (error) {
+        console.error("Failed to establish auth after external connect:", error);
+      }
     };
     
     const handleAccountChange = (publicKey: string) => {
       console.log("Wallet account changed:", publicKey);
       
-      // We'll reload the page to ensure the app state is updated properly
-      window.location.reload();
+      // Try to reconnect through our flow to establish auth with new account
+      try {
+        connectWallet().catch(err => {
+          console.error("Failed to reconnect after account change:", err);
+        });
+      } catch (error) {
+        console.error("Error during reconnect after account change:", error);
+      }
     };
     
     // Set up event listeners
@@ -40,5 +59,5 @@ export function useWalletEvents() {
         window.phantom.solana.off('accountChanged', handleAccountChange);
       }
     };
-  }, []);
+  }, [connectWallet]);
 }

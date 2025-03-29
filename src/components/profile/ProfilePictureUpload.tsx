@@ -28,7 +28,29 @@ export function ProfilePictureUpload({
   } = useProfileImage();
   const { connectWallet } = useWallet();
   const [imageError, setImageError] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Check auth when component mounts
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const isAuth = await validateAuth();
+        console.log("Auth check in ProfilePictureUpload:", isAuth);
+        
+        if (!isAuth) {
+          const reestablished = await establishAuth(connectWallet);
+          console.log("Reestablished auth:", reestablished);
+        }
+        
+        setAuthChecked(true);
+      } catch (err) {
+        console.error("Error checking auth in ProfilePictureUpload:", err);
+      }
+    };
+    
+    checkAuth();
+  }, [connectWallet]);
   
   // Ensure storage bucket exists when component mounts
   useEffect(() => {
@@ -40,12 +62,29 @@ export function ProfilePictureUpload({
   const handleUploadClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     
-    // Check authentication before attempting upload
-    const isAuthenticated = await establishAuth(connectWallet);
+    // Double-check authentication before attempting upload
+    const isAuthenticated = await validateAuth();
     
     if (!isAuthenticated) {
-      toast.error("Authentication required to upload a profile picture");
-      return;
+      console.log("Not authenticated, trying to reconnect");
+      
+      // Show toast message
+      toast.error("Please reconnect your wallet to upload a profile picture");
+      
+      // Try to reconnect
+      try {
+        const reauth = await establishAuth(connectWallet);
+        
+        if (!reauth) {
+          console.error("Failed to reconnect for profile upload");
+          return;
+        }
+        
+        console.log("Successfully reconnected for profile upload");
+      } catch (err) {
+        console.error("Error reconnecting for profile upload:", err);
+        return;
+      }
     }
     
     fileInputRef.current?.click();
@@ -61,15 +100,27 @@ export function ProfilePictureUpload({
       e.target.value = '';
       
       // Check authentication again before starting upload
-      const isAuthenticated = await establishAuth(connectWallet);
+      const isAuthenticated = await validateAuth();
       
       if (!isAuthenticated) {
-        toast.error("Authentication required to upload a profile picture");
-        return;
+        console.log("Not authenticated for upload, trying to reconnect");
+        
+        // Try to reconnect
+        const reauth = await establishAuth(connectWallet);
+        
+        if (!reauth) {
+          toast.error("Authentication required to upload a profile picture. Please reconnect your wallet.");
+          return;
+        }
       }
       
       // Ensure bucket exists before uploading
-      await ensureStorageBucketExists('profile-images');
+      const bucketExists = await ensureStorageBucketExists('profile-images');
+      
+      if (!bucketExists) {
+        toast.error("Failed to prepare storage for upload. Please try again.");
+        return;
+      }
       
       console.log("Uploading profile image:", file.name);
       const url = await uploadProfileImage(file, userId || 'anonymous');

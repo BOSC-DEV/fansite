@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { WalletConnectionState } from "./WalletConnectionState";
@@ -27,6 +28,7 @@ export function UserProfile() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [hasProfile, setHasProfile] = useState(false);
+  const [authInitialized, setAuthInitialized] = useState(false);
   const [formData, setFormData] = useState<ProfileFormData>({
     displayName: "",
     username: "",
@@ -39,6 +41,26 @@ export function UserProfile() {
   const [checkingUsername, setCheckingUsername] = useState(false);
   const [emailVerified, setEmailVerified] = useState<boolean | undefined>(undefined);
 
+  // Initialize auth when component mounts
+  useEffect(() => {
+    const initAuth = async () => {
+      if (isConnected && address) {
+        try {
+          // Try to establish authentication
+          const isAuth = await establishAuth(connectWallet);
+          console.log("Auth initialized, authenticated:", isAuth);
+          setAuthInitialized(true);
+        } catch (err) {
+          console.error("Error establishing auth:", err);
+        }
+      } else {
+        setAuthInitialized(true);
+      }
+    };
+    
+    initAuth();
+  }, [isConnected, address, connectWallet]);
+
   // Ensure storage bucket exists when component mounts
   useEffect(() => {
     if (isConnected) {
@@ -48,10 +70,10 @@ export function UserProfile() {
     }
   }, [isConnected]);
 
-  // Fetch existing profile data when component mounts
+  // Fetch existing profile data when auth is initialized
   useEffect(() => {
     const fetchProfileData = async () => {
-      if (!isConnected || !address) {
+      if (!isConnected || !address || !authInitialized) {
         setIsLoading(false);
         return;
       }
@@ -60,14 +82,19 @@ export function UserProfile() {
       try {
         console.log("Fetching profile for wallet address:", address);
         
-        // First try to establish authentication
-        const isAuthenticated = await establishAuth(connectWallet);
+        // First ensure we're authenticated
+        const isAuthenticated = await validateAuth();
         
         if (!isAuthenticated) {
-          console.warn("Could not establish authentication after reconnect attempt");
-          toast.error("Please reconnect your wallet to view your profile");
-          setIsLoading(false);
-          return;
+          console.log("Not authenticated, attempting to establish auth");
+          const reauth = await establishAuth(connectWallet);
+          
+          if (!reauth) {
+            console.warn("Could not establish authentication");
+            toast.error("Please reconnect your wallet to view your profile");
+            setIsLoading(false);
+            return;
+          }
         }
         
         // Try to fetch profile from Supabase
@@ -123,7 +150,7 @@ export function UserProfile() {
     };
     
     checkEmailVerification();
-  }, [isConnected, address, connectWallet]);
+  }, [isConnected, address, connectWallet, authInitialized]);
 
   // Check if username is available
   const checkUsername = async (username: string) => {
@@ -134,8 +161,8 @@ export function UserProfile() {
     
     setCheckingUsername(true);
     try {
-      // Establish auth before checking username
-      await establishAuth(connectWallet);
+      // Ensure we're authenticated
+      await validateAuth();
       
       const { data, error } = await supabase
         .from('profiles')
@@ -232,13 +259,18 @@ export function UserProfile() {
     
     try {
       // Ensure user is authenticated with Supabase
-      const isAuthenticated = await establishAuth(connectWallet);
+      const isAuthenticated = await validateAuth();
       
       if (!isAuthenticated) {
-        toast.dismiss();
-        toast.error("Authentication required. Please reconnect your wallet.");
-        setIsSubmitting(false);
-        return;
+        console.log("Not authenticated, attempting to establish auth");
+        const reauth = await establishAuth(connectWallet);
+        
+        if (!reauth) {
+          toast.dismiss();
+          toast.error("Authentication required. Please reconnect your wallet.");
+          setIsSubmitting(false);
+          return;
+        }
       }
       
       // Ensure the storage bucket exists
@@ -299,6 +331,17 @@ export function UserProfile() {
     navigate('/');
   };
 
+  const handleReconnect = async () => {
+    try {
+      await connectWallet();
+      // Reload the page to refresh everything
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to reconnect wallet:", error);
+      toast.error("Failed to reconnect wallet. Please try again.");
+    }
+  };
+
   if (!isConnected) {
     return <WalletConnectionState address={address} />;
   }
@@ -314,17 +357,36 @@ export function UserProfile() {
 
   return (
     <>
-      <div className="mb-6">
+      <div className="mb-6 flex justify-between items-center">
+        <div>
+          {!authInitialized || (!isLoading && !hasProfile) ? (
+            <button
+              onClick={handleReconnect}
+              className="bg-western-accent hover:bg-western-accent/80 text-white py-2 px-4 rounded flex items-center gap-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+                <path d="M16 21h5v-5"></path>
+              </svg>
+              Reconnect Wallet
+            </button>
+          ) : null}
+        </div>
         <WalletDisconnect onDisconnect={() => navigate('/')} />
       </div>
       <UserProfileForm
         formData={formData}
-        setDisplayName={handleDisplayNameChange}
-        setUsername={handleUsernameChange}
-        setProfilePicUrl={handleProfilePicChange}
-        setXLink={handleXLinkChange}
-        setWebsiteLink={handleWebsiteLinkChange}
-        handleBioChange={handleBioChange}
+        setDisplayName={(value) => setFormData(prev => ({ ...prev, displayName: value }))}
+        setUsername={(value) => {
+          setFormData(prev => ({ ...prev, username: value }));
+          checkUsername(value);
+        }}
+        setProfilePicUrl={(value) => setFormData(prev => ({ ...prev, profilePicUrl: value }))}
+        setXLink={(value) => setFormData(prev => ({ ...prev, xLink: value }))}
+        setWebsiteLink={(value) => setFormData(prev => ({ ...prev, websiteLink: value }))}
+        handleBioChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
         isSubmitting={isSubmitting}
         hasProfile={hasProfile}
         saveProfile={async () => true}
