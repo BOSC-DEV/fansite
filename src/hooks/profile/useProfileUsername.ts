@@ -13,7 +13,7 @@ export function useProfileUsername() {
     // Validate username with debounce
     if (username) {
       const timer = setTimeout(() => {
-        checkUsernameAvailability(username);
+        checkUsernameAvailability(username, address);
       }, 500);
       return () => clearTimeout(timer);
     } else {
@@ -21,7 +21,7 @@ export function useProfileUsername() {
     }
   }, [username, address]);
 
-  const checkUsernameAvailability = async (usernameToCheck: string) => {
+  const checkUsernameAvailability = async (usernameToCheck: string, currentAddress?: string) => {
     if (!usernameToCheck) return;
     
     if (usernameToCheck.length < 3) {
@@ -38,7 +38,7 @@ export function useProfileUsername() {
     setCheckingUsername(true);
     try {
       console.log("[useProfileUsername] Checking username availability:", usernameToCheck);
-      const isAvailable = await storageService.isUsernameAvailable(usernameToCheck, address);
+      const isAvailable = await storageService.isUsernameAvailable(usernameToCheck, currentAddress);
       console.log("[useProfileUsername] Username availability result:", isAvailable);
       setUsernameAvailable(isAvailable);
     } catch (error) {
@@ -61,5 +61,6 @@ export function useProfileUsername() {
     setUsername: handleUsernameChange,
     usernameAvailable,
     checkingUsername,
+    checkUsername: checkUsernameAvailability // <-- Expose the checkUsername function
   };
 }

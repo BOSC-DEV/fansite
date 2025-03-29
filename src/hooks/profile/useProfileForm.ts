@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { useProfileFormSubmit } from "./useProfileFormSubmit";
@@ -77,7 +76,9 @@ export function useProfileForm() {
   const setUsername = (username: string) => {
     const sanitizedUsername = username.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
     setFormData(prev => ({ ...prev, username: sanitizedUsername }));
-    checkUsername(sanitizedUsername, address);
+    if (checkUsername) {
+      checkUsername(sanitizedUsername, address);
+    }
   };
 
   const setProfilePicUrl = (url: string) => {
