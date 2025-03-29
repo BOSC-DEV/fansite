@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { storageService } from "@/services/storage";
-import { v4 as uuidv4 } from 'uuid';
 
 interface ProfileFormData {
   displayName: string;
@@ -31,29 +30,12 @@ export function useProfileFormSubmit() {
   // Check if user has a profile on mount
   useEffect(() => {
     const checkProfile = async () => {
-      if (isConnected && address) {
+      if (isConnected && address && supabaseReady) {
         try {
-          console.log("[useProfileFormSubmit] Checking for existing profile for:", address);
-          const profile = await storageService.getProfile(address);
-          
-          if (profile) {
-            console.log("[useProfileFormSubmit] Found existing profile:", profile);
-            setHasProfile(true);
-            setProfileId(profile.id || address);
-          } else {
-            console.log("[useProfileFormSubmit] No profile found for:", address);
-            // Check if we have a profile in localStorage as fallback
-            try {
-              const storageKey = `profile_${address}`;
-              const localData = localStorage.getItem(storageKey);
-              if (localData) {
-                console.log("[useProfileFormSubmit] Found profile in localStorage:", localData);
-                setHasProfile(true);
-                setProfileId(address);
-              }
-            } catch (error) {
-              console.error("[useProfileFormSubmit] Error checking localStorage:", error);
-            }
+          const exists = await storageService.hasProfile(address);
+          setHasProfile(exists);
+          if (exists) {
+            setProfileId(address);
           }
         } catch (error) {
           console.error("[useProfileFormSubmit] Error checking profile:", error);
@@ -70,7 +52,8 @@ export function useProfileFormSubmit() {
     urlValidation: FormValidation
   ) => {
     if (!supabaseReady) {
-      console.warn("[useProfileFormSubmit] Supabase is not configured properly. Falling back to local storage.");
+      toast.error("Supabase is not configured properly. Please check your environment variables.");
+      return false;
     }
 
     if (!formData.displayName.trim()) {
@@ -97,9 +80,9 @@ export function useProfileFormSubmit() {
   };
 
   const saveProfile = async (
-    formData?: ProfileFormData, 
-    usernameAvailable?: boolean,
-    urlValidation?: FormValidation
+    formData: ProfileFormData, 
+    usernameAvailable: boolean,
+    urlValidation: FormValidation
   ) => {
     // Security check: Only allow save if wallet is connected
     if (!isConnected || !address) {
@@ -107,15 +90,15 @@ export function useProfileFormSubmit() {
       return false;
     }
 
-    if (formData && usernameAvailable !== undefined && urlValidation) {
-      if (!validateForm(formData, usernameAvailable, urlValidation)) return false;
-    }
+    if (!validateForm(formData, usernameAvailable, urlValidation)) return false;
 
     setIsSubmitting(true);
+    console.log("[useProfileFormSubmit] Starting profile save for address:", address);
     
     try {
-      // Prepare the profile data
-      const profileData = formData ? {
+      // Use the wallet address as the ID
+      const profileData = {
+        id: address,
         displayName: formData.displayName,
         username: formData.username,
         profilePicUrl: formData.profilePicUrl,
@@ -123,51 +106,27 @@ export function useProfileFormSubmit() {
         createdAt: new Date().toISOString(),
         xLink: formData.xLink || '',
         websiteLink: formData.websiteLink || '',
-        bio: formData.bio || '',
-        id: uuidv4() // Always generate a new UUID to avoid conflicts
-      } : {
-        displayName: "User", // Fallback if somehow no form data is provided
-        username: address.slice(0, 8).toLowerCase(),
-        profilePicUrl: '',
-        walletAddress: address,
-        createdAt: new Date().toISOString(),
-        id: uuidv4()
+        bio: formData.bio || ''
       };
       
-      console.log("[useProfileFormSubmit] Saving profile data:", profileData);
+      console.log("[useProfileFormSubmit] Prepared profile data:", profileData);
       
-      // Try to save through service
       const success = await storageService.saveProfile(profileData);
       
-      if (success) {
-        console.log("[useProfileFormSubmit] Profile saved successfully");
-        
-        // Also save to localStorage as a backup
-        try {
-          localStorage.setItem(`profile_${address}`, JSON.stringify(profileData));
-          console.log("[useProfileFormSubmit] Profile also saved to localStorage");
-        } catch (err) {
-          console.warn("[useProfileFormSubmit] Couldn't save to localStorage:", err);
-        }
-        
-        setHasProfile(true);
-        setProfileId(address);
-        return true;
-      } else {
-        console.warn("[useProfileFormSubmit] Service save failed, using localStorage fallback");
-        try {
-          localStorage.setItem(`profile_${address}`, JSON.stringify(profileData));
-          console.log("[useProfileFormSubmit] Profile saved to localStorage as fallback");
-          setHasProfile(true);
-          setProfileId(address);
-          return true;
-        } catch (error) {
-          console.error("[useProfileFormSubmit] Error during localStorage fallback:", error);
-          return false;
-        }
+      if (!success) {
+        console.error('[useProfileFormSubmit] Error saving profile through service');
+        toast.error("Failed to save profile");
+        return false;
       }
+      
+      console.log("[useProfileFormSubmit] Profile saved successfully");
+      toast.success("Profile saved successfully");
+      setHasProfile(true);
+      setProfileId(address);
+      return true;
     } catch (error) {
       console.error("[useProfileFormSubmit] Error saving profile:", error);
+      toast.error("Failed to save profile");
       return false;
     } finally {
       setIsSubmitting(false);

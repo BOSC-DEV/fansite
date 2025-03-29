@@ -1,7 +1,9 @@
 
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { useWallet } from "@/context/WalletContext";
+import { LogOut } from "lucide-react";
 
 interface ProfileFormFooterProps {
   isSubmitting: boolean;
@@ -10,30 +12,55 @@ interface ProfileFormFooterProps {
   emailVerified?: boolean;
 }
 
-export function ProfileFormFooter({
-  isSubmitting,
-  hasProfile,
+export function ProfileFormFooter({ 
+  isSubmitting, 
+  hasProfile, 
   usernameAvailable
 }: ProfileFormFooterProps) {
+  const navigate = useNavigate();
+  const { disconnectWallet } = useWallet();
+  
+  const buttonText = () => {
+    if (isSubmitting) return "Saving...";
+    if (!hasProfile) return "Create Profile";
+    return "Update Profile";
+  };
+  
+  const handleDisconnect = async () => {
+    await disconnectWallet();
+    navigate('/');
+  };
+  
   return (
-    <div className="p-6 flex flex-row justify-end items-center space-x-3">
+    <div className="px-6 py-4 border-t border-western-sand/20 flex items-center justify-between">
       <Button 
-        variant="outline" 
         type="button" 
-        onClick={() => window.history.back()} 
-        className="w-auto"
+        variant="outline" 
+        onClick={handleDisconnect}
+        className="border-western-wood/30 text-western-wood flex items-center gap-2"
       >
-        <ArrowLeft className="mr-2 h-4 w-4" />
-        Back
+        <LogOut className="h-4 w-4" />
+        Disconnect Wallet
       </Button>
       
-      <Button 
-        type="submit" 
-        className="w-auto" 
-        disabled={isSubmitting || !usernameAvailable}
-      >
-        {isSubmitting ? "Saving..." : hasProfile ? "Update Profile" : "Save Profile"}
-      </Button>
+      <div className="flex items-center gap-4">
+        <Button 
+          type="button" 
+          variant="outline" 
+          onClick={() => navigate(-1)}
+          className="min-w-[100px] border-western-wood/30 text-western-wood"
+        >
+          Cancel
+        </Button>
+        
+        <Button 
+          type="submit" 
+          disabled={isSubmitting || !usernameAvailable}
+          className="min-w-[140px] bg-western-accent hover:bg-western-accent/80 text-western-parchment"
+        >
+          {buttonText()}
+        </Button>
+      </div>
     </div>
   );
 }

@@ -46,6 +46,7 @@ export class StorageService extends BaseSupabaseService {
         try {
           // Fall back to localStorage
           const dataUrl = await storeImageLocally(file, userId);
+          toast.success('Image saved locally (offline mode)');
           return dataUrl;
         } catch (localError) {
           console.error('Error storing image locally:', localError);
@@ -72,6 +73,7 @@ export class StorageService extends BaseSupabaseService {
       try {
         console.log('Attempting localStorage as last resort...');
         const dataUrl = await storeImageLocally(file, userId);
+        toast.success('Image saved locally (offline mode)');
         return dataUrl;
       } catch (localError) {
         console.error('Error storing image locally:', localError);
@@ -140,11 +142,6 @@ export class StorageService extends BaseSupabaseService {
 
   async saveProfile(profile: UserProfile): Promise<boolean> {
     return profileService.saveProfile(profile);
-  }
-  
-  // Add updateProfile method to match the one in profileService
-  async updateProfile(profile: UserProfile): Promise<boolean> {
-    return profileService.updateProfile(profile);
   }
 
   async hasProfile(walletAddress: string): Promise<boolean> {

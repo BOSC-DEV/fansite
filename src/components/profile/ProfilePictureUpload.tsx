@@ -1,8 +1,9 @@
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserCircle2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { useProfileImage } from "@/hooks/profile/useProfileImage";
 
 interface ProfilePictureUploadProps {
@@ -20,11 +21,22 @@ export function ProfilePictureUpload({
 }: ProfilePictureUploadProps) {
   const {
     uploadProfileImage,
+    getLocalProfileImage,
     isUploading
   } = useProfileImage();
   const [imageError, setImageError] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
+  // Check for locally stored image on mount
+  useEffect(() => {
+    if (!profilePicUrl && userId) {
+      const localImage = getLocalProfileImage(userId);
+      if (localImage) {
+        onProfilePicChange(localImage);
+      }
+    }
+  }, [userId, profilePicUrl, onProfilePicChange, getLocalProfileImage]);
+
   const handleUploadClick = (e: React.MouseEvent) => {
     e.preventDefault();
     fileInputRef.current?.click();
@@ -39,26 +51,23 @@ export function ProfilePictureUpload({
       // Clear any previous input value so user can upload same file again if needed
       e.target.value = '';
       
-      console.log("Uploading profile image:", file.name);
       const url = await uploadProfileImage(file, userId || 'anonymous');
-      
       if (url) {
-        console.log("Upload successful, new image URL:", url);
         onProfilePicChange(url);
         setImageError(false);
       } else {
-        console.error("Upload failed, no URL returned");
         setImageError(true);
       }
     } catch (error) {
       console.error("Error during upload:", error);
+      toast.error("Failed to upload profile picture");
       setImageError(true);
     }
   };
 
   const handleImageError = () => {
-    console.error("Error loading profile image from URL:", profilePicUrl);
     setImageError(true);
+    console.error("Error loading profile image");
   };
 
   // Generate initials for avatar fallback
