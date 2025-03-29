@@ -6,6 +6,7 @@ import { Upload, Image as ImageIcon, X } from "lucide-react";
 import { storageService } from "@/services/storage";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "sonner";
+import { ensureBucketExists } from "@/services/storage/storageUtils";
 
 interface ImageUploadProps {
   onImageChange: (url: string) => void;
@@ -40,6 +41,9 @@ export function ImageUpload({ onImageChange, currentImage }: ImageUploadProps) {
     setIsUploading(true);
     try {
       console.log("Starting scammer image upload...");
+      
+      // Ensure bucket exists before upload
+      await ensureBucketExists('most-wanted-images', true);
       
       // Generate a unique ID for the image
       const uniqueId = uuidv4();

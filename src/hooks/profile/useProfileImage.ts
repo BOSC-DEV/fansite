@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { storageService } from "@/services/storage";
 import { toast } from "sonner";
+import { ensureBucketExists } from "@/services/storage/storageUtils";
 
 export function useProfileImage() {
   const [profilePicUrl, setProfilePicUrl] = useState("");
@@ -31,6 +32,9 @@ export function useProfileImage() {
         setIsUploading(false);
         return null;
       }
+      
+      // Ensure the profile-images bucket exists before uploading
+      await ensureBucketExists('profile-images', true);
       
       const url = await storageService.uploadProfileImage(file, userId);
       if (url) {

@@ -8,7 +8,7 @@ import { leaderboardService } from './leaderboardService';
 import { UserProfile } from './profileService';
 import { ScammerListing } from './scammer/scammerTypes';
 import { LeaderboardUser } from './leaderboardService';
-import { uploadImage } from './storageUtils';
+import { uploadImage, ensureBucketExists } from './storageUtils';
 
 export class StorageService extends BaseSupabaseService {
   // Storage bucket names
@@ -18,6 +18,13 @@ export class StorageService extends BaseSupabaseService {
   async uploadProfileImage(file: File, userId: string): Promise<string | null> {
     try {
       console.log('Uploading profile image for user:', userId);
+      
+      // Ensure the bucket exists before attempting upload
+      const bucketExists = await ensureBucketExists(this.PROFILE_IMAGES_BUCKET, true);
+      if (!bucketExists) {
+        toast.error("Storage configuration error. Please try again later.");
+        return null;
+      }
       
       // Use the uploadImage utility with profile images bucket
       const imageUrl = await uploadImage(file, this.PROFILE_IMAGES_BUCKET, userId);
@@ -39,6 +46,13 @@ export class StorageService extends BaseSupabaseService {
   async uploadScammerImage(file: File, scammerId: string): Promise<string | null> {
     try {
       console.log('Uploading scammer image for scammer:', scammerId);
+      
+      // Ensure the bucket exists before attempting upload
+      const bucketExists = await ensureBucketExists(this.MOST_WANTED_IMAGES_BUCKET, true);
+      if (!bucketExists) {
+        toast.error("Storage configuration error. Please try again later.");
+        return null;
+      }
       
       // Use the uploadImage utility with most wanted images bucket
       const imageUrl = await uploadImage(file, this.MOST_WANTED_IMAGES_BUCKET, `scammer-${scammerId}`);

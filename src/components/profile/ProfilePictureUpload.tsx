@@ -55,10 +55,15 @@ export function ProfilePictureUpload({
       return;
     }
 
-    const url = await uploadProfileImage(file, userId);
-    if (url) {
-      console.log("[ProfilePictureUpload] Upload successful, updating profile with URL:", url);
-      onProfilePicChange(url);
+    try {
+      const url = await uploadProfileImage(file, userId);
+      if (url) {
+        console.log("[ProfilePictureUpload] Upload successful, updating profile with URL:", url);
+        onProfilePicChange(url);
+      }
+    } catch (error) {
+      console.error("[ProfilePictureUpload] Error during upload:", error);
+      toast.error("Failed to upload profile picture");
     }
   };
 
