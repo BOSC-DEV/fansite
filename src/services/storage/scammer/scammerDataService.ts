@@ -1,5 +1,5 @@
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { ScammerBaseService } from './scammerBaseService';
 import { ScammerListing, ScammerDbRecord } from './scammerTypes';
 import { ScammerDataProcessor } from './scammerDataProcessor';
@@ -42,12 +42,11 @@ export class ScammerDataService extends ScammerBaseService {
           likes: dbRecord.likes || 0,
           dislikes: dbRecord.dislikes || 0,
           views: dbRecord.views || 0,
+          shares: dbRecord.shares || 0,
           comments: dbRecord.comments,
           deleted_at: null // Ensure new/updated records are not marked as deleted
-        }, { 
-          onConflict: 'id',
-          ignoreDuplicates: false 
-        });
+        })
+        .select();
 
       if (error) {
         console.error("Error saving scammer:", error);

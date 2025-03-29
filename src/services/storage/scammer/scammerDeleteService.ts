@@ -1,5 +1,5 @@
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { ScammerBaseService } from './scammerBaseService';
 import { ScammerListing, ScammerDbRecord } from './scammerTypes';
 import { ScammerDataProcessor } from './scammerDataProcessor';
@@ -91,9 +91,11 @@ export class ScammerDeleteService extends ScammerBaseService {
     try {
       console.log("Fetching deleted scammers");
       
+      // Query the main scammers table with a filter for deleted entries
       const { data, error } = await supabase
-        .from('deleted_scammers')
+        .from('scammers')
         .select('*')
+        .not('deleted_at', 'is', null)
         .order('deleted_at', { ascending: false });
 
       if (error) {
