@@ -33,6 +33,14 @@ export function ScammerInteractionButtons({
   onDislike,
   className
 }: ScammerInteractionButtonsProps) {
+  console.log("ScammerInteractionButtons rendering with:", {
+    scammerId,
+    likes,
+    dislikes,
+    isLiked,
+    isDisliked
+  });
+
   return (
     <div className={`flex items-center gap-2 ${className || ''}`}>
       <LikeButton 

@@ -1,4 +1,3 @@
-
 import { ScammerStats } from './scammerTypes';
 import { ScammerBaseService } from './scammerBaseService';
 import { supabase } from '@/lib/supabase';
@@ -12,6 +11,8 @@ export class ScammerStatsService extends ScammerBaseService {
    */
   async updateScammerStats(scammerId: string, stats: ScammerStats): Promise<boolean> {
     try {
+      console.log(`[ScammerStatsService] Updating stats for scammer ${scammerId}:`, stats);
+      
       // Convert to DB column names
       const dbStats: Record<string, any> = {};
       if (stats.likes !== undefined) dbStats.likes = stats.likes;
@@ -19,9 +20,11 @@ export class ScammerStatsService extends ScammerBaseService {
       if (stats.views !== undefined) dbStats.views = stats.views;
       if (stats.shares !== undefined) dbStats.shares = stats.shares;
       
-      return await this.updateScammerRecord(scammerId, dbStats);
+      const result = await this.updateScammerRecord(scammerId, dbStats);
+      console.log(`[ScammerStatsService] Update result:`, result);
+      return result;
     } catch (error) {
-      console.error("Error updating scammer stats:", error);
+      console.error("[ScammerStatsService] Error updating scammer stats:", error);
       return false;
     }
   }
@@ -142,18 +145,22 @@ export class ScammerStatsService extends ScammerBaseService {
    */
   async likeScammer(scammerId: string): Promise<boolean> {
     try {
+      console.log(`[ScammerStatsService] Liking scammer ${scammerId}`);
       const scammer = await this.getScammerRecord(scammerId);
       
       if (!scammer) {
-        console.error("Scammer not found for liking:", scammerId);
+        console.error("[ScammerStatsService] Scammer not found for liking:", scammerId);
         return false;
       }
       
       const currentLikes = scammer.likes || 0;
+      console.log(`[ScammerStatsService] Current likes: ${currentLikes}`);
       
-      return await this.updateScammerStats(scammerId, { likes: currentLikes + 1 });
+      const result = await this.updateScammerStats(scammerId, { likes: currentLikes + 1 });
+      console.log(`[ScammerStatsService] Like update result: ${result}`);
+      return result;
     } catch (error) {
-      console.error("Error in likeScammer:", error);
+      console.error("[ScammerStatsService] Error in likeScammer:", error);
       return false;
     }
   }

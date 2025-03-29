@@ -1,6 +1,7 @@
 
 import { supabase } from "@/lib/supabase";
 import { storageService } from "@/services/storage/localStorageService";
+import { scammerService } from "@/services/storage/scammer/scammerService";
 
 /**
  * Hook to manage database interactions for likes/dislikes
@@ -16,6 +17,8 @@ export function useInteractionDb() {
     if (!scammerId || !userId) return;
     
     try {
+      console.log("Saving interaction to DB:", { scammerId, userId, liked, disliked });
+      
       // Check if record exists
       const { data, error } = await supabase
         .from('user_scammer_interactions')
@@ -33,17 +36,29 @@ export function useInteractionDb() {
       
       if (data) {
         // Update existing record
-        await supabase
+        const { error: updateError } = await supabase
           .from('user_scammer_interactions')
           .update({ liked, disliked, last_updated: now })
           .eq('id', data.id);
+          
+        if (updateError) {
+          console.error("Error updating interaction:", updateError);
+        } else {
+          console.log("Updated existing interaction record");
+        }
       } else {
         // Insert new record
-        await supabase
+        const { error: insertError } = await supabase
           .from('user_scammer_interactions')
           .insert([
             { user_id: userId, scammer_id: scammerId, liked, disliked }
           ]);
+          
+        if (insertError) {
+          console.error("Error inserting interaction:", insertError);
+        } else {
+          console.log("Created new interaction record");
+        }
       }
     } catch (error) {
       console.error("Error saving interaction to DB:", error);
@@ -53,10 +68,21 @@ export function useInteractionDb() {
   // Update scammer stats in storage
   const updateScammerStats = async (scammerId: string, likes: number, dislikes: number) => {
     try {
-      await storageService.updateScammerStats(scammerId, {
-        likes: likes,
-        dislikes: dislikes,
+      console.log("Updating scammer stats:", { scammerId, likes, dislikes });
+      
+      // Update through the scammer service
+      await scammerService.updateScammerStats(scammerId, {
+        likes,
+        dislikes,
       });
+      
+      // Also update through local storage for redundancy
+      await storageService.updateScammerStats(scammerId, {
+        likes,
+        dislikes,
+      });
+      
+      console.log("Scammer stats updated successfully");
     } catch (error) {
       console.error("Error updating scammer stats:", error);
     }

@@ -13,8 +13,15 @@ interface LikeButtonProps {
 export function LikeButton({ count, isActive, onLike }: LikeButtonProps) {
   const { handleInteraction } = useProfileInteraction();
 
-  const handleLike = () => {
+  const handleLike = (event: React.MouseEvent) => {
+    // Prevent event bubbling
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Use the handler from props
     handleInteraction(onLike);
+    
+    console.log("Like button clicked", { count, isActive });
   };
 
   return (

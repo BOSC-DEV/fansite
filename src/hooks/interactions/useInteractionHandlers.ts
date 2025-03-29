@@ -90,7 +90,7 @@ export function useInteractionHandlers({
         toast.success("Liked scammer");
       }
       
-      // Update local state
+      // Update local state FIRST before any async operations
       setState(prev => ({
         ...prev,
         localLikes: newLikes,
@@ -99,7 +99,7 @@ export function useInteractionHandlers({
         isDisliked: newIsDisliked
       }));
 
-      // Store interaction both locally and in DB
+      // Store interaction locally
       localStorage.setItem(`scammer-interactions-${scammerId}`, JSON.stringify({ 
         liked: newIsLiked, 
         disliked: newIsDisliked 
@@ -110,8 +110,17 @@ export function useInteractionHandlers({
 
       // Update in storage service
       await updateScammerStats(scammerId, newLikes, newDislikes);
+      
+      console.log("Like interaction completed:", {
+        scammerId,
+        newIsLiked,
+        newIsDisliked,
+        newLikes,
+        newDislikes
+      });
     } catch (error) {
       console.error("Error handling like:", error);
+      toast.error("Failed to save interaction");
     } finally {
       setState(prev => ({ ...prev, isInteractionLocked: false }));
     }
