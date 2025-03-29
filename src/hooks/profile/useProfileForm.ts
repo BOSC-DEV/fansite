@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { useProfileFormSubmit } from "./useProfileFormSubmit";
@@ -44,8 +45,10 @@ export function useProfileForm() {
     const loadProfile = async () => {
       if (isConnected && address && hasProfile) {
         try {
+          console.log("[useProfileForm] Loading existing profile for address:", address);
           const profile = await storageService.getProfile(address);
           if (profile) {
+            console.log("[useProfileForm] Loaded profile data:", profile);
             setFormData({
               displayName: profile.displayName || "",
               username: profile.username || "",
@@ -58,9 +61,11 @@ export function useProfileForm() {
             if (profile.username) {
               checkUsername(profile.username, address);
             }
+          } else {
+            console.log("[useProfileForm] No profile found despite hasProfile being true");
           }
         } catch (error) {
-          console.error("Error loading profile data:", error);
+          console.error("[useProfileForm] Error loading profile data:", error);
         }
       }
     };
@@ -70,11 +75,13 @@ export function useProfileForm() {
 
   // Update form handlers
   const setDisplayName = (name: string) => {
+    console.log("[useProfileForm] Setting display name:", name);
     setFormData(prev => ({ ...prev, displayName: name }));
   };
 
   const setUsername = (username: string) => {
     const sanitizedUsername = username.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
+    console.log("[useProfileForm] Setting username:", sanitizedUsername);
     setFormData(prev => ({ ...prev, username: sanitizedUsername }));
     if (checkUsername) {
       checkUsername(sanitizedUsername, address);
@@ -82,20 +89,24 @@ export function useProfileForm() {
   };
 
   const setProfilePicUrl = (url: string) => {
+    console.log("[useProfileForm] Setting profile pic URL:", url);
     setFormData(prev => ({ ...prev, profilePicUrl: url }));
   };
 
   const setXLink = (link: string) => {
+    console.log("[useProfileForm] Setting X link:", link);
     setFormData(prev => ({ ...prev, xLink: link }));
     validateUrls(link, formData.websiteLink);
   };
 
   const setWebsiteLink = (link: string) => {
+    console.log("[useProfileForm] Setting website link:", link);
     setFormData(prev => ({ ...prev, websiteLink: link }));
     validateUrls(formData.xLink, link);
   };
 
   const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    console.log("[useProfileForm] Setting bio:", e.target.value);
     setFormData(prev => ({ ...prev, bio: e.target.value }));
   };
 
@@ -138,10 +149,11 @@ export function useProfileForm() {
   // Save profile, utilizing the useProfileFormSubmit hook
   const saveProfile = async () => {
     if (!isConnected || !address) {
-      console.error("Cannot save profile: wallet not connected");
+      console.error("[useProfileForm] Cannot save profile: wallet not connected");
       return false;
     }
     
+    console.log("[useProfileForm] Saving profile with data:", formData);
     return await submitProfileChanges(formData, usernameAvailable, urlValidation);
   };
 

@@ -234,7 +234,7 @@ export class ProfileService extends BaseSupabaseService {
       console.log("[ProfileService] Prepared DB profile:", dbProfile);
       
       if (existingProfile) {
-        // Update existing profile
+        // Try direct update first
         console.log("[ProfileService] Updating existing profile with ID:", existingProfile.id);
         const { error: updateError } = await this.supabase
           .from('profiles')
@@ -249,8 +249,26 @@ export class ProfileService extends BaseSupabaseService {
           .eq('id', existingProfile.id);
           
         if (updateError) {
-          console.error('[ProfileService] Error updating profile:', updateError);
-          return false;
+          console.error('[ProfileService] Error updating profile with direct update:', updateError);
+          
+          // Try upsert as fallback
+          const { error: upsertError } = await this.supabase
+            .from('profiles')
+            .upsert({
+              id: existingProfile.id,
+              display_name: profile.displayName,
+              username: profile.username || '',
+              profile_pic_url: profile.profilePicUrl || '',
+              wallet_address: profile.walletAddress,
+              x_link: profile.xLink || '',
+              website_link: profile.websiteLink || '',
+              bio: profile.bio || ''
+            }, { onConflict: 'id' });
+            
+          if (upsertError) {
+            console.error('[ProfileService] Error updating profile with upsert:', upsertError);
+            return false;
+          }
         }
       } else {
         // Insert new profile

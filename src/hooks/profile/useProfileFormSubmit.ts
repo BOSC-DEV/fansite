@@ -127,14 +127,16 @@ export function useProfileFormSubmit() {
       
       let success = false;
       
-      // Direct update for existing profiles to avoid the RPC column ambiguity issue
+      // Direct update for existing profiles using supabase to avoid any service layer issues
       if (hasProfile && currentProfileId) {
         console.log("[useProfileFormSubmit] Updating existing profile with ID:", currentProfileId);
+        
+        // First try with direct update
         const { error } = await supabase
           .from('profiles')
           .update({
             display_name: profileData.displayName,
-            username: profileData.username, // Ensure username is included
+            username: profileData.username,
             profile_pic_url: profileData.profilePicUrl,
             x_link: profileData.xLink,
             website_link: profileData.websiteLink,
@@ -143,16 +145,57 @@ export function useProfileFormSubmit() {
           .eq('id', currentProfileId);
           
         if (error) {
-          console.error("[useProfileFormSubmit] Error updating profile:", error);
-          // Try fallback storage service
-          success = await storageService.saveProfile(profileData);
+          console.error("[useProfileFormSubmit] Error updating profile with Supabase direct update:", error);
+          
+          // Try with the upsert method as fallback
+          const { error: upsertError } = await supabase
+            .from('profiles')
+            .upsert({
+              id: currentProfileId,
+              display_name: profileData.displayName,
+              username: profileData.username,
+              profile_pic_url: profileData.profilePicUrl,
+              wallet_address: address,
+              x_link: profileData.xLink,
+              website_link: profileData.websiteLink,
+              bio: profileData.bio
+            }, { onConflict: 'id' });
+            
+          if (upsertError) {
+            console.error("[useProfileFormSubmit] Error updating profile with Supabase upsert:", upsertError);
+            // As last resort, try the storage service
+            success = await storageService.saveProfile(profileData);
+          } else {
+            success = true;
+          }
         } else {
           success = true;
         }
       } else {
-        // For new profiles, use the storage service
+        // For new profiles, try direct insert first
         console.log("[useProfileFormSubmit] Creating new profile");
-        success = await storageService.saveProfile(profileData);
+        
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert({
+            id: currentProfileId,
+            display_name: profileData.displayName,
+            username: profileData.username,
+            profile_pic_url: profileData.profilePicUrl,
+            wallet_address: address,
+            created_at: profileData.createdAt,
+            x_link: profileData.xLink,
+            website_link: profileData.websiteLink,
+            bio: profileData.bio
+          });
+          
+        if (insertError) {
+          console.error("[useProfileFormSubmit] Error creating profile with direct insert:", insertError);
+          // Fallback to storage service
+          success = await storageService.saveProfile(profileData);
+        } else {
+          success = true;
+        }
       }
       
       if (!success) {
@@ -166,7 +209,7 @@ export function useProfileFormSubmit() {
       // High contrast, themed success toast
       toast.success("Profile saved successfully!", {
         style: {
-          backgroundColor: "#ea384c", // Bright red
+          backgroundColor: "#ea384c", // Bright red 
           color: "#ffffff", // White text for contrast
           fontWeight: "bold"
         },

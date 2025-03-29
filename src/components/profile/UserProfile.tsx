@@ -63,7 +63,7 @@ export function UserProfile() {
         console.log("Profile saved successfully, navigating back");
         // We don't need toast here as it's handled in the useProfileFormSubmit hook
         // Add a small delay before navigating to ensure the toast is visible
-        setTimeout(() => navigate(-1), 1000);
+        setTimeout(() => navigate(-1), 1500);
       } else {
         console.error("Profile save returned false");
         setSaveError("Failed to save profile. Please try again.");
