@@ -25,18 +25,28 @@ export function ProfileFormFooter({
   };
   
   return (
-    <div className="px-6 py-4 bg-muted/20 border-t border-western-sand/10 flex justify-between shadow-md">
-      <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+    <div className="px-6 py-4 bg-muted/20 border-t border-western-sand/10 flex items-center justify-between shadow-md">
+      <Button 
+        type="button" 
+        variant="outline" 
+        onClick={() => navigate(-1)}
+        className="min-w-[100px]"
+      >
         Cancel
       </Button>
-      <div className="flex items-center gap-2">
+      
+      <div className="flex items-center gap-4">
         {emailVerified === false && (
-          <span className="text-amber-500 text-xs">Email not verified</span>
+          <span className="text-amber-500 text-sm">Email not verified</span>
         )}
         {emailVerified === true && (
-          <span className="text-green-500 text-xs">Email verified</span>
+          <span className="text-green-500 text-sm">Email verified</span>
         )}
-        <Button type="submit" disabled={isSubmitting || !usernameAvailable}>
+        <Button 
+          type="submit" 
+          disabled={isSubmitting || !usernameAvailable}
+          className="min-w-[140px]"
+        >
           {buttonText()}
         </Button>
       </div>

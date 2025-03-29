@@ -12,6 +12,7 @@ export function CreateListingForm() {
   const { isConnected, address } = useWallet();
   const navigate = useNavigate();
   const [isCheckingProfile, setIsCheckingProfile] = useState(true);
+  const [hasToastBeenShown, setHasToastBeenShown] = useState(false);
 
   useEffect(() => {
     // Check if user has a profile
@@ -29,13 +30,15 @@ export function CreateListingForm() {
             console.error("Error checking profile:", error);
             // Fallback to localStorage check if Supabase fails
             const hasLocalProfile = profileService.hasProfile(address);
-            if (!hasLocalProfile) {
+            if (!hasLocalProfile && !hasToastBeenShown) {
               toast.info("You need to create a profile before reporting a scammer");
+              setHasToastBeenShown(true);
               navigate("/profile");
             }
-          } else if (!profile) {
+          } else if (!profile && !hasToastBeenShown) {
             // No profile found in Supabase
             toast.info("You need to create a profile before reporting a scammer");
+            setHasToastBeenShown(true);
             navigate("/profile");
           }
         } catch (error) {
@@ -49,7 +52,7 @@ export function CreateListingForm() {
     };
 
     checkProfile();
-  }, [isConnected, address, navigate]);
+  }, [isConnected, address, navigate, hasToastBeenShown]);
 
   if (isCheckingProfile) {
     return (
