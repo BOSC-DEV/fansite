@@ -2,11 +2,11 @@
 import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { db, Comment, safeSpread } from "@/lib/supabase-helpers";
+import { db, Comment } from "@/lib/supabase-helpers";
 import { useWallet } from "@/context/WalletContext";
 import { CommentList } from "@/components/comments/CommentList";
 import { toast } from "sonner";
-import { safeSpreader } from "@/utils/databaseHelpers";
+import { isNotNullOrUndefined } from "@/utils/databaseHelpers";
 
 export function CommentsTab() {
   const [comments, setComments] = useState<Comment[]>([]);
@@ -37,12 +37,11 @@ export function CommentsTab() {
             
             // Ensure all comments have a valid created_at field
             const validatedComments = userComments.map(comment => {
-              const commentObj = safeSpreader(comment);
-              if (!commentObj.created_at || commentObj.created_at === 'Invalid Date') {
+              if (!comment.created_at || comment.created_at === 'Invalid Date') {
                 // Use current timestamp if the date is invalid
-                return { ...commentObj, created_at: new Date().toISOString() } as Comment;
+                return { ...comment, created_at: new Date().toISOString() };
               }
-              return comment as Comment;
+              return comment;
             });
             
             setComments(validatedComments);

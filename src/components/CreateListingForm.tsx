@@ -22,7 +22,7 @@ export function CreateListingForm() {
           // First check if the profile exists in Supabase
           const { data: profile, error } = await db.profiles()
             .select('id')
-            .eq('wallet_address', address as string)
+            .eq('wallet_address', address)
             .maybeSingle();
             
           if (error) {

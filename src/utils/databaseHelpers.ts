@@ -48,3 +48,28 @@ export function processDbResult<T>(data: any | null, defaultValue: T): T {
   if (!data) return defaultValue;
   return data as T;
 }
+
+// Safely extract an error message from any error type
+export function extractErrorMessage(error: unknown): string {
+  if (typeof error === 'string') return error;
+  if (error instanceof Error) return error.message;
+  if (typeof error === 'object' && error !== null && 'message' in error && typeof (error as any).message === 'string') {
+    return (error as any).message;
+  }
+  return 'An unknown error occurred';
+}
+
+// Helper to convert unknown database object to a specific type
+export function convertToType<T>(data: unknown): T | null {
+  if (!data) return null;
+  try {
+    return data as T;
+  } catch {
+    return null;
+  }
+}
+
+// Type guard for database query responses
+export function isDbError(result: any): boolean {
+  return result && typeof result === 'object' && 'error' in result && result.error !== null;
+}

@@ -1,6 +1,8 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/database.types';
+import { PostgrestQueryBuilder } from '@supabase/postgrest-js';
+import { createClient } from '@supabase/supabase-js';
 
 // Type definitions for our database schema
 export type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -11,17 +13,25 @@ export type UserScammerInteraction = Database['public']['Tables']['user_scammer_
 export type UserCommentInteraction = Database['public']['Tables']['user_comment_interactions']['Row'];
 export type LeaderboardStats = Database['public']['Tables']['leaderboard_stats']['Row'];
 
-// Type-safe table accessors using the Database type
-export const db = {
-  profiles: () => supabase.from<Profile>('profiles'),
-  scammers: () => supabase.from<Scammer>('scammers'),
-  comments: () => supabase.from<Comment>('comments'),
-  scammerViews: () => supabase.from<ScammerView>('scammer_views'),
-  userScammerInteractions: () => supabase.from<UserScammerInteraction>('user_scammer_interactions'),
-  userCommentInteractions: () => supabase.from<UserCommentInteraction>('user_comment_interactions'),
-  leaderboardStats: () => supabase.from<LeaderboardStats>('leaderboard_stats'),
-  deletedScammers: () => supabase.from<Scammer>('deleted_scammers')
+// Type for table references to help with type checking
+export type TableName = keyof Database['public']['Tables'];
+
+// Helper to cast database calls with proper types
+export function fromTable<T extends TableName>(table: T) {
+  return supabase.from(table) as PostgrestQueryBuilder<Database['public'], Database['public']['Tables'][T]['Row'], Database['public']['Tables'][T]['Insert']>;
 }
+
+// Type-safe table accessors
+export const db = {
+  profiles: () => fromTable('profiles'),
+  scammers: () => fromTable('scammers'),
+  comments: () => fromTable('comments'),
+  scammerViews: () => fromTable('scammer_views'),
+  userScammerInteractions: () => fromTable('user_scammer_interactions'),
+  userCommentInteractions: () => fromTable('user_comment_interactions'),
+  leaderboardStats: () => fromTable('leaderboard_stats'),
+  deletedScammers: () => fromTable('deleted_scammers')
+};
 
 // Helper utility to safely check if a property exists on a potentially null object
 export function safeGet<T, K extends keyof T>(obj: T | null | undefined, key: K): T[K] | undefined {
@@ -48,4 +58,32 @@ export function safeGetWithDefault<T, K extends keyof T, D>(obj: T | null | unde
   if (!obj) return defaultValue;
   const value = obj[key];
   return value !== undefined && value !== null ? value : defaultValue;
+}
+
+// TypeScript type guards
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object';
+}
+
+// Helper for type casting
+export function asType<T>(value: unknown): T {
+  return value as T;
+}
+
+// Safely cast database response to a specific type
+export function castResponse<T>(data: unknown): T | null {
+  if (!data) return null;
+  return data as T;
+}
+
+// Cast database array response to an array of a specific type
+export function castArrayResponse<T>(data: unknown): T[] {
+  if (!data || !Array.isArray(data)) return [];
+  return data as T[];
+}
+
+// For safely working with database responses
+export function processDbResponse<T>(data: unknown, defaultValue: T): T {
+  if (!data) return defaultValue;
+  return data as T;
 }

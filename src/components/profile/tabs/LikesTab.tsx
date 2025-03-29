@@ -2,12 +2,12 @@
 import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { db, safeGet } from "@/lib/supabase-helpers";
+import { db } from "@/lib/supabase-helpers";
 import { ScammerCard } from "@/components/scammer/card/ScammerCard";
 import { Scammer } from "@/lib/types";
 import { storageService } from "@/services/storage";
 import { toast } from "sonner";
-import { isNotNullOrUndefined, safeSpreader } from "@/utils/databaseHelpers";
+import { isNotNullOrUndefined } from "@/utils/databaseHelpers";
 
 interface LikesTabProps {
   address?: string;

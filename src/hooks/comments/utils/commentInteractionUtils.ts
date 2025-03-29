@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { safeGet } from "@/lib/supabase-helpers";
 import { toast } from "sonner";
 import { db } from "@/lib/supabase-helpers";
+import { extractErrorMessage } from "@/utils/databaseHelpers";
 
 /**
  * Checks if a user has an interaction with a comment
@@ -21,8 +22,8 @@ export async function checkPreviousInteraction(commentId: string, userId: string
     }
 
     return {
-      isLiked: data ? Boolean(safeGet(data, 'liked')) : false,
-      isDisliked: data ? Boolean(safeGet(data, 'disliked')) : false
+      isLiked: data ? Boolean(data.liked) : false,
+      isDisliked: data ? Boolean(data.disliked) : false
     };
   } catch (error) {
     console.error("Error in checkPreviousInteraction:", error);
@@ -65,7 +66,7 @@ export async function saveInteraction(commentId: string, userId: string, liked: 
     }
     return true;
   } catch (error) {
-    console.error("Error saving interaction:", error);
+    console.error("Error saving interaction:", extractErrorMessage(error));
     return false;
   }
 }
@@ -83,7 +84,7 @@ export async function updateCommentCounts(commentId: string, newLikes: number, n
       .eq('id', commentId);
     return true;
   } catch (error) {
-    console.error("Error updating comment counts:", error);
+    console.error("Error updating comment counts:", extractErrorMessage(error));
     return false;
   }
 }
@@ -104,11 +105,11 @@ export async function getCommentCounts(commentId: string) {
     }
     
     return {
-      likes: data ? safeGet(data, 'likes') || 0 : 0,
-      dislikes: data ? safeGet(data, 'dislikes') || 0 : 0
+      likes: data ? (data.likes || 0) : 0,
+      dislikes: data ? (data.dislikes || 0) : 0
     };
   } catch (error) {
-    console.error("Error in getCommentCounts:", error);
+    console.error("Error in getCommentCounts:", extractErrorMessage(error));
     return { likes: 0, dislikes: 0 };
   }
 }

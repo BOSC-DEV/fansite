@@ -36,7 +36,7 @@ export function useCommentsViewTracking(commentId: string) {
           return;
         }
         
-        const currentViews = comment ? safeGet(comment, 'views') || 0 : 0;
+        const currentViews = comment ? (comment.views || 0) : 0;
         
         await db.comments()
           .update({ views: currentViews + 1 })
