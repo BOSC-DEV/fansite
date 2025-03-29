@@ -6,10 +6,8 @@ import { UserProfileForm } from "./UserProfileForm";
 import { useProfileForm } from "@/hooks/profile/useProfileForm";
 import { toast } from "sonner";
 import { EmailVerification } from "./EmailVerification";
-import { isEmailVerified } from "@/lib/supabase";
 import CloudflareTurnstile from "@/components/CloudflareTurnstile";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { supabase } from "@/integrations/supabase/client";
 
 export function UserProfile() {
   const navigate = useNavigate();
@@ -36,16 +34,6 @@ export function UserProfile() {
     checkingUsername
   } = useProfileForm();
 
-  useEffect(() => {
-    const checkEmailVerification = async () => {
-      const verified = await isEmailVerified();
-      setEmailVerified(verified);
-    };
-    
-    // Still check email verification status, but don't require it
-    checkEmailVerification();
-  }, []);
-
   const handleTurnstileVerify = async (token: string) => {
     console.log("Turnstile verification successful with token:", token);
     setCaptchaVerified(true);
@@ -65,33 +53,28 @@ export function UserProfile() {
       return;
     }
     
+    // Show simple saving toast
+    toast.loading("Saving your profile...");
+    
     try {
-      // Proceed with profile save
-      toast.info("Saving your profile...");
-      
-      // Use upsertProfile to ensure profile is created if it doesn't exist
-      // First check if we have a user session
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        console.log("Creating public profile for non-authenticated user");
-      } else {
-        console.log("Creating profile for authenticated user:", session.user.id);
-      }
-      
+      // Use a simple try/catch for profile save
       const success = await saveProfile();
       
       if (success) {
-        console.log("Profile saved successfully, navigating back");
+        toast.dismiss();
         toast.success("Profile saved successfully!");
+        
+        // Wait a moment before navigating
         setTimeout(() => {
           navigate(-1);
         }, 1500);
       } else {
-        throw new Error("Failed to save profile");
+        toast.dismiss();
+        toast.error("Failed to save profile. Please try again.");
       }
     } catch (error) {
       console.error("Error during profile save:", error);
+      toast.dismiss();
       toast.error("Failed to save profile. Please try again.");
     }
   };
