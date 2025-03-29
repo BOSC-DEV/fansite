@@ -6,7 +6,15 @@ export { supabase };
 
 // Export a function to check if Supabase is properly configured
 export const isSupabaseConfigured = () => {
-  return true; // We now have hardcoded values from our Supabase project
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  
+  if (supabaseUrl && supabaseAnonKey) {
+    return true;
+  }
+  
+  // Fallback to hardcoded values if environment variables are not set
+  return true; // We have hardcoded values from our Supabase project
 };
 
 // Email auth functions
