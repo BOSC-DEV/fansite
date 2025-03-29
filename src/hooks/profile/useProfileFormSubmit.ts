@@ -2,10 +2,11 @@
 import { useState, useEffect } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { storageService } from "@/services/storage";
 import { v4 as uuidv4 } from 'uuid';
+import { useProfileValidation } from "./useProfileValidation";
+import { profileDataProcessor, ProfileData } from "@/services/profile/profileDataProcessor";
 
 interface ProfileFormData {
   displayName: string;
@@ -27,6 +28,7 @@ export function useProfileFormSubmit() {
   const [hasProfile, setHasProfile] = useState(false);
   const [profileId, setProfileId] = useState<string | undefined>(undefined);
   const supabaseReady = isSupabaseConfigured();
+  const { validateForm } = useProfileValidation();
 
   // Check if user has a profile on mount
   useEffect(() => {
@@ -53,39 +55,6 @@ export function useProfileFormSubmit() {
     checkProfile();
   }, [isConnected, address, supabaseReady]);
 
-  const validateForm = (
-    formData: ProfileFormData, 
-    usernameAvailable: boolean,
-    urlValidation: FormValidation
-  ) => {
-    if (!supabaseReady) {
-      toast.error("Supabase is not configured properly. Please check your environment variables.");
-      return false;
-    }
-
-    if (!formData.displayName.trim()) {
-      toast.error("Please enter a display name");
-      return false;
-    }
-
-    if (!formData.username.trim()) {
-      toast.error("Please enter a username");
-      return false;
-    }
-
-    if (!usernameAvailable) {
-      toast.error("Username is not available or invalid");
-      return false;
-    }
-
-    if (!urlValidation.valid) {
-      toast.error(urlValidation.message);
-      return false;
-    }
-
-    return true;
-  };
-
   const saveProfile = async (
     formData: ProfileFormData, 
     usernameAvailable: boolean,
@@ -111,7 +80,7 @@ export function useProfileFormSubmit() {
       let currentProfileId = profileId || uuidv4();
       
       // Prepare the profile data
-      const profileData = {
+      const profileData: ProfileData = {
         id: currentProfileId,
         displayName: formData.displayName,
         username: formData.username,
@@ -125,77 +94,11 @@ export function useProfileFormSubmit() {
       
       console.log("[useProfileFormSubmit] Prepared profile data:", profileData);
       
-      let success = false;
-      
-      try {
-        // First approach: Try direct operations since the RPC function has an issue
-        try {
-          console.log("[useProfileFormSubmit] Trying direct operations");
-          if (hasProfile && profileId) {
-            // Update existing profile
-            console.log("[useProfileFormSubmit] Updating existing profile with ID:", profileId);
-            const { error: updateError } = await supabase
-              .from('profiles')
-              .update({
-                display_name: formData.displayName,
-                username: formData.username,
-                profile_pic_url: formData.profilePicUrl || '',
-                x_link: formData.xLink || '',
-                website_link: formData.websiteLink || '',
-                bio: formData.bio || ''
-              })
-              .eq('id', profileId);
-            
-            if (updateError) {
-              console.error("[useProfileFormSubmit] Error updating profile:", updateError);
-              throw new Error(updateError.message);
-            } else {
-              success = true;
-              console.log("[useProfileFormSubmit] Profile updated successfully");
-            }
-          } else {
-            // Create new profile
-            console.log("[useProfileFormSubmit] Creating new profile with ID:", currentProfileId);
-            const { error: insertError } = await supabase
-              .from('profiles')
-              .insert({
-                id: currentProfileId,
-                display_name: formData.displayName,
-                username: formData.username,
-                profile_pic_url: formData.profilePicUrl || '',
-                wallet_address: address,
-                created_at: new Date().toISOString(),
-                x_link: formData.xLink || '',
-                website_link: formData.websiteLink || '',
-                bio: formData.bio || ''
-              });
-            
-            if (insertError) {
-              console.error("[useProfileFormSubmit] Error creating profile:", insertError);
-              throw new Error(insertError.message);
-            } else {
-              success = true;
-              console.log("[useProfileFormSubmit] Profile created successfully");
-            }
-          }
-        } catch (directError) {
-          console.error("[useProfileFormSubmit] Direct operations failed:", directError);
-          
-          // Use storage service as fallback
-          console.log("[useProfileFormSubmit] Trying storage service as final fallback");
-          success = await storageService.saveProfile(profileData);
-          
-          if (success) {
-            console.log("[useProfileFormSubmit] Profile saved successfully via storage service");
-          } else {
-            console.error("[useProfileFormSubmit] All save methods failed");
-            throw new Error("All profile save methods failed");
-          }
-        }
-      } catch (error) {
-        console.error("[useProfileFormSubmit] Error saving profile:", error);
-        throw error;
-      }
+      const success = await profileDataProcessor.saveProfileWithFallback(
+        profileData, 
+        hasProfile, 
+        profileId
+      );
       
       if (success) {
         console.log("[useProfileFormSubmit] Profile saved successfully");
