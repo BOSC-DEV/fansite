@@ -44,7 +44,7 @@ export function ImageUpload({ onImageChange, currentImage }: ImageUploadProps) {
       // Generate a unique ID for the image
       const uniqueId = uuidv4();
       
-      // Upload the file using the storage service's new scammer image method
+      // Upload the file using the storage service
       const imageUrl = await storageService.uploadScammerImage(file, uniqueId);
       
       if (imageUrl) {

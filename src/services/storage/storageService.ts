@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 import { toast } from 'sonner';
@@ -7,80 +8,48 @@ import { leaderboardService } from './leaderboardService';
 import { UserProfile } from './profileService';
 import { ScammerListing } from './scammer/scammerTypes';
 import { LeaderboardUser } from './leaderboardService';
+import { uploadImage } from './storageUtils';
 
 export class StorageService extends BaseSupabaseService {
-  // This bucket already exists, no need to create it again
-  async ensureProfileImagesBucketExists() {
-    console.log('Checking if profile-images bucket exists');
-    const { data } = await this.supabase.storage.getBucket('profile-images');
-    return !!data;
-  }
+  // Storage bucket names
+  private readonly PROFILE_IMAGES_BUCKET = 'profile-images';
+  private readonly MOST_WANTED_IMAGES_BUCKET = 'most-wanted-images';
 
   async uploadProfileImage(file: File, userId: string): Promise<string | null> {
     try {
       console.log('Uploading profile image for user:', userId);
       
-      // Generate a unique file name
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${userId}-${Date.now()}.${fileExt}`;
-      const filePath = `${fileName}`;
+      // Use the uploadImage utility with profile images bucket
+      const imageUrl = await uploadImage(file, this.PROFILE_IMAGES_BUCKET, userId);
       
-      // Upload the file to the 'profile-images' bucket
-      const { error: uploadError, data } = await this.supabase.storage
-        .from('profile-images')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: true // Overwrite if the file already exists
-        });
-        
-      if (uploadError) {
-        console.error('Error uploading image:', uploadError);
+      if (!imageUrl) {
+        console.error('Error uploading profile image');
         return null;
       }
       
-      // Get the public URL for the uploaded file
-      const { data: publicUrlData } = this.supabase.storage
-        .from('profile-images')
-        .getPublicUrl(filePath);
-        
-      console.log('Image uploaded successfully, public URL:', publicUrlData.publicUrl);
-      return publicUrlData.publicUrl;
+      console.log('Image uploaded successfully, public URL:', imageUrl);
+      return imageUrl;
     } catch (error) {
       console.error('Error in uploadProfileImage:', error);
       return null;
     }
   }
 
-  // New method specifically for scammer images
+  // Method specifically for scammer images
   async uploadScammerImage(file: File, scammerId: string): Promise<string | null> {
     try {
       console.log('Uploading scammer image for scammer:', scammerId);
       
-      // Generate a unique file name
-      const fileExt = file.name.split('.').pop();
-      const fileName = `scammer-${scammerId}-${Date.now()}.${fileExt}`;
-      const filePath = `${fileName}`;
+      // Use the uploadImage utility with most wanted images bucket
+      const imageUrl = await uploadImage(file, this.MOST_WANTED_IMAGES_BUCKET, `scammer-${scammerId}`);
       
-      // Upload the file to the 'profile-images' bucket (reusing the same bucket for now)
-      const { error: uploadError, data } = await this.supabase.storage
-        .from('profile-images')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: true // Overwrite if the file already exists
-        });
-        
-      if (uploadError) {
-        console.error('Error uploading scammer image:', uploadError);
+      if (!imageUrl) {
+        console.error('Error uploading scammer image');
         return null;
       }
       
-      // Get the public URL for the uploaded file
-      const { data: publicUrlData } = this.supabase.storage
-        .from('profile-images')
-        .getPublicUrl(filePath);
-        
-      console.log('Scammer image uploaded successfully, public URL:', publicUrlData.publicUrl);
-      return publicUrlData.publicUrl;
+      console.log('Scammer image uploaded successfully, public URL:', imageUrl);
+      return imageUrl;
     } catch (error) {
       console.error('Error in uploadScammerImage:', error);
       return null;
