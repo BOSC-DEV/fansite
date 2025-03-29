@@ -27,7 +27,11 @@ export function ProfileFormFooter({
       <Button type="button" variant="outline" onClick={() => navigate(-1)}>
         Cancel
       </Button>
-      <Button type="submit" disabled={isSubmitting || !usernameAvailable}>
+      <Button 
+        type="submit" 
+        disabled={isSubmitting || !usernameAvailable}
+        className="min-w-24"
+      >
         {buttonText()}
       </Button>
     </div>

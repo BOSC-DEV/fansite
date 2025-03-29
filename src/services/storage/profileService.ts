@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 
@@ -238,15 +239,17 @@ export class ProfileService extends BaseSupabaseService {
           .eq('id', existingProfile.id);
       } else {
         console.log("[ProfileService] Creating new profile");
-        // Insert new profile with auto-generated UUID - include id field
-        const newProfile = {
+        // Create a new profile with required ID field
+        const newProfileWithId = {
           ...dbProfile,
           id: uuidv4() // Generate a new UUID for the id field
         };
         
+        console.log("[ProfileService] New profile with ID:", newProfileWithId);
+        
         result = await this.supabase
           .from('profiles')
-          .insert(newProfile);
+          .insert(newProfileWithId);
       }
 
       if (result.error) {
