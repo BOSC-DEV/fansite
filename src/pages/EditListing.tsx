@@ -1,6 +1,6 @@
 
-import React from "react";
-import { useParams, Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -18,7 +18,15 @@ const EditListing = () => {
   const { id } = useParams<{ id: string }>();
   const { isLoading, scammer, isAuthorized } = useEditScammer(id);
   const isMobile = useIsMobile();
-  const { isConnected } = useWallet();
+  const { isConnected, address } = useWallet();
+  const navigate = useNavigate();
+
+  // Redirect if not connected
+  useEffect(() => {
+    if (!isConnected || !address) {
+      navigate('/');
+    }
+  }, [isConnected, address, navigate]);
 
   if (isLoading) {
     return (

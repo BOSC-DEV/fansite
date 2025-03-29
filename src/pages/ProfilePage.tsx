@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { UserProfile } from "@/components/profile/UserProfile";
 import { useWallet } from "@/context/WalletContext";
@@ -8,11 +8,20 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { useNavigate } from "react-router-dom";
 
 export function ProfilePage() {
-  const { isConnected } = useWallet();
+  const { isConnected, address } = useWallet();
   const [isLoading, setIsLoading] = useState(false);
   const supabaseReady = isSupabaseConfigured();
+  const navigate = useNavigate();
+  
+  // Redirect if not connected - profile editing is only for connected wallets
+  useEffect(() => {
+    if (!isConnected || !address) {
+      navigate('/');
+    }
+  }, [isConnected, address, navigate]);
   
   return (
     <div className="min-h-screen old-paper flex flex-col">

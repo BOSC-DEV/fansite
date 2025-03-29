@@ -1,6 +1,6 @@
 
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUserProfile } from "@/hooks/useUserProfile";
@@ -37,7 +37,8 @@ export function UserProfilePage() {
   };
   
   // Check if this is the current user's profile
-  const isCurrentUserProfile = profile?.walletAddress === address;
+  const isCurrentUserProfile = profile?.walletAddress && address && 
+    profile.walletAddress.toLowerCase() === address.toLowerCase();
   
   return <div className="min-h-screen old-paper flex flex-col">
       <Header />
