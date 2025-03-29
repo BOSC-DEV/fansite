@@ -198,13 +198,10 @@ export class ProfileService extends BaseSupabaseService {
       return false;
     }
     
-    // MODIFIED: Skip Supabase auth check and instead rely on wallet address for authentication
-    // This allows the wallet-connected users to save profiles without Supabase auth
-    
     // Normalize wallet address
     profile.walletAddress = profile.walletAddress.trim();
     
-    // Use wallet address as the ID
+    // Use wallet address as the ID to ensure consistency
     const profileId = profile.walletAddress;
     
     // Convert from camelCase to snake_case for database
@@ -214,7 +211,7 @@ export class ProfileService extends BaseSupabaseService {
       username: profile.username,
       profile_pic_url: profile.profilePicUrl,
       wallet_address: profile.walletAddress,
-      created_at: profile.createdAt,
+      created_at: profile.createdAt || new Date().toISOString(),
       x_link: profile.xLink || null,
       website_link: profile.websiteLink || null,
       bio: profile.bio || null,

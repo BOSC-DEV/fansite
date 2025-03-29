@@ -8,6 +8,8 @@ import { ProfileFormHeader } from "./ProfileFormHeader";
 import { ProfileFormFooter } from "./ProfileFormFooter";
 import { UsernameInput } from "./UsernameInput";
 import { ProfileLinks } from "./ProfileLinks";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 // Update the interface to include our new props
 interface UserProfileFormProps {
@@ -32,7 +34,9 @@ interface UserProfileFormProps {
   usernameAvailable: boolean;
   checkingUsername: boolean;
   handleSubmit: (e: React.FormEvent) => void;
+  error?: string | null;
 }
+
 export function UserProfileForm({
   formData,
   setDisplayName,
@@ -47,10 +51,20 @@ export function UserProfileForm({
   address,
   usernameAvailable,
   checkingUsername,
-  handleSubmit
+  handleSubmit,
+  error
 }: UserProfileFormProps) {
   return <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
       <ProfileFormHeader hasProfile={hasProfile} address={address} />
+      
+      {error && (
+        <div className="p-6 pt-0">
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        </div>
+      )}
       
       <div className="p-6 space-y-6 py-0">
         <ProfilePictureUpload displayName={formData.displayName} profilePicUrl={formData.profilePicUrl} onProfilePicChange={setProfilePicUrl} userId={address || ""} />

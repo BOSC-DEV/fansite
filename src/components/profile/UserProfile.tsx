@@ -8,6 +8,7 @@ import { toast } from "sonner";
 
 export function UserProfile() {
   const navigate = useNavigate();
+  const [saveError, setSaveError] = useState<string | null>(null);
   
   const {
     formData,
@@ -29,6 +30,7 @@ export function UserProfile() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSaveError(null);
     console.log("Profile form submitted with data:", formData);
     
     if (!isConnected) {
@@ -44,10 +46,14 @@ export function UserProfile() {
         toast.success("Profile saved successfully!");
         navigate(-1);
       } else {
+        console.error("Profile save returned false");
+        setSaveError("Failed to save profile. Please try again.");
         toast.error("Failed to save profile. Please try again.");
       }
     } catch (error) {
       console.error("Error saving profile:", error);
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      setSaveError(errorMessage);
       toast.error("An unexpected error occurred while saving profile.");
     }
   };
@@ -72,6 +78,7 @@ export function UserProfile() {
       usernameAvailable={usernameAvailable}
       checkingUsername={checkingUsername}
       handleSubmit={handleSubmit}
+      error={saveError}
     />
   );
 }
