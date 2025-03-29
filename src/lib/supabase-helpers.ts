@@ -2,7 +2,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/database.types';
 import { PostgrestQueryBuilder } from '@supabase/postgrest-js';
-import { createClient } from '@supabase/supabase-js';
 
 // Type definitions for our database schema
 export type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -29,8 +28,7 @@ export const db = {
   scammerViews: () => fromTable('scammer_views'),
   userScammerInteractions: () => fromTable('user_scammer_interactions'),
   userCommentInteractions: () => fromTable('user_comment_interactions'),
-  leaderboardStats: () => fromTable('leaderboard_stats'),
-  deletedScammers: () => fromTable('deleted_scammers')
+  leaderboardStats: () => fromTable('leaderboard_stats')
 };
 
 // Helper utility to safely check if a property exists on a potentially null object
