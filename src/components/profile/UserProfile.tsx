@@ -61,13 +61,24 @@ export function UserProfile() {
       
       // Proceed with profile save
       toast.info("Saving your profile...");
+      
+      // Ensure we have a unique ID for this profile - use the wallet address if needed
+      const profileToSave = {
+        ...formData,
+        walletAddress: address || "",
+        createdAt: new Date().toISOString(),
+      };
+      
       const success = await saveProfile();
+      
       if (success) {
         console.log("Profile saved successfully, navigating back");
         toast.success("Profile saved successfully!");
         setTimeout(() => {
           navigate(-1);
         }, 1500);
+      } else {
+        throw new Error("Failed to save profile - unknown error");
       }
     } catch (error) {
       console.error("Error during profile save:", error);

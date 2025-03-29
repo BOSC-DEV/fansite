@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { storageService } from "@/services/storage";
+import { v4 as uuidv4 } from 'uuid';
 
 interface ProfileFormData {
   displayName: string;
@@ -35,6 +36,7 @@ export function useProfileFormSubmit() {
           const exists = await storageService.hasProfile(address);
           setHasProfile(exists);
           if (exists) {
+            // Just store the address - we'll get the actual profile ID later
             setProfileId(address);
           }
         } catch (error) {
@@ -96,9 +98,12 @@ export function useProfileFormSubmit() {
     console.log("[useProfileFormSubmit] Starting profile save for address:", address);
     
     try {
-      // Skip the Supabase auth check and directly save using wallet address
+      // Generate a proper UUID for the profile ID
+      const generatedId = uuidv4();
+      
+      // Prepare the profile data
       const profileData = {
-        id: address,
+        id: generatedId, // Use UUID, not the wallet address
         displayName: formData.displayName,
         username: formData.username,
         profilePicUrl: formData.profilePicUrl,
@@ -111,8 +116,7 @@ export function useProfileFormSubmit() {
       
       console.log("[useProfileFormSubmit] Prepared profile data:", profileData);
       
-      // Use alternative method for profile saving that doesn't rely on Supabase auth
-      // but instead uses the wallet address directly
+      // Use the updateProfile method in storage service
       const success = await storageService.updateProfile(profileData);
       
       if (!success) {
@@ -122,7 +126,6 @@ export function useProfileFormSubmit() {
       }
       
       console.log("[useProfileFormSubmit] Profile saved successfully");
-      toast.success("Profile saved successfully");
       setHasProfile(true);
       setProfileId(address);
       return true;

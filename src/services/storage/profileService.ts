@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 
@@ -198,16 +199,16 @@ export class ProfileService extends BaseSupabaseService {
       return false;
     }
     
-    // Use wallet address as the ID without requiring auth session
-    const profileId = profile.walletAddress;
+    // Generate a proper UUID for the id field if not provided
+    const profileId = profile.id || uuidv4();
     
     // Convert from camelCase to snake_case for database
     const dbProfile = {
-      id: profileId, // Use wallet address as ID
+      id: profileId, // Use proper UUID, not wallet address
       display_name: profile.displayName,
       username: profile.username,
       profile_pic_url: profile.profilePicUrl,
-      wallet_address: profile.walletAddress,
+      wallet_address: profile.walletAddress, // Store wallet address in its own field
       created_at: profile.createdAt,
       x_link: profile.xLink || null,
       website_link: profile.websiteLink || null,
@@ -217,7 +218,7 @@ export class ProfileService extends BaseSupabaseService {
     
     console.log("[ProfileService] Converted profile for database:", dbProfile);
     
-    // Check if profile exists
+    // Check if profile exists by wallet address, not id
     const { data: existingProfile, error: lookupError } = await this.supabase
       .from('profiles')
       .select('id')
@@ -231,12 +232,12 @@ export class ProfileService extends BaseSupabaseService {
     let result;
     
     if (existingProfile) {
-      console.log("[ProfileService] Updating existing profile");
-      // Update
+      console.log("[ProfileService] Updating existing profile with id:", existingProfile.id);
+      // Update using the existing profile id
       result = await this.supabase
         .from('profiles')
         .update(dbProfile)
-        .eq('wallet_address', profile.walletAddress);
+        .eq('id', existingProfile.id);
     } else {
       console.log("[ProfileService] Creating new profile");
       // Insert
