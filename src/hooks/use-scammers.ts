@@ -49,7 +49,7 @@ export const useScammers = () => {
         console.error("[useScammers] Error loading from Supabase:", err);
       }
 
-      // Also load from localStorage as a fallback
+      // Also load from localStorage
       const localScammers = storageService.getAllScammers();
       console.log("[useScammers] Loaded from localStorage:", localScammers.length, "scammers");
       
@@ -72,22 +72,30 @@ export const useScammers = () => {
         shares: s.shares || 0
       }));
 
-      // Merge the scammers, preferring Supabase versions but including local-only ones
-      // Use a Map to handle merging with id as the key
-      const mergedScammersMap = new Map<string, Scammer>();
+      // Create a comprehensive list with all scammers
+      const allScammerIds = new Set<string>();
+      const allScammers: Scammer[] = [];
       
       // Add all local scammers first
       mappedLocalScammers.forEach(scammer => {
-        mergedScammersMap.set(scammer.id, scammer);
+        allScammerIds.add(scammer.id);
+        allScammers.push(scammer);
       });
       
-      // Override with Supabase scammers (which take precedence)
+      // Add Supabase scammers, overriding any duplicates
       supabaseScammers.forEach(scammer => {
-        mergedScammersMap.set(scammer.id, scammer);
+        if (allScammerIds.has(scammer.id)) {
+          // Replace existing scammer with Supabase version
+          const index = allScammers.findIndex(s => s.id === scammer.id);
+          if (index !== -1) {
+            allScammers[index] = scammer;
+          }
+        } else {
+          // Add new scammer
+          allScammerIds.add(scammer.id);
+          allScammers.push(scammer);
+        }
       });
-      
-      // Convert map to array
-      const allScammers = Array.from(mergedScammersMap.values());
       
       if (allScammers.length === 0) {
         console.log("[useScammers] No scammers found in either Supabase or localStorage");

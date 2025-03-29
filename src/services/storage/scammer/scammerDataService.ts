@@ -31,9 +31,9 @@ export class ScammerDataService extends ScammerBaseService {
         photo_url: dbRecord.photo_url,
         accused_of: dbRecord.accused_of,
         // Ensure these are proper string arrays for Supabase
-        links: Array.isArray(dbRecord.links) ? dbRecord.links as string[] : [],
-        aliases: Array.isArray(dbRecord.aliases) ? dbRecord.aliases as string[] : [],
-        accomplices: Array.isArray(dbRecord.accomplices) ? dbRecord.accomplices as string[] : [],
+        links: Array.isArray(dbRecord.links) ? dbRecord.links : [],
+        aliases: Array.isArray(dbRecord.aliases) ? dbRecord.aliases : [],
+        accomplices: Array.isArray(dbRecord.accomplices) ? dbRecord.accomplices : [],
         official_response: dbRecord.official_response,
         bounty_amount: dbRecord.bounty_amount || 0,
         wallet_address: dbRecord.wallet_address || '',
@@ -43,37 +43,61 @@ export class ScammerDataService extends ScammerBaseService {
         dislikes: dbRecord.dislikes || 0,
         views: dbRecord.views || 0,
         shares: dbRecord.shares || 0,
-        comments: Array.isArray(dbRecord.comments) ? dbRecord.comments as string[] : [],
+        comments: Array.isArray(dbRecord.comments) ? dbRecord.comments : [],
         deleted_at: null // Ensure new/updated records are not marked as deleted
       };
       
       console.log("[ScammerDataService] Formatted scammer data for Supabase:", scammerData);
       
-      // Use upsert with an array containing a single object
-      const { error } = await supabase
+      // First try using the direct insert method - RLS may be preventing upsert
+      const { error: insertError } = await supabase
         .from('scammers')
-        .upsert([scammerData]) // Correctly pass an array with one object
+        .insert([scammerData])
         .select();
-
-      if (error) {
-        console.error("[ScammerDataService] Error saving scammer:", error);
         
-        // Try an insert if upsert fails
-        const { error: insertError } = await supabase
-          .from('scammers')
-          .insert([scammerData]) // Also pass an array here
-          .select();
-          
-        if (insertError) {
-          console.error("[ScammerDataService] Insert also failed:", insertError);
-          return false;
-        }
+      if (insertError) {
+        console.error("[ScammerDataService] Insert failed:", insertError);
+        
+        // Fall back to local storage - make sure to save there at least
+        const localStorageService = (await import('../localStorage/scammerService')).scammerService;
+        const localScammer = {
+          ...scammer,
+          dateAdded: typeof scammer.dateAdded === 'string' ? scammer.dateAdded : new Date().toISOString()
+        };
+        localStorageService.saveScammer(localScammer);
+        console.log("[ScammerDataService] Saved scammer to local storage as fallback");
+        
+        return false;
       }
       
-      console.log("[ScammerDataService] Scammer saved successfully:", scammer.name);
+      console.log("[ScammerDataService] Scammer saved successfully to Supabase:", scammer.name);
+      
+      // Also save to local storage for redundancy
+      const localStorageService = (await import('../localStorage/scammerService')).scammerService;
+      const localScammer = {
+        ...scammer,
+        dateAdded: typeof scammer.dateAdded === 'string' ? scammer.dateAdded : new Date().toISOString()
+      };
+      localStorageService.saveScammer(localScammer);
+      console.log("[ScammerDataService] Saved scammer to local storage for redundancy");
+      
       return true;
     } catch (error) {
       console.error("[ScammerDataService] Error in saveScammer:", error);
+      
+      // Always try to save to local storage as a last resort
+      try {
+        const localStorageService = (await import('../localStorage/scammerService')).scammerService;
+        const localScammer = {
+          ...scammer,
+          dateAdded: typeof scammer.dateAdded === 'string' ? scammer.dateAdded : new Date().toISOString()
+        };
+        localStorageService.saveScammer(localScammer);
+        console.log("[ScammerDataService] Saved scammer to local storage after error");
+      } catch (localError) {
+        console.error("[ScammerDataService] Failed to save to local storage:", localError);
+      }
+      
       return false;
     }
   }

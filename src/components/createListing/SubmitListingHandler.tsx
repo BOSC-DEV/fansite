@@ -86,9 +86,9 @@ export function useSubmitListing() {
         name,
         photoUrl: finalPhotoUrl,
         accusedOf,
-        links,
-        aliases,
-        accomplices,
+        links: Array.isArray(links) ? links : [],
+        aliases: Array.isArray(aliases) ? aliases : [],
+        accomplices: Array.isArray(accomplices) ? accomplices : [],
         officialResponse,
         bountyAmount: 0,
         walletAddress: "",
@@ -101,8 +101,14 @@ export function useSubmitListing() {
         shares: 0
       };
       
-      // Save to localStorage and try to save to Supabase
+      console.log("[SubmitListingHandler] Saving scammer listing:", scammerListing);
+      
+      // Save to storage service
       const saved = await storageService.saveScammer(scammerListing);
+      
+      // Always save to local storage as a backup
+      const localStorageService = (await import('@/services/storage/localStorage/scammerService')).scammerService;
+      localStorageService.saveScammer(scammerListing);
       
       if (saved) {
         console.log("Successfully saved scammer to Supabase with ID:", nextId);
@@ -118,6 +124,39 @@ export function useSubmitListing() {
     } catch (error: any) {
       console.error("Error creating listing:", error);
       toast.error(`Failed to create listing: ${error.message || "Please try again"}`);
+      
+      // Try to save to local storage as a fallback
+      try {
+        const localStorageService = (await import('@/services/storage/localStorage/scammerService')).scammerService;
+        const scammerListing = {
+          id: String(Date.now()),
+          name,
+          photoUrl: photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`,
+          accusedOf,
+          links: Array.isArray(links) ? links : [],
+          aliases: Array.isArray(aliases) ? aliases : [],
+          accomplices: Array.isArray(accomplices) ? accomplices : [],
+          officialResponse,
+          bountyAmount: 0,
+          walletAddress: "",
+          dateAdded: new Date().toISOString(),
+          addedBy: address || "",
+          comments: [],
+          likes: 0,
+          dislikes: 0,
+          views: 0,
+          shares: 0
+        };
+        
+        localStorageService.saveScammer(scammerListing);
+        console.log("Saved scammer to local storage as fallback after error");
+        toast.success("Report saved locally");
+        
+        // Navigate to the scammer page
+        setTimeout(() => navigate(`/scammer/${scammerListing.id}`), 1500);
+      } catch (localError) {
+        console.error("Failed to save to local storage:", localError);
+      }
     } finally {
       setIsSubmitting(false);
       onSubmitEnd();
