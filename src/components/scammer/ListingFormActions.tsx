@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { useWallet } from "@/context/wallet";
+import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { Wallet } from "lucide-react";
 

@@ -3,7 +3,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Wallet, Home, Award, Trophy, BookOpen } from "lucide-react";
-import { useWallet } from "@/context/wallet";
+import { useWallet } from "@/context/WalletContext";
 
 interface MenuItem {
   path: string;

@@ -4,9 +4,9 @@ import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Camera, Image, Trash2, FileX, Upload } from "lucide-react";
+import { storageService } from "@/services/storage";
 import { useWallet } from "@/context/WalletContext";
 import { supabase } from "@/integrations/supabase/client";
-import { safeSupabaseQuery } from "@/utils/supabaseHelpers";
 
 interface ImageUploadProps {
   onImageUpload: (url: string) => void;
@@ -59,38 +59,14 @@ export function ImageUpload({ onImageUpload, scammerId, currentImage }: ImageUpl
       // Use either the provided scammerId or a temporary id based on user address
       const effectiveId = scammerId || `temp-${address?.substring(0, 8)}`;
       
-      // Create a unique file path
-      const fileExt = file.name.split('.').pop();
-      const filePath = `${effectiveId}/${Date.now()}.${fileExt}`;
-      
-      // Upload to Supabase storage
-      const { data, error } = await safeSupabaseQuery(() => 
-        supabase.storage
-          .from('most-wanted-images')
-          .upload(filePath, file, {
-            cacheControl: '3600',
-            upsert: true
-          })
-      );
-      
-      if (error) {
-        setError("Failed to upload image");
-        return;
-      }
-      
-      // Get public URL
-      const { data: urlData } = supabase.storage
-        .from('most-wanted-images')
-        .getPublicUrl(data?.path || '');
-        
-      const url = urlData?.publicUrl;
+      const url = await storageService.uploadScammerImage(file, effectiveId);
       
       if (url) {
         setImageUrl(url);
         onImageUpload(url);
         toast.success("Image uploaded successfully");
       } else {
-        setError("Failed to get image URL");
+        setError("Failed to upload image. Please try again.");
         toast.error("Failed to upload image");
       }
     } catch (error) {

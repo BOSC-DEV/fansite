@@ -77,15 +77,13 @@ export function ProfileHeader({
             
             <div className="mt-1 flex items-center space-x-2">
               <TooltipProvider>
-                <Tooltip>
+                <Tooltip delayDuration={0}>
                   <TooltipTrigger asChild>
-                    <div className="inline-flex">
-                      <Badge variant="outline" className="bg-western-accent/10 border-western-accent/30 text-western-accent text-xs cursor-help">
-                        <Gift className="h-3 w-3 mr-1" />
-                        <span className="font-mono">{points.toLocaleString()} score</span>
-                        <HelpCircle className="h-3 w-3 ml-1 text-western-accent/70" />
-                      </Badge>
-                    </div>
+                    <Badge variant="outline" className="bg-western-accent/10 border-western-accent/30 text-western-accent text-xs cursor-help">
+                      <Gift className="h-3 w-3 mr-1" />
+                      <span className="font-mono">{points.toLocaleString()} score</span>
+                      <HelpCircle className="h-3 w-3 ml-1 text-western-accent/70" />
+                    </Badge>
                   </TooltipTrigger>
                   <TooltipContent side="bottom" className="max-w-xs bg-western-parchment text-western-wood border-western-accent/50 p-4">
                     <p className="font-medium mb-1">Score Algorithm</p>
