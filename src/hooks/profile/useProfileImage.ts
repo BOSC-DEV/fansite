@@ -33,6 +33,23 @@ export function useProfileImage() {
         return null;
       }
       
+      // Check if there's a previous image to delete
+      if (profilePicUrl && profilePicUrl.includes('profile-images')) {
+        try {
+          // Extract the filename from the URL
+          const prevFileName = profilePicUrl.split('/').pop();
+          if (prevFileName) {
+            console.log(`Attempting to remove previous image: ${prevFileName}`);
+            await supabase.storage
+              .from('profile-images')
+              .remove([prevFileName]);
+          }
+        } catch (error) {
+          console.error("Error removing previous image:", error);
+          // Continue with upload even if delete fails
+        }
+      }
+      
       // Create a unique filename using UUID
       const fileExt = file.name.split('.').pop();
       const fileName = `${userId.replace(/[^a-zA-Z0-9]/g, '')}-${uuidv4()}.${fileExt}`;
@@ -50,23 +67,9 @@ export function useProfileImage() {
         
       if (error) {
         console.error("Error uploading image:", error);
-        
-        // Fall back to local storage if upload fails
-        const reader = new FileReader();
-        return new Promise<string | null>((resolve) => {
-          reader.onload = () => {
-            const dataUrl = reader.result as string;
-            localStorage.setItem(`profile_${userId}`, dataUrl);
-            toast.success("Image saved locally");
-            setProfilePicUrl(dataUrl);
-            resolve(dataUrl);
-          };
-          reader.onerror = () => {
-            toast.error("Failed to save image locally");
-            resolve(null);
-          };
-          reader.readAsDataURL(file);
-        });
+        toast.error("Failed to upload image");
+        setImageError(true);
+        return null;
       }
       
       // Get public URL
@@ -82,35 +85,15 @@ export function useProfileImage() {
       return url;
     } catch (error) {
       console.error("Error in upload process:", error);
-      
-      // Try to save locally as fallback
-      try {
-        const reader = new FileReader();
-        return new Promise<string | null>((resolve) => {
-          reader.onload = () => {
-            const dataUrl = reader.result as string;
-            localStorage.setItem(`profile_${userId}`, dataUrl);
-            toast.success("Image saved locally");
-            setProfilePicUrl(dataUrl);
-            resolve(dataUrl);
-          };
-          reader.onerror = () => {
-            toast.error("Failed to save image");
-            resolve(null);
-          };
-          reader.readAsDataURL(file);
-        });
-      } catch (e) {
-        toast.error("Failed to upload image");
-        setImageError(true);
-        return null;
-      }
+      toast.error("Failed to upload image");
+      setImageError(true);
+      return null;
     } finally {
       setIsUploading(false);
     }
   };
 
-  // Check if there's a locally stored image
+  // For backward compatibility - check if there's a locally stored image
   const getLocalProfileImage = (userId: string): string | null => {
     return localStorage.getItem(`profile_${userId}`);
   };

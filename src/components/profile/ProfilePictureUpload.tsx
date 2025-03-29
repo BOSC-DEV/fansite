@@ -76,16 +76,12 @@ export function ProfilePictureUpload({
   // Fallback URL when image fails to load
   const fallbackUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName || 'User')}&background=random&size=200`;
   
-  // Check if profilePicUrl is a local data URL (localStorage fallback)
-  const isLocalImage = profilePicUrl && profilePicUrl.startsWith('data:image');
-  const displayUrl = imageError ? fallbackUrl : (profilePicUrl || '');
-  
   return (
     <div className="flex flex-col items-center space-y-4">
       <div className="relative">
         <Avatar className="w-24 h-24">
           <AvatarImage 
-            src={displayUrl} 
+            src={imageError ? fallbackUrl : (profilePicUrl || '')} 
             alt={displayName || "User"} 
             onError={handleImageError} 
           />
@@ -116,7 +112,6 @@ export function ProfilePictureUpload({
         onChange={handleFileChange} 
         disabled={isUploading} 
       />
-      {isLocalImage && <p className="text-xs text-amber-500">(Saved locally)</p>}
       <p className="text-xs text-center text-muted-foreground max-w-[200px]">(max 2MB)</p>
     </div>
   );
