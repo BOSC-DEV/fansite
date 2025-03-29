@@ -39,11 +39,15 @@ export function ProfilePictureUpload({
       // Clear any previous input value so user can upload same file again if needed
       e.target.value = '';
       
+      console.log("Uploading profile image:", file.name);
       const url = await uploadProfileImage(file, userId || 'anonymous');
+      
       if (url) {
+        console.log("Upload successful, new image URL:", url);
         onProfilePicChange(url);
         setImageError(false);
       } else {
+        console.error("Upload failed, no URL returned");
         setImageError(true);
       }
     } catch (error) {
@@ -53,8 +57,8 @@ export function ProfilePictureUpload({
   };
 
   const handleImageError = () => {
+    console.error("Error loading profile image from URL:", profilePicUrl);
     setImageError(true);
-    console.error("Error loading profile image");
   };
 
   // Generate initials for avatar fallback

@@ -38,14 +38,6 @@ export async function uploadImage(file: File, bucketName: string, fileName: stri
   try {
     console.log(`Starting upload to ${bucketName} bucket with filename: ${fileName}`);
     
-    // First ensure the bucket exists
-    const bucketExists = await ensureBucketExists(bucketName);
-    
-    if (!bucketExists) {
-      console.warn(`Bucket ${bucketName} does not exist.`);
-      return null;
-    }
-    
     // Create a unique file path to avoid collisions
     const fileExt = file.name.split('.').pop();
     const uniqueFilePath = `${fileName.trim().replace(/\s+/g, '-')}-${uuidv4()}.${fileExt}`;
