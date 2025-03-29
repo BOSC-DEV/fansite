@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { profileService } from "@/services/storage/localStorageService";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/lib/supabase-helpers";
 import ConnectWallet from "@/components/ConnectWallet";
 
 export function CreateListingForm() {
@@ -20,8 +20,7 @@ export function CreateListingForm() {
         setIsCheckingProfile(true);
         try {
           // First check if the profile exists in Supabase
-          const { data: profile, error } = await supabase
-            .from('profiles')
+          const { data: profile, error } = await db.profiles()
             .select('id')
             .eq('wallet_address', address)
             .maybeSingle();

@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { supabase } from "@/lib/supabase";
+import { db, Comment } from "@/lib/supabase-helpers";
 import { useWallet } from "@/context/WalletContext";
 import { CommentList } from "@/components/comments/CommentList";
 import { toast } from "sonner";
 
 export function CommentsTab() {
-  const [comments, setComments] = useState<any[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { address } = useWallet();
 
@@ -20,8 +20,7 @@ export function CommentsTab() {
           console.log("Fetching comments for address:", address);
           
           // Get comments from Supabase
-          const { data: userComments, error } = await supabase
-            .from('comments')
+          const { data: userComments, error } = await db.comments()
             .select('*')
             .eq('author', address)
             .order('created_at', { ascending: false });
@@ -42,7 +41,7 @@ export function CommentsTab() {
                 return { ...comment, created_at: new Date().toISOString() };
               }
               return comment;
-            });
+            }) as Comment[];
             
             setComments(validatedComments);
           } else {

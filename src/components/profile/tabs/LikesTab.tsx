@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { supabase } from "@/lib/supabase";
+import { db } from "@/lib/supabase-helpers";
 import { ScammerCard } from "@/components/scammer/card/ScammerCard";
 import { Scammer } from "@/lib/types";
 import { storageService } from "@/services/storage";
@@ -26,8 +26,7 @@ export function LikesTab({ address }: LikesTabProps) {
       setIsLoading(true);
       try {
         // Get the interactions where the user liked scammers
-        const { data: interactions, error } = await supabase
-          .from('user_scammer_interactions')
+        const { data: interactions, error } = await db.userScammerInteractions()
           .select('scammer_id')
           .eq('user_id', address)
           .eq('liked', true);

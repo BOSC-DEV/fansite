@@ -3,8 +3,8 @@ import { useState } from "react";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
+import { db } from "@/lib/supabase-helpers";
 import { commentService, profileService } from "@/services/storage/localStorageService";
-import { supabase } from "@/lib/supabase";
 
 interface NormalizedProfile {
   name: string;
@@ -44,13 +44,12 @@ export function useCommentSubmit(
       
       // First check Supabase for profile
       try {
-        const { data: supabaseProfile } = await supabase
-          .from('profiles')
+        const { data: supabaseProfile, error } = await db.profiles()
           .select('*')
           .eq('wallet_address', address)
           .single();
           
-        if (supabaseProfile) {
+        if (!error && supabaseProfile) {
           normalizedProfile = {
             name: supabaseProfile.display_name || "Anonymous",
             profilePic: supabaseProfile.profile_pic_url || ""
@@ -90,14 +89,14 @@ export function useCommentSubmit(
         author_profile_pic: normalizedProfile.profilePic,
         created_at: new Date().toISOString(),
         likes: 0,
-        dislikes: 0
+        dislikes: 0,
+        views: 0
       };
       
       console.log("Saving comment to Supabase:", comment);
       
       // Save to Supabase
-      const { error } = await supabase
-        .from('comments')
+      const { error } = await db.comments()
         .insert(comment);
       
       if (error) {
