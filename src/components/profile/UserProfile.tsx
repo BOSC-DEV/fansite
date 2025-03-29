@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { WalletConnectionState } from "./WalletConnectionState";
@@ -8,7 +9,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { supabase } from "@/integrations/supabase/client";
 import { validateAuth, establishAuth, ensureStorageBucketExists } from "@/utils/supabaseHelpers";
 import type { Database } from '@/integrations/supabase/database.types';
-import { WalletDisconnect } from "@/components/wallet/WalletDisconnect";
 
 type ProfileRow = Database['public']['Tables']['profiles']['Row'];
 
@@ -23,7 +23,7 @@ export interface ProfileFormData {
 
 export function UserProfile() {
   const navigate = useNavigate();
-  const { isConnected, address, connectWallet, disconnectWallet } = useWallet();
+  const { isConnected, address, connectWallet } = useWallet();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [hasProfile, setHasProfile] = useState(false);
@@ -294,11 +294,6 @@ export function UserProfile() {
     toast.info("Email verification requested");
   };
 
-  const handleDisconnect = async () => {
-    await disconnectWallet();
-    navigate('/');
-  };
-
   if (!isConnected) {
     return <WalletConnectionState address={address} />;
   }
@@ -313,29 +308,24 @@ export function UserProfile() {
   }
 
   return (
-    <>
-      <div className="mb-6">
-        <WalletDisconnect onDisconnect={() => navigate('/')} />
-      </div>
-      <UserProfileForm
-        formData={formData}
-        setDisplayName={handleDisplayNameChange}
-        setUsername={handleUsernameChange}
-        setProfilePicUrl={handleProfilePicChange}
-        setXLink={handleXLinkChange}
-        setWebsiteLink={handleWebsiteLinkChange}
-        handleBioChange={handleBioChange}
-        isSubmitting={isSubmitting}
-        hasProfile={hasProfile}
-        saveProfile={async () => true}
-        address={address}
-        usernameAvailable={usernameAvailable}
-        checkingUsername={checkingUsername}
-        handleSubmit={handleSubmit}
-        emailVerified={emailVerified}
-        onRequestEmailVerification={onRequestEmailVerification}
-      />
-    </>
+    <UserProfileForm
+      formData={formData}
+      setDisplayName={handleDisplayNameChange}
+      setUsername={handleUsernameChange}
+      setProfilePicUrl={handleProfilePicChange}
+      setXLink={handleXLinkChange}
+      setWebsiteLink={handleWebsiteLinkChange}
+      handleBioChange={handleBioChange}
+      isSubmitting={isSubmitting}
+      hasProfile={hasProfile}
+      saveProfile={async () => true}
+      address={address}
+      usernameAvailable={usernameAvailable}
+      checkingUsername={checkingUsername}
+      handleSubmit={handleSubmit}
+      emailVerified={emailVerified}
+      onRequestEmailVerification={onRequestEmailVerification}
+    />
   );
 }
 
