@@ -69,7 +69,7 @@ const Index = () => {
         <HeroSection />
         <div className="relative">
           <div className="torn-edge-top"></div>
-          <FeaturedScammers limit={6} />
+          <FeaturedScammers limit={3} />
           <div className="torn-edge-bottom"></div>
         </div>
         <HowItWorksSection />
