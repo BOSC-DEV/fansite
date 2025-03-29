@@ -41,6 +41,7 @@ export function UserProfile() {
       setEmailVerified(verified);
     };
     
+    // Still check email verification status, but don't require it
     checkEmailVerification();
   }, []);
 
@@ -60,16 +61,7 @@ export function UserProfile() {
     }
     
     try {
-      // If email is not verified, ask if they want to verify it
-      if (emailVerified === false) {
-        const shouldProceed = window.confirm("Your email is not verified. Would you like to verify it now?");
-        if (shouldProceed) {
-          setShowEmailVerification(true);
-          return;
-        }
-      }
-      
-      // Proceed with profile save
+      // Proceed with profile save without email verification check
       toast.info("Saving your profile...");
       
       const success = await saveProfile();
@@ -97,7 +89,7 @@ export function UserProfile() {
       return;
     }
     
-    // Show Turnstile verification instead of requiring wallet signature
+    // Show Turnstile verification
     setShowCaptcha(true);
   };
 
