@@ -25,10 +25,6 @@ const Toaster = ({ ...props }: ToasterProps) => {
           error: 
             "group-[.toaster]:bg-destructive group-[.toaster]:text-destructive-foreground",
         },
-        style: {
-          "--toast-success-bg": "#ea384c",
-          "--toast-success-fg": "white",
-        } as React.CSSProperties,
       }}
       {...props}
     />

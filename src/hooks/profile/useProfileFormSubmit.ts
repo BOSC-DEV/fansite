@@ -128,31 +128,7 @@ export function useProfileFormSubmit() {
       let success = false;
       
       try {
-        // First approach: Try using the RPC function
-        console.log("[useProfileFormSubmit] Trying to save profile using RPC function");
-        const { error: rpcError } = await supabase.rpc('upsert_profile', {
-          profile_id: currentProfileId,
-          profile_display_name: formData.displayName,
-          profile_username: formData.username,
-          profile_pic_url: formData.profilePicUrl,
-          profile_wallet_address: address,
-          profile_created_at: new Date().toISOString(),
-          profile_x_link: formData.xLink || '',
-          profile_website_link: formData.websiteLink || '',
-          profile_bio: formData.bio || ''
-        });
-        
-        if (rpcError) {
-          console.error("[useProfileFormSubmit] Error using upsert_profile RPC:", rpcError);
-          throw new Error(rpcError.message);
-        } else {
-          success = true;
-          console.log("[useProfileFormSubmit] Profile saved successfully via RPC");
-        }
-      } catch (rpcError) {
-        console.error("[useProfileFormSubmit] RPC approach failed:", rpcError);
-        
-        // Second approach: Try direct operations
+        // First approach: Try direct operations since the RPC function has an issue
         try {
           console.log("[useProfileFormSubmit] Trying direct operations");
           if (hasProfile && profileId) {
@@ -163,7 +139,7 @@ export function useProfileFormSubmit() {
               .update({
                 display_name: formData.displayName,
                 username: formData.username,
-                profile_pic_url: formData.profilePicUrl,
+                profile_pic_url: formData.profilePicUrl || '',
                 x_link: formData.xLink || '',
                 website_link: formData.websiteLink || '',
                 bio: formData.bio || ''
@@ -205,7 +181,7 @@ export function useProfileFormSubmit() {
         } catch (directError) {
           console.error("[useProfileFormSubmit] Direct operations failed:", directError);
           
-          // Third approach: Use storage service as fallback
+          // Use storage service as fallback
           console.log("[useProfileFormSubmit] Trying storage service as final fallback");
           success = await storageService.saveProfile(profileData);
           
@@ -216,6 +192,9 @@ export function useProfileFormSubmit() {
             throw new Error("All profile save methods failed");
           }
         }
+      } catch (error) {
+        console.error("[useProfileFormSubmit] Error saving profile:", error);
+        throw error;
       }
       
       if (success) {

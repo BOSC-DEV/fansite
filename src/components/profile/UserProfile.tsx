@@ -63,11 +63,6 @@ export function UserProfile() {
         console.log("Profile saved successfully, navigating back");
         toast.success("Profile saved successfully!", {
           duration: 3000,
-          style: {
-            backgroundColor: "#ea384c", 
-            color: "#ffffff", 
-            fontWeight: "bold"
-          },
         });
         
         // Add a small delay before navigating to ensure the toast is visible
