@@ -31,12 +31,16 @@ export function LikesTab({ address }: LikesTabProps) {
       try {
         console.log("Fetching liked scammers for address:", effectiveAddress);
         
-        // Get the interactions where the user liked scammers
-        const { data: interactions, error } = await supabase
+        // Use join query to get liked scammers in one efficient query
+        const { data, error } = await supabase
           .from('user_scammer_interactions')
-          .select('scammer_id')
+          .select(`
+            scammer_id,
+            scammer:scammers!inner(*)
+          `)
           .eq('user_id', effectiveAddress)
-          .eq('liked', true);
+          .eq('liked', true)
+          .is('scammers.deleted_at', null);
 
         if (error) {
           console.error("Error fetching liked scammers:", error);
@@ -45,53 +49,36 @@ export function LikesTab({ address }: LikesTabProps) {
           return;
         }
 
-        console.log("Found liked interactions:", interactions?.length || 0);
+        console.log("Found liked scammers:", data?.length || 0);
         
-        if (!interactions || interactions.length === 0) {
+        if (!data || data.length === 0) {
           setLikedScammers([]);
           setIsLoading(false);
           return;
         }
 
-        // Get scammer IDs from interactions
-        const scammerIds = interactions.map(interaction => interaction.scammer_id);
-        console.log("Scammer IDs to fetch:", scammerIds);
-        
-        // Fetch all scammers with these IDs
-        const { data: scammers, error: scammersError } = await supabase
-          .from('scammers')
-          .select('*')
-          .in('id', scammerIds)
-          .is('deleted_at', null);
-          
-        if (scammersError) {
-          console.error("Error fetching scammers details:", scammersError);
-          toast.error("Failed to load scammer details");
-          setIsLoading(false);
-          return;
-        }
-        
-        console.log("Fetched scammers:", scammers?.length || 0);
-        
         // Convert to Scammer type
-        const convertedScammers = scammers.map(scammer => ({
-          id: scammer.id,
-          name: scammer.name,
-          photoUrl: scammer.photo_url,
-          accusedOf: scammer.accused_of,
-          addedBy: scammer.added_by,
-          dateAdded: new Date(scammer.date_added),
-          likes: scammer.likes || 0,
-          dislikes: scammer.dislikes || 0,
-          views: scammer.views || 0,
-          shares: scammer.shares || 0,
-          bountyAmount: scammer.bounty_amount || 0,
-          aliases: scammer.aliases || [],
-          links: scammer.links || [],
-          officialResponse: scammer.official_response,
-          accomplices: scammer.accomplices || [],
-          walletAddress: scammer.wallet_address
-        }));
+        const convertedScammers = data.map(item => {
+          const scammer = item.scammer;
+          return {
+            id: scammer.id,
+            name: scammer.name,
+            photoUrl: scammer.photo_url,
+            accusedOf: scammer.accused_of,
+            addedBy: scammer.added_by,
+            dateAdded: new Date(scammer.date_added),
+            likes: scammer.likes || 0,
+            dislikes: scammer.dislikes || 0,
+            views: scammer.views || 0,
+            shares: scammer.shares || 0,
+            bountyAmount: scammer.bounty_amount || 0,
+            aliases: scammer.aliases || [],
+            links: scammer.links || [],
+            officialResponse: scammer.official_response,
+            accomplices: scammer.accomplices || [],
+            walletAddress: scammer.wallet_address
+          };
+        });
 
         setLikedScammers(convertedScammers);
       } catch (error) {

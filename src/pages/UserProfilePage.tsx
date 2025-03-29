@@ -14,7 +14,6 @@ import { CommentsTab } from "@/components/profile/tabs/CommentsTab";
 import { BountiesTab } from "@/components/profile/tabs/BountiesTab";
 import { BookOpen, User, Heart, MessageSquare, Coins } from "lucide-react";
 import { useWallet } from "@/context/WalletContext";
-import { SiteFooter } from "@/components/layout/SiteFooter";
 import { WalletDisconnect } from "@/components/wallet/WalletDisconnect";
 
 export function UserProfilePage() {
@@ -114,7 +113,7 @@ export function UserProfilePage() {
           </div>
         ) : null}
       </main>
-      {/* SiteFooter is now rendered at the App level */}
+      {/* Removed the SiteFooter as it's now rendered at the App level */}
     </div>
   );
 }

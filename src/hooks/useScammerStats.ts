@@ -20,6 +20,8 @@ export function useScammerStats(scammer: Scammer) {
     
     const checkPreviousInteraction = async () => {
       try {
+        console.log("Checking previous interaction for", address, "with scammer", scammer.id);
+        
         // Check database first
         const { data, error } = await supabase
           .from('user_scammer_interactions')
@@ -100,7 +102,7 @@ export function useScammerStats(scammer: Scammer) {
             console.error("Error checking interaction record:", error);
           } else if (data) {
             // Update existing record
-            await supabase
+            const { error: updateError } = await supabase
               .from('user_scammer_interactions')
               .update({ 
                 liked: newLikedState, 
@@ -108,9 +110,15 @@ export function useScammerStats(scammer: Scammer) {
                 last_updated: new Date().toISOString()
               })
               .eq('id', data.id);
+              
+            if (updateError) {
+              console.error("Error updating interaction:", updateError);
+            } else {
+              console.log("Successfully updated interaction");
+            }
           } else {
             // Insert new record
-            await supabase
+            const { error: insertError } = await supabase
               .from('user_scammer_interactions')
               .insert([
                 { 
@@ -120,6 +128,12 @@ export function useScammerStats(scammer: Scammer) {
                   disliked: isDisliked ? false : isDisliked 
                 }
               ]);
+              
+            if (insertError) {
+              console.error("Error inserting interaction:", insertError);
+            } else {
+              console.log("Successfully inserted new interaction");
+            }
           }
         } catch (dbError) {
           console.error("Error saving interaction to DB:", dbError);
@@ -190,7 +204,7 @@ export function useScammerStats(scammer: Scammer) {
             console.error("Error checking interaction record:", error);
           } else if (data) {
             // Update existing record
-            await supabase
+            const { error: updateError } = await supabase
               .from('user_scammer_interactions')
               .update({ 
                 liked: isLiked ? false : isLiked, 
@@ -198,9 +212,15 @@ export function useScammerStats(scammer: Scammer) {
                 last_updated: new Date().toISOString()
               })
               .eq('id', data.id);
+              
+            if (updateError) {
+              console.error("Error updating interaction:", updateError);
+            } else {
+              console.log("Successfully updated interaction");
+            }
           } else {
             // Insert new record
-            await supabase
+            const { error: insertError } = await supabase
               .from('user_scammer_interactions')
               .insert([
                 { 
@@ -210,6 +230,12 @@ export function useScammerStats(scammer: Scammer) {
                   disliked: newDislikedState 
                 }
               ]);
+              
+            if (insertError) {
+              console.error("Error inserting interaction:", insertError);
+            } else {
+              console.log("Successfully inserted new interaction");
+            }
           }
         } catch (dbError) {
           console.error("Error saving interaction to DB:", dbError);
