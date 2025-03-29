@@ -4,7 +4,7 @@ import { CommentList } from "./CommentList";
 import { CommentForm } from "./CommentForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MessageSquare, ArrowDown, ArrowUp } from "lucide-react";
-import { storageService, Comment } from "@/services/storage/localStorageService";
+import { supabase } from "@/lib/supabase";
 import { Badge } from "@/components/ui/badge";
 import { useComments } from "@/hooks/useComments";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -33,18 +33,31 @@ export function CommentSection({ scammerId }: CommentSectionProps) {
   } = useComments(scammerId);
 
   useEffect(() => {
-    // Increment view count when component mounts
-    try {
-      storageService.incrementScammerViews(scammerId);
-    } catch (e) {
-      console.error("Failed to increment views:", e);
-    }
+    // Check if the scammer exists to avoid commenting on non-existent records
+    const verifyScammer = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('scammers')
+          .select('id')
+          .eq('id', scammerId)
+          .maybeSingle();
+          
+        if (error || !data) {
+          console.error("Error verifying scammer existence:", error);
+          setError("This scammer listing might not exist in the database. Comments may not save correctly.");
+        } else {
+          setError(null);
+        }
+      } catch (e) {
+        console.error("Failed to verify scammer:", e);
+      }
+    };
+    
+    verifyScammer();
     
     // Check if commenting is enabled
     if (!window.phantom?.solana) {
       setError("Phantom wallet extension is required to comment. Please install it to participate in discussions.");
-    } else {
-      setError(null);
     }
   }, [scammerId]);
 
@@ -137,8 +150,6 @@ export function CommentSection({ scammerId }: CommentSectionProps) {
                 Most Liked
               </Button>
             </div>
-            
-            {/* Post button will now be handled in CommentForm.tsx */}
           </div>
           
           {isLoading ? (

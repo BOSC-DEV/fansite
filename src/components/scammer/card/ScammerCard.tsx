@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { Clock, ArrowRight } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Scammer } from "@/lib/types";
 import { formatTimeAgo } from "@/utils/formatters";
 import { ScammerCardImage } from "./image/ScammerCardImage";
@@ -29,6 +28,11 @@ export function ScammerCard({
   useEffect(() => {
     // Fetch comment count for this scammer
     const fetchCommentCount = async () => {
+      if (!scammer.id) {
+        console.error("No scammer ID provided for comment count");
+        return;
+      }
+      
       try {
         const { count, error } = await supabase
           .from('comments')

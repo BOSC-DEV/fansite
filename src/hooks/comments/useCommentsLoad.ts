@@ -13,6 +13,17 @@ export function useCommentsLoad(scammerId: string) {
     try {
       console.log("Loading comments for scammer:", scammerId);
       
+      // Verify the scammer exists first
+      const { data: scammerExists } = await supabase
+        .from('scammers')
+        .select('id')
+        .eq('id', scammerId)
+        .maybeSingle();
+        
+      if (!scammerExists) {
+        console.warn("Scammer not found, comments may not load correctly");
+      }
+      
       // Load from Supabase
       const { data: supabaseComments, error } = await supabase
         .from('comments')

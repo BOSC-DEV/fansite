@@ -4,6 +4,7 @@ import { useWallet } from "@/context/wallet";
 import { useCommentsLoad } from "./comments/useCommentsLoad";
 import { useProfileCheck } from "./comments/useProfileCheck";
 import { useCommentSubmit } from "./comments/useCommentSubmit";
+import { supabase } from "@/lib/supabase";
 
 export function useComments(scammerId: string) {
   const { isConnected, connectWallet, address } = useWallet();
@@ -33,6 +34,24 @@ export function useComments(scammerId: string) {
 
   // Load comments when component mounts or scammerId changes
   useEffect(() => {
+    const verifyScammer = async () => {
+      try {
+        // Verify the scammer exists
+        const { data, error } = await supabase
+          .from('scammers')
+          .select('id')
+          .eq('id', scammerId)
+          .maybeSingle();
+          
+        if (error || !data) {
+          console.warn("Scammer not found, comments may not load correctly:", error);
+        }
+      } catch (e) {
+        console.error("Failed to verify scammer:", e);
+      }
+    };
+    
+    verifyScammer();
     loadComments();
   }, [scammerId, loadComments]);
 
