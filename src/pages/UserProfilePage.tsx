@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -18,7 +17,6 @@ import { WalletDisconnect } from "@/components/wallet/WalletDisconnect";
 import { useWallet } from "@/context/WalletContext";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-
 export function UserProfilePage() {
   const {
     username
@@ -32,67 +30,47 @@ export function UserProfilePage() {
     error
   } = useUserProfile(username);
   const [activeTab, setActiveTab] = useState("reports");
-  const { address, isConnected } = useWallet();
+  const {
+    address,
+    isConnected
+  } = useWallet();
   const navigate = useNavigate();
-  
   const handleTabChange = (value: string) => {
     setActiveTab(value);
   };
-  
+
   // Check if this is the current user's profile
   const isCurrentUserProfile = profile?.walletAddress === address;
-  
+
   // Handle the creation of a profile
   const handleCreateProfile = () => {
     if (!isConnected) {
       toast.error("Please connect your wallet first");
       return;
     }
-    
     navigate("/profile");
   };
-  
   return <div className="min-h-screen old-paper flex flex-col">
       <Header />
       <main className="container mx-auto px-4 py-4 flex-grow">
-        {isLoading ? <ProfileSkeleton /> : error ? (
-          <div className="max-w-4xl mx-auto">
+        {isLoading ? <ProfileSkeleton /> : error ? <div className="max-w-4xl mx-auto">
             <ProfileError error={error} />
             
             {/* Add a prompt to create profile if the error is about non-existent profile */}
-            {(error.includes("Profile not found") || error.includes("Invalid username")) && (
-              <div className="mt-8 p-6 border border-western-wood/20 rounded-lg bg-western-sand/10 text-center">
+            {(error.includes("Profile not found") || error.includes("Invalid username")) && <div className="mt-8 p-6 border border-western-wood/20 rounded-lg bg-western-sand/10 text-center">
                 <h3 className="text-xl font-western text-western-wood mb-3">Want to create your profile?</h3>
-                <p className="text-western-sand mb-4">Join the community by creating your own profile</p>
-                <Button 
-                  onClick={handleCreateProfile}
-                  className="bg-western-accent hover:bg-western-accent/80 text-western-parchment"
-                >
+                <p className="mb-4 text-orange-800">Join the community by creating your own profile</p>
+                <Button onClick={handleCreateProfile} className="bg-western-accent hover:bg-western-accent/80 text-western-parchment">
                   Create Profile
                 </Button>
-              </div>
-            )}
-          </div>
-        ) : profile ? <div className="max-w-4xl mx-auto">
-            <ProfileHeader 
-              username={profile.username || ''} 
-              name={profile.displayName} 
-              bio={profile.bio} 
-              avatarUrl={profile.profilePicUrl} 
-              location={''} 
-              website={profile.websiteLink} 
-              joinDate={profile.createdAt ? new Date(profile.createdAt) : undefined} 
-              isCurrentUser={isCurrentUserProfile} 
-              address={profile.walletAddress} 
-              points={profile.points} 
-            />
+              </div>}
+          </div> : profile ? <div className="max-w-4xl mx-auto">
+            <ProfileHeader username={profile.username || ''} name={profile.displayName} bio={profile.bio} avatarUrl={profile.profilePicUrl} location={''} website={profile.websiteLink} joinDate={profile.createdAt ? new Date(profile.createdAt) : undefined} isCurrentUser={isCurrentUserProfile} address={profile.walletAddress} points={profile.points} />
             
             {/* Show wallet disconnect button if this is the current user's profile */}
-            {isCurrentUserProfile && (
-              <div className="mt-4">
+            {isCurrentUserProfile && <div className="mt-4">
                 <WalletDisconnect />
-              </div>
-            )}
+              </div>}
             
             {/* Tabs Section - Aligned with content above */}
             <Tabs value={activeTab} onValueChange={handleTabChange} className="mb-8">
