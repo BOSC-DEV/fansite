@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { ScammerTable } from "@/components/scammer/ScammerTable";
@@ -11,10 +12,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { formatCurrency, formatDate } from "@/utils/formatters";
 import { useSortableScammers } from "@/hooks/useSortableScammers";
 import { Button } from "@/components/ui/button";
-import { Grid, Scroll, Table } from "lucide-react";
+import { Grid, Scroll } from "lucide-react";
 import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { SiteFooter } from "@/components/layout/SiteFooter";
 
 const MostWanted = () => {
   const { 
@@ -164,7 +164,7 @@ const MostWanted = () => {
           </div>
         </div>
       </main>
-      <SiteFooter />
+      {/* SiteFooter is now rendered at the App level */}
     </div>
   );
 };
