@@ -31,9 +31,9 @@ export class ScammerDataService extends ScammerBaseService {
         photo_url: dbRecord.photo_url,
         accused_of: dbRecord.accused_of,
         // Ensure these are proper string arrays for Supabase
-        links: Array.isArray(dbRecord.links) ? dbRecord.links : [],
-        aliases: Array.isArray(dbRecord.aliases) ? dbRecord.aliases : [],
-        accomplices: Array.isArray(dbRecord.accomplices) ? dbRecord.accomplices : [],
+        links: Array.isArray(dbRecord.links) ? dbRecord.links.map(String) : [],
+        aliases: Array.isArray(dbRecord.aliases) ? dbRecord.aliases.map(String) : [],
+        accomplices: Array.isArray(dbRecord.accomplices) ? dbRecord.accomplices.map(String) : [],
         official_response: dbRecord.official_response,
         bounty_amount: dbRecord.bounty_amount || 0,
         wallet_address: dbRecord.wallet_address || '',
@@ -43,7 +43,7 @@ export class ScammerDataService extends ScammerBaseService {
         dislikes: dbRecord.dislikes || 0,
         views: dbRecord.views || 0,
         shares: dbRecord.shares || 0,
-        comments: Array.isArray(dbRecord.comments) ? dbRecord.comments : [],
+        comments: Array.isArray(dbRecord.comments) ? dbRecord.comments.map(String) : [],
         deleted_at: null // Ensure new/updated records are not marked as deleted
       };
       
@@ -52,7 +52,7 @@ export class ScammerDataService extends ScammerBaseService {
       // First try using the direct insert method - RLS may be preventing upsert
       const { error: insertError } = await supabase
         .from('scammers')
-        .insert([scammerData])
+        .insert(scammerData)
         .select();
         
       if (insertError) {
