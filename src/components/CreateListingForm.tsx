@@ -7,6 +7,7 @@ import { profileService } from "@/services/storage/localStorageService";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import ConnectWallet from "@/components/ConnectWallet";
+import { WalletDisconnect } from "@/components/wallet/WalletDisconnect";
 
 export function CreateListingForm() {
   const { isConnected, address } = useWallet();
@@ -75,6 +76,7 @@ export function CreateListingForm() {
 
   return (
     <div className="space-y-6">
+      <WalletDisconnect />
       <FormContainer />
     </div>
   );

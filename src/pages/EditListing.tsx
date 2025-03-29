@@ -11,11 +11,14 @@ import { UnauthorizedAccess } from "@/components/scammer/UnauthorizedAccess";
 import { EditScammerForm } from "@/components/scammer/EditScammerForm";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { WalletDisconnect } from "@/components/wallet/WalletDisconnect";
+import { useWallet } from "@/context/WalletContext";
 
 const EditListing = () => {
   const { id } = useParams<{ id: string }>();
   const { isLoading, scammer, isAuthorized } = useEditScammer(id);
   const isMobile = useIsMobile();
+  const { isConnected } = useWallet();
 
   if (isLoading) {
     return (
@@ -66,6 +69,12 @@ const EditListing = () => {
               Back to Scammer Details
             </Link>
           </Button>
+
+          {isConnected && (
+            <div className="mb-6">
+              <WalletDisconnect />
+            </div>
+          )}
 
           <div className="paper-texture border-2 border-western-wood rounded-sm p-6 mb-6">
             <div className="mb-6 text-center">

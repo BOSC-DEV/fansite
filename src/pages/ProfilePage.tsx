@@ -8,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { WalletDisconnect } from "@/components/wallet/WalletDisconnect";
 
 export function ProfilePage() {
   const { isConnected, address } = useWallet();
@@ -30,6 +31,12 @@ export function ProfilePage() {
                 to your .env file. See .env.example for details.
               </AlertDescription>
             </Alert>
+          )}
+          
+          {isConnected && (
+            <div className="mb-6">
+              <WalletDisconnect />
+            </div>
           )}
           
           {isLoading ? (
