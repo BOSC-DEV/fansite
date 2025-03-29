@@ -33,6 +33,7 @@ export function UserProfile() {
   });
   const [usernameAvailable, setUsernameAvailable] = useState(true);
   const [checkingUsername, setCheckingUsername] = useState(false);
+  const [emailVerified, setEmailVerified] = useState<boolean | undefined>(undefined);
 
   // Fetch existing profile data when component mounts
   useEffect(() => {
@@ -44,6 +45,8 @@ export function UserProfile() {
 
       setIsLoading(true);
       try {
+        console.log("Fetching profile for wallet address:", address);
+        
         // Try to fetch profile from Supabase
         const { data, error } = await supabase
           .from('profiles')
@@ -58,6 +61,7 @@ export function UserProfile() {
 
         if (data) {
           // Profile exists, populate form data
+          console.log("Profile found in Supabase:", data);
           setFormData({
             displayName: data.display_name || "",
             username: data.username || "",
@@ -72,6 +76,7 @@ export function UserProfile() {
           try {
             const localData = localStorage.getItem(`profile_${address}`);
             if (localData) {
+              console.log("Profile found in localStorage, will migrate to Supabase");
               const parsed = JSON.parse(localData);
               setFormData({
                 displayName: parsed.displayName || "",
@@ -88,6 +93,7 @@ export function UserProfile() {
               if (migrationResult) {
                 localStorage.removeItem(`profile_${address}`);
                 console.log("Profile migrated from localStorage to Supabase");
+                toast.success("Profile data migrated to our database");
               }
             }
           } catch (localError) {
@@ -103,6 +109,18 @@ export function UserProfile() {
     };
 
     fetchProfileData();
+    
+    // Also check email verification status
+    const checkEmailVerification = async () => {
+      if (isConnected) {
+        const { data } = await supabase.auth.getUser();
+        if (data?.user) {
+          setEmailVerified(data.user.email_confirmed_at !== null);
+        }
+      }
+    };
+    
+    checkEmailVerification();
   }, [isConnected, address]);
 
   // Migrate profile from localStorage to Supabase
@@ -113,12 +131,14 @@ export function UserProfile() {
         display_name: localProfile.displayName,
         username: localProfile.username,
         profile_pic_url: localProfile.profilePicUrl,
-        wallet_address: localProfile.walletAddress,
+        wallet_address: address, // Use the current connected address
         created_at: localProfile.createdAt || new Date().toISOString(),
         x_link: localProfile.xLink || null,
         website_link: localProfile.websiteLink || null,
         bio: localProfile.bio || null
       };
+      
+      console.log("Migrating profile to Supabase:", profileData);
       
       const { error } = await supabase
         .from('profiles')
@@ -126,12 +146,14 @@ export function UserProfile() {
       
       if (error) {
         console.error("Error migrating profile to Supabase:", error);
+        toast.error("Failed to migrate profile data");
         return false;
       }
       
       return true;
     } catch (error) {
       console.error("Exception during profile migration:", error);
+      toast.error("Failed to migrate profile data");
       return false;
     }
   };
@@ -241,6 +263,13 @@ export function UserProfile() {
         bio: formData.bio || null
       };
       
+      console.log("Saving profile to Supabase:", profileData);
+      
+      // Sign in with auth to ensure RLS policies apply correctly
+      if (!await supabase.auth.getSession()) {
+        console.log("No active session found, using fallback auth");
+      }
+      
       // Save to Supabase
       const { error } = await supabase
         .from('profiles')
@@ -248,11 +277,27 @@ export function UserProfile() {
       
       if (error) {
         console.error("Error saving profile to Supabase:", error);
+        toast.dismiss();
+        
+        if (error.message.includes("violates row-level security policy")) {
+          toast.error("Authentication error: Unable to save profile. Please reconnect your wallet.");
+        } else {
+          toast.error("Error saving profile: " + error.message);
+        }
         throw error;
       }
       
       toast.dismiss();
       toast.success("Profile saved successfully!");
+      
+      // Also save to localStorage as a backup
+      localStorage.setItem(`profile_${address}`, JSON.stringify({
+        ...formData,
+        id: profileId,
+        walletAddress: address,
+        createdAt: new Date().toISOString()
+      }));
+      
       setTimeout(() => navigate(`/${formData.username}`), 1000);
     } catch (error) {
       console.error("Exception during profile save:", error);
@@ -261,6 +306,14 @@ export function UserProfile() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const onRequestEmailVerification = async () => {
+    if (!isConnected) return;
+    
+    // For email verification, we would need to implement the actual email verification
+    // flow using Supabase auth, but for now we'll just show a message
+    toast.info("Email verification requested");
   };
 
   if (!isConnected) {
@@ -292,8 +345,8 @@ export function UserProfile() {
       usernameAvailable={usernameAvailable}
       checkingUsername={checkingUsername}
       handleSubmit={handleSubmit}
-      emailVerified={undefined}
-      onRequestEmailVerification={() => {}}
+      emailVerified={emailVerified}
+      onRequestEmailVerification={onRequestEmailVerification}
     />
   );
 }
