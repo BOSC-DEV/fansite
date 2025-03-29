@@ -5,28 +5,60 @@ import { useNavigate } from 'react-router-dom';
 import { useWallet } from '@/context/WalletContext';
 import { User } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { storageService } from '@/services/storage';
+import { supabase } from '@/integrations/supabase/client';
 
 export function ProfileButton() {
   const { address } = useWallet();
   const navigate = useNavigate();
-  const [username, setUsername] = React.useState<string | null>(null);
-  const [profilePic, setProfilePic] = React.useState<string | null>(null);
-  const [isProfileLoading, setIsProfileLoading] = React.useState(true);
+  const [profileData, setProfileData] = React.useState<{
+    username: string | null;
+    profilePicUrl: string | null;
+  }>({ username: null, profilePicUrl: null });
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     const loadProfile = async () => {
-      if (address) {
-        try {
-          setIsProfileLoading(true);
-          const profile = await storageService.getProfile(address);
-          setUsername(profile?.username || null);
-          setProfilePic(profile?.profilePicUrl || null);
-        } catch (error) {
-          console.error('Error loading profile:', error);
-        } finally {
-          setIsProfileLoading(false);
+      if (!address) {
+        setProfileData({ username: null, profilePicUrl: null });
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        // Try Supabase first
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('username, profile_pic_url')
+          .eq('wallet_address', address)
+          .maybeSingle();
+
+        if (data) {
+          console.log("Found profile in Supabase:", data);
+          setProfileData({
+            username: data.username || null,
+            profilePicUrl: data.profile_pic_url || null,
+          });
+        } else {
+          // Fallback to localStorage
+          try {
+            const localData = localStorage.getItem(`profile_${address}`);
+            if (localData) {
+              const parsed = JSON.parse(localData);
+              console.log("Found profile in localStorage:", parsed);
+              setProfileData({
+                username: parsed.username || null,
+                profilePicUrl: parsed.profilePicUrl || null,
+              });
+            }
+          } catch (localError) {
+            console.error("Error checking localStorage:", localError);
+          }
         }
+      } catch (err) {
+        console.error("Error loading profile:", err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -34,10 +66,13 @@ export function ProfileButton() {
   }, [address]);
 
   const handleProfileClick = () => {
-    if (username) {
-      navigate(`/${username}`);
-    } else if (address) {
-      navigate(`/user/${address}`);
+    if (!address) {
+      navigate('/profile');
+      return;
+    }
+    
+    if (profileData.username) {
+      navigate(`/${profileData.username}`);
     } else {
       navigate('/profile');
     }
@@ -49,9 +84,10 @@ export function ProfileButton() {
       size="icon" 
       className="rounded-full bg-western-accent hover:bg-western-accent/80 text-western-parchment"
       onClick={handleProfileClick}
+      disabled={isLoading}
     >
       <Avatar className="h-8 w-8">
-        <AvatarImage src={profilePic || ''} alt="Profile" />
+        <AvatarImage src={profileData.profilePicUrl || ''} alt="Profile" />
         <AvatarFallback className="bg-western-wood text-western-parchment text-xs">
           <User className="h-5 w-5" />
         </AvatarFallback>

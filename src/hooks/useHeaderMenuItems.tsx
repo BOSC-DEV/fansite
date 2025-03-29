@@ -2,6 +2,7 @@
 import React from "react";
 import { Home, Award, Trophy, BookOpen, User, Wallet } from "lucide-react";
 import { useWallet } from "@/context/WalletContext";
+import { supabase } from "@/integrations/supabase/client";
 
 export const useHeaderMenuItems = () => {
   const { isConnected, address } = useWallet();
@@ -9,16 +10,63 @@ export const useHeaderMenuItems = () => {
 
   React.useEffect(() => {
     const loadUsername = async () => {
-      if (isConnected && address) {
-        try {
-          const { storageService } = await import("@/services/storage");
-          const profile = await storageService.getProfile(address);
-          setUsername(profile?.username || null);
-        } catch (error) {
-          console.error("Error fetching profile for username:", error);
-          setUsername(null);
+      if (!isConnected || !address) {
+        setUsername(null);
+        return;
+      }
+      
+      try {
+        // Check Supabase first
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('username')
+          .eq('wallet_address', address)
+          .maybeSingle();
+          
+        if (data && data.username) {
+          console.log("Found username in Supabase:", data.username);
+          setUsername(data.username);
+          return;
         }
-      } else {
+        
+        // Fallback to localStorage
+        try {
+          const localData = localStorage.getItem(`profile_${address}`);
+          if (localData) {
+            const parsed = JSON.parse(localData);
+            if (parsed.username) {
+              console.log("Found username in localStorage:", parsed.username);
+              setUsername(parsed.username);
+              return;
+            }
+          }
+          
+          // Check all localStorage keys in case wallet address format is different
+          const allStorageKeys = Object.keys(localStorage);
+          const profileKeys = allStorageKeys.filter(key => key.startsWith('profile_'));
+          
+          for (const key of profileKeys) {
+            try {
+              const storedData = localStorage.getItem(key);
+              if (!storedData) continue;
+              
+              const parsed = JSON.parse(storedData);
+              if (parsed.walletAddress === address && parsed.username) {
+                console.log("Found username by wallet address in localStorage:", parsed.username);
+                setUsername(parsed.username);
+                return;
+              }
+            } catch (e) {
+              console.error("Error parsing localStorage item:", e);
+            }
+          }
+        } catch (localError) {
+          console.error("Error checking localStorage for username:", localError);
+        }
+        
+        setUsername(null);
+      } catch (error) {
+        console.error("Error fetching profile for username:", error);
         setUsername(null);
       }
     };
@@ -45,8 +93,9 @@ export const useHeaderMenuItems = () => {
   }];
 
   if (isConnected) {
+    // If there's a username, use it for the profile path, otherwise use the profile page
     menuItems.push({
-      path: username ? `/${username}` : address ? `/user/${address}` : "/profile",
+      path: username ? `/${username}` : "/profile",
       label: "Profile",
       icon: <User className="h-5 w-5" />
     });

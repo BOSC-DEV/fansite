@@ -110,7 +110,7 @@ export function ProfileHeader({
         
         <div className="flex items-center gap-2">
           {isCurrentUser ? (
-            <EditProfileButton />
+            <EditProfileButton profileAddress={address} />
           ) : (
             <ShareProfileButton username={username} walletAddress={address} />
           )}

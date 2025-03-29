@@ -1,10 +1,9 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { v4 as uuidv4 } from 'uuid';
-import { toast } from 'sonner';
 
 /**
- * Helper function to check if a storage bucket exists and create a publicly accessible one if it doesn't
+ * Helper function to check if a storage bucket exists
  */
 export async function ensureBucketExists(bucketName: string): Promise<boolean> {
   try {
@@ -20,7 +19,7 @@ export async function ensureBucketExists(bucketName: string): Promise<boolean> {
     const bucketExists = existingBuckets.some(bucket => bucket.name === bucketName);
     
     if (!bucketExists) {
-      console.warn(`Bucket ${bucketName} not found. Using localStorage fallback.`);
+      console.warn(`Bucket ${bucketName} not found.`);
       return false;
     } else {
       console.log(`Bucket ${bucketName} exists`);
@@ -33,51 +32,11 @@ export async function ensureBucketExists(bucketName: string): Promise<boolean> {
 }
 
 /**
- * Fallback for when Supabase storage is not available - uses local storage
- */
-export function storeImageLocally(file: File, userId: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const key = `profile_${userId}`;
-        if (typeof reader.result === 'string') {
-          localStorage.setItem(key, reader.result);
-          console.log(`Image stored locally with key: ${key}`);
-          resolve(reader.result);
-        } else {
-          reject(new Error('FileReader result is not a string'));
-        }
-      } catch (error) {
-        console.error('Error storing image in localStorage:', error);
-        reject(error);
-      }
-    };
-    reader.onerror = () => {
-      reject(new Error('Error reading file'));
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-/**
  * Helper function to upload images to Supabase Storage
  */
 export async function uploadImage(file: File, bucketName: string, fileName: string): Promise<string | null> {
   try {
     console.log(`Starting upload to ${bucketName} bucket with filename: ${fileName}`);
-    
-    // First ensure the bucket exists
-    const bucketExists = await ensureBucketExists(bucketName);
-    
-    if (!bucketExists) {
-      console.warn(`Bucket ${bucketName} does not exist. Trying localStorage fallback...`);
-      
-      // For profile images, we can use localStorage as fallback
-      const localUrl = await storeImageLocally(file, fileName);
-      toast.success('Image saved locally (offline mode)');
-      return localUrl;
-    }
     
     // Create a unique file path to avoid collisions
     const fileExt = file.name.split('.').pop();
@@ -93,26 +52,11 @@ export async function uploadImage(file: File, bucketName: string, fileName: stri
     
     if (error) {
       console.error(`Error uploading to ${bucketName}:`, error);
-      
-      // Try localStorage fallback for profile images
-      if (bucketName.includes('profile')) {
-        try {
-          console.log('Attempting localStorage fallback...');
-          const localUrl = await storeImageLocally(file, fileName);
-          toast.success('Image saved locally (offline mode)');
-          return localUrl;
-        } catch (localError) {
-          console.error('LocalStorage fallback also failed:', localError);
-          return null;
-        }
-      }
-      
       return null;
     }
     
     if (!data || !data.path) {
       console.error(`Upload to ${bucketName} succeeded but no path returned`);
-      toast.error('Error getting image URL');
       return null;
     }
     
@@ -123,7 +67,6 @@ export async function uploadImage(file: File, bucketName: string, fileName: stri
     
     if (!publicUrlData || !publicUrlData.publicUrl) {
       console.error(`Failed to get public URL for ${data.path}`);
-      toast.error('Error getting public image URL');
       return null;
     }
     
@@ -131,21 +74,27 @@ export async function uploadImage(file: File, bucketName: string, fileName: stri
     return publicUrlData.publicUrl;
   } catch (error) {
     console.error(`Unexpected error in uploadImage to ${bucketName}:`, error);
-    toast.error('Unexpected error uploading image');
-    
-    // Try localStorage fallback for profile images
-    if (bucketName.includes('profile')) {
-      try {
-        console.log('Attempting localStorage fallback after error...');
-        const localUrl = await storeImageLocally(file, fileName);
-        toast.success('Image saved locally (offline mode)');
-        return localUrl;
-      } catch (localError) {
-        console.error('LocalStorage fallback also failed:', localError);
-        return null;
-      }
-    }
-    
     return null;
   }
+}
+
+/**
+ * Helper function to store images locally (as a fallback)
+ */
+export async function storeImageLocally(file: File, userId: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        // Return the data URL which can be used as the src for an image
+        resolve(reader.result);
+      } else {
+        reject(new Error('Failed to convert image to data URL'));
+      }
+    };
+    reader.onerror = () => {
+      reject(new Error('Failed to read image file'));
+    };
+    reader.readAsDataURL(file);
+  });
 }

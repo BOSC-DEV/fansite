@@ -3,9 +3,8 @@ import { FormContainer } from "./createListing/FormContainer";
 import { useWallet } from "@/context/WalletContext";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { profileService } from "@/services/storage/localStorageService";
 import { toast } from "sonner";
-import { db } from "@/lib/supabase-helpers";
+import { supabase } from "@/integrations/supabase/client";
 import ConnectWallet from "@/components/ConnectWallet";
 import { Button } from "@/components/ui/button";
 import { AlertCircle } from "lucide-react";
@@ -15,55 +14,76 @@ export function CreateListingForm() {
   const { isConnected, address } = useWallet();
   const navigate = useNavigate();
   const [isCheckingProfile, setIsCheckingProfile] = useState(true);
-  const [hasProfile, setHasProfile] = useState(true);
-  const [hasToastBeenShown, setHasToastBeenShown] = useState(false);
+  const [hasProfile, setHasProfile] = useState(false);
 
   useEffect(() => {
     // Check if user has a profile
     const checkProfile = async () => {
-      if (isConnected && address) {
-        setIsCheckingProfile(true);
-        try {
-          // First check if the profile exists in Supabase
-          const { data: profile, error } = await db.profiles()
-            .select('id')
-            .eq('wallet_address', address)
-            .maybeSingle();
-            
-          if (error) {
-            console.error("Error checking profile:", error);
-            // Fallback to localStorage check if Supabase fails
-            const hasLocalProfile = profileService.hasProfile(address);
-            setHasProfile(hasLocalProfile);
-            
-            if (!hasLocalProfile && !hasToastBeenShown) {
-              toast.info("You need to create a profile before reporting a scammer");
-              setHasToastBeenShown(true);
+      if (!isConnected || !address) {
+        setIsCheckingProfile(false);
+        setHasProfile(false);
+        return;
+      }
+      
+      setIsCheckingProfile(true);
+      
+      try {
+        // Check Supabase for profile
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('wallet_address', address)
+          .maybeSingle();
+          
+        if (data) {
+          console.log("Found profile in Supabase:", data);
+          setHasProfile(true);
+        } else {
+          // Check localStorage as fallback
+          try {
+            const localData = localStorage.getItem(`profile_${address}`);
+            if (localData) {
+              console.log("Found profile in localStorage");
+              setHasProfile(true);
+            } else {
+              // Check all localStorage keys in case wallet address format is different
+              const allStorageKeys = Object.keys(localStorage);
+              const profileKeys = allStorageKeys.filter(key => key.startsWith('profile_'));
+              
+              let foundProfile = false;
+              for (const key of profileKeys) {
+                try {
+                  const storedData = localStorage.getItem(key);
+                  if (!storedData) continue;
+                  
+                  const parsed = JSON.parse(storedData);
+                  if (parsed.walletAddress === address) {
+                    console.log("Found profile by wallet address in localStorage");
+                    foundProfile = true;
+                    break;
+                  }
+                } catch (e) {
+                  console.error("Error parsing localStorage item:", e);
+                }
+              }
+              
+              setHasProfile(foundProfile);
             }
-          } else if (!profile) {
-            // No profile found in Supabase
+          } catch (localError) {
+            console.error("Error checking localStorage:", localError);
             setHasProfile(false);
-            
-            if (!hasToastBeenShown) {
-              toast.info("You need to create a profile before reporting a scammer");
-              setHasToastBeenShown(true);
-            }
-          } else {
-            setHasProfile(true);
           }
-        } catch (error) {
-          console.error("Error checking profile:", error);
-          setHasProfile(false);
-        } finally {
-          setIsCheckingProfile(false);
         }
-      } else {
+      } catch (error) {
+        console.error("Error checking profile:", error);
+        setHasProfile(false);
+      } finally {
         setIsCheckingProfile(false);
       }
     };
 
     checkProfile();
-  }, [isConnected, address, navigate, hasToastBeenShown]);
+  }, [isConnected, address]);
 
   const handleCreateProfile = () => {
     navigate("/profile");

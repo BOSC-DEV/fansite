@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -20,52 +19,55 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 export function UserProfilePage() {
-  const {
-    username
-  } = useParams<{
-    username: string;
-  }>();
-  const {
-    profile,
-    scammers,
-    isLoading,
-    error
-  } = useUserProfile(username);
+  const { username } = useParams<{ username: string }>();
+  const { profile, scammers, isLoading, error } = useUserProfile(username);
   const [activeTab, setActiveTab] = useState("reports");
   const { address, isConnected } = useWallet();
   const navigate = useNavigate();
   
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-  };
-  
-  // Check if this is the current user's profile
   const isCurrentUserProfile = profile?.walletAddress === address;
-  
-  // Handle the creation of a profile
+
   const handleCreateProfile = () => {
     if (!isConnected) {
       toast.error("Please connect your wallet first");
       return;
     }
-    
     navigate("/profile");
   };
   
-  return <div className="min-h-screen old-paper flex flex-col">
+  useEffect(() => {
+    if (error && error.includes("Profile not found") && username) {
+      try {
+        const localProfile = localStorage.getItem(`profile_${username}`);
+        if (localProfile) {
+          console.log("Found profile in localStorage, redirecting to complete it properly");
+          toast.info("Let's complete your profile setup");
+          setTimeout(() => {
+            navigate("/profile");
+          }, 1500);
+        }
+      } catch (e) {
+        console.error("Error checking localStorage for profile:", e);
+      }
+    }
+  }, [error, username, navigate]);
+
+  return (
+    <div className="min-h-screen old-paper flex flex-col">
       <Header />
       <main className="container mx-auto px-4 py-4 flex-grow">
-        {isLoading ? <ProfileSkeleton /> : error ? (
+        {isLoading ? (
+          <ProfileSkeleton />
+        ) : error ? (
           <div className="max-w-4xl mx-auto">
             <ProfileError error={error} />
             
-            {/* Add a prompt to create profile if the error is about non-existent profile */}
             {(error.includes("Profile not found") || error.includes("Invalid username")) && (
               <div className="mt-8 p-6 border border-western-wood/20 rounded-lg bg-western-sand/10 text-center">
                 <h3 className="text-xl font-western text-western-wood mb-3">Want to create your profile?</h3>
-                <p className="text-western-sand mb-4">Join the community by creating your own profile</p>
+                <p className="mb-4 text-orange-800">Join the community by creating your own profile</p>
                 <Button 
-                  onClick={handleCreateProfile}
+                  onClick={handleCreateProfile} 
                   className="bg-western-accent hover:bg-western-accent/80 text-western-parchment"
                 >
                   Create Profile
@@ -73,7 +75,8 @@ export function UserProfilePage() {
               </div>
             )}
           </div>
-        ) : profile ? <div className="max-w-4xl mx-auto">
+        ) : profile ? (
+          <div className="max-w-4xl mx-auto">
             <ProfileHeader 
               username={profile.username || ''} 
               name={profile.displayName} 
@@ -87,15 +90,13 @@ export function UserProfilePage() {
               points={profile.points} 
             />
             
-            {/* Show wallet disconnect button if this is the current user's profile */}
             {isCurrentUserProfile && (
               <div className="mt-4">
                 <WalletDisconnect />
               </div>
             )}
             
-            {/* Tabs Section - Aligned with content above */}
-            <Tabs value={activeTab} onValueChange={handleTabChange} className="mb-8">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
               <TabsList className="grid grid-cols-5 w-full max-w-none ml-0 bg-western-parchment/10 mt-6 border-b border-western-wood/20">
                 <TabsTrigger value="reports" className="flex items-center gap-2 font-western text-western-wood">
                   <BookOpen className="h-4 w-4" />
@@ -120,33 +121,31 @@ export function UserProfilePage() {
               </TabsList>
               
               <TabsContent value="reports" className="mt-6 px-0">
-                <h2 className="text-2xl font-western text-western-wood mb-4"></h2>
                 <ReportsTab scammers={scammers} />
               </TabsContent>
               
               <TabsContent value="bounties" className="mt-6 px-0">
-                <h2 className="text-2xl font-western text-western-wood mb-4"></h2>
                 <BountiesTab />
               </TabsContent>
               
               <TabsContent value="info" className="mt-6 px-0">
-                <h2 className="text-2xl font-western text-western-wood mb-4"></h2>
                 <InfoTab profile={profile} />
               </TabsContent>
               
               <TabsContent value="likes" className="mt-6 px-0">
-                <h2 className="text-2xl font-western text-western-wood mb-4"></h2>
                 <LikesTab address={profile.walletAddress} />
               </TabsContent>
               
               <TabsContent value="comments" className="mt-6 px-0">
-                <h2 className="text-2xl font-western text-western-wood mb-4"></h2>
                 <CommentsTab />
               </TabsContent>
             </Tabs>
-          </div> : null}
+          </div>
+        ) : null}
       </main>
       <SiteFooter />
-    </div>;
+    </div>
+  );
 }
+
 export default UserProfilePage;
