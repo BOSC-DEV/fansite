@@ -98,12 +98,9 @@ export function useProfileFormSubmit() {
     console.log("[useProfileFormSubmit] Starting profile save for address:", address);
     
     try {
-      // Generate a proper UUID for the profile ID
-      const generatedId = uuidv4();
-      
       // Prepare the profile data
       const profileData = {
-        id: generatedId, // Use UUID, not the wallet address
+        // Don't generate a UUID here - let the profile service handle IDs
         displayName: formData.displayName,
         username: formData.username,
         profilePicUrl: formData.profilePicUrl,
@@ -116,8 +113,8 @@ export function useProfileFormSubmit() {
       
       console.log("[useProfileFormSubmit] Prepared profile data:", profileData);
       
-      // Use the updateProfile method in storage service
-      const success = await storageService.updateProfile(profileData);
+      // Use the saveProfile method which doesn't require an ID
+      const success = await storageService.saveProfile(profileData);
       
       if (!success) {
         console.error('[useProfileFormSubmit] Error saving profile through service');

@@ -1,4 +1,3 @@
-
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 
@@ -199,64 +198,72 @@ export class ProfileService extends BaseSupabaseService {
       return false;
     }
     
-    // Generate a proper UUID for the id field if not provided
-    const profileId = profile.id || uuidv4();
-    
-    // Convert from camelCase to snake_case for database
-    const dbProfile = {
-      id: profileId, // Use proper UUID, not wallet address
-      display_name: profile.displayName,
-      username: profile.username,
-      profile_pic_url: profile.profilePicUrl,
-      wallet_address: profile.walletAddress, // Store wallet address in its own field
-      created_at: profile.createdAt,
-      x_link: profile.xLink || null,
-      website_link: profile.websiteLink || null,
-      bio: profile.bio || null,
-      points: profile.points || 0
-    };
-    
-    console.log("[ProfileService] Converted profile for database:", dbProfile);
-    
-    // Check if profile exists by wallet address, not id
-    const { data: existingProfile, error: lookupError } = await this.supabase
-      .from('profiles')
-      .select('id')
-      .eq('wallet_address', profile.walletAddress)
-      .maybeSingle();
-    
-    if (lookupError) {
-      console.error('[ProfileService] Error checking if profile exists:', lookupError);
-    }
-
-    let result;
-    
-    if (existingProfile) {
-      console.log("[ProfileService] Updating existing profile with id:", existingProfile.id);
-      // Update using the existing profile id
-      result = await this.supabase
+    try {
+      // Convert from camelCase to snake_case for database
+      const dbProfile = {
+        // Skip id field - it will be assigned based on the existing profile or generated
+        display_name: profile.displayName,
+        username: profile.username,
+        profile_pic_url: profile.profilePicUrl,
+        wallet_address: profile.walletAddress,
+        created_at: profile.createdAt,
+        x_link: profile.xLink || null,
+        website_link: profile.websiteLink || null,
+        bio: profile.bio || null,
+        points: profile.points || 0
+      };
+      
+      console.log("[ProfileService] Converted profile for database:", dbProfile);
+      
+      // Check if profile exists by wallet address
+      const { data: existingProfile, error: lookupError } = await this.supabase
         .from('profiles')
-        .update(dbProfile)
-        .eq('id', existingProfile.id);
-    } else {
-      console.log("[ProfileService] Creating new profile");
-      // Insert
-      result = await this.supabase
-        .from('profiles')
-        .insert(dbProfile);
-    }
+        .select('id')
+        .eq('wallet_address', profile.walletAddress)
+        .maybeSingle();
+      
+      if (lookupError) {
+        console.error('[ProfileService] Error checking if profile exists:', lookupError);
+        return false;
+      }
 
-    if (result.error) {
-      console.error('[ProfileService] Error saving profile:', result.error);
+      let result;
+      
+      if (existingProfile) {
+        console.log("[ProfileService] Updating existing profile with id:", existingProfile.id);
+        // Update using the existing profile id
+        result = await this.supabase
+          .from('profiles')
+          .update(dbProfile)
+          .eq('id', existingProfile.id);
+      } else {
+        console.log("[ProfileService] Creating new profile");
+        // For new profiles, generate a UUID
+        const newProfile = {
+          ...dbProfile,
+          id: uuidv4()  // Generate UUID for new profiles
+        };
+        // Insert with UUID
+        result = await this.supabase
+          .from('profiles')
+          .insert(newProfile);
+      }
+
+      if (result.error) {
+        console.error('[ProfileService] Error saving profile:', result.error);
+        return false;
+      }
+      
+      console.log("[ProfileService] Profile saved successfully");
+      return true;
+    } catch (err) {
+      console.error('[ProfileService] Exception during profile save:', err);
       return false;
     }
-    
-    console.log("[ProfileService] Profile saved successfully");
-    return true;
   }
 
   async saveProfile(profile: UserProfile): Promise<boolean> {
-    // Forward to the new updateProfile method that doesn't require auth
+    // Forward to the updateProfile method
     return this.updateProfile(profile);
   }
 
