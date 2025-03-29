@@ -61,7 +61,14 @@ export function UserProfile() {
       
       if (success) {
         console.log("Profile saved successfully, navigating back");
-        // We don't need toast here as it's handled in the useProfileFormSubmit hook
+        toast.success("Profile saved successfully!", {
+          style: {
+            backgroundColor: "#ea384c", // Bright red 
+            color: "#ffffff", // White text for contrast
+            fontWeight: "bold"
+          },
+        });
+        
         // Add a small delay before navigating to ensure the toast is visible
         setTimeout(() => navigate(-1), 1500);
       } else {

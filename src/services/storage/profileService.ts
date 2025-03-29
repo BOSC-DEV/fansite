@@ -218,68 +218,93 @@ export class ProfileService extends BaseSupabaseService {
     const profileId = profile.id || uuidv4();
     
     try {
-      // Prepare data object for database operations
-      const dbProfile = {
-        id: profileId,
-        display_name: profile.displayName,
-        username: profile.username || '', // Ensure username is included
-        profile_pic_url: profile.profilePicUrl || '',
-        wallet_address: profile.walletAddress,
-        created_at: profile.createdAt || new Date().toISOString(),
-        x_link: profile.xLink || '',
-        website_link: profile.websiteLink || '',
-        bio: profile.bio || ''
-      };
-      
-      console.log("[ProfileService] Prepared DB profile:", dbProfile);
-      
-      if (existingProfile) {
-        // Try direct update first
-        console.log("[ProfileService] Updating existing profile with ID:", existingProfile.id);
-        const { error: updateError } = await this.supabase
-          .from('profiles')
-          .update({
-            display_name: profile.displayName,
-            username: profile.username || '', // Ensure username is updated
-            profile_pic_url: profile.profilePicUrl || '',
-            x_link: profile.xLink || '',
-            website_link: profile.websiteLink || '',
-            bio: profile.bio || ''
-          })
-          .eq('id', existingProfile.id);
-          
-        if (updateError) {
-          console.error('[ProfileService] Error updating profile with direct update:', updateError);
-          
-          // Try upsert as fallback
-          const { error: upsertError } = await this.supabase
+      // Try using the Supabase RPC function first
+      try {
+        const { data, error } = await this.supabase.rpc('upsert_profile', {
+          profile_id: profileId,
+          profile_display_name: profile.displayName,
+          profile_username: profile.username,
+          profile_pic_url: profile.profilePicUrl,
+          profile_wallet_address: profile.walletAddress,
+          profile_created_at: profile.createdAt || new Date().toISOString(),
+          profile_x_link: profile.xLink || '',
+          profile_website_link: profile.websiteLink || '',
+          profile_bio: profile.bio || ''
+        });
+        
+        if (error) {
+          console.error('[ProfileService] Error using upsert_profile function:', error);
+          throw new Error('RPC function failed');
+        }
+        
+        console.log("[ProfileService] Profile saved successfully via RPC function");
+        return true;
+      } catch (rpcError) {
+        console.error('[ProfileService] RPC function failed, falling back to direct operations:', rpcError);
+        
+        // Prepare data object for database operations
+        const dbProfile = {
+          id: profileId,
+          display_name: profile.displayName,
+          username: profile.username || '', // Ensure username is included
+          profile_pic_url: profile.profilePicUrl || '',
+          wallet_address: profile.walletAddress,
+          created_at: profile.createdAt || new Date().toISOString(),
+          x_link: profile.xLink || '',
+          website_link: profile.websiteLink || '',
+          bio: profile.bio || ''
+        };
+        
+        console.log("[ProfileService] Prepared DB profile:", dbProfile);
+        
+        if (existingProfile) {
+          // Try direct update first
+          console.log("[ProfileService] Updating existing profile with ID:", existingProfile.id);
+          const { error: updateError } = await this.supabase
             .from('profiles')
-            .upsert({
-              id: existingProfile.id,
+            .update({
               display_name: profile.displayName,
-              username: profile.username || '',
+              username: profile.username || '', // Ensure username is updated
               profile_pic_url: profile.profilePicUrl || '',
-              wallet_address: profile.walletAddress,
               x_link: profile.xLink || '',
               website_link: profile.websiteLink || '',
               bio: profile.bio || ''
-            }, { onConflict: 'id' });
+            })
+            .eq('id', existingProfile.id);
             
-          if (upsertError) {
-            console.error('[ProfileService] Error updating profile with upsert:', upsertError);
+          if (updateError) {
+            console.error('[ProfileService] Error updating profile with direct update:', updateError);
+            
+            // Try upsert as fallback
+            const { error: upsertError } = await this.supabase
+              .from('profiles')
+              .upsert({
+                id: existingProfile.id,
+                display_name: profile.displayName,
+                username: profile.username || '',
+                profile_pic_url: profile.profilePicUrl || '',
+                wallet_address: profile.walletAddress,
+                x_link: profile.xLink || '',
+                website_link: profile.websiteLink || '',
+                bio: profile.bio || ''
+              }, { onConflict: 'id' });
+              
+            if (upsertError) {
+              console.error('[ProfileService] Error updating profile with upsert:', upsertError);
+              return false;
+            }
+          }
+        } else {
+          // Insert new profile
+          console.log("[ProfileService] Creating new profile");
+          const { error: insertError } = await this.supabase
+            .from('profiles')
+            .insert(dbProfile);
+            
+          if (insertError) {
+            console.error('[ProfileService] Error inserting profile:', insertError);
             return false;
           }
-        }
-      } else {
-        // Insert new profile
-        console.log("[ProfileService] Creating new profile");
-        const { error: insertError } = await this.supabase
-          .from('profiles')
-          .insert(dbProfile);
-          
-        if (insertError) {
-          console.error('[ProfileService] Error inserting profile:', insertError);
-          return false;
         }
       }
       
