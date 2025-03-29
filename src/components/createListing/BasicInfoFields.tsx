@@ -34,7 +34,11 @@ export function BasicInfoFields({
         <label className="block text-sm font-medium text-western-wood mb-1">
           Scammer Photo <span className="text-western-accent">*</span>
         </label>
-        <ImageUpload onImageChange={setPhotoUrl} currentImage={photoUrl} />
+        <ImageUpload 
+          onImageUpload={setPhotoUrl} 
+          currentImage={photoUrl} 
+          scammerId=""
+        />
       </div>
 
       <TextAreaField
