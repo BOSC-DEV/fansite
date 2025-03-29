@@ -36,11 +36,19 @@ export function UserProfile() {
       return;
     }
     
-    // Proceed with profile save (no wallet signature required anymore)
-    const success = await saveProfile();
-    if (success) {
-      console.log("Profile saved successfully, navigating back");
-      navigate(-1);
+    try {
+      // Proceed with profile save
+      const success = await saveProfile();
+      if (success) {
+        console.log("Profile saved successfully, navigating back");
+        toast.success("Profile saved successfully!");
+        navigate(-1);
+      } else {
+        toast.error("Failed to save profile. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      toast.error("An unexpected error occurred while saving profile.");
     }
   };
 
