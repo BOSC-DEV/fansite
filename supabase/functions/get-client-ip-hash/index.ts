@@ -1,21 +1,34 @@
 
-// Create a Supabase Edge Function to hash client IP addresses for view tracking
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.21.0";
-import { encode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
+import * as crypto from "https://deno.land/std@0.168.0/crypto/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Simple hash function to anonymize IP addresses
-async function hashIp(ip: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(`${ip}-Book-of-Scams-salt-key`);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+async function hashString(str: string): Promise<string> {
+  // Get the salt from environment variable, or use a default for dev
+  const salt = Deno.env.get('IP_HASH_SALT') || 'default-salt-for-development';
+  const msgUint8 = new TextEncoder().encode(str + salt);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function getIpHash(req: Request): Promise<string> {
+  // Try to get the real client IP from various headers
+  let clientIp = req.headers.get('cf-connecting-ip') ||
+                 req.headers.get('x-forwarded-for')?.split(',')[0].trim();
+                 
+  if (!clientIp) {
+    console.log("Couldn't determine client IP, using a fallback");
+    // Generate a random string as a fallback
+    clientIp = crypto.randomUUID();
+  }
+  
+  // Hash the IP for anonymity
+  return await hashString(clientIp);
 }
 
 serve(async (req) => {
@@ -25,37 +38,25 @@ serve(async (req) => {
   }
   
   try {
-    // Get client IP from request headers
-    const clientIp = req.headers.get('x-real-ip') || 
-                    req.headers.get('x-forwarded-for') || 
-                    "unknown";
-    
-    // Generate a hash of the IP address
-    const ipHash = await hashIp(clientIp);
-    
-    console.log(`Hashed IP address for tracking: ${ipHash.substring(0, 8)}...`);
+    // Get and hash the client IP
+    const ipHash = await getIpHash(req);
+    console.log("Generated IP hash for tracking: ", ipHash.substring(0, 10) + "...");
     
     // Return the hashed IP
     return new Response(
       JSON.stringify({ ipHash }),
       { 
-        headers: { 
-          ...corsHeaders,
-          'Content-Type': 'application/json' 
-        } 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 200 
       }
     );
   } catch (error) {
-    console.error("Error in get-client-ip-hash function:", error);
-    
+    console.error("Error generating IP hash:", error.message);
     return new Response(
-      JSON.stringify({ error: "Failed to process request" }),
+      JSON.stringify({ error: "Failed to generate IP hash" }),
       { 
-        status: 500,
-        headers: { 
-          ...corsHeaders,
-          'Content-Type': 'application/json' 
-        }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 500
       }
     );
   }
