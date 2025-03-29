@@ -39,6 +39,17 @@ export function UserProfile() {
     }
     
     try {
+      // Ensure we have required fields
+      if (!formData.displayName.trim()) {
+        toast.error("Display name is required");
+        return;
+      }
+      
+      if (!formData.username.trim()) {
+        toast.error("Username is required");
+        return;
+      }
+      
       // Proceed with profile save
       const success = await saveProfile();
       if (success) {

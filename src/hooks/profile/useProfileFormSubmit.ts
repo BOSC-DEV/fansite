@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { storageService } from "@/services/storage";
+import { v4 as uuidv4 } from 'uuid';
 
 interface ProfileFormData {
   displayName: string;
@@ -96,9 +97,20 @@ export function useProfileFormSubmit() {
     console.log("[useProfileFormSubmit] Starting profile save for address:", address);
     
     try {
-      // Use the wallet address as the ID
+      // Check if profile exists to get the ID if it does
+      let existingId: string | undefined;
+      const existingProfile = await storageService.getProfile(address);
+      if (existingProfile && existingProfile.id) {
+        existingId = existingProfile.id;
+      }
+
+      // Use the existing ID or generate a new one
+      const profileId = existingId || uuidv4();
+      console.log("[useProfileFormSubmit] Using profile ID:", profileId);
+      
+      // Prepare the profile data
       const profileData = {
-        id: address,
+        id: profileId,
         displayName: formData.displayName,
         username: formData.username,
         profilePicUrl: formData.profilePicUrl,
@@ -122,11 +134,11 @@ export function useProfileFormSubmit() {
       console.log("[useProfileFormSubmit] Profile saved successfully");
       toast.success("Profile saved successfully");
       setHasProfile(true);
-      setProfileId(address);
+      setProfileId(profileId);
       return true;
     } catch (error) {
       console.error("[useProfileFormSubmit] Error saving profile:", error);
-      toast.error("Failed to save profile");
+      toast.error(`Failed to save profile: ${error instanceof Error ? error.message : 'Unknown error'}`);
       return false;
     } finally {
       setIsSubmitting(false);

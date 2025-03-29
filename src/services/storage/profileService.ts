@@ -13,7 +13,7 @@ export interface UserProfile {
   xLink?: string;
   websiteLink?: string;
   bio?: string;
-  points?: number; // Added points property
+  points?: number;
 }
 
 export class ProfileService extends BaseSupabaseService {
@@ -232,10 +232,16 @@ export class ProfileService extends BaseSupabaseService {
     try {
       if (existingProfile) {
         console.log("[ProfileService] Updating existing profile with ID:", existingProfile.id);
-        // Update existing profile - use the existing ID
+        // Update existing profile - include the ID field in the update
+        const updatedProfile = {
+          ...dbProfile,
+          id: existingProfile.id
+        };
+        
+        // Update existing profile
         result = await this.supabase
           .from('profiles')
-          .update(dbProfile)
+          .update(updatedProfile)
           .eq('id', existingProfile.id);
       } else {
         console.log("[ProfileService] Creating new profile");
@@ -247,9 +253,13 @@ export class ProfileService extends BaseSupabaseService {
         
         console.log("[ProfileService] New profile with ID:", newProfileWithId);
         
+        // Using upsert instead of insert to handle potential conflicts
         result = await this.supabase
           .from('profiles')
-          .insert(newProfileWithId);
+          .upsert(newProfileWithId, { 
+            onConflict: 'wallet_address',
+            ignoreDuplicates: false 
+          });
       }
 
       if (result.error) {
