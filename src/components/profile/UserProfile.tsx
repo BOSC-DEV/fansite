@@ -8,6 +8,9 @@ import { toast } from "sonner";
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from "@/integrations/supabase/client";
 import { safeSupabaseQuery, validateAuth } from "@/utils/supabaseHelpers";
+import type { Database } from '@/integrations/supabase/database.types';
+
+type ProfileRow = Database['public']['Tables']['profiles']['Row'];
 
 export interface ProfileFormData {
   displayName: string;
@@ -58,13 +61,11 @@ export function UserProfile() {
         }
         
         // Try to fetch profile from Supabase
-        const { data, error } = await safeSupabaseQuery(() => 
-          supabase
-            .from('profiles')
-            .select('*')
-            .eq('wallet_address', address)
-            .maybeSingle()
-        );
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('wallet_address', address)
+          .maybeSingle();
 
         if (error) {
           console.error("Error fetching profile from Supabase:", error);
@@ -74,13 +75,17 @@ export function UserProfile() {
         if (data) {
           // Profile exists, populate form data
           console.log("Profile found in Supabase:", data);
+          
+          // Type assertion of data as ProfileRow
+          const typedData = data as ProfileRow;
+          
           setFormData({
-            displayName: data.display_name || "",
-            username: data.username || "",
-            profilePicUrl: data.profile_pic_url || "",
-            xLink: data.x_link || "",
-            websiteLink: data.website_link || "",
-            bio: data.bio || ""
+            displayName: typedData.display_name || "",
+            username: typedData.username || "",
+            profilePicUrl: typedData.profile_pic_url || "",
+            xLink: typedData.x_link || "",
+            websiteLink: typedData.website_link || "",
+            bio: typedData.bio || ""
           });
           setHasProfile(true);
         } else {
@@ -119,13 +124,11 @@ export function UserProfile() {
     
     setCheckingUsername(true);
     try {
-      const { data, error } = await safeSupabaseQuery(() => 
-        supabase
-          .from('profiles')
-          .select('wallet_address')
-          .eq('username', username)
-          .maybeSingle()
-      );
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('wallet_address')
+        .eq('username', username)
+        .maybeSingle();
       
       if (error) {
         console.error("Error checking username:", error);
@@ -133,7 +136,8 @@ export function UserProfile() {
       } else {
         // If no data, username is available
         // If data exists but belongs to current user, it's available
-        setUsernameAvailable(!data || (data.wallet_address === address));
+        const profileData = data as { wallet_address: string } | null;
+        setUsernameAvailable(!profileData || (profileData.wallet_address === address));
       }
     } catch (error) {
       console.error("Exception checking username:", error);
@@ -229,14 +233,12 @@ export function UserProfile() {
       console.log("Saving profile to Supabase:", profileData);
       
       // Save to Supabase
-      const { error } = await safeSupabaseQuery(() =>
-        supabase
-          .from('profiles')
-          .upsert(profileData, { 
-            onConflict: 'wallet_address',
-            ignoreDuplicates: false 
-          })
-      );
+      const { error } = await supabase
+        .from('profiles')
+        .upsert(profileData, { 
+          onConflict: 'wallet_address',
+          ignoreDuplicates: false 
+        });
       
       if (error) {
         console.error("Error saving profile to Supabase:", error);

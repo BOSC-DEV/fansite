@@ -47,14 +47,12 @@ export function useProfileImage() {
       const filePath = `${userId}/${Date.now()}.${fileExt}`;
       
       // Upload to Supabase Storage
-      const { data, error } = await safeSupabaseQuery(() => 
-        supabase.storage
-          .from('profile-images')
-          .upload(filePath, file, {
-            cacheControl: '3600',
-            upsert: true
-          })
-      );
+      const { data, error } = await supabase.storage
+        .from('profile-images')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
       
       if (error) {
         console.error("Error uploading file to Supabase Storage:", error);
