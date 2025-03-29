@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { storageService } from "@/services/storage";
-import { v4 as uuidv4 } from 'uuid';
 
 interface ProfileFormData {
   displayName: string;
@@ -100,7 +99,6 @@ export function useProfileFormSubmit() {
     try {
       // Prepare the profile data
       const profileData = {
-        // Don't generate a UUID here - let the profile service handle IDs
         displayName: formData.displayName,
         username: formData.username,
         profilePicUrl: formData.profilePicUrl,
@@ -113,7 +111,7 @@ export function useProfileFormSubmit() {
       
       console.log("[useProfileFormSubmit] Prepared profile data:", profileData);
       
-      // Use the saveProfile method which doesn't require an ID
+      // Use the saveProfile method which doesn't require wallet signature
       const success = await storageService.saveProfile(profileData);
       
       if (!success) {

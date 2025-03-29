@@ -7,11 +7,15 @@ import { useProfileForm } from "@/hooks/profile/useProfileForm";
 import { toast } from "sonner";
 import { EmailVerification } from "./EmailVerification";
 import { isEmailVerified } from "@/lib/supabase";
+import CloudflareTurnstile from "@/components/CloudflareTurnstile";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 export function UserProfile() {
   const navigate = useNavigate();
   const [showEmailVerification, setShowEmailVerification] = useState(false);
   const [emailVerified, setEmailVerified] = useState<boolean | undefined>(undefined);
+  const [showCaptcha, setShowCaptcha] = useState(false);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
   
   const {
     formData,
@@ -40,8 +44,14 @@ export function UserProfile() {
     checkEmailVerification();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleTurnstileVerify = (token: string) => {
+    console.log("Turnstile verification successful with token:", token);
+    setCaptchaVerified(true);
+    // Continue with form submission after verification
+    handleFormSubmit();
+  };
+
+  const handleFormSubmit = async () => {
     console.log("Profile form submitted with data:", formData);
     
     if (!isConnected) {
@@ -50,10 +60,10 @@ export function UserProfile() {
     }
     
     try {
-      // If wallet is connected but email is not verified, suggest it
-      if (isConnected && emailVerified === false) {
-        const shouldProceed = window.confirm("Your email is not verified. You can still save your profile with wallet signature only. Would you like to proceed?");
-        if (!shouldProceed) {
+      // If email is not verified, ask if they want to verify it
+      if (emailVerified === false) {
+        const shouldProceed = window.confirm("Your email is not verified. Would you like to verify it now?");
+        if (shouldProceed) {
           setShowEmailVerification(true);
           return;
         }
@@ -79,6 +89,18 @@ export function UserProfile() {
     }
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!isConnected) {
+      toast.error("Please connect your wallet first");
+      return;
+    }
+    
+    // Show Turnstile verification instead of requiring wallet signature
+    setShowCaptcha(true);
+  };
+
   const handleEmailVerified = (email: string) => {
     toast.success("Email verification process initiated for " + email);
     setEmailVerified(true);
@@ -100,29 +122,50 @@ export function UserProfile() {
               onClick={() => setShowEmailVerification(false)}
               className="text-sm text-muted-foreground hover:underline"
             >
-              Skip and continue with wallet only
+              Skip and continue without email verification
             </button>
           </div>
         </div>
       ) : (
-        <UserProfileForm
-          formData={formData}
-          setDisplayName={setDisplayName}
-          setUsername={setUsername}
-          setProfilePicUrl={setProfilePicUrl}
-          setXLink={setXLink}
-          setWebsiteLink={setWebsiteLink}
-          handleBioChange={handleBioChange}
-          isSubmitting={isSubmitting}
-          hasProfile={hasProfile}
-          saveProfile={saveProfile}
-          address={address}
-          usernameAvailable={usernameAvailable}
-          checkingUsername={checkingUsername}
-          handleSubmit={handleSubmit}
-          emailVerified={emailVerified}
-          onRequestEmailVerification={() => setShowEmailVerification(true)}
-        />
+        <>
+          <UserProfileForm
+            formData={formData}
+            setDisplayName={setDisplayName}
+            setUsername={setUsername}
+            setProfilePicUrl={setProfilePicUrl}
+            setXLink={setXLink}
+            setWebsiteLink={setWebsiteLink}
+            handleBioChange={handleBioChange}
+            isSubmitting={isSubmitting}
+            hasProfile={hasProfile}
+            saveProfile={saveProfile}
+            address={address}
+            usernameAvailable={usernameAvailable}
+            checkingUsername={checkingUsername}
+            handleSubmit={handleSubmit}
+            emailVerified={emailVerified}
+            onRequestEmailVerification={() => setShowEmailVerification(true)}
+          />
+          
+          <Dialog open={showCaptcha} onOpenChange={setShowCaptcha}>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Human Verification</DialogTitle>
+                <DialogDescription>
+                  Please complete the captcha to save your profile
+                </DialogDescription>
+              </DialogHeader>
+              
+              <div className="my-4">
+                <CloudflareTurnstile 
+                  siteKey="1x00000000000000000000AA" 
+                  onVerify={handleTurnstileVerify} 
+                  theme="auto"
+                />
+              </div>
+            </DialogContent>
+          </Dialog>
+        </>
       )}
     </>
   );
