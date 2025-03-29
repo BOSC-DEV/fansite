@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 import { toast } from 'sonner';
@@ -139,6 +140,11 @@ export class StorageService extends BaseSupabaseService {
 
   async saveProfile(profile: UserProfile): Promise<boolean> {
     return profileService.saveProfile(profile);
+  }
+  
+  // Add updateProfile method to match the one in profileService
+  async updateProfile(profile: UserProfile): Promise<boolean> {
+    return profileService.updateProfile(profile);
   }
 
   async hasProfile(walletAddress: string): Promise<boolean> {
