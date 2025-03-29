@@ -133,28 +133,32 @@ export function useProfileFormSubmit() {
       
       console.log("[useProfileFormSubmit] Prepared profile data:", profileData);
       
-      // Use direct Supabase API call with RPC function to bypass RLS
-      const { error } = await supabase.rpc('upsert_profile', {
-        profile_id: profileData.id,
-        profile_display_name: profileData.displayName,
-        profile_username: profileData.username,
-        profile_pic_url: profileData.profilePicUrl,
-        profile_wallet_address: profileData.walletAddress,
-        profile_created_at: profileData.createdAt,
-        profile_x_link: profileData.xLink,
-        profile_website_link: profileData.websiteLink,
-        profile_bio: profileData.bio
-      });
-      
-      if (error) {
-        console.error("[useProfileFormSubmit] Error saving profile via RPC:", error);
-        
-        // Fallback to using the storageService if RPC fails
-        console.log("[useProfileFormSubmit] Falling back to storage service method");
+      // Use direct update for existing profiles to avoid the RPC column ambiguity issue
+      if (existingProfile && existingProfile.id) {
+        console.log("[useProfileFormSubmit] Using direct update for existing profile");
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({
+            display_name: profileData.displayName,
+            username: profileData.username,
+            profile_pic_url: profileData.profilePicUrl,
+            x_link: profileData.xLink,
+            website_link: profileData.websiteLink,
+            bio: profileData.bio
+          })
+          .eq('id', profileId);
+          
+        if (updateError) {
+          console.error("[useProfileFormSubmit] Error updating profile:", updateError);
+          throw new Error("Failed to update profile");
+        }
+      } else {
+        // For new profiles, use the storage service
+        console.log("[useProfileFormSubmit] Using storage service for new profile");
         const success = await storageService.saveProfile(profileData);
         
         if (!success) {
-          throw new Error("Failed to save profile via both methods");
+          throw new Error("Failed to save new profile");
         }
       }
       
