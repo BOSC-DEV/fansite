@@ -101,6 +101,7 @@ export function useWalletActions(walletState: ReturnType<typeof useWalletState>)
       // Clear persisted wallet data
       localStorage.removeItem('walletData');
       localStorage.removeItem('walletTimestamp');
+      localStorage.removeItem('lastSignatureTime'); // Clear signature timestamp
       
       // Show only one toast notification
       toast.success('Wallet disconnected', {

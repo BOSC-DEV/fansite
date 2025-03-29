@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,7 +8,6 @@ import { ProfileFormHeader } from "./ProfileFormHeader";
 import { ProfileFormFooter } from "./ProfileFormFooter";
 import { UsernameInput } from "./UsernameInput";
 import { ProfileLinks } from "./ProfileLinks";
-import { Button } from "@/components/ui/button";
 
 // Update the interface to include our new props
 interface UserProfileFormProps {
@@ -31,8 +31,6 @@ interface UserProfileFormProps {
   address: string | undefined;
   usernameAvailable: boolean;
   checkingUsername: boolean;
-  emailVerified?: boolean;
-  onRequestEmailVerification?: () => void;
   handleSubmit: (e: React.FormEvent) => void;
 }
 export function UserProfileForm({
@@ -49,8 +47,6 @@ export function UserProfileForm({
   address,
   usernameAvailable,
   checkingUsername,
-  emailVerified,
-  onRequestEmailVerification,
   handleSubmit
 }: UserProfileFormProps) {
   return <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
@@ -67,21 +63,6 @@ export function UserProfileForm({
             </div>
             
             <UsernameInput username={formData.username} setUsername={setUsername} isAvailable={usernameAvailable} checkingUsername={checkingUsername} />
-            
-            {/* Email verification section */}
-            {onRequestEmailVerification && <div className="bg-muted/30 p-4 rounded-md mt-2">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h3 className="font-medium">Email Verification</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {emailVerified === true ? "Your email is verified" : "Verify your email for additional security"}
-                    </p>
-                  </div>
-                  {emailVerified !== true && <Button type="button" variant="outline" size="sm" onClick={onRequestEmailVerification}>
-                      Verify Email
-                    </Button>}
-                </div>
-              </div>}
           </div>
           
           <div>
@@ -93,6 +74,6 @@ export function UserProfileForm({
         </div>
       </div>
       
-      <ProfileFormFooter isSubmitting={isSubmitting} hasProfile={hasProfile} usernameAvailable={usernameAvailable} emailVerified={emailVerified} />
+      <ProfileFormFooter isSubmitting={isSubmitting} hasProfile={hasProfile} usernameAvailable={usernameAvailable} />
     </form>;
 }
