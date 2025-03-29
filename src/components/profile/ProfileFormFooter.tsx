@@ -25,17 +25,17 @@ export function ProfileFormFooter({
   };
   
   return (
-    <div className="px-6 py-4 bg-muted/20 border-t border-western-sand/10 flex justify-between shadow-md">
-      <Button type="button" variant="outline" onClick={() => navigate(-1)}>
-        Cancel
-      </Button>
-      <div className="flex items-center gap-2">
+    <div className="px-6 py-4 flex justify-end">
+      <div className="flex items-center gap-3">
         {emailVerified === false && (
-          <span className="text-amber-500 text-xs">Email not verified</span>
+          <span className="text-amber-500 text-xs mr-auto">Email not verified</span>
         )}
         {emailVerified === true && (
-          <span className="text-green-500 text-xs">Email verified</span>
+          <span className="text-green-500 text-xs mr-auto">Email verified</span>
         )}
+        <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+          Cancel
+        </Button>
         <Button type="submit" disabled={isSubmitting || !usernameAvailable}>
           {buttonText()}
         </Button>
