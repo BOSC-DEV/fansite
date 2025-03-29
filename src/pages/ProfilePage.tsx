@@ -8,10 +8,9 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SiteFooter } from "@/components/layout/SiteFooter";
-import { WalletDisconnect } from "@/components/wallet/WalletDisconnect";
 
 export function ProfilePage() {
-  const { isConnected, address } = useWallet();
+  const { isConnected } = useWallet();
   const [isLoading, setIsLoading] = useState(false);
   const supabaseReady = isSupabaseConfigured();
   
@@ -33,12 +32,6 @@ export function ProfilePage() {
             </Alert>
           )}
           
-          {isConnected && (
-            <div className="mb-6">
-              <WalletDisconnect />
-            </div>
-          )}
-          
           {isLoading ? (
             <Card className="p-4 mb-8">
               <div className="flex items-center justify-center gap-4">
@@ -49,7 +42,7 @@ export function ProfilePage() {
           ) : null}
           
           {supabaseReady ? (
-            <UserProfile key={address} /> 
+            <UserProfile key={isConnected ? '1' : '0'} /> 
           ) : (
             <Card>
               <CardHeader>
