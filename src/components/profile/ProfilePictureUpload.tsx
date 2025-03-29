@@ -1,9 +1,8 @@
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserCircle2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { useProfileImage } from "@/hooks/profile/useProfileImage";
 
 interface ProfilePictureUploadProps {
@@ -21,22 +20,11 @@ export function ProfilePictureUpload({
 }: ProfilePictureUploadProps) {
   const {
     uploadProfileImage,
-    getLocalProfileImage,
     isUploading
   } = useProfileImage();
   const [imageError, setImageError] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // Check for locally stored image on mount
-  useEffect(() => {
-    if (!profilePicUrl && userId) {
-      const localImage = getLocalProfileImage(userId);
-      if (localImage) {
-        onProfilePicChange(localImage);
-      }
-    }
-  }, [userId, profilePicUrl, onProfilePicChange, getLocalProfileImage]);
-
   const handleUploadClick = (e: React.MouseEvent) => {
     e.preventDefault();
     fileInputRef.current?.click();
@@ -60,7 +48,6 @@ export function ProfilePictureUpload({
       }
     } catch (error) {
       console.error("Error during upload:", error);
-      toast.error("Failed to upload profile picture");
       setImageError(true);
     }
   };

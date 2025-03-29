@@ -11,7 +11,6 @@ export function useProfileImage() {
 
   const uploadProfileImage = async (file: File, userId: string) => {
     if (!file) {
-      toast.error("No file selected");
       return null;
     }
     
@@ -57,7 +56,7 @@ export function useProfileImage() {
       
       console.log(`Uploading file ${filePath} to profile-images bucket`);
       
-      // Upload directly using Supabase Storage
+      // Upload directly using Supabase Storage with anonymous access
       const { data, error } = await supabase.storage
         .from('profile-images')
         .upload(filePath, file, {
@@ -67,7 +66,6 @@ export function useProfileImage() {
         
       if (error) {
         console.error("Error uploading image:", error);
-        toast.error("Failed to upload image");
         setImageError(true);
         return null;
       }
@@ -81,11 +79,9 @@ export function useProfileImage() {
       console.log("Upload successful, URL:", url);
       
       setProfilePicUrl(url);
-      toast.success("Profile picture uploaded successfully");
       return url;
     } catch (error) {
       console.error("Error in upload process:", error);
-      toast.error("Failed to upload image");
       setImageError(true);
       return null;
     } finally {
@@ -93,16 +89,10 @@ export function useProfileImage() {
     }
   };
 
-  // For backward compatibility - check if there's a locally stored image
-  const getLocalProfileImage = (userId: string): string | null => {
-    return localStorage.getItem(`profile_${userId}`);
-  };
-
   return {
     profilePicUrl,
     setProfilePicUrl,
     uploadProfileImage,
-    getLocalProfileImage,
     isUploading,
     imageError,
     setImageError
