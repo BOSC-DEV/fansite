@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useProfileImage } from "@/hooks/profile/useProfileImage";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { useWallet } from "@/context/WalletContext";
+import { useWallet } from "@/context/wallet";
 import { validateAuth, establishAuth, ensureStorageBucketExists } from "@/utils/supabaseHelpers";
 
 interface ProfilePictureUploadProps {
