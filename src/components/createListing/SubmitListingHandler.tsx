@@ -1,11 +1,9 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { storageService } from "@/services/storage";
-import { scammerService } from "@/services/storage";
-import { profileService } from "@/services/storage/profileService";
+import { v4 as uuidv4 } from 'uuid';
 
 interface SubmitListingHandlerProps {
   name: string;
@@ -23,7 +21,6 @@ interface SubmitListingHandlerProps {
 
 export function useSubmitListing() {
   const navigate = useNavigate();
-  const { isConnected, address } = useWallet();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (props: SubmitListingHandlerProps) => {
@@ -40,11 +37,6 @@ export function useSubmitListing() {
       onSubmitStart,
       onSubmitEnd
     } = props;
-    
-    if (!isConnected) {
-      toast.error("Please connect your wallet first");
-      return;
-    }
     
     if (!validateForm()) {
       return;
@@ -80,6 +72,9 @@ export function useSubmitListing() {
       // Use fallback image if photoUrl is empty
       const finalPhotoUrl = photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`;
       
+      // Get profile identifier (either from wallet or from localStorage)
+      let profileIdentifier = localStorage.getItem('anonymous_profile_id') || uuidv4();
+      
       // Create the scammer listing with the sequential ID
       const scammerListing = {
         id: nextId,
@@ -93,7 +88,7 @@ export function useSubmitListing() {
         bountyAmount: 0,
         walletAddress: "",
         dateAdded: new Date().toISOString(),
-        addedBy: address || "",
+        addedBy: profileIdentifier,
         comments: [],
         likes: 0,
         dislikes: 0,

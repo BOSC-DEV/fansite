@@ -1,13 +1,12 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { WalletConnectionState } from "./WalletConnectionState";
 import { UserProfileForm } from "./UserProfileForm";
 import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from "@/integrations/supabase/client";
-import { safeSupabaseQuery, validateAuth } from "@/utils/supabaseHelpers";
+import { safeSupabaseQuery } from "@/utils/supabaseHelpers";
 
 export interface ProfileFormData {
   displayName: string;
@@ -20,10 +19,11 @@ export interface ProfileFormData {
 
 export function UserProfile() {
   const navigate = useNavigate();
-  const { isConnected, address } = useWallet();
+  const { address } = useWallet();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [hasProfile, setHasProfile] = useState(false);
+  const [profileId, setProfileId] = useState<string | null>(null);
   const [formData, setFormData] = useState<ProfileFormData>({
     displayName: "",
     username: "",
@@ -36,33 +36,34 @@ export function UserProfile() {
   const [checkingUsername, setCheckingUsername] = useState(false);
   const [emailVerified, setEmailVerified] = useState<boolean | undefined>(undefined);
 
+  // Generate a unique identifier for anonymous profiles
+  const getProfileIdentifier = () => {
+    // Use wallet address if available, otherwise generate a unique ID and store it in localStorage
+    if (address) return address;
+    
+    let localId = localStorage.getItem('anonymous_profile_id');
+    if (!localId) {
+      localId = uuidv4();
+      localStorage.setItem('anonymous_profile_id', localId);
+    }
+    return localId;
+  };
+
+  const profileIdentifier = getProfileIdentifier();
+
   // Fetch existing profile data when component mounts
   useEffect(() => {
     const fetchProfileData = async () => {
-      if (!isConnected || !address) {
-        setIsLoading(false);
-        return;
-      }
-
       setIsLoading(true);
       try {
-        console.log("Fetching profile for wallet address:", address);
-        
-        // Ensure user is authenticated with Supabase
-        const isAuthenticated = await validateAuth();
-        if (!isAuthenticated) {
-          console.warn("User not authenticated with Supabase");
-          toast.error("Authentication required. Please reconnect your wallet.");
-          setIsLoading(false);
-          return;
-        }
+        console.log("Fetching profile for identifier:", profileIdentifier);
         
         // Try to fetch profile from Supabase
         const { data, error } = await safeSupabaseQuery(() => 
           supabase
             .from('profiles')
             .select('*')
-            .eq('wallet_address', address)
+            .eq('wallet_address', profileIdentifier)
             .maybeSingle()
         );
 
@@ -83,8 +84,9 @@ export function UserProfile() {
             bio: data.bio || ""
           });
           setHasProfile(true);
+          setProfileId(data.id);
         } else {
-          console.log("No profile found for address:", address);
+          console.log("No profile found for identifier:", profileIdentifier);
           setHasProfile(false);
         }
       } catch (err) {
@@ -96,19 +98,7 @@ export function UserProfile() {
     };
 
     fetchProfileData();
-    
-    // Also check email verification status
-    const checkEmailVerification = async () => {
-      if (isConnected) {
-        const { data } = await supabase.auth.getUser();
-        if (data?.user) {
-          setEmailVerified(data.user.email_confirmed_at !== null);
-        }
-      }
-    };
-    
-    checkEmailVerification();
-  }, [isConnected, address]);
+  }, [profileIdentifier]);
 
   // Check if username is available
   const checkUsername = async (username: string) => {
@@ -133,7 +123,7 @@ export function UserProfile() {
       } else {
         // If no data, username is available
         // If data exists but belongs to current user, it's available
-        setUsernameAvailable(!data || (data.wallet_address === address));
+        setUsernameAvailable(!data || (data.wallet_address === profileIdentifier));
       }
     } catch (error) {
       console.error("Exception checking username:", error);
@@ -191,11 +181,6 @@ export function UserProfile() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!isConnected || !address) {
-      toast.error("Please connect your wallet first");
-      return;
-    }
-    
     if (!validateForm()) {
       return;
     }
@@ -204,22 +189,13 @@ export function UserProfile() {
     toast.loading("Saving your profile...");
     
     try {
-      // Ensure user is authenticated with Supabase
-      const isAuthenticated = await validateAuth();
-      if (!isAuthenticated) {
-        toast.dismiss();
-        toast.error("Authentication required. Please reconnect your wallet.");
-        setIsSubmitting(false);
-        return;
-      }
-      
-      const profileId = hasProfile ? undefined : uuidv4();
+      const newProfileId = hasProfile && profileId ? profileId : uuidv4();
       const profileData = {
-        id: profileId,
+        id: newProfileId,
         display_name: formData.displayName,
         username: formData.username,
         profile_pic_url: formData.profilePicUrl,
-        wallet_address: address,
+        wallet_address: profileIdentifier,
         created_at: new Date().toISOString(),
         x_link: formData.xLink || null,
         website_link: formData.websiteLink || null,
@@ -257,18 +233,6 @@ export function UserProfile() {
     }
   };
 
-  const onRequestEmailVerification = async () => {
-    if (!isConnected) return;
-    
-    // For email verification, we would need to implement the actual email verification
-    // flow using Supabase auth, but for now we'll just show a message
-    toast.info("Email verification requested");
-  };
-
-  if (!isConnected) {
-    return <WalletConnectionState address={address} />;
-  }
-
   if (isLoading) {
     return (
       <div className="flex justify-center items-center p-8">
@@ -290,12 +254,12 @@ export function UserProfile() {
       isSubmitting={isSubmitting}
       hasProfile={hasProfile}
       saveProfile={async () => true}
-      address={address}
+      address={profileIdentifier}
       usernameAvailable={usernameAvailable}
       checkingUsername={checkingUsername}
       handleSubmit={handleSubmit}
       emailVerified={emailVerified}
-      onRequestEmailVerification={onRequestEmailVerification}
+      onRequestEmailVerification={() => {}}
     />
   );
 }

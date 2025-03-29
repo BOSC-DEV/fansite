@@ -32,14 +32,6 @@ export function useProfileImage() {
         return null;
       }
       
-      // Check authentication
-      const { data: sessionData } = await supabase.auth.getSession();
-      if (!sessionData.session) {
-        toast.error("Authentication required to upload images");
-        setImageError(true);
-        return null;
-      }
-      
       console.log("Uploading profile image to Supabase storage");
       
       // Create a unique file path with timestamp and userId

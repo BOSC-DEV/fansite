@@ -29,14 +29,7 @@ export function ProfilePictureUpload({
   
   const handleUploadClick = async (e: React.MouseEvent) => {
     e.preventDefault();
-    
-    // Check authentication before attempting upload
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) {
-      toast.error("Please sign in to upload a profile picture");
-      return;
-    }
-    
+    // No wallet check required anymore
     fileInputRef.current?.click();
   };
 
