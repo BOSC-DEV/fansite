@@ -23,6 +23,7 @@ export interface ScammerListing {
   dislikes: number;
   views: number;
   shares: number;
+  deletedAt?: string | null; // Add this property with optional modifier
 }
 
 export interface ScammerStats {
@@ -50,4 +51,5 @@ export interface ScammerDbRecord {
   views: number | null;
   shares: number | null;
   comments: Json | null;
+  deleted_at: string | null;
 }

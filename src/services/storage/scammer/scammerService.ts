@@ -1,3 +1,4 @@
+
 import { ScammerListing, ScammerStats } from './scammerTypes';
 import { scammerDataService } from './scammerDataService';
 import { scammerStatsService } from './scammerStatsService';
@@ -18,6 +19,11 @@ class ScammerService {
 
   async getAllScammers(): Promise<ScammerListing[]> {
     return scammerDataService.getAllScammers();
+  }
+  
+  // Add the missing getScammersByUser method
+  async getScammersByUser(userWalletAddress: string): Promise<ScammerListing[]> {
+    return scammerDataService.getScammersByUser(userWalletAddress);
   }
   
   // Delete operations - delegated to the specialized delete service

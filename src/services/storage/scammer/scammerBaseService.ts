@@ -1,17 +1,17 @@
 
-import { supabase } from '@/integrations/supabase/client';
+import { BaseSupabaseService } from '../baseSupabaseService';
 import { ScammerDbRecord } from './scammerTypes';
 
 /**
  * Base service with core scammer operations
  */
-export class ScammerBaseService {
+export class ScammerBaseService extends BaseSupabaseService {
   /**
    * Get a scammer record from the database
    */
   protected async getScammerRecord(id: string): Promise<ScammerDbRecord | null> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await this.supabase
         .from('scammers')
         .select('*')
         .eq('id', id)
@@ -56,7 +56,7 @@ export class ScammerBaseService {
         }
       });
       
-      const { error } = await supabase
+      const { error } = await this.supabase
         .from('scammers')
         .update(supabaseUpdateData)
         .eq('id', id);

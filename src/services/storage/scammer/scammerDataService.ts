@@ -1,12 +1,14 @@
+
 import { ScammerListing } from './scammerTypes';
 import { ScammerBaseService } from './scammerBaseService';
 import { v4 as uuidv4 } from 'uuid';
+import { BaseSupabaseService } from '../baseSupabaseService';
 
 /**
  * Service for managing scammer data operations
  * This handles CRUD operations for scammer listings
  */
-export class ScammerDataService extends ScammerBaseService {
+export class ScammerDataService extends BaseSupabaseService {
   /**
    * Save a scammer listing to the database
    */
@@ -72,7 +74,7 @@ export class ScammerDataService extends ScammerBaseService {
         console.error("[ScammerDataService] Error fetching scammer:", error);
         
         // Fall back to local storage
-        const localScammer = this.getLocalScammer(id);
+        const localScammer = await this.getLocalScammer(id);
         if (localScammer) {
           console.log(`[ScammerDataService] Found scammer in local storage with ID: ${id}`);
           return localScammer;
@@ -85,7 +87,7 @@ export class ScammerDataService extends ScammerBaseService {
         console.log(`[ScammerDataService] No scammer found in database with ID: ${id}`);
         
         // Fall back to local storage
-        const localScammer = this.getLocalScammer(id);
+        const localScammer = await this.getLocalScammer(id);
         if (localScammer) {
           console.log(`[ScammerDataService] Found scammer in local storage with ID: ${id}`);
           return localScammer;
@@ -102,7 +104,7 @@ export class ScammerDataService extends ScammerBaseService {
       console.error("[ScammerDataService] Error fetching scammer:", error);
       
       // Fall back to local storage in case of error
-      const localScammer = this.getLocalScammer(id);
+      const localScammer = await this.getLocalScammer(id);
       return localScammer || null;
     }
   }
@@ -124,7 +126,7 @@ export class ScammerDataService extends ScammerBaseService {
         console.error("[ScammerDataService] Error fetching all scammers:", error);
         
         // Fall back to local storage
-        const localScammers = this.getLocalScammers();
+        const localScammers = await this.getLocalScammers();
         console.log(`[ScammerDataService] Found ${localScammers.length} scammers in local storage`);
         return localScammers;
       }
@@ -133,7 +135,7 @@ export class ScammerDataService extends ScammerBaseService {
         console.log("[ScammerDataService] No scammers found in database");
         
         // Fall back to local storage
-        const localScammers = this.getLocalScammers();
+        const localScammers = await this.getLocalScammers();
         console.log(`[ScammerDataService] Found ${localScammers.length} scammers in local storage`);
         return localScammers;
       }
@@ -144,7 +146,7 @@ export class ScammerDataService extends ScammerBaseService {
       const scammers = data.map(this.convertFromDbRecord);
       
       // Merge with local storage scammers
-      const localScammers = this.getLocalScammers();
+      const localScammers = await this.getLocalScammers();
       const allIds = new Set(scammers.map(s => s.id));
       
       // Add local scammers that aren't in the database results
@@ -159,7 +161,7 @@ export class ScammerDataService extends ScammerBaseService {
       console.error("[ScammerDataService] Error fetching all scammers:", error);
       
       // Fall back to local storage in case of error
-      const localScammers = this.getLocalScammers();
+      const localScammers = await this.getLocalScammers();
       return localScammers;
     }
   }
@@ -193,15 +195,15 @@ export class ScammerDataService extends ScammerBaseService {
   /**
    * Get a scammer from local storage by ID
    */
-  private getLocalScammer(id: string): ScammerListing | null {
-    const localScammers = this.getLocalScammers();
+  private async getLocalScammer(id: string): Promise<ScammerListing | null> {
+    const localScammers = await this.getLocalScammers();
     return localScammers.find(scammer => scammer.id === id) || null;
   }
 
   /**
    * Get all scammers from local storage
    */
-  private getLocalScammers(): ScammerListing[] {
+  private async getLocalScammers(): Promise<ScammerListing[]> {
     try {
       const localStorageService = (await import('@/services/storage/localStorage/scammerService')).scammerService;
       return localStorageService.getAllScammers();
@@ -229,7 +231,7 @@ export class ScammerDataService extends ScammerBaseService {
         console.error("[ScammerDataService] Error fetching user's scammers:", error);
         
         // Fall back to local storage
-        const localScammers = this.getLocalScammers();
+        const localScammers = await this.getLocalScammers();
         const userLocalScammers = localScammers.filter(s => s.addedBy === userWalletAddress);
         
         console.log(`[ScammerDataService] Found ${userLocalScammers.length} scammers in local storage for user`);
@@ -240,7 +242,7 @@ export class ScammerDataService extends ScammerBaseService {
         console.log(`[ScammerDataService] No scammers found in database for user ${userWalletAddress}`);
         
         // Fall back to local storage
-        const localScammers = this.getLocalScammers();
+        const localScammers = await this.getLocalScammers();
         const userLocalScammers = localScammers.filter(s => s.addedBy === userWalletAddress);
         
         console.log(`[ScammerDataService] Found ${userLocalScammers.length} scammers in local storage for user`);
@@ -253,11 +255,12 @@ export class ScammerDataService extends ScammerBaseService {
       const scammers = data.map(this.convertFromDbRecord);
       
       // Merge with local storage scammers
-      const localScammers = this.getLocalScammers().filter(s => s.addedBy === userWalletAddress);
+      const localScammers = await this.getLocalScammers();
+      const userLocalScammers = localScammers.filter(s => s.addedBy === userWalletAddress);
       const allIds = new Set(scammers.map(s => s.id));
       
       // Add local scammers that aren't in the database results
-      localScammers.forEach(localScammer => {
+      userLocalScammers.forEach(localScammer => {
         if (!allIds.has(localScammer.id)) {
           scammers.push(localScammer);
         }
@@ -268,7 +271,7 @@ export class ScammerDataService extends ScammerBaseService {
       console.error("[ScammerDataService] Error fetching user's scammers:", error);
       
       // Fall back to local storage in case of error
-      const localScammers = this.getLocalScammers();
+      const localScammers = await this.getLocalScammers();
       const userLocalScammers = localScammers.filter(s => s.addedBy === userWalletAddress);
       
       return userLocalScammers;
