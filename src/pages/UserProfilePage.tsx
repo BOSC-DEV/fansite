@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -26,10 +25,8 @@ export function UserProfilePage() {
   const { address, isConnected } = useWallet();
   const navigate = useNavigate();
   
-  // Check if this is the current user's profile
   const isCurrentUserProfile = profile?.walletAddress === address;
 
-  // Handle the creation of a profile
   const handleCreateProfile = () => {
     if (!isConnected) {
       toast.error("Please connect your wallet first");
@@ -38,14 +35,11 @@ export function UserProfilePage() {
     navigate("/profile");
   };
   
-  // Try to load profile from localStorage if not found in database
   useEffect(() => {
     if (error && error.includes("Profile not found") && username) {
-      // Check localStorage for profile data
       try {
         const localProfile = localStorage.getItem(`profile_${username}`);
         if (localProfile) {
-          // If found in localStorage, redirect to profile page
           console.log("Found profile in localStorage, redirecting to complete it properly");
           toast.info("Let's complete your profile setup");
           setTimeout(() => {
@@ -68,7 +62,6 @@ export function UserProfilePage() {
           <div className="max-w-4xl mx-auto">
             <ProfileError error={error} />
             
-            {/* Add a prompt to create profile if the error is about non-existent profile */}
             {(error.includes("Profile not found") || error.includes("Invalid username")) && (
               <div className="mt-8 p-6 border border-western-wood/20 rounded-lg bg-western-sand/10 text-center">
                 <h3 className="text-xl font-western text-western-wood mb-3">Want to create your profile?</h3>
@@ -97,14 +90,12 @@ export function UserProfilePage() {
               points={profile.points} 
             />
             
-            {/* Show wallet disconnect button if this is the current user's profile */}
             {isCurrentUserProfile && (
               <div className="mt-4">
                 <WalletDisconnect />
               </div>
             )}
             
-            {/* Tabs Section - Aligned with content above */}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
               <TabsList className="grid grid-cols-5 w-full max-w-none ml-0 bg-western-parchment/10 mt-6 border-b border-western-wood/20">
                 <TabsTrigger value="reports" className="flex items-center gap-2 font-western text-western-wood">
