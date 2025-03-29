@@ -85,3 +85,24 @@ export async function uploadImage(file: File, bucketName: string, fileName: stri
     return null;
   }
 }
+
+/**
+ * Helper function to store images locally (as a fallback)
+ */
+export async function storeImageLocally(file: File, userId: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        // Return the data URL which can be used as the src for an image
+        resolve(reader.result);
+      } else {
+        reject(new Error('Failed to convert image to data URL'));
+      }
+    };
+    reader.onerror = () => {
+      reject(new Error('Failed to read image file'));
+    };
+    reader.readAsDataURL(file);
+  });
+}

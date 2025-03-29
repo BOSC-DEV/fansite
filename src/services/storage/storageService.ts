@@ -1,4 +1,3 @@
-
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 import { toast } from 'sonner';
@@ -46,7 +45,6 @@ export class StorageService extends BaseSupabaseService {
         try {
           // Fall back to localStorage
           const dataUrl = await storeImageLocally(file, userId);
-          toast.success('Image saved locally (offline mode)');
           return dataUrl;
         } catch (localError) {
           console.error('Error storing image locally:', localError);
@@ -73,7 +71,6 @@ export class StorageService extends BaseSupabaseService {
       try {
         console.log('Attempting localStorage as last resort...');
         const dataUrl = await storeImageLocally(file, userId);
-        toast.success('Image saved locally (offline mode)');
         return dataUrl;
       } catch (localError) {
         console.error('Error storing image locally:', localError);
