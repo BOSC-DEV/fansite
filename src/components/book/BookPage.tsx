@@ -144,4 +144,4 @@ export const BookPage = ({
       </div>
     </div>
   );
-};
+}

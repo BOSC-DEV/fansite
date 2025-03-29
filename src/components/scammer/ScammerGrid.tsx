@@ -32,8 +32,11 @@ export const ScammerGrid = ({
                 <Skeleton className="w-full h-full absolute inset-0" />
               </div>
               <div className="p-4 space-y-2">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-2/3" />
+                <div className="flex justify-between">
+                  <Skeleton className="h-4 w-2/5" />
+                  <Skeleton className="h-4 w-1/3" />
+                </div>
+                <Skeleton className="h-4 w-3/4" />
                 <Skeleton className="h-8 w-full mt-4" />
               </div>
             </Card>

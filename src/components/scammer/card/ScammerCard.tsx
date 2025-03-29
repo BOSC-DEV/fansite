@@ -45,6 +45,7 @@ export const ScammerCard: React.FC<ScammerCardProps> = ({
         aliases={aliases || []}
         formattedBounty={bountyAmount.toString()}
         formattedDate={formatDate(dateAdded)}
+        name={name} // Pass the name to the ScammerCardContent
       />
     </Card>
   );

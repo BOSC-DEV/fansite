@@ -13,6 +13,7 @@ interface ScammerCardContentProps {
   aliases: string[];
   formattedBounty: string;
   formattedDate: string;
+  name?: string; // Add name prop
 }
 
 export function ScammerCardContent({
@@ -22,20 +23,25 @@ export function ScammerCardContent({
   dateAdded,
   aliases,
   formattedBounty,
-  formattedDate
+  formattedDate,
+  name // Include the name in the props
 }: ScammerCardContentProps) {
   // Make sure aliases is always an array, even if it's null or undefined
   const aliasesArray = Array.isArray(aliases) ? aliases : [];
   
   return (
     <div className="p-4 space-y-3">
+      {/* Name at the top right and accused of at top left */}
       <div className="flex justify-between items-start">
         <div className="w-3/5">
           <p className="text-xs text-western-wood/70 font-western">Accused of</p>
           <p className="text-sm font-medium line-clamp-2 text-western-wood font-serif">{accusedOf}</p>
         </div>
-        <div className="text-xs text-western-wood/70 text-right font-serif">
-          Added {formattedDate}
+        <div className="text-right">
+          {name && <p className="font-wanted text-lg text-western-wood mb-1">{name}</p>}
+          <p className="text-xs text-western-wood/70 font-serif">
+            Added {formattedDate}
+          </p>
         </div>
       </div>
       
