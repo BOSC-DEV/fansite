@@ -30,9 +30,10 @@ export class ScammerDataService extends ScammerBaseService {
         name: dbRecord.name,
         photo_url: dbRecord.photo_url,
         accused_of: dbRecord.accused_of,
-        links: dbRecord.links,
-        aliases: dbRecord.aliases,
-        accomplices: dbRecord.accomplices,
+        // Ensure these are proper string arrays for Supabase
+        links: dbRecord.links as string[],
+        aliases: dbRecord.aliases as string[],
+        accomplices: dbRecord.accomplices as string[],
         official_response: dbRecord.official_response,
         bounty_amount: dbRecord.bounty_amount,
         wallet_address: dbRecord.wallet_address,
@@ -42,13 +43,13 @@ export class ScammerDataService extends ScammerBaseService {
         dislikes: dbRecord.dislikes || 0,
         views: dbRecord.views || 0,
         shares: dbRecord.shares || 0,
-        comments: dbRecord.comments,
+        comments: dbRecord.comments as string[],
         deleted_at: null // Ensure new/updated records are not marked as deleted
       };
       
       const { error } = await supabase
         .from('scammers')
-        .upsert(scammerData)
+        .upsert([scammerData]) // Wrap in array since upsert expects array of objects
         .select();
 
       if (error) {
