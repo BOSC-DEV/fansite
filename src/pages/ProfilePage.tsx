@@ -1,24 +1,24 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Header } from "@/components/Header";
-import { UserProfile } from "@/components/profile/UserProfile";
 import { useWallet } from "@/context/WalletContext";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { ProfileEditor } from "@/components/profile/ProfileEditor";
+import { ConnectWallet } from "@/components/ConnectWallet";
 
 export function ProfilePage() {
   const { isConnected, address } = useWallet();
-  const [isLoading, setIsLoading] = useState(false);
   const supabaseReady = isSupabaseConfigured();
   const navigate = useNavigate();
   
   // Redirect if not connected - profile editing is only for connected wallets
   useEffect(() => {
     if (!isConnected || !address) {
-      navigate('/');
+      // Don't redirect, we'll show the connect wallet component
     }
   }, [isConnected, address, navigate]);
   
@@ -40,17 +40,10 @@ export function ProfilePage() {
             </Alert>
           )}
           
-          {isLoading ? (
-            <Card className="p-4 mb-8">
-              <div className="flex items-center justify-center gap-4">
-                <Loader2 className="h-5 w-5 animate-spin text-western-accent" />
-                <div>Loading profile data...</div>
-              </div>
-            </Card>
-          ) : null}
-          
-          {supabaseReady ? (
-            <UserProfile key={isConnected ? '1' : '0'} /> 
+          {!isConnected ? (
+            <ConnectWallet />
+          ) : supabaseReady ? (
+            <ProfileEditor />
           ) : (
             <Card>
               <CardHeader>
@@ -63,7 +56,6 @@ export function ProfilePage() {
           )}
         </div>
       </main>
-      {/* Removed SiteFooter - now only rendered at the App level */}
     </div>
   );
 }
