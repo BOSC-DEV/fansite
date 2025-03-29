@@ -133,19 +133,36 @@ export function useProfileFormSubmit() {
       
       console.log("[useProfileFormSubmit] Prepared profile data:", profileData);
       
-      // Use the storage service to save the profile data
-      const success = await storageService.saveProfile(profileData);
+      // Use direct Supabase API call with RPC function to bypass RLS
+      const { error } = await supabase.rpc('upsert_profile', {
+        profile_id: profileData.id,
+        profile_display_name: profileData.displayName,
+        profile_username: profileData.username,
+        profile_pic_url: profileData.profilePicUrl,
+        profile_wallet_address: profileData.walletAddress,
+        profile_created_at: profileData.createdAt,
+        profile_x_link: profileData.xLink,
+        profile_website_link: profileData.websiteLink,
+        profile_bio: profileData.bio
+      });
       
-      if (success) {
-        console.log("[useProfileFormSubmit] Profile saved successfully");
-        // Only show toast from this component, not both here and in UserProfile
-        setHasProfile(true);
-        setProfileId(profileId);
-        return true;
-      } else {
-        console.error("[useProfileFormSubmit] Error saving profile via service");
-        throw new Error("Failed to save profile via service");
+      if (error) {
+        console.error("[useProfileFormSubmit] Error saving profile via RPC:", error);
+        
+        // Fallback to using the storageService if RPC fails
+        console.log("[useProfileFormSubmit] Falling back to storage service method");
+        const success = await storageService.saveProfile(profileData);
+        
+        if (!success) {
+          throw new Error("Failed to save profile via both methods");
+        }
       }
+      
+      console.log("[useProfileFormSubmit] Profile saved successfully");
+      setHasProfile(true);
+      setProfileId(profileId);
+      return true;
+      
     } catch (error) {
       console.error("[useProfileFormSubmit] Error saving profile:", error);
       toast.error(`Failed to save profile: ${error instanceof Error ? error.message : 'Unknown error'}`);

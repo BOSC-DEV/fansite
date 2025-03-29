@@ -201,6 +201,30 @@ export class ProfileService extends BaseSupabaseService {
     // Normalize wallet address
     profile.walletAddress = profile.walletAddress.trim();
     
+    // Try using the RPC function first (which bypasses RLS)
+    try {
+      const { error: rpcError } = await this.supabase.rpc('upsert_profile', {
+        profile_id: profile.id || uuidv4(),
+        profile_display_name: profile.displayName,
+        profile_username: profile.username || '',
+        profile_pic_url: profile.profilePicUrl || '',
+        profile_wallet_address: profile.walletAddress,
+        profile_created_at: profile.createdAt || new Date().toISOString(),
+        profile_x_link: profile.xLink || '',
+        profile_website_link: profile.websiteLink || '',
+        profile_bio: profile.bio || ''
+      });
+      
+      if (!rpcError) {
+        console.log("[ProfileService] Profile saved successfully via RPC");
+        return true;
+      }
+      
+      console.error('[ProfileService] Error with RPC operation, falling back to direct methods:', rpcError);
+    } catch (rpcFailure) {
+      console.error('[ProfileService] RPC call failed, falling back to direct methods:', rpcFailure);
+    }
+    
     // Check if profile exists
     const { data: existingProfile, error: lookupError } = await this.supabase
       .from('profiles')
