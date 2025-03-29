@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { WalletConnectionState } from "./WalletConnectionState";
 import { UserProfileForm } from "./UserProfileForm";
@@ -21,6 +21,8 @@ export function UserProfile() {
   const navigate = useNavigate();
   const { isConnected, address } = useWallet();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasProfile, setHasProfile] = useState(false);
   const [formData, setFormData] = useState<ProfileFormData>({
     displayName: "",
     username: "",
@@ -31,6 +33,108 @@ export function UserProfile() {
   });
   const [usernameAvailable, setUsernameAvailable] = useState(true);
   const [checkingUsername, setCheckingUsername] = useState(false);
+
+  // Fetch existing profile data when component mounts
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      if (!isConnected || !address) {
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        // Try to fetch profile from Supabase
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('wallet_address', address)
+          .maybeSingle();
+
+        if (error) {
+          console.error("Error fetching profile from Supabase:", error);
+          throw error;
+        }
+
+        if (data) {
+          // Profile exists, populate form data
+          setFormData({
+            displayName: data.display_name || "",
+            username: data.username || "",
+            profilePicUrl: data.profile_pic_url || "",
+            xLink: data.x_link || "",
+            websiteLink: data.website_link || "",
+            bio: data.bio || ""
+          });
+          setHasProfile(true);
+        } else {
+          // Try localStorage as fallback
+          try {
+            const localData = localStorage.getItem(`profile_${address}`);
+            if (localData) {
+              const parsed = JSON.parse(localData);
+              setFormData({
+                displayName: parsed.displayName || "",
+                username: parsed.username || "",
+                profilePicUrl: parsed.profilePicUrl || "",
+                xLink: parsed.xLink || "",
+                websiteLink: parsed.websiteLink || "",
+                bio: parsed.bio || ""
+              });
+              setHasProfile(true);
+              
+              // Migrate localStorage data to Supabase
+              const migrationResult = await migrateProfileToSupabase(parsed);
+              if (migrationResult) {
+                localStorage.removeItem(`profile_${address}`);
+                console.log("Profile migrated from localStorage to Supabase");
+              }
+            }
+          } catch (localError) {
+            console.error("Error checking localStorage:", localError);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch profile data:", err);
+        toast.error("Failed to load profile data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProfileData();
+  }, [isConnected, address]);
+
+  // Migrate profile from localStorage to Supabase
+  const migrateProfileToSupabase = async (localProfile: any) => {
+    try {
+      const profileData = {
+        id: localProfile.id || uuidv4(),
+        display_name: localProfile.displayName,
+        username: localProfile.username,
+        profile_pic_url: localProfile.profilePicUrl,
+        wallet_address: localProfile.walletAddress,
+        created_at: localProfile.createdAt || new Date().toISOString(),
+        x_link: localProfile.xLink || null,
+        website_link: localProfile.websiteLink || null,
+        bio: localProfile.bio || null
+      };
+      
+      const { error } = await supabase
+        .from('profiles')
+        .upsert(profileData, { onConflict: 'wallet_address' });
+      
+      if (error) {
+        console.error("Error migrating profile to Supabase:", error);
+        return false;
+      }
+      
+      return true;
+    } catch (error) {
+      console.error("Exception during profile migration:", error);
+      return false;
+    }
+  };
 
   // Check if username is available
   const checkUsername = async (username: string) => {
@@ -138,66 +242,22 @@ export function UserProfile() {
       };
       
       // Save to Supabase
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('profiles')
         .upsert(profileData, { onConflict: 'wallet_address' });
       
       if (error) {
         console.error("Error saving profile to Supabase:", error);
-        
-        // Save to localStorage as fallback
-        try {
-          const localData = {
-            id: profileId,
-            displayName: formData.displayName,
-            username: formData.username,
-            profilePicUrl: formData.profilePicUrl,
-            walletAddress: address,
-            createdAt: new Date().toISOString(),
-            xLink: formData.xLink || '',
-            websiteLink: formData.websiteLink || '',
-            bio: formData.bio || ''
-          };
-          
-          localStorage.setItem(`profile_${address}`, JSON.stringify(localData));
-          console.log("Profile saved to localStorage as fallback");
-          
-          toast.dismiss();
-          toast.success("Profile saved (using local storage)");
-          setTimeout(() => navigate(`/${formData.username}`), 1000);
-        } catch (localError) {
-          console.error("Error saving to localStorage:", localError);
-          toast.dismiss();
-          toast.error("Failed to save profile");
-        }
-      } else {
-        // Also save to localStorage for redundancy
-        try {
-          const localData = {
-            id: profileId,
-            displayName: formData.displayName,
-            username: formData.username,
-            profilePicUrl: formData.profilePicUrl,
-            walletAddress: address,
-            createdAt: new Date().toISOString(),
-            xLink: formData.xLink || '',
-            websiteLink: formData.websiteLink || '',
-            bio: formData.bio || ''
-          };
-          
-          localStorage.setItem(`profile_${address}`, JSON.stringify(localData));
-        } catch (localError) {
-          console.error("Error saving backup to localStorage:", localError);
-        }
-        
-        toast.dismiss();
-        toast.success("Profile saved successfully!");
-        setTimeout(() => navigate(`/${formData.username}`), 1000);
+        throw error;
       }
+      
+      toast.dismiss();
+      toast.success("Profile saved successfully!");
+      setTimeout(() => navigate(`/${formData.username}`), 1000);
     } catch (error) {
       console.error("Exception during profile save:", error);
       toast.dismiss();
-      toast.error("An unexpected error occurred");
+      toast.error("An error occurred while saving your profile");
     } finally {
       setIsSubmitting(false);
     }
@@ -205,6 +265,15 @@ export function UserProfile() {
 
   if (!isConnected) {
     return <WalletConnectionState address={address} />;
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center p-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-western-accent"></div>
+        <span className="ml-3 text-western-wood">Loading profile...</span>
+      </div>
+    );
   }
 
   return (
@@ -217,7 +286,7 @@ export function UserProfile() {
       setWebsiteLink={handleWebsiteLinkChange}
       handleBioChange={handleBioChange}
       isSubmitting={isSubmitting}
-      hasProfile={false}
+      hasProfile={hasProfile}
       saveProfile={async () => true}
       address={address}
       usernameAvailable={usernameAvailable}
