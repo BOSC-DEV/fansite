@@ -8,9 +8,10 @@ import { formatWalletAddress } from "@/utils/formatters";
 
 interface EditProfileButtonProps {
   profileAddress?: string;
+  size?: "default" | "sm" | "lg" | "icon";
 }
 
-export function EditProfileButton({ profileAddress }: EditProfileButtonProps) {
+export function EditProfileButton({ profileAddress, size = "default" }: EditProfileButtonProps) {
   const { address } = useWallet();
   
   // Only show edit button if the profile belongs to the current user
@@ -21,7 +22,7 @@ export function EditProfileButton({ profileAddress }: EditProfileButtonProps) {
   return (
     <Button 
       variant="outline" 
-      size="sm" 
+      size={size}
       asChild
       className="bg-western-sand/40 border-western-sand/20 text-western-wood hover:bg-western-wood hover:text-western-parchment transition-colors"
     >
@@ -32,4 +33,3 @@ export function EditProfileButton({ profileAddress }: EditProfileButtonProps) {
     </Button>
   );
 }
-
