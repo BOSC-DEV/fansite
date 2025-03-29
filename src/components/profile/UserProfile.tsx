@@ -7,7 +7,7 @@ import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from "@/integrations/supabase/client";
-import { validateAuth } from "@/utils/supabaseHelpers";
+import { validateAuth, establishAuth, ensureStorageBucketExists } from "@/utils/supabaseHelpers";
 import type { Database } from '@/integrations/supabase/database.types';
 
 type ProfileRow = Database['public']['Tables']['profiles']['Row'];
@@ -39,6 +39,15 @@ export function UserProfile() {
   const [checkingUsername, setCheckingUsername] = useState(false);
   const [emailVerified, setEmailVerified] = useState<boolean | undefined>(undefined);
 
+  // Ensure storage bucket exists when component mounts
+  useEffect(() => {
+    if (isConnected) {
+      ensureStorageBucketExists('profile-images').catch(error => {
+        console.error("Error ensuring profile-images bucket exists:", error);
+      });
+    }
+  }, [isConnected]);
+
   // Fetch existing profile data when component mounts
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -51,20 +60,14 @@ export function UserProfile() {
       try {
         console.log("Fetching profile for wallet address:", address);
         
-        // Ensure user is authenticated with Supabase
-        const isAuthenticated = await validateAuth();
+        // First try to establish authentication
+        const isAuthenticated = await establishAuth(connectWallet);
+        
         if (!isAuthenticated) {
-          console.warn("User not authenticated with Supabase");
-          // Try to reconnect wallet
-          await connectWallet();
-          
-          // Check again after reconnect attempt
-          const retryAuth = await validateAuth();
-          if (!retryAuth) {
-            toast.error("Authentication required. Please reconnect your wallet.");
-            setIsLoading(false);
-            return;
-          }
+          console.warn("Could not establish authentication after reconnect attempt");
+          toast.error("Please reconnect your wallet to view your profile");
+          setIsLoading(false);
+          return;
         }
         
         // Try to fetch profile from Supabase
@@ -131,6 +134,9 @@ export function UserProfile() {
     
     setCheckingUsername(true);
     try {
+      // Establish auth before checking username
+      await establishAuth(connectWallet);
+      
       const { data, error } = await supabase
         .from('profiles')
         .select('wallet_address')
@@ -226,29 +232,17 @@ export function UserProfile() {
     
     try {
       // Ensure user is authenticated with Supabase
-      const isAuthenticated = await validateAuth();
+      const isAuthenticated = await establishAuth(connectWallet);
+      
       if (!isAuthenticated) {
         toast.dismiss();
         toast.error("Authentication required. Please reconnect your wallet.");
-        
-        // Try to reconnect wallet
-        try {
-          await connectWallet();
-          
-          // Check authentication again
-          const retryAuth = await validateAuth();
-          if (!retryAuth) {
-            toast.error("Could not authenticate with your wallet. Please try again.");
-            setIsSubmitting(false);
-            return;
-          }
-        } catch (error) {
-          console.error("Failed to reconnect wallet:", error);
-          toast.error("Failed to reconnect wallet. Please try again manually.");
-          setIsSubmitting(false);
-          return;
-        }
+        setIsSubmitting(false);
+        return;
       }
+      
+      // Ensure the storage bucket exists
+      await ensureStorageBucketExists('profile-images');
       
       const profileId = hasProfile ? undefined : uuidv4();
       const profileData = {

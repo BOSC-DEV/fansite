@@ -3,6 +3,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useWallet } from "@/context/WalletContext";
+import { validateAuth, establishAuth, ensureStorageBucketExists } from "@/utils/supabaseHelpers";
 
 export function useProfileImage() {
   const [profilePicUrl, setProfilePicUrl] = useState("");
@@ -33,27 +34,20 @@ export function useProfileImage() {
         return null;
       }
       
+      // Ensure profile-images bucket exists
+      const bucketExists = await ensureStorageBucketExists('profile-images');
+      if (!bucketExists) {
+        toast.error("Failed to ensure storage bucket exists");
+        setImageError(true);
+        return null;
+      }
+      
       // Check authentication
-      const { data: sessionData } = await supabase.auth.getSession();
-      if (!sessionData.session) {
+      const isAuthenticated = await establishAuth(connectWallet);
+      if (!isAuthenticated) {
         toast.error("Authentication required to upload images");
-        
-        // Try to reconnect wallet
-        try {
-          await connectWallet();
-          
-          // Check if reconnect worked
-          const { data: retryData } = await supabase.auth.getSession();
-          if (!retryData.session) {
-            toast.error("Please reconnect your wallet to upload images");
-            setImageError(true);
-            return null;
-          }
-        } catch (error) {
-          console.error("Failed to reconnect wallet:", error);
-          setImageError(true);
-          return null;
-        }
+        setImageError(true);
+        return null;
       }
       
       console.log("Uploading profile image to Supabase storage");
@@ -72,6 +66,7 @@ export function useProfileImage() {
       
       if (error) {
         console.error("Error uploading file to Supabase Storage:", error);
+        toast.error("Failed to upload image: " + (error.message || "Unknown error"));
         setImageError(true);
         return null;
       }
@@ -89,11 +84,13 @@ export function useProfileImage() {
         return url;
       } else {
         console.error("Upload succeeded but couldn't get public URL");
+        toast.error("Upload succeeded but couldn't get public URL");
         setImageError(true);
         return null;
       }
     } catch (error) {
       console.error("Error in upload process:", error);
+      toast.error("Error uploading image: " + (error instanceof Error ? error.message : "Unknown error"));
       setImageError(true);
       return null;
     } finally {
