@@ -1,7 +1,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/database.types';
-import { PostgrestQueryBuilder } from '@supabase/postgrest-js';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 // Type definitions for our database schema
 export type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -12,23 +12,15 @@ export type UserScammerInteraction = Database['public']['Tables']['user_scammer_
 export type UserCommentInteraction = Database['public']['Tables']['user_comment_interactions']['Row'];
 export type LeaderboardStats = Database['public']['Tables']['leaderboard_stats']['Row'];
 
-// Type for table references to help with type checking
-export type TableName = keyof Database['public']['Tables'];
-
-// Helper to cast database calls with proper types
-export function fromTable<T extends TableName>(table: T) {
-  return supabase.from(table) as PostgrestQueryBuilder<Database['public'], Database['public']['Tables'][T]['Row'], Database['public']['Tables'][T]['Insert']>;
-}
-
-// Type-safe table accessors
+// Helper to safely access Supabase tables with proper typing
 export const db = {
-  profiles: () => fromTable('profiles'),
-  scammers: () => fromTable('scammers'),
-  comments: () => fromTable('comments'),
-  scammerViews: () => fromTable('scammer_views'),
-  userScammerInteractions: () => fromTable('user_scammer_interactions'),
-  userCommentInteractions: () => fromTable('user_comment_interactions'),
-  leaderboardStats: () => fromTable('leaderboard_stats')
+  profiles: () => supabase.from('profiles'),
+  scammers: () => supabase.from('scammers'),
+  comments: () => supabase.from('comments'),
+  scammerViews: () => supabase.from('scammer_views'),
+  userScammerInteractions: () => supabase.from('user_scammer_interactions'),
+  userCommentInteractions: () => supabase.from('user_comment_interactions'),
+  leaderboardStats: () => supabase.from('leaderboard_stats')
 };
 
 // Helper utility to safely check if a property exists on a potentially null object

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -7,7 +6,6 @@ import { ScammerCard } from "@/components/scammer/card/ScammerCard";
 import { Scammer } from "@/lib/types";
 import { storageService } from "@/services/storage";
 import { toast } from "sonner";
-import { isNotNullOrUndefined } from "@/utils/databaseHelpers";
 
 interface LikesTabProps {
   address?: string;
@@ -48,7 +46,7 @@ export function LikesTab({ address }: LikesTabProps) {
         // Get scammer IDs from interactions
         const scammerIds = interactions
           .map(interaction => interaction?.scammer_id)
-          .filter(isNotNullOrUndefined);
+          .filter(id => id !== undefined && id !== null);
         
         // Fetch scammer details for each ID
         const allScammers = await storageService.getAllScammers();

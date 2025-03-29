@@ -1,8 +1,7 @@
 
 import { supabase } from "@/lib/supabase";
-import { safeGet } from "@/lib/supabase-helpers";
-import { toast } from "sonner";
 import { db } from "@/lib/supabase-helpers";
+import { toast } from "sonner";
 import { extractErrorMessage } from "@/utils/databaseHelpers";
 
 /**
@@ -51,8 +50,7 @@ export async function saveInteraction(commentId: string, userId: string, liked: 
           disliked,
           last_updated: new Date().toISOString()
         })
-        .eq('comment_id', commentId)
-        .eq('user_id', userId);
+        .eq('id', existingInteraction.id);
     } else {
       // Create new interaction
       await db.userCommentInteractions()

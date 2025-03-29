@@ -6,7 +6,6 @@ import { db, Comment } from "@/lib/supabase-helpers";
 import { useWallet } from "@/context/WalletContext";
 import { CommentList } from "@/components/comments/CommentList";
 import { toast } from "sonner";
-import { isNotNullOrUndefined } from "@/utils/databaseHelpers";
 
 export function CommentsTab() {
   const [comments, setComments] = useState<Comment[]>([]);

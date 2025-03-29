@@ -1,8 +1,7 @@
 
 import { useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { safeGet } from '@/lib/supabase-helpers';
-import { db, Comment } from '@/lib/supabase-helpers';
+import { db } from '@/lib/supabase-helpers';
 
 export function useCommentsViewTracking(commentId: string) {
   useEffect(() => {
