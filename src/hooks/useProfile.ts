@@ -65,9 +65,9 @@ export const useProfile = () => {
           setHasProfile(true);
           setProfileId(data.id);
           
-          // If we have a username, verify it's still available (it should be)
+          // If we have a username, ensure it's considered available for the current user
           if (data.username) {
-            checkUsername(data.username);
+            setUsernameAvailable(true);
           }
         } else {
           setHasProfile(false);
@@ -98,18 +98,26 @@ export const useProfile = () => {
       return;
     }
 
+    // Validate username format (letters, numbers, underscores only)
+    const usernameRegex = /^[a-zA-Z0-9_]+$/;
+    if (!usernameRegex.test(username)) {
+      setUsernameAvailable(false);
+      return;
+    }
+
     setCheckingUsername(true);
     try {
       // First, check if this username belongs to the current user
-      if (hasProfile) {
+      if (hasProfile && profileId) {
         const { data: currentProfile } = await supabase
           .from('profiles')
-          .select('username')
+          .select('username, id')
           .eq('wallet_address', address)
           .maybeSingle();
           
         if (currentProfile && currentProfile.username === username) {
           // User already owns this username
+          console.log("User already owns this username:", username);
           setUsernameAvailable(true);
           setCheckingUsername(false);
           return;
