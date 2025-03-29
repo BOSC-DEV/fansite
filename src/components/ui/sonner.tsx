@@ -31,11 +31,12 @@ function Toaster({ ...props }: ToasterProps) {
       closeButton
       // Group similar toasts together
       visibleToasts={3}
-      // Custom styles for better contrast
+      // Custom styles for better contrast using CSS variables in a type-safe way
       style={{
-        '--toast-success-bg': '#ea384c', // Bright red for success
-        '--toast-success-text': '#ffffff', // White text for contrast
-      }}
+        // Using the style attribute to cast it and avoid the TypeScript error
+        "--toast-success-bg": "#ea384c", 
+        "--toast-success-text": "#ffffff",
+      } as React.CSSProperties}
       {...props}
     />
   )
