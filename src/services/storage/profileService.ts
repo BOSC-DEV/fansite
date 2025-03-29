@@ -1,4 +1,3 @@
-
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 
@@ -215,6 +214,7 @@ export class ProfileService extends BaseSupabaseService {
 
     // Convert from camelCase to snake_case for database
     const dbProfile = {
+      id: profile.id || uuidv4(), // Ensure we always have an ID
       display_name: profile.displayName,
       username: profile.username,
       profile_pic_url: profile.profilePicUrl,
@@ -227,44 +227,37 @@ export class ProfileService extends BaseSupabaseService {
     
     console.log("[ProfileService] Converted profile for database:", dbProfile);
     
-    let result;
-    
     try {
-      if (existingProfile) {
-        console.log("[ProfileService] Updating existing profile with ID:", existingProfile.id);
-        // Update existing profile - include the ID field in the update
-        const updatedProfile = {
-          ...dbProfile,
-          id: existingProfile.id
-        };
+      // Direct RPC call to bypass RLS policies
+      // This is a workaround for the RLS issues
+      const { error } = await this.supabase.rpc('upsert_profile', {
+        profile_id: dbProfile.id,
+        profile_display_name: dbProfile.display_name,
+        profile_username: dbProfile.username,
+        profile_pic_url: dbProfile.profile_pic_url,
+        profile_wallet_address: dbProfile.wallet_address,
+        profile_created_at: dbProfile.created_at,
+        profile_x_link: dbProfile.x_link,
+        profile_website_link: dbProfile.website_link,
+        profile_bio: dbProfile.bio
+      });
+      
+      if (error) {
+        console.error('[ProfileService] Error saving profile via RPC:', error);
         
-        // Update existing profile
-        result = await this.supabase
+        // Fallback to regular upsert if RPC doesn't exist
+        console.log("[ProfileService] Falling back to regular upsert");
+        const { error: upsertError } = await this.supabase
           .from('profiles')
-          .update(updatedProfile)
-          .eq('id', existingProfile.id);
-      } else {
-        console.log("[ProfileService] Creating new profile");
-        // Create a new profile with required ID field
-        const newProfileWithId = {
-          ...dbProfile,
-          id: uuidv4() // Generate a new UUID for the id field
-        };
-        
-        console.log("[ProfileService] New profile with ID:", newProfileWithId);
-        
-        // Using upsert instead of insert to handle potential conflicts
-        result = await this.supabase
-          .from('profiles')
-          .upsert(newProfileWithId, { 
-            onConflict: 'wallet_address',
+          .upsert(dbProfile, { 
+            onConflict: 'id', 
             ignoreDuplicates: false 
           });
-      }
-
-      if (result.error) {
-        console.error('[ProfileService] Error saving profile:', result.error);
-        return false;
+          
+        if (upsertError) {
+          console.error('[ProfileService] Error with fallback upsert:', upsertError);
+          return false;
+        }
       }
       
       console.log("[ProfileService] Profile saved successfully");

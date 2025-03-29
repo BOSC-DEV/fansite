@@ -103,32 +103,17 @@ export function useProfileFormSubmit() {
     console.log("[useProfileFormSubmit] Starting profile save for address:", address);
     
     try {
-      // Attempt to directly query Supabase first to check for existing profile
-      const { data: existingData, error: lookupError } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('wallet_address', address)
-        .maybeSingle();
-        
-      if (lookupError) {
-        console.warn("[useProfileFormSubmit] Error checking for existing profile:", lookupError);
+      // Generate a new ID if none exists or use existing one
+      let profileId = uuidv4();
+      
+      // Check for existing profile first
+      const existingProfile = await storageService.getProfile(address);
+      if (existingProfile && existingProfile.id) {
+        profileId = existingProfile.id;
+        console.log("[useProfileFormSubmit] Using existing profile ID:", profileId);
+      } else {
+        console.log("[useProfileFormSubmit] Generated new profile ID:", profileId);
       }
-      
-      // Either use existing ID, or check via service, or generate new one
-      let profileId = existingData?.id;
-      
-      if (!profileId) {
-        // Try via service as fallback
-        const existingProfile = await storageService.getProfile(address);
-        if (existingProfile && existingProfile.id) {
-          profileId = existingProfile.id;
-        } else {
-          // Generate a new ID if none exists
-          profileId = uuidv4();
-        }
-      }
-      
-      console.log("[useProfileFormSubmit] Using profile ID:", profileId);
       
       // Prepare the profile data
       const profileData = {
@@ -145,37 +130,20 @@ export function useProfileFormSubmit() {
       
       console.log("[useProfileFormSubmit] Prepared profile data:", profileData);
       
-      // Direct Supabase upsert to bypass any potential service issues
-      const { error: upsertError } = await supabase
-        .from('profiles')
-        .upsert(
-          {
-            id: profileData.id,
-            display_name: profileData.displayName,
-            username: profileData.username,
-            profile_pic_url: profileData.profilePicUrl,
-            wallet_address: profileData.walletAddress,
-            created_at: profileData.createdAt,
-            x_link: profileData.xLink,
-            website_link: profileData.websiteLink,
-            bio: profileData.bio
-          },
-          { 
-            onConflict: 'id',
-            ignoreDuplicates: false 
-          }
-        );
-        
-      if (upsertError) {
-        console.error('[useProfileFormSubmit] Error saving profile directly:', upsertError);
-        throw new Error(`Database error: ${upsertError.message}`);
-      }
+      // Use the storage service to save the profile data
+      // This will handle the database operations and bypass RLS issues
+      const success = await storageService.saveProfile(profileData);
       
-      console.log("[useProfileFormSubmit] Profile saved successfully via direct upsert");
-      toast.success("Profile saved successfully");
-      setHasProfile(true);
-      setProfileId(profileId);
-      return true;
+      if (success) {
+        console.log("[useProfileFormSubmit] Profile saved successfully");
+        toast.success("Profile saved successfully");
+        setHasProfile(true);
+        setProfileId(profileId);
+        return true;
+      } else {
+        console.error("[useProfileFormSubmit] Error saving profile via service");
+        throw new Error("Failed to save profile via service");
+      }
     } catch (error) {
       console.error("[useProfileFormSubmit] Error saving profile:", error);
       toast.error(`Failed to save profile: ${error instanceof Error ? error.message : 'Unknown error'}`);

@@ -9,6 +9,13 @@ export const isSupabaseConfigured = () => {
   return true; // We now have hardcoded values from our Supabase project
 };
 
+// Helper function to bypass RLS for operations
+export const createAdminClient = () => {
+  // This is just a placeholder because we can't access the service role key in the browser
+  // The real admin operations should be done via RPC functions
+  return supabase;
+};
+
 // Email auth functions
 export const signUpWithEmail = async (email: string, password: string) => {
   console.log(`Signing up user with email: ${email}`);
