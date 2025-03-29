@@ -7,10 +7,7 @@ import { useWallet } from "@/context/WalletContext";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from "@/integrations/supabase/client";
-import { validateAuth, establishAuth, ensureStorageBucketExists } from "@/utils/supabaseHelpers";
-import type { Database } from '@/integrations/supabase/database.types';
-
-type ProfileRow = Database['public']['Tables']['profiles']['Row'];
+import { safeSupabaseQuery, validateAuth } from "@/utils/supabaseHelpers";
 
 export interface ProfileFormData {
   displayName: string;
@@ -23,7 +20,7 @@ export interface ProfileFormData {
 
 export function UserProfile() {
   const navigate = useNavigate();
-  const { isConnected, address, connectWallet } = useWallet();
+  const { isConnected, address } = useWallet();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [hasProfile, setHasProfile] = useState(false);
@@ -39,15 +36,6 @@ export function UserProfile() {
   const [checkingUsername, setCheckingUsername] = useState(false);
   const [emailVerified, setEmailVerified] = useState<boolean | undefined>(undefined);
 
-  // Ensure storage bucket exists when component mounts
-  useEffect(() => {
-    if (isConnected) {
-      ensureStorageBucketExists('profile-images').catch(error => {
-        console.error("Error ensuring profile-images bucket exists:", error);
-      });
-    }
-  }, [isConnected]);
-
   // Fetch existing profile data when component mounts
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -60,22 +48,23 @@ export function UserProfile() {
       try {
         console.log("Fetching profile for wallet address:", address);
         
-        // First try to establish authentication
-        const isAuthenticated = await establishAuth(connectWallet);
-        
+        // Ensure user is authenticated with Supabase
+        const isAuthenticated = await validateAuth();
         if (!isAuthenticated) {
-          console.warn("Could not establish authentication after reconnect attempt");
-          toast.error("Please reconnect your wallet to view your profile");
+          console.warn("User not authenticated with Supabase");
+          toast.error("Authentication required. Please reconnect your wallet.");
           setIsLoading(false);
           return;
         }
         
         // Try to fetch profile from Supabase
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('wallet_address', address)
-          .maybeSingle();
+        const { data, error } = await safeSupabaseQuery(() => 
+          supabase
+            .from('profiles')
+            .select('*')
+            .eq('wallet_address', address)
+            .maybeSingle()
+        );
 
         if (error) {
           console.error("Error fetching profile from Supabase:", error);
@@ -85,17 +74,13 @@ export function UserProfile() {
         if (data) {
           // Profile exists, populate form data
           console.log("Profile found in Supabase:", data);
-          
-          // Type assertion of data as ProfileRow
-          const typedData = data as ProfileRow;
-          
           setFormData({
-            displayName: typedData.display_name || "",
-            username: typedData.username || "",
-            profilePicUrl: typedData.profile_pic_url || "",
-            xLink: typedData.x_link || "",
-            websiteLink: typedData.website_link || "",
-            bio: typedData.bio || ""
+            displayName: data.display_name || "",
+            username: data.username || "",
+            profilePicUrl: data.profile_pic_url || "",
+            xLink: data.x_link || "",
+            websiteLink: data.website_link || "",
+            bio: data.bio || ""
           });
           setHasProfile(true);
         } else {
@@ -123,7 +108,7 @@ export function UserProfile() {
     };
     
     checkEmailVerification();
-  }, [isConnected, address, connectWallet]);
+  }, [isConnected, address]);
 
   // Check if username is available
   const checkUsername = async (username: string) => {
@@ -134,14 +119,13 @@ export function UserProfile() {
     
     setCheckingUsername(true);
     try {
-      // Establish auth before checking username
-      await establishAuth(connectWallet);
-      
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('wallet_address')
-        .eq('username', username)
-        .maybeSingle();
+      const { data, error } = await safeSupabaseQuery(() => 
+        supabase
+          .from('profiles')
+          .select('wallet_address')
+          .eq('username', username)
+          .maybeSingle()
+      );
       
       if (error) {
         console.error("Error checking username:", error);
@@ -149,8 +133,7 @@ export function UserProfile() {
       } else {
         // If no data, username is available
         // If data exists but belongs to current user, it's available
-        const profileData = data as { wallet_address: string } | null;
-        setUsernameAvailable(!profileData || (profileData.wallet_address === address));
+        setUsernameAvailable(!data || (data.wallet_address === address));
       }
     } catch (error) {
       console.error("Exception checking username:", error);
@@ -210,17 +193,7 @@ export function UserProfile() {
     
     if (!isConnected || !address) {
       toast.error("Please connect your wallet first");
-      try {
-        await connectWallet();
-      } catch (error) {
-        console.error("Failed to connect wallet:", error);
-        return;
-      }
-      
-      if (!isConnected || !address) {
-        toast.error("Wallet connection required to save profile");
-        return;
-      }
+      return;
     }
     
     if (!validateForm()) {
@@ -232,17 +205,13 @@ export function UserProfile() {
     
     try {
       // Ensure user is authenticated with Supabase
-      const isAuthenticated = await establishAuth(connectWallet);
-      
+      const isAuthenticated = await validateAuth();
       if (!isAuthenticated) {
         toast.dismiss();
         toast.error("Authentication required. Please reconnect your wallet.");
         setIsSubmitting(false);
         return;
       }
-      
-      // Ensure the storage bucket exists
-      await ensureStorageBucketExists('profile-images');
       
       const profileId = hasProfile ? undefined : uuidv4();
       const profileData = {
@@ -260,12 +229,14 @@ export function UserProfile() {
       console.log("Saving profile to Supabase:", profileData);
       
       // Save to Supabase
-      const { error } = await supabase
-        .from('profiles')
-        .upsert(profileData, { 
-          onConflict: 'wallet_address',
-          ignoreDuplicates: false 
-        });
+      const { error } = await safeSupabaseQuery(() =>
+        supabase
+          .from('profiles')
+          .upsert(profileData, { 
+            onConflict: 'wallet_address',
+            ignoreDuplicates: false 
+          })
+      );
       
       if (error) {
         console.error("Error saving profile to Supabase:", error);

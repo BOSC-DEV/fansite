@@ -1,13 +1,11 @@
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserCircle2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useProfileImage } from "@/hooks/profile/useProfileImage";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { useWallet } from "@/context/WalletContext";
-import { validateAuth, establishAuth, ensureStorageBucketExists } from "@/utils/supabaseHelpers";
 
 interface ProfilePictureUploadProps {
   displayName: string;
@@ -26,25 +24,16 @@ export function ProfilePictureUpload({
     uploadProfileImage,
     isUploading
   } = useProfileImage();
-  const { connectWallet } = useWallet();
   const [imageError, setImageError] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
-  // Ensure storage bucket exists when component mounts
-  useEffect(() => {
-    ensureStorageBucketExists('profile-images').catch(error => {
-      console.error("Error ensuring profile-images bucket exists:", error);
-    });
-  }, []);
   
   const handleUploadClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     
     // Check authentication before attempting upload
-    const isAuthenticated = await establishAuth(connectWallet);
-    
-    if (!isAuthenticated) {
-      toast.error("Authentication required to upload a profile picture");
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) {
+      toast.error("Please sign in to upload a profile picture");
       return;
     }
     
@@ -59,17 +48,6 @@ export function ProfilePictureUpload({
     try {
       // Clear any previous input value so user can upload same file again if needed
       e.target.value = '';
-      
-      // Check authentication again before starting upload
-      const isAuthenticated = await establishAuth(connectWallet);
-      
-      if (!isAuthenticated) {
-        toast.error("Authentication required to upload a profile picture");
-        return;
-      }
-      
-      // Ensure bucket exists before uploading
-      await ensureStorageBucketExists('profile-images');
       
       console.log("Uploading profile image:", file.name);
       const url = await uploadProfileImage(file, userId || 'anonymous');
