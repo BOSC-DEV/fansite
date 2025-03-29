@@ -60,6 +60,8 @@ export function ProfilePictureUpload({
       if (url) {
         console.log("[ProfilePictureUpload] Upload successful, updating profile with URL:", url);
         onProfilePicChange(url);
+      } else {
+        toast.error("Failed to upload profile picture");
       }
     } catch (error) {
       console.error("[ProfilePictureUpload] Error during upload:", error);

@@ -5,9 +5,8 @@ import { toast } from 'sonner';
 
 /**
  * Helper function to check if a storage bucket exists
- * Modified to not attempt to create buckets which fails due to RLS policies
  */
-export async function ensureBucketExists(bucketName: string, isPublic: boolean = true): Promise<boolean> {
+export async function ensureBucketExists(bucketName: string): Promise<boolean> {
   try {
     // Check if the bucket exists
     const { data: existingBuckets, error: bucketError } = await supabase.storage.listBuckets();
@@ -21,11 +20,10 @@ export async function ensureBucketExists(bucketName: string, isPublic: boolean =
     const bucketExists = existingBuckets.some(bucket => bucket.name === bucketName);
     
     if (!bucketExists) {
-      console.log(`Bucket ${bucketName} not found`);
-      // We no longer attempt to create the bucket here - it should be created via SQL migrations
+      console.error(`Bucket ${bucketName} not found. Please ensure it's created via migrations.`);
       return false;
     } else {
-      console.log(`Bucket ${bucketName} already exists`);
+      console.log(`Bucket ${bucketName} exists`);
       return true;
     }
   } catch (error) {
@@ -36,7 +34,6 @@ export async function ensureBucketExists(bucketName: string, isPublic: boolean =
 
 /**
  * Helper function to upload images to Supabase Storage
- * Works with both profile images and most wanted images
  */
 export async function uploadImage(file: File, bucketName: string, fileName: string): Promise<string | null> {
   try {
@@ -46,8 +43,8 @@ export async function uploadImage(file: File, bucketName: string, fileName: stri
     const bucketExists = await ensureBucketExists(bucketName);
     
     if (!bucketExists) {
-      console.error(`Bucket ${bucketName} does not exist. Please ensure the bucket is created via SQL migrations.`);
-      toast.error(`Storage configuration error. Please try again later.`);
+      console.error(`Bucket ${bucketName} does not exist. Please ensure the bucket is created via migrations.`);
+      toast.error(`Storage configuration error. Please contact support.`);
       return null;
     }
     

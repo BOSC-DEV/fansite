@@ -1,4 +1,3 @@
-
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 import { toast } from 'sonner';
@@ -18,16 +17,6 @@ export class StorageService extends BaseSupabaseService {
   async uploadProfileImage(file: File, userId: string): Promise<string | null> {
     try {
       console.log('Uploading profile image for user:', userId);
-      
-      // Check if bucket exists
-      const bucketExists = await ensureBucketExists(this.PROFILE_IMAGES_BUCKET);
-      if (!bucketExists) {
-        console.log("Profile images bucket doesn't exist, using fallback method");
-        // Fallback to local storage or temporary URL for development
-        const objectUrl = URL.createObjectURL(file);
-        toast.warning("Using temporary image URL. In production, please ensure the storage bucket exists.");
-        return objectUrl;
-      }
       
       // Use the uploadImage utility with profile images bucket
       const imageUrl = await uploadImage(file, this.PROFILE_IMAGES_BUCKET, userId);
@@ -49,16 +38,6 @@ export class StorageService extends BaseSupabaseService {
   async uploadScammerImage(file: File, scammerId: string): Promise<string | null> {
     try {
       console.log('Uploading scammer image for scammer:', scammerId);
-      
-      // Check if bucket exists
-      const bucketExists = await ensureBucketExists(this.MOST_WANTED_IMAGES_BUCKET);
-      if (!bucketExists) {
-        console.log("Most wanted images bucket doesn't exist, using fallback method");
-        // Fallback to local storage or temporary URL for development
-        const objectUrl = URL.createObjectURL(file);
-        toast.warning("Using temporary image URL. In production, please ensure the storage bucket exists.");
-        return objectUrl;
-      }
       
       // Use the uploadImage utility with most wanted images bucket
       const imageUrl = await uploadImage(file, this.MOST_WANTED_IMAGES_BUCKET, `scammer-${scammerId}`);
