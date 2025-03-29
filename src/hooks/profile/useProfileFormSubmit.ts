@@ -97,27 +97,73 @@ export function useProfileFormSubmit() {
     console.log("[useProfileFormSubmit] Starting profile save for address:", address);
     
     try {
+      // Try direct database insert/update if we're having issues with RLS
+      const { data: existingProfile, error: lookupError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('wallet_address', address)
+        .maybeSingle();
+        
+      if (lookupError) {
+        console.error("[useProfileFormSubmit] Error checking if profile exists:", lookupError);
+      }
+      
       // Prepare the profile data
       const profileData = {
-        displayName: formData.displayName,
+        display_name: formData.displayName,
         username: formData.username,
-        profilePicUrl: formData.profilePicUrl,
-        walletAddress: address,
-        createdAt: new Date().toISOString(),
-        xLink: formData.xLink || '',
-        websiteLink: formData.websiteLink || '',
-        bio: formData.bio || ''
+        profile_pic_url: formData.profilePicUrl,
+        wallet_address: address,
+        created_at: new Date().toISOString(),
+        x_link: formData.xLink || null,
+        website_link: formData.websiteLink || null,
+        bio: formData.bio || null
       };
       
-      console.log("[useProfileFormSubmit] Prepared profile data:", profileData);
+      let result;
       
-      // Use the saveProfile method which doesn't require wallet signature
-      const success = await storageService.saveProfile(profileData);
-      
-      if (!success) {
-        console.error('[useProfileFormSubmit] Error saving profile through service');
-        toast.error("Failed to save profile");
-        return false;
+      if (existingProfile) {
+        console.log("[useProfileFormSubmit] Updating existing profile with id:", existingProfile.id);
+        // Update existing profile
+        result = await supabase
+          .from('profiles')
+          .update(profileData)
+          .eq('id', existingProfile.id);
+      } else {
+        console.log("[useProfileFormSubmit] Creating new profile for address:", address);
+        // Insert new profile
+        result = await supabase
+          .from('profiles')
+          .insert([{
+            ...profileData,
+            id: crypto.randomUUID() // Generate UUID on client side
+          }]);
+      }
+
+      if (result.error) {
+        console.error('[useProfileFormSubmit] Error saving profile:', result.error);
+        
+        // Try using the service as a fallback
+        console.log("[useProfileFormSubmit] Attempting to save profile through service as fallback");
+        
+        const serviceProfileData = {
+          displayName: formData.displayName,
+          username: formData.username,
+          profilePicUrl: formData.profilePicUrl,
+          walletAddress: address,
+          createdAt: new Date().toISOString(),
+          xLink: formData.xLink || '',
+          websiteLink: formData.websiteLink || '',
+          bio: formData.bio || ''
+        };
+        
+        const success = await storageService.saveProfile(serviceProfileData);
+        
+        if (!success) {
+          console.error('[useProfileFormSubmit] Error saving profile through service');
+          toast.error("Failed to save profile");
+          return false;
+        }
       }
       
       console.log("[useProfileFormSubmit] Profile saved successfully");

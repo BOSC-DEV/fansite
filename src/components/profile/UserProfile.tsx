@@ -9,6 +9,7 @@ import { EmailVerification } from "./EmailVerification";
 import { isEmailVerified } from "@/lib/supabase";
 import CloudflareTurnstile from "@/components/CloudflareTurnstile";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { supabase } from "@/integrations/supabase/client";
 
 export function UserProfile() {
   const navigate = useNavigate();
@@ -45,11 +46,15 @@ export function UserProfile() {
     checkEmailVerification();
   }, []);
 
-  const handleTurnstileVerify = (token: string) => {
+  const handleTurnstileVerify = async (token: string) => {
     console.log("Turnstile verification successful with token:", token);
     setCaptchaVerified(true);
+    
+    // Close the dialog after verification
+    setShowCaptcha(false);
+    
     // Continue with form submission after verification
-    handleFormSubmit();
+    await handleFormSubmit();
   };
 
   const handleFormSubmit = async () => {
@@ -61,8 +66,18 @@ export function UserProfile() {
     }
     
     try {
-      // Proceed with profile save without email verification check
+      // Proceed with profile save
       toast.info("Saving your profile...");
+      
+      // Use upsertProfile to ensure profile is created if it doesn't exist
+      // First check if we have a user session
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        console.log("Creating public profile for non-authenticated user");
+      } else {
+        console.log("Creating profile for authenticated user:", session.user.id);
+      }
       
       const success = await saveProfile();
       

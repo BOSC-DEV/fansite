@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, ArrowLeft, CheckCircle } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 interface ProfileFormFooterProps {
   isSubmitting: boolean;
@@ -13,8 +13,7 @@ interface ProfileFormFooterProps {
 export function ProfileFormFooter({
   isSubmitting,
   hasProfile,
-  usernameAvailable,
-  emailVerified
+  usernameAvailable
 }: ProfileFormFooterProps) {
   return (
     <div className="border-t p-6 flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
