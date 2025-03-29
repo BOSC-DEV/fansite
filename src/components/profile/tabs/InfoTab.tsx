@@ -21,6 +21,11 @@ export function InfoTab({ profile }: InfoTabProps) {
     toast.success("Wallet address copied to clipboard");
   };
 
+  const formatAddress = (address: string) => {
+    if (!address) return '';
+    return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+  };
+
   return (
     <>
       <h2 className="text-xl font-bold mb-4 font-western text-western-accent">Profile Information</h2>
@@ -46,11 +51,12 @@ export function InfoTab({ profile }: InfoTabProps) {
           <div>
             <h3 className="text-sm font-medium text-western-wood">Wallet Address</h3>
             <div className="flex items-center gap-2">
-              <p className="text-xs overflow-hidden text-ellipsis text-western-wood">{profile.walletAddress}</p>
+              <p className="text-western-wood font-mono">{formatAddress(profile.walletAddress)}</p>
               <button 
                 onClick={() => copyToClipboard(profile.walletAddress)}
                 className="text-western-wood hover:text-western-accent transition-colors"
                 aria-label="Copy wallet address"
+                title="Copy wallet address"
               >
                 <Copy size={16} />
               </button>
