@@ -25,12 +25,12 @@ export function ProfileFormFooter({
   };
   
   return (
-    <div className="px-6 py-4 bg-muted/20 border-t border-western-sand/10 flex items-center justify-between shadow-md">
+    <div className="px-6 py-4 border-t border-western-sand/20 flex items-center justify-between">
       <Button 
         type="button" 
         variant="outline" 
         onClick={() => navigate(-1)}
-        className="min-w-[100px]"
+        className="min-w-[100px] border-western-wood/30 text-western-wood"
       >
         Cancel
       </Button>
@@ -45,7 +45,7 @@ export function ProfileFormFooter({
         <Button 
           type="submit" 
           disabled={isSubmitting || !usernameAvailable}
-          className="min-w-[140px]"
+          className="min-w-[140px] bg-western-accent hover:bg-western-accent/80 text-western-parchment"
         >
           {buttonText()}
         </Button>
