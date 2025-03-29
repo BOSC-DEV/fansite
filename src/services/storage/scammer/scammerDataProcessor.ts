@@ -27,7 +27,8 @@ export class ScammerDataProcessor {
       likes: record.likes || 0,
       dislikes: record.dislikes || 0,
       views: record.views || 0,
-      shares: record.shares || 0
+      shares: record.shares || 0,
+      deletedAt: record.deleted_at
     };
   }
 
@@ -59,7 +60,8 @@ export class ScammerDataProcessor {
       likes: listing.likes,
       dislikes: listing.dislikes,
       views: listing.views,
-      shares: listing.shares
+      shares: listing.shares,
+      deleted_at: listing.deletedAt  // Add the missing deleted_at property that maps to deletedAt
     };
   }
 }

@@ -23,7 +23,7 @@ export interface ScammerListing {
   dislikes: number;
   views: number;
   shares: number;
-  deletedAt?: string | null; // Add this property with optional modifier
+  deletedAt: string | null; // This property is required to match the DB schema
 }
 
 export interface ScammerStats {
