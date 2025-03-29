@@ -49,21 +49,29 @@ export function UserProfile() {
       return;
     }
     
-    // If wallet is connected but email is not verified, suggest it
-    if (isConnected && emailVerified === false) {
-      const shouldProceed = window.confirm("Your email is not verified. You can still save your profile with wallet signature only. Would you like to proceed?");
-      if (!shouldProceed) {
-        setShowEmailVerification(true);
-        return;
+    try {
+      // If wallet is connected but email is not verified, suggest it
+      if (isConnected && emailVerified === false) {
+        const shouldProceed = window.confirm("Your email is not verified. You can still save your profile with wallet signature only. Would you like to proceed?");
+        if (!shouldProceed) {
+          setShowEmailVerification(true);
+          return;
+        }
       }
-    }
-    
-    // Proceed with profile save using wallet signature
-    toast.info("Please sign the transaction with your wallet");
-    const success = await saveProfile();
-    if (success) {
-      console.log("Profile saved successfully, navigating back");
-      navigate(-1);
+      
+      // Proceed with profile save
+      toast.info("Saving your profile...");
+      const success = await saveProfile();
+      if (success) {
+        console.log("Profile saved successfully, navigating back");
+        toast.success("Profile saved successfully!");
+        setTimeout(() => {
+          navigate(-1);
+        }, 1500);
+      }
+    } catch (error) {
+      console.error("Error during profile save:", error);
+      toast.error("Failed to save profile. Please try again.");
     }
   };
 

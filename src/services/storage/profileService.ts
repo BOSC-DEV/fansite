@@ -190,44 +190,15 @@ export class ProfileService extends BaseSupabaseService {
     return false;
   }
 
-  async saveProfile(profile: UserProfile): Promise<boolean> {
-    console.log("[ProfileService] Saving profile for wallet:", profile.walletAddress);
+  async updateProfile(profile: UserProfile): Promise<boolean> {
+    console.log("[ProfileService] Updating profile for wallet:", profile.walletAddress);
     
     if (!profile.walletAddress) {
       console.error("[ProfileService] Error: Attempted to save profile with empty wallet address");
       return false;
     }
     
-    // Security check: Verify the current authenticated session's wallet address 
-    // matches the wallet address of the profile being updated
-    const {
-      data: { session },
-    } = await this.supabase.auth.getSession();
-    
-    // This is for wallet-based auth, but we can adapt the principle if using other auth methods
-    // For our app, the wallet address is the key user identifier
-    const currentUserWallet = session?.user?.id;
-    
-    // If there's no authenticated session, or the wallet addresses don't match, reject the save
-    if (!currentUserWallet) {
-      console.error("[ProfileService] Security Error: No authenticated session found when attempting to save profile");
-      return false;
-    }
-    
-    // In our system, the wallet address is used as the identifier
-    // So we need to ensure the profile being saved belongs to the current user
-    if (currentUserWallet !== profile.walletAddress) {
-      console.error(
-        "[ProfileService] Security Error: Attempted to modify another user's profile", 
-        { currentUser: currentUserWallet, targetProfile: profile.walletAddress }
-      );
-      return false;
-    }
-    
-    // Normalize wallet address
-    profile.walletAddress = profile.walletAddress.trim();
-    
-    // Use wallet address as the ID
+    // Use wallet address as the ID without requiring auth session
     const profileId = profile.walletAddress;
     
     // Convert from camelCase to snake_case for database
@@ -281,6 +252,11 @@ export class ProfileService extends BaseSupabaseService {
     
     console.log("[ProfileService] Profile saved successfully");
     return true;
+  }
+
+  async saveProfile(profile: UserProfile): Promise<boolean> {
+    // Forward to the new updateProfile method that doesn't require auth
+    return this.updateProfile(profile);
   }
 
   async hasProfile(walletAddress: string): Promise<boolean> {

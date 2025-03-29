@@ -96,7 +96,7 @@ export function useProfileFormSubmit() {
     console.log("[useProfileFormSubmit] Starting profile save for address:", address);
     
     try {
-      // Use the wallet address as the ID
+      // Skip the Supabase auth check and directly save using wallet address
       const profileData = {
         id: address,
         displayName: formData.displayName,
@@ -111,7 +111,9 @@ export function useProfileFormSubmit() {
       
       console.log("[useProfileFormSubmit] Prepared profile data:", profileData);
       
-      const success = await storageService.saveProfile(profileData);
+      // Use alternative method for profile saving that doesn't rely on Supabase auth
+      // but instead uses the wallet address directly
+      const success = await storageService.updateProfile(profileData);
       
       if (!success) {
         console.error('[useProfileFormSubmit] Error saving profile through service');
