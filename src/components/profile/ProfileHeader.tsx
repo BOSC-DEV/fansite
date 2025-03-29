@@ -87,10 +87,14 @@ export function ProfileHeader({
                     <p className="font-medium mb-1">Score Algorithm</p>
                     <p className="text-xs mb-2">Score is calculated based on:</p>
                     <ul className="text-xs list-disc pl-4 space-y-1">
-                      <li>Bounty spent + bounty generated</li>
-                      <li>(Max of 1, days old) × likes × views × comments</li>
+                      <li>10 points per report</li>
+                      <li>2 points per like</li>
+                      <li>1 point per view</li> 
+                      <li>3 points per comment</li>
+                      <li>Bounty generated (added to total)</li>
+                      <li>Bounty spent (added to total)</li>
                     </ul>
-                    <p className="text-xs mt-2">Everyone starts with at least 1 point. Higher engagement and more contributions lead to a higher score!</p>
+                    <p className="text-xs mt-2">Everyone starts with at least 1 point!</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>

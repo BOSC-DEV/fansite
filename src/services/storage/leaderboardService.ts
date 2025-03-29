@@ -97,8 +97,7 @@ export class LeaderboardService extends BaseSupabaseService {
         const now = new Date();
         const ageInDays = Math.max(0.01, (now.getTime() - profileCreatedDate.getTime()) / (1000 * 60 * 60 * 24));
         
-        // Calculate points using the fixed algorithm:
-        // We'll recalculate points always to ensure they're accurate
+        // Calculate points using the updated formula
         const points = this.calculateUserPoints(bountySpent, bountyGenerated, ageInDays, totalReports, totalLikes, totalViews, totalComments);
         
         // Update the points in the database for future use
@@ -162,7 +161,7 @@ export class LeaderboardService extends BaseSupabaseService {
     }
   }
 
-  // Fixed calculation logic with the correct formula implementation
+  // Updated calculation logic with the new formula implementation
   private calculateUserPoints(
     bountySpent: number, 
     bountyGenerated: number, 
@@ -172,16 +171,24 @@ export class LeaderboardService extends BaseSupabaseService {
     totalViews: number,
     totalComments: number
   ): number {
-    // Start with base points from bounty (if any)
-    let points = bountySpent + bountyGenerated;
+    // Updated formula with new weights
+    // 10 points per report
+    let reportPoints = totalReports * 10;
     
-    // Direct contribution from reports - each report is worth 100 points
-    points += totalReports * 100;
+    // 2 points per like
+    let likePoints = totalLikes * 2;
     
-    // Add points from engagement metrics
-    points += totalLikes * 15;
-    points += totalViews * 5;
-    points += totalComments * 10;
+    // 1 point per view
+    let viewPoints = totalViews * 1;
+    
+    // 3 points per comment
+    let commentPoints = totalComments * 3;
+    
+    // Include bounty amounts
+    let bountyPoints = bountySpent + bountyGenerated;
+    
+    // Sum up all points
+    let points = reportPoints + likePoints + viewPoints + commentPoints + bountyPoints;
     
     // Ensure all users get at least 1 point
     points = Math.max(1, points);
@@ -189,17 +196,16 @@ export class LeaderboardService extends BaseSupabaseService {
     console.log(`[LeaderboardService] Calculated points details:`, {
       bountySpent,
       bountyGenerated,
-      ageInDays,
       totalReports,
       totalLikes,
       totalViews,
       totalComments,
       formulaBreakdown: {
-        fromBounty: bountySpent + bountyGenerated,
-        fromReports: totalReports * 100,
-        fromLikes: totalLikes * 15,
-        fromViews: totalViews * 5,
-        fromComments: totalComments * 10
+        fromReports: reportPoints,
+        fromLikes: likePoints,
+        fromViews: viewPoints,
+        fromComments: commentPoints,
+        fromBounty: bountyPoints
       },
       finalPoints: points
     });

@@ -78,11 +78,12 @@ export function InfoTab({ profile }: InfoTabProps) {
                       <p className="font-medium mb-1">Score Calculation</p>
                       <p className="text-xs mb-2">Your score is calculated based on:</p>
                       <ul className="text-xs list-disc pl-4 space-y-1">
-                        <li>Reports: 100 points each</li>
-                        <li>Likes: 15 points each</li>
-                        <li>Views: 5 points each</li>
-                        <li>Comments: 10 points each</li>
-                        <li>Bounty generated/spent: 1:1 ratio</li>
+                        <li>Reports: 10 points each</li>
+                        <li>Likes: 2 points each</li>
+                        <li>Views: 1 point each</li>
+                        <li>Comments: 3 points each</li>
+                        <li>Bounty generated: Added to total</li>
+                        <li>Bounty spent: Added to total</li>
                       </ul>
                       <p className="text-xs mt-2">Everyone starts with at least 1 point!</p>
                     </TooltipContent>
