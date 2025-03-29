@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useProfileImage } from "@/hooks/profile/useProfileImage";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { useWallet } from "@/context/wallet";
+import { useWallet } from "@/context/WalletContext";
 import { validateAuth, establishAuth, ensureStorageBucketExists } from "@/utils/supabaseHelpers";
 
 interface ProfilePictureUploadProps {
@@ -28,30 +28,7 @@ export function ProfilePictureUpload({
   } = useProfileImage();
   const { connectWallet } = useWallet();
   const [imageError, setImageError] = useState(false);
-  const [authChecked, setAuthChecked] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
-  // Check auth when component mounts
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const isAuth = await validateAuth();
-        console.log("Auth check in ProfilePictureUpload:", isAuth);
-        
-        if (!isAuth) {
-          const reestablished = await establishAuth(connectWallet);
-          console.log("Reestablished auth:", reestablished);
-        }
-        
-        setAuthChecked(true);
-      } catch (err) {
-        console.error("Error checking auth in ProfilePictureUpload:", err);
-        setAuthChecked(true); // Set to true even on error to allow the component to proceed
-      }
-    };
-    
-    checkAuth();
-  }, [connectWallet]);
   
   // Ensure storage bucket exists when component mounts
   useEffect(() => {
@@ -63,29 +40,12 @@ export function ProfilePictureUpload({
   const handleUploadClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     
-    // Double-check authentication before attempting upload
-    const isAuthenticated = await validateAuth();
+    // Check authentication before attempting upload
+    const isAuthenticated = await establishAuth(connectWallet);
     
     if (!isAuthenticated) {
-      console.log("Not authenticated, trying to reconnect");
-      
-      // Show toast message
-      toast.error("Please reconnect your wallet to upload a profile picture");
-      
-      // Try to reconnect
-      try {
-        const reauth = await establishAuth(connectWallet);
-        
-        if (!reauth) {
-          console.error("Failed to reconnect for profile upload");
-          return;
-        }
-        
-        console.log("Successfully reconnected for profile upload");
-      } catch (err) {
-        console.error("Error reconnecting for profile upload:", err);
-        return;
-      }
+      toast.error("Authentication required to upload a profile picture");
+      return;
     }
     
     fileInputRef.current?.click();
@@ -101,27 +61,15 @@ export function ProfilePictureUpload({
       e.target.value = '';
       
       // Check authentication again before starting upload
-      const isAuthenticated = await validateAuth();
+      const isAuthenticated = await establishAuth(connectWallet);
       
       if (!isAuthenticated) {
-        console.log("Not authenticated for upload, trying to reconnect");
-        
-        // Try to reconnect
-        const reauth = await establishAuth(connectWallet);
-        
-        if (!reauth) {
-          toast.error("Authentication required to upload a profile picture. Please reconnect your wallet.");
-          return;
-        }
+        toast.error("Authentication required to upload a profile picture");
+        return;
       }
       
       // Ensure bucket exists before uploading
-      const bucketExists = await ensureStorageBucketExists('profile-images');
-      
-      if (!bucketExists) {
-        toast.error("Failed to prepare storage for upload. Please try again.");
-        return;
-      }
+      await ensureStorageBucketExists('profile-images');
       
       console.log("Uploading profile image:", file.name);
       const url = await uploadProfileImage(file, userId || 'anonymous');
