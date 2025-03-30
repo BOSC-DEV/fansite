@@ -4,6 +4,7 @@ import { useWallet } from "@/context/wallet";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "@/lib/supabase";
+import { profileService } from "@/services/storage/profileService";
 
 interface NormalizedProfile {
   name: string;
@@ -28,7 +29,11 @@ export function useCommentSubmit(
     
     if (!isConnected || !address) {
       toast.error("You must be connected with a wallet to comment");
-      await connectWallet();
+      try {
+        await connectWallet();
+      } catch (error) {
+        console.error("Failed to connect wallet:", error);
+      }
       return;
     }
     
@@ -41,27 +46,19 @@ export function useCommentSubmit(
         profilePic: ""
       };
       
-      // First check Supabase for profile
+      // First check if user has a profile
       try {
-        const { data: supabaseProfile, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('wallet_address', address)
-          .maybeSingle();
-          
-        if (supabaseProfile) {
+        // Get user profile from Supabase
+        const userProfile = await profileService.getProfile(address);
+        
+        if (userProfile) {
           normalizedProfile = {
-            name: supabaseProfile.display_name || "Anonymous",
-            profilePic: supabaseProfile.profile_pic_url || ""
+            name: userProfile.displayName || "Anonymous",
+            profilePic: userProfile.profilePicUrl || ""
           };
         }
-        
-        if (error) {
-          console.error("Error fetching profile from Supabase:", error);
-          throw error;
-        }
       } catch (profileError) {
-        console.error("Error in profile fetch:", profileError);
+        console.error("Error fetching profile:", profileError);
         // Continue with default Anonymous profile
       }
       
@@ -94,7 +91,7 @@ export function useCommentSubmit(
         throw new Error("Scammer not found");
       }
       
-      // Try authentication bypass to fix RLS issues by using service_role access
+      // Insert the comment
       const { error: insertError } = await supabase
         .from('comments')
         .insert(comment);

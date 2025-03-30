@@ -1,55 +1,95 @@
 
-import { useState } from "react";
-import { Comment, CommentType } from "./Comment";
-import { Button } from "@/components/ui/button";
-import { ArrowDown, ArrowUp } from "lucide-react";
+import React from "react";
+import { formatTimeAgo } from "@/utils/formatters";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Link } from "react-router-dom";
+import { ThumbsUp, ThumbsDown, EyeIcon, MessageSquare } from "lucide-react";
+
+interface Comment {
+  id: string;
+  content: string;
+  author: string;
+  author_name: string;
+  author_profile_pic?: string;
+  created_at: string;
+  likes: number;
+  dislikes: number;
+  views: number;
+  scammer_id?: string;
+}
 
 interface CommentListProps {
-  comments: any[];
-  showScammerLinks?: boolean; // Whether to show links to scammer listings
+  comments: Comment[];
+  showScammerLinks?: boolean;
 }
 
 export function CommentList({ comments, showScammerLinks = false }: CommentListProps) {
-  const [sortMethod, setSortMethod] = useState<'newest' | 'oldest' | 'mostLiked'>('newest');
-  
-  // Sort comments based on current sortMethod
-  const sortedComments = [...comments].sort((a, b) => {
-    if (sortMethod === 'newest') {
-      return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
-    } else if (sortMethod === 'oldest') {
-      return new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime();
-    } else if (sortMethod === 'mostLiked') {
-      return (b.likes || 0) - (a.likes || 0);
-    }
-    return 0;
-  });
+  if (!comments || comments.length === 0) {
+    return <div className="text-center py-4">No comments yet.</div>;
+  }
 
   return (
-    <div className="font-serif">
-      {/* Comments list */}
-      <div className="space-y-4">
-        {sortedComments.map((comment) => {
-          // Convert from database format to CommentType format
-          const normalizedComment: CommentType = {
-            id: comment.id,
-            content: comment.content,
-            author: comment.author,
-            authorName: comment.author_name || "Anonymous",
-            authorProfilePic: comment.author_profile_pic || "",
-            createdAt: comment.created_at,
-            likes: comment.likes || 0,
-            dislikes: comment.dislikes || 0,
-            views: comment.views || 0,
-            scammerId: comment.scammer_id // Include the scammer ID
-          };
-          
-          return <Comment 
-            key={comment.id} 
-            comment={normalizedComment} 
-            showScammerLink={showScammerLinks}
-          />;
-        })}
-      </div>
+    <div className="space-y-4">
+      {comments.map((comment) => (
+        <div key={comment.id} className="border-b border-western-wood/10 pb-4 last:border-0">
+          <div className="flex items-start gap-3">
+            {/* Avatar */}
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={comment.author_profile_pic || ''} alt={comment.author_name} />
+              <AvatarFallback>
+                {comment.author_name?.substring(0, 2) || 'AN'}
+              </AvatarFallback>
+            </Avatar>
+            
+            {/* Comment content */}
+            <div className="flex-1 space-y-1">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Link 
+                    to={`/user/${comment.author}`} 
+                    className="font-semibold hover:text-western-accent transition-colors"
+                  >
+                    {comment.author_name || "Anonymous"}
+                  </Link>
+                  
+                  <span className="text-western-wood/50 text-xs">
+                    {formatTimeAgo(comment.created_at)}
+                  </span>
+                </div>
+                
+                {showScammerLinks && comment.scammer_id && (
+                  <Link
+                    to={`/scammer/${comment.scammer_id}`}
+                    className="text-xs text-western-wood/70 hover:text-western-accent transition-colors flex items-center gap-1"
+                  >
+                    <MessageSquare className="h-3 w-3" />
+                    View Scammer
+                  </Link>
+                )}
+              </div>
+              
+              <p className="text-western-wood">{comment.content}</p>
+              
+              <div className="flex items-center gap-4 pt-1">
+                <div className="flex items-center gap-1 text-xs text-western-wood/70">
+                  <ThumbsUp className="h-3 w-3" />
+                  <span>{comment.likes || 0}</span>
+                </div>
+                
+                <div className="flex items-center gap-1 text-xs text-western-wood/70">
+                  <ThumbsDown className="h-3 w-3" />
+                  <span>{comment.dislikes || 0}</span>
+                </div>
+                
+                <div className="flex items-center gap-1 text-xs text-western-wood/70">
+                  <EyeIcon className="h-3 w-3" />
+                  <span>{comment.views || 0} views</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

@@ -1,23 +1,22 @@
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import React from "react";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { WalletButton } from "@/components/WalletButton";
+import { Loader2 } from "lucide-react";
 
 interface CommentFormProps {
   scammerId: string;
-  onCommentAdded: () => void;
+  onCommentAdded?: () => void;
   content: string;
-  setContent: (content: string) => void;
+  setContent: React.Dispatch<React.SetStateAction<string>>;
   isSubmitting: boolean;
-  handleSubmit: (e: React.FormEvent) => void;
+  handleSubmit: (e: React.FormEvent) => Promise<void>;
   isConnected: boolean;
   connectWallet: () => Promise<void>;
 }
 
-export function CommentForm({ 
-  scammerId, 
-  onCommentAdded,
+export function CommentForm({
   content,
   setContent,
   isSubmitting,
@@ -25,59 +24,39 @@ export function CommentForm({
   isConnected,
   connectWallet
 }: CommentFormProps) {
-  const [connecting, setConnecting] = useState(false);
-  
-  const handleConnect = async () => {
-    setConnecting(true);
-    try {
-      await connectWallet();
-      toast.success("Wallet connected successfully");
-    } catch (error) {
-      console.error("Error connecting wallet:", error);
-      toast.error("Failed to connect wallet. Please try again.");
-    } finally {
-      setConnecting(false);
-    }
-  };
-
-  if (!isConnected) {
-    return (
-      <div className="bg-muted/30 rounded-lg p-4 text-center font-serif">
-        <p className="text-sm text-muted-foreground mb-2">
-          Connect your wallet to comment on this listing
-        </p>
-        <Button 
-          onClick={handleConnect} 
-          variant="outline" 
-          size="sm"
-          disabled={connecting}
-          className="font-western"
-        >
-          {connecting ? "Connecting..." : "Connect Wallet"}
-        </Button>
-      </div>
-    );
-  }
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 w-full">
-      <Textarea
-        placeholder="Share your thoughts about this scammer..."
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        rows={3}
-        className="resize-none w-full font-serif"
-        disabled={isSubmitting}
-      />
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <Textarea
+          placeholder="Share your thoughts..."
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          className="min-h-[100px] resize-none focus:border-western-accent"
+          disabled={isSubmitting || !isConnected}
+        />
+      </div>
+      
       <div className="flex justify-end">
-        <Button 
-          type="submit" 
-          disabled={isSubmitting || !content.trim()}
-          size="sm"
-          className="bg-western-leather hover:bg-western-leather/90 font-western"
-        >
-          {isSubmitting ? "Posting..." : "Post Comment"}
-        </Button>
+        {!isConnected ? (
+          <WalletButton onClick={connectWallet} className="bg-western-leather hover:bg-western-leather/80 text-white">
+            Connect Wallet to Comment
+          </WalletButton>
+        ) : (
+          <Button 
+            type="submit" 
+            disabled={isSubmitting || !content.trim()}
+            className="bg-western-leather hover:bg-western-leather/80 text-white"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Posting...
+              </>
+            ) : (
+              'Post Comment'
+            )}
+          </Button>
+        )}
       </div>
     </form>
   );

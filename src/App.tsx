@@ -11,7 +11,7 @@ import MostWanted from './pages/MostWanted';
 import CreateListing from './pages/CreateListing';
 import NotFound from './pages/NotFound';
 import Leaderboard from './pages/Leaderboard';
-import { WalletProvider } from './context/WalletContext';
+import { WalletProvider } from './context/wallet/WalletContext';
 import { Toaster } from "@/components/ui/sonner";
 import { HelmetProvider } from 'react-helmet-async';
 
