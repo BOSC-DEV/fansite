@@ -1,4 +1,3 @@
-
 import { supabase } from '@/lib/supabase';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -150,6 +149,79 @@ class ProfileService {
     } catch (error) {
       console.error("Error in getProfileByUsername method:", error);
       return null;
+    }
+  }
+
+  // Add the missing isUsernameAvailable method
+  async isUsernameAvailable(username: string, currentUserWallet?: string): Promise<boolean> {
+    try {
+      console.log(`Checking if username is available: ${username}`);
+      
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('wallet_address')
+        .ilike('username', username)
+        .maybeSingle();
+        
+      if (error) {
+        console.error("Error checking username availability:", error);
+        throw error;
+      }
+      
+      // If no profile with this username exists, it's available
+      if (!data) {
+        return true;
+      }
+      
+      // If the profile belongs to the current user, the username is available for them
+      if (currentUserWallet && data.wallet_address === currentUserWallet) {
+        return true;
+      }
+      
+      // Otherwise, the username is taken
+      return false;
+    } catch (error) {
+      console.error("Error in isUsernameAvailable method:", error);
+      return false;
+    }
+  }
+
+  // Add the missing getAllProfiles method
+  async getAllProfiles(): Promise<UserProfile[]> {
+    try {
+      console.log("Getting all profiles");
+      
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+        
+      if (error) {
+        console.error("Error fetching all profiles:", error);
+        throw error;
+      }
+      
+      if (!data || data.length === 0) {
+        console.log("No profiles found");
+        return [];
+      }
+      
+      // Convert from database format to client format
+      return data.map(profile => ({
+        id: profile.id,
+        walletAddress: profile.wallet_address,
+        displayName: profile.display_name,
+        username: profile.username,
+        profilePicUrl: profile.profile_pic_url,
+        bio: profile.bio,
+        xLink: profile.x_link,
+        websiteLink: profile.website_link,
+        createdAt: profile.created_at,
+        points: profile.points || 0
+      }));
+    } catch (error) {
+      console.error("Error in getAllProfiles method:", error);
+      return [];
     }
   }
 }

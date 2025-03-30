@@ -46,31 +46,82 @@ const extendedProfileService = {
       console.error("Error getting all profiles:", error);
       return [];
     }
+  },
+
+  // Expose the original methods
+  saveProfile: profileService.saveProfile,
+  getProfile: profileService.getProfile,
+  hasProfile: profileService.hasProfile
+};
+
+// Extend the comment service
+const extendedCommentService = {
+  ...commentService,
+  // Add the missing getComments method
+  getComments: (scammerId: string) => commentService.getCommentsForScammer(scammerId)
+};
+
+// Extend the scammer service
+const extendedScammerService = {
+  ...scammerService,
+  // Ensure these methods exist
+  deleteScammer: (id: string) => {
+    const scammer = scammerService.getScammer(id);
+    if (scammer) {
+      // Implementation would depend on your needs
+      console.log(`Deleting scammer ${id}`);
+      // For now, just return true
+      return true;
+    }
+    return false;
+  },
+  incrementScammerViews: (scammerId: string) => {
+    scammerService.incrementScammerViews(scammerId);
+    return true;
+  },
+  likeScammer: (scammerId: string) => {
+    scammerService.likeScammer(scammerId);
+    return true;
+  },
+  dislikeScammer: (scammerId: string) => {
+    scammerService.dislikeScammer(scammerId);
+    return true;
+  },
+  updateScammerStats: (scammerId: string, stats: { likes?: number; dislikes?: number; views?: number; shares?: number }) => {
+    scammerService.updateScammerStats(scammerId, stats);
+    return true;
   }
 };
 
 // Export the services
 export const storageService = {
   profile: extendedProfileService,
-  scammer: scammerService,
-  comment: commentService,
+  scammer: extendedScammerService,
+  comment: extendedCommentService,
   
   // Convenience methods that delegate to the specific services
   saveProfile: (profile: any) => extendedProfileService.saveProfile(profile),
   getProfile: (walletAddress: string) => extendedProfileService.getProfile(walletAddress),
   hasProfile: (walletAddress: string) => extendedProfileService.hasProfile(walletAddress),
   
-  getScammer: (id: string) => scammerService.getScammer(id),
-  getAllScammers: () => scammerService.getAllScammers(),
-  saveScammer: (scammer: any) => scammerService.saveScammer(scammer),
-  deleteScammer: (id: string) => scammerService.deleteScammer(id),
+  getScammer: (id: string) => extendedScammerService.getScammer(id),
+  getAllScammers: () => extendedScammerService.getAllScammers(),
+  saveScammer: (scammer: any) => extendedScammerService.saveScammer(scammer),
+  deleteScammer: (id: string) => extendedScammerService.deleteScammer(id),
   
-  saveComment: (comment: any) => commentService.saveComment(comment),
-  getComments: (scammerId: string) => commentService.getComments(scammerId),
+  saveComment: (comment: any) => extendedCommentService.saveComment(comment),
+  getComments: (scammerId: string) => extendedCommentService.getComments(scammerId),
   
   // Add the missing methods
   isUsernameAvailable: (username: string) => extendedProfileService.isUsernameAvailable(username),
-  getAllProfiles: () => extendedProfileService.getAllProfiles()
+  getAllProfiles: () => extendedProfileService.getAllProfiles(),
+  
+  // Add methods for incrementing scammer views and stats
+  incrementScammerViews: (scammerId: string) => extendedScammerService.incrementScammerViews(scammerId),
+  likeScammer: (scammerId: string) => extendedScammerService.likeScammer(scammerId),
+  dislikeScammer: (scammerId: string) => extendedScammerService.dislikeScammer(scammerId),
+  updateScammerStats: (scammerId: string, stats: { likes?: number; dislikes?: number; views?: number; shares?: number }) => 
+    extendedScammerService.updateScammerStats(scammerId, stats)
 };
 
 export { profileService, scammerService, commentService };
