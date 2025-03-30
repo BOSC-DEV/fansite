@@ -13,6 +13,7 @@ export interface ProfileData {
   xLink: string;
   websiteLink: string;
   bio: string;
+  points?: number; // Add points as optional
 }
 
 export class ProfileDataProcessor {
@@ -60,7 +61,8 @@ export class ProfileDataProcessor {
           created_at: profileData.createdAt,
           x_link: profileData.xLink || '',
           website_link: profileData.websiteLink || '',
-          bio: profileData.bio || ''
+          bio: profileData.bio || '',
+          points: profileData.points || 0
         });
       
       if (insertError) {
@@ -86,7 +88,8 @@ export class ProfileDataProcessor {
           profilePicUrl: profileData.profilePicUrl,
           xLink: profileData.xLink,
           websiteLink: profileData.websiteLink,
-          bio: profileData.bio
+          bio: profileData.bio,
+          points: profileData.points
         });
       } else {
         // Create new profile
@@ -97,7 +100,13 @@ export class ProfileDataProcessor {
       
       // Use storage service as fallback
       console.log("[ProfileDataProcessor] Trying storage service as final fallback");
-      const success = await storageService.saveProfile(profileData);
+      
+      // Add points if not provided
+      if (profileData.points === undefined) {
+        profileData.points = 0;
+      }
+      
+      const success = await storageService.saveProfile(profileData as any);
       
       if (success) {
         console.log("[ProfileDataProcessor] Profile saved successfully via storage service");

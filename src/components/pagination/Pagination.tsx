@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { formatNumberRange } from "@/utils/formatters";
+import { formatNumber } from "@/utils/formatters";
 
 interface PaginationProps {
   currentPage: number;

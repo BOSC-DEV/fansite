@@ -62,6 +62,13 @@ export function formatNumber(number: number): string {
 }
 
 /**
+ * Format a number range for pagination display
+ */
+export function formatNumberRange(start: number, end: number, total: number): string {
+  return `${formatNumber(start)}-${formatNumber(end)} of ${formatNumber(total)}`;
+}
+
+/**
  * Format a date as a localized string
  */
 export function formatDate(date: Date | string): string {
@@ -79,11 +86,30 @@ export function formatDate(date: Date | string): string {
 }
 
 /**
+ * Format a currency value
+ */
+export function formatCurrency(value: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2
+  }).format(value);
+}
+
+/**
  * Truncate a string to a maximum length
  */
 export function truncateString(str: string, maxLength: number): string {
   if (str.length <= maxLength) return str;
   return `${str.substring(0, maxLength)}...`;
+}
+
+/**
+ * Truncate text to a specific length
+ */
+export function truncateText(text: string, maxLength: number = 20): string {
+  if (!text || text.length <= maxLength) return text;
+  return `${text.substring(0, maxLength)}...`;
 }
 
 /**
