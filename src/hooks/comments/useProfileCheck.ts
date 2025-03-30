@@ -1,44 +1,43 @@
 
 import { useState, useEffect } from "react";
-import { profileService } from "@/services/storage/localStorageService";
-import { supabase } from "@/lib/supabase";
+import { profileService } from "@/services/storage/profileService";
 
-export function useProfileCheck(address: string | null) {
-  const [profileChecked, setProfileChecked] = useState(false);
-  const [hasProfile, setHasProfile] = useState(false);
-
+/**
+ * Hook to check if a user has a profile based on wallet address
+ */
+export function useProfileCheck(address?: string) {
+  const [profileState, setProfileState] = useState({
+    profileChecked: false,
+    hasProfile: false,
+  });
+  
   // Check if user has a profile
   useEffect(() => {
-    const checkProfile = async () => {
-      if (address) {
+    if (address) {
+      const checkProfile = async () => {
         try {
-          // Check if user has a profile in Supabase
-          const { data } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('wallet_address', address)
-            .single();
-          
-          setHasProfile(!!data);
-          setProfileChecked(true);
+          const exists = await profileService.hasProfile(address);
+          setProfileState({
+            hasProfile: exists,
+            profileChecked: true
+          });
         } catch (error) {
-          console.error("Error checking profile:", error);
-          // Fallback to localStorage
-          const profile = profileService.getProfile(address);
-          setHasProfile(!!profile);
-          setProfileChecked(true);
+          console.error("Error checking if user has profile:", error);
+          setProfileState(prev => ({
+            ...prev,
+            profileChecked: true
+          }));
         }
-      } else {
-        setProfileChecked(false);
-        setHasProfile(false);
-      }
-    };
-    
-    checkProfile();
+      };
+      
+      checkProfile();
+    } else {
+      setProfileState({
+        profileChecked: false,
+        hasProfile: false
+      });
+    }
   }, [address]);
 
-  return {
-    profileChecked,
-    hasProfile
-  };
+  return profileState;
 }

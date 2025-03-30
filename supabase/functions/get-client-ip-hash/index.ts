@@ -1,6 +1,5 @@
 
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
-import * as crypto from 'https://deno.land/std@0.177.0/crypto/mod.ts'
 
 // Handle request to get a hash of the client's IP address
 serve(async (req) => {
@@ -8,10 +7,13 @@ serve(async (req) => {
     // Get the client IP from the request headers
     const clientIp = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown'
     
-    // Create a SHA-256 hash of the IP to protect privacy
+    // Create a simple hash of the IP to protect privacy
+    // We'll use SHA-256 algorithm from the Deno standard library
     const encoder = new TextEncoder();
     const data = encoder.encode(clientIp);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    
+    // Calculate hash - using crypto.subtle instead of createHash
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
     
     // Convert the hash buffer to a hex string
     const hashArray = Array.from(new Uint8Array(hashBuffer));

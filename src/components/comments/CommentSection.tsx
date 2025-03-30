@@ -121,9 +121,8 @@ export function CommentSection({ scammerId }: CommentSectionProps) {
             />
           </div>
           
-          {/* Sort buttons and Post button on same line */}
+          {/* Sort buttons */}
           <div className="flex justify-between items-center">
-            {/* Sort buttons - left side */}
             <div className="flex space-x-2">
               <Button 
                 variant={sortMethod === 'newest' ? "default" : "outline"} 

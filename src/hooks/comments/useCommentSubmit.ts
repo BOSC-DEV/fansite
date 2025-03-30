@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useWallet } from "@/context/WalletContext";
+import { useWallet } from "@/context/wallet";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "@/lib/supabase";
