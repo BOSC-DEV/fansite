@@ -1,97 +1,69 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Helmet } from "react-helmet-async";
+
+import React, { useEffect } from "react";
 import { Header } from "@/components/Header";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { LeaderboardTable } from "@/components/leaderboard/LeaderboardTable";
-import { Trophy } from "lucide-react";
-import { leaderboardService } from "@/services/storage/leaderboardService";
-import type { LeaderboardUser } from "@/services/storage/leaderboardService";
+import { EmptyLeaderboard } from "@/components/leaderboard/EmptyLeaderboard";
+import { LeaderboardTableSkeleton } from "@/components/leaderboard/LeaderboardSkeleton";
+import { useLeaderboard } from "@/hooks/useLeaderboard";
+import { ScammerStatsCard } from "@/components/stats/ScammerStatsCard";
+import { useScammers } from "@/hooks/use-scammers";
+import { Button } from "@/components/ui/button";
+import { RefreshCw } from "lucide-react";
+import { toast } from "sonner";
 
-const ITEMS_PER_PAGE = 50;
+const Leaderboard = () => {
+  const { leaderboardData, isLoading, refetchLeaderboard } = useLeaderboard();
+  const { scammers } = useScammers();
 
-export default function Leaderboard() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [leaderboardUsers, setLeaderboardUsers] = useState<LeaderboardUser[]>([]);
-  const [allUsers, setAllUsers] = useState<LeaderboardUser[]>([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchLeaderboardData = useCallback(async (isInitial = true) => {
-    try {
-      if (isInitial) {
-        setIsLoading(true);
-      }
-      
-      const users = await leaderboardService.getLeaderboardUsers();
-      setAllUsers(users);
-      
-      // For the initial load, show the first 50 users
-      const displayUsers = users.slice(0, ITEMS_PER_PAGE * page);
-      setLeaderboardUsers(displayUsers);
-      
-      // Determine if there are more users to load
-      setHasMore(users.length > displayUsers.length);
-    } catch (err) {
-      console.error("Error fetching leaderboard data:", err);
-      setError("Failed to load leaderboard data. Please try again later.");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [page]);
-
-  // Initial data load
-  useEffect(() => {
-    fetchLeaderboardData();
-  }, []);
-
-  const loadMoreUsers = useCallback(() => {
-    if (!hasMore || isLoading) return;
-    
-    const nextPage = page + 1;
-    setPage(nextPage);
-    
-    const moreUsers = allUsers.slice(0, ITEMS_PER_PAGE * nextPage);
-    setLeaderboardUsers(moreUsers);
-    setHasMore(allUsers.length > moreUsers.length);
-  }, [allUsers, hasMore, isLoading, page]);
+  const handleRefresh = async () => {
+    toast.info("Refreshing leaderboard data...");
+    await refetchLeaderboard();
+    toast.success("Leaderboard refreshed!");
+  };
 
   return (
-    <div className="min-h-screen flex flex-col bg-western-dark paper-texture">
-      <Helmet>
-        <title>BOSC Leaderboard - Book of Scams</title>
-        <meta name="description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
-        <meta property="og:title" content="BOSC Leaderboard - Book of Scams" />
-        <meta property="og:description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
-        <meta property="twitter:title" content="BOSC Leaderboard - Book of Scams" />
-        <meta property="twitter:description" content="BOSC - Draining the swamp, recording history and bringing whatever justice we can to on-chain terrorists" />
-      </Helmet>
-      
+    <div className="min-h-screen old-paper flex flex-col">
       <Header />
-      <main className="flex-1 container mx-auto max-w-6xl px-4 py-20">
-        <div className="mt-8 mb-12">
-          <PageHeader
-            title="Leaderboards"
-            description="The leaderboard will be ordered by total bounty generated once the bounty payment system is live. In the meantime, it's organised chronologically."
-            actionIcon={<Trophy className="h-5 w-5 mr-1" />}
-          />
-        </div>
-
-        {error ? (
-          <div className="p-8 text-center">
-            <p className="text-red-500">{error}</p>
-          </div>
-        ) : (
-          <div className="wanted-poster-border paper-texture p-6 rounded-sm">
-            <LeaderboardTable 
-              users={leaderboardUsers} 
-              isLoading={isLoading} 
-              hasMore={hasMore}
-              loadMore={loadMoreUsers}
+      <main className="flex-grow py-1 md:py-4 mt-16 md:mt-24">
+        <div className="container mx-auto max-w-6xl px-4">
+          <div className="flex justify-between items-center mb-4">
+            <PageHeader 
+              title="Bounty Leaderboard" 
+              description="The highest bounty contributions and most active users in the network"
             />
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleRefresh}
+              className="border-western-wood text-western-accent hover:bg-western-wood hover:text-western-parchment transition-colors"
+            >
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh
+            </Button>
           </div>
-        )}
+
+          {/* Stats card showing overall network stats */}
+          {scammers.length > 0 && (
+            <ScammerStatsCard scammers={scammers} className="mb-6" />
+          )}
+
+          <div className="paper-texture border-2 border-western-wood rounded-sm p-6">
+            {isLoading ? (
+              <LeaderboardTableSkeleton />
+            ) : leaderboardData && leaderboardData.length > 0 ? (
+              <LeaderboardTable 
+                users={leaderboardData} 
+                isLoading={false} 
+              />
+            ) : (
+              <EmptyLeaderboard />
+            )}
+          </div>
+        </div>
       </main>
     </div>
   );
-}
+};
+
+export default Leaderboard;

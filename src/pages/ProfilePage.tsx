@@ -1,27 +1,36 @@
 
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Header } from "@/components/Header";
-import { UserProfile } from "@/components/profile/UserProfile";
 import { useWallet } from "@/context/WalletContext";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
+import { ProfileEditor } from "@/components/profile/ProfileEditor";
+import { ConnectWallet } from "@/components/ConnectWallet";
 
 export function ProfilePage() {
   const { isConnected, address } = useWallet();
-  const [isLoading, setIsLoading] = useState(false);
   const supabaseReady = isSupabaseConfigured();
+  const navigate = useNavigate();
+  
+  // Redirect if not connected - profile editing is only for connected wallets
+  useEffect(() => {
+    if (!isConnected || !address) {
+      // Don't redirect, we'll show the connect wallet component
+    }
+  }, [isConnected, address, navigate]);
   
   return (
-    <div className="min-h-screen old-paper">
+    <div className="min-h-screen old-paper flex flex-col">
       <Header />
-      <main className="container mx-auto px-4 py-8 pt-28">
+      <main className="container mx-auto px-4 py-1 md:py-4 flex-grow mt-16 md:mt-24">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl font-wanted text-western-accent text-center mb-8">Your Profile</h1>
+          <h1 className="text-3xl font-wanted text-western-accent text-center mb-6 md:mb-8">Your Profile</h1>
           
           {!supabaseReady && (
-            <Alert variant="destructive" className="mb-8">
+            <Alert variant="destructive" className="mb-6 md:mb-8">
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Configuration Error</AlertTitle>
               <AlertDescription>
@@ -31,17 +40,10 @@ export function ProfilePage() {
             </Alert>
           )}
           
-          {isLoading ? (
-            <Card className="p-4 mb-8">
-              <div className="flex items-center justify-center gap-4">
-                <Loader2 className="h-5 w-5 animate-spin text-western-accent" />
-                <div>Loading profile data...</div>
-              </div>
-            </Card>
-          ) : null}
-          
-          {supabaseReady ? (
-            <UserProfile key={address} /> 
+          {!isConnected ? (
+            <ConnectWallet />
+          ) : supabaseReady ? (
+            <ProfileEditor />
           ) : (
             <Card>
               <CardHeader>

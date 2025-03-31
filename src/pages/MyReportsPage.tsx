@@ -56,9 +56,9 @@ export function MyReportsPage() {
   const paginatedScammers = scammers.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   return (
-    <div className="min-h-screen old-paper">
+    <div className="min-h-screen old-paper flex flex-col">
       <Header />
-      <main className="container mx-auto px-4 pt-28 pb-20">
+      <main className="container mx-auto px-4 py-4 flex-grow">
         <div className="flex flex-col items-center mb-8">
           <div className="flex items-center justify-between w-full max-w-4xl">
             <h1 className="text-3xl font-bold font-wanted text-western-accent mb-2">
@@ -102,6 +102,7 @@ export function MyReportsPage() {
           </div>
         )}
       </main>
+      {/* SiteFooter is now rendered at the App level */}
     </div>
   );
 }

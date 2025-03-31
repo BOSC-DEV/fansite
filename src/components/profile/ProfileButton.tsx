@@ -1,58 +1,59 @@
 
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { useWallet } from "@/context/WalletContext";
-import { UserCircle2 } from "lucide-react";
-import { storageService, UserProfile } from "@/services/storage";
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import { useWallet } from '@/context/WalletContext';
+import { User } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { storageService } from '@/services/storage';
 
 export function ProfileButton() {
-  const { isConnected, address } = useWallet();
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const { address } = useWallet();
   const navigate = useNavigate();
-  
-  useEffect(() => {
-    // Fetch user profile if wallet is connected
-    const fetchProfile = async () => {
-      if (isConnected && address) {
+  const [username, setUsername] = React.useState<string | null>(null);
+  const [profilePic, setProfilePic] = React.useState<string | null>(null);
+  const [isProfileLoading, setIsProfileLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const loadProfile = async () => {
+      if (address) {
         try {
-          const userProfile = await storageService.getProfile(address);
-          setProfile(userProfile);
+          setIsProfileLoading(true);
+          const profile = await storageService.getProfile(address);
+          setUsername(profile?.username || null);
+          setProfilePic(profile?.profilePicUrl || null);
         } catch (error) {
-          console.error("Error fetching profile:", error);
+          console.error('Error loading profile:', error);
+        } finally {
+          setIsProfileLoading(false);
         }
-      } else {
-        setProfile(null);
       }
     };
 
-    fetchProfile();
-  }, [isConnected, address]);
+    loadProfile();
+  }, [address]);
 
   const handleProfileClick = () => {
-    if (profile && profile.username) {
-      navigate(`/${profile.username}`);
+    if (username) {
+      navigate(`/${username}`);
     } else if (address) {
       navigate(`/user/${address}`);
+    } else {
+      navigate('/profile');
     }
   };
-
-  if (!isConnected) {
-    return null;
-  }
 
   return (
     <Button 
       variant="ghost" 
       size="icon" 
-      className="relative h-9 w-9 rounded-full"
+      className="rounded-full bg-western-accent hover:bg-western-accent/80 text-western-parchment"
       onClick={handleProfileClick}
     >
-      <Avatar className="h-9 w-9 border border-western-sand/30">
-        <AvatarImage src={profile?.profilePicUrl} alt={profile?.displayName || "Profile"} />
-        <AvatarFallback className="bg-western-sand/20">
-          <UserCircle2 className="h-5 w-5 text-western-parchment" />
+      <Avatar className="h-8 w-8">
+        <AvatarImage src={profilePic || ''} alt="Profile" />
+        <AvatarFallback className="bg-western-wood text-western-parchment text-xs">
+          <User className="h-5 w-5" />
         </AvatarFallback>
       </Avatar>
     </Button>

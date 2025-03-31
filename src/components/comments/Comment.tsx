@@ -1,9 +1,11 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { ThumbsUp, ThumbsDown, UserCircle2 } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import { storageService } from "@/services/storage/localStorageService";
+import { ThumbsUp, ThumbsDown, UserCircle2, ExternalLink, Eye } from "lucide-react";
+import { formatTimeAgo } from "@/utils/formatters";
+import { Link } from "react-router-dom";
+import { useCommentInteractions } from "@/hooks/comments/useCommentInteractions";
+import { useCommentsViewTracking } from "@/hooks/comments/useCommentsViewTracking";
 
 export interface CommentType {
   id: string;
@@ -14,24 +16,46 @@ export interface CommentType {
   createdAt: string;
   likes: number;
   dislikes: number;
+  views: number;
+  scammerId?: string;
 }
 
 interface CommentProps {
   comment: CommentType;
+  showScammerLink?: boolean;
 }
 
-export function Comment({ comment }: CommentProps) {
+export function Comment({ comment, showScammerLink = false }: CommentProps) {
+  const { 
+    likes, 
+    dislikes,
+    isLiked,
+    isDisliked,
+    handleLike,
+    handleDislike
+  } = useCommentInteractions(
+    comment.id,
+    comment.likes,
+    comment.dislikes,
+    false, // initialIsLiked
+    false  // initialIsDisliked
+  );
+
+  // Use the dedicated hook for view tracking
+  useCommentsViewTracking(comment.id);
+
+  // Use our safe formatTimeAgo utility instead of direct date-fns usage
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return formatDistanceToNow(date, { addSuffix: true });
-  };
-
-  const handleLike = () => {
-    storageService.likeComment(comment.id);
-  };
-
-  const handleDislike = () => {
-    storageService.dislikeComment(comment.id);
+    try {
+      // Handle potential invalid date strings
+      if (!dateString || dateString === 'Invalid Date') {
+        return 'Recently';
+      }
+      return formatTimeAgo(dateString);
+    } catch (error) {
+      console.error("Error formatting date:", error, dateString);
+      return 'Recently';
+    }
   };
 
   return (
@@ -44,10 +68,19 @@ export function Comment({ comment }: CommentProps) {
               <UserCircle2 className="h-4 w-4" />
             </AvatarFallback>
           </Avatar>
-          <div>
+          <div className="flex-1">
             <p className="text-sm font-medium">{comment.authorName}</p>
             <p className="text-xs text-muted-foreground">{formatDate(comment.createdAt)}</p>
           </div>
+          {showScammerLink && comment.scammerId && (
+            <Link 
+              to={`/scammer/${comment.scammerId}`} 
+              className="flex items-center text-xs text-western-accent hover:underline"
+            >
+              <span className="mr-1">View Listing</span>
+              <ExternalLink className="h-3 w-3" />
+            </Link>
+          )}
         </div>
       </CardHeader>
       <CardContent className="pb-2 px-4">
@@ -57,18 +90,24 @@ export function Comment({ comment }: CommentProps) {
         <div className="flex items-center space-x-4">
           <button 
             onClick={handleLike}
-            className="flex items-center space-x-1 text-xs hover:text-green-600 transition-colors"
+            className={`flex items-center space-x-1 text-xs transition-colors ${isLiked ? 'text-green-600' : 'hover:text-green-600'}`}
+            aria-label="Like comment"
           >
             <ThumbsUp className="h-3 w-3" />
-            <span>{comment.likes || 0}</span>
+            <span>{likes || 0}</span>
           </button>
           <button 
             onClick={handleDislike}
-            className="flex items-center space-x-1 text-xs hover:text-red-600 transition-colors"
+            className={`flex items-center space-x-1 text-xs transition-colors ${isDisliked ? 'text-red-600' : 'hover:text-red-600'}`}
+            aria-label="Dislike comment"
           >
             <ThumbsDown className="h-3 w-3" />
-            <span>{comment.dislikes || 0}</span>
+            <span>{dislikes || 0}</span>
           </button>
+          <div className="flex items-center space-x-1 text-xs text-western-wood/70">
+            <Eye className="h-3 w-3" />
+            <span>{comment.views || 0}</span>
+          </div>
         </div>
       </CardFooter>
     </Card>

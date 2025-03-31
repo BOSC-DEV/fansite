@@ -3,8 +3,12 @@ import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Scammer } from "@/lib/types";
-import { Award, Users, TrendingUp, BarChart } from "lucide-react";
+import { Award, Users, TrendingUp, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SolAmount } from "@/components/SolAmount";
+import { Link } from "react-router-dom";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { truncateText } from "@/utils/formatters";
 
 interface ScammerStatsCardProps {
   scammers: Scammer[];
@@ -34,18 +38,11 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
 
   if (!stats) return null;
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'decimal',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
-
   return (
-    <Card className={cn("mb-8 border-western-wood bg-western-parchment/80", className)}>
-      <CardContent className="p-6">
+    <Card className={cn("mb-6 border-western-wood bg-western-parchment/80 w-full", className)}>
+      <CardContent className="p-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {/* Total Scammers */}
           <div className="flex items-center gap-4">
             <div className="rounded-md bg-western-sand/30 p-2 text-western-accent">
               <Users className="h-5 w-5" />
@@ -56,50 +53,78 @@ export const ScammerStatsCard = ({ scammers, className }: ScammerStatsCardProps)
             </div>
           </div>
 
+          {/* Highest Bounty */}
           <div className="flex items-center gap-4">
             <div className="rounded-md bg-western-sand/30 p-2 text-western-accent">
               <Award className="h-5 w-5" />
             </div>
-            <div>
+            <div className="flex flex-col">
               <p className="text-sm font-medium text-western-wood/70">Highest Bounty</p>
-              <h4 className="text-2xl font-bold text-western-accent">{formatCurrency(stats.highestBounty)} $BOSC</h4>
-              <p className="text-xs text-western-wood/70 truncate">
-                {stats.highestBountyScammer?.name}
-              </p>
+              <div className="flex items-center gap-2">
+                <h4 className="text-2xl font-bold text-western-accent">
+                  <SolAmount amount={stats.highestBounty} decimals={0} />
+                </h4>
+                {stats.highestBountyScammer && (
+                  <Link to={`/scammer/${stats.highestBountyScammer?.id}`}>
+                    <Avatar className="h-8 w-8 border-2 border-western-accent cursor-pointer hover:ring-2 hover:ring-western-wood/50 transition-all">
+                      <AvatarImage 
+                        src={stats.highestBountyScammer.photoUrl} 
+                        alt={stats.highestBountyScammer.name} 
+                      />
+                      <AvatarFallback className="bg-western-sand text-western-wood">
+                        {stats.highestBountyScammer.name.substring(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
 
+          {/* Total Bounties */}
           <div className="flex items-center gap-4">
             <div className="rounded-md bg-western-sand/30 p-2 text-western-accent">
               <TrendingUp className="h-5 w-5" />
             </div>
             <div>
               <p className="text-sm font-medium text-western-wood/70">Total Bounties</p>
-              <h4 className="text-2xl font-bold text-western-accent">{formatCurrency(stats.totalBounty)} $BOSC</h4>
+              <h4 className="text-2xl font-bold text-western-accent">
+                <SolAmount amount={stats.totalBounty} decimals={0} />
+              </h4>
             </div>
           </div>
 
+          {/* Recently Added */}
           <div className="flex items-center gap-4">
             <div className="rounded-md bg-western-sand/30 p-2 text-western-accent">
-              <BarChart className="h-5 w-5" />
+              <Clock className="h-5 w-5" />
             </div>
             <div>
               <p className="text-sm font-medium text-western-wood/70">Recently Added</p>
-              <h4 className="text-base font-bold truncate text-western-wood">{stats.recentScammer?.name}</h4>
-              <p className="text-xs text-western-wood/70">
-                {new Date(stats.recentScammer?.dateAdded).toLocaleDateString()}
-              </p>
+              {stats.recentScammer && (
+                <div className="flex items-center gap-2">
+                  <h4 className="text-2xl font-bold text-western-accent truncate max-w-32">
+                    <Link to={`/scammer/${stats.recentScammer?.id}`} className="hover:underline">
+                      {truncateText(stats.recentScammer?.name, 12)}
+                    </Link>
+                  </h4>
+                  <Link to={`/scammer/${stats.recentScammer?.id}`}>
+                    <Avatar className="h-8 w-8 border-2 border-western-accent cursor-pointer hover:ring-2 hover:ring-western-wood/50 transition-all">
+                      <AvatarImage 
+                        src={stats.recentScammer.photoUrl} 
+                        alt={stats.recentScammer.name} 
+                      />
+                      <AvatarFallback className="bg-western-sand text-western-wood">
+                        {stats.recentScammer.name.substring(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
-        </div>
-
-        <Separator className="my-6 bg-western-wood/30" />
-
-        <div className="flex justify-between items-center">
-          <p className="text-sm text-western-wood/70">Statistics updated in real-time</p>
-          <p className="text-sm font-medium text-western-accent font-wanted">Most Wanted List</p>
         </div>
       </CardContent>
     </Card>
   );
-};
+}

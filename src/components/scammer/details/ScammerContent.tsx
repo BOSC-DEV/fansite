@@ -19,11 +19,31 @@ export function ScammerContent({ aliases, links, accomplices, officialResponse }
   
   return (
     <Tabs defaultValue="identity" className="w-full">
-      <TabsList className="grid grid-cols-4 mb-6">
-        <TabsTrigger value="identity">Identity</TabsTrigger>
-        <TabsTrigger value="socials">Links</TabsTrigger>
-        <TabsTrigger value="network">Network</TabsTrigger>
-        <TabsTrigger value="response">Response</TabsTrigger>
+      <TabsList className="grid grid-cols-4 mb-6 bg-western-sand/20 p-1 border border-western-wood/30 rounded-md">
+        <TabsTrigger 
+          value="identity" 
+          className="data-[state=active]:bg-western-parchment data-[state=active]:text-western-accent font-western"
+        >
+          Identity
+        </TabsTrigger>
+        <TabsTrigger 
+          value="socials" 
+          className="data-[state=active]:bg-western-parchment data-[state=active]:text-western-accent font-western"
+        >
+          Links
+        </TabsTrigger>
+        <TabsTrigger 
+          value="network" 
+          className="data-[state=active]:bg-western-parchment data-[state=active]:text-western-accent font-western"
+        >
+          Network
+        </TabsTrigger>
+        <TabsTrigger 
+          value="response" 
+          className="data-[state=active]:bg-western-parchment data-[state=active]:text-western-accent font-western"
+        >
+          Response
+        </TabsTrigger>
       </TabsList>
       
       <TabsContent value="identity">

@@ -44,4 +44,5 @@ export const CONTRACT_ADDRESSES = {
   }
 };
 
-export const DEVELOPER_WALLET_ADDRESS = "A6X5A7ZSvez8BK82Z5tnZJC3qarGbsxRVv8Hc3DKBiZx";
+// Use a valid Ethereum address format
+export const DEVELOPER_WALLET_ADDRESS = "0x1234567890123456789012345678901234567890";

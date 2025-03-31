@@ -1,135 +1,176 @@
 
 import { useState, useEffect } from "react";
-import { useProfileBasicInfo } from "@/hooks/profile/useProfileBasicInfo";
-import { useProfileUsername } from "@/hooks/profile/useProfileUsername";
-import { useProfileSocialLinks } from "@/hooks/profile/useProfileSocialLinks";
-import { useProfileImage } from "@/hooks/profile/useProfileImage";
-import { useProfileFormSubmit } from "@/hooks/profile/useProfileFormSubmit";
-import { useProfileFetch } from "@/hooks/profile/useProfileFetch";
+import { useWallet } from "@/context/WalletContext";
+import { useProfileFormSubmit } from "./useProfileFormSubmit";
+import { useProfileFetch } from "./useProfileFetch";
+import { useProfileUsername } from "./useProfileUsername";
 import { storageService } from "@/services/storage";
-
-export interface ProfileFormData {
-  displayName: string;
-  username: string;
-  profilePicUrl: string;
-  xLink: string;
-  websiteLink: string;
-  bio: string;
-  bioCharCount: number;
-}
+import { toast } from "sonner";
 
 export function useProfileForm() {
-  const { basicInfo, setDisplayName, handleBioChange, address, isConnected } = useProfileBasicInfo();
-  const { username, setUsername, usernameAvailable, checkingUsername } = useProfileUsername();
-  const { socialLinks, setXLink, setWebsiteLink, validateUrls } = useProfileSocialLinks();
-  const { profilePicUrl, setProfilePicUrl } = useProfileImage();
-  const { isSubmitting, hasProfile: submissionHasProfile, profileId: submissionProfileId, supabaseReady, saveProfile: submitProfile } = useProfileFormSubmit();
-  const { isFetchingProfile, hasProfile: fetchedHasProfile, profileId: fetchedProfileId } = useProfileFetch();
+  const { isConnected, address } = useWallet();
+  const [formData, setFormData] = useState({
+    displayName: "",
+    username: "",
+    profilePicUrl: "",
+    xLink: "",
+    websiteLink: "",
+    bio: ""
+  });
+  
+  const [urlValidation, setUrlValidation] = useState({
+    valid: true,
+    message: ""
+  });
 
-  const [combinedHasProfile, setCombinedHasProfile] = useState(false);
-  const [combinedProfileId, setCombinedProfileId] = useState<string | undefined>(undefined);
-  const [previousAddress, setPreviousAddress] = useState<string | null>(null);
+  // Custom hooks for profile interactions
+  const { 
+    hasProfile,
+    profileId, 
+    supabaseReady 
+  } = useProfileFetch();
   
-  // Track if we've already populated the form data
-  const [hasPopulatedFormData, setHasPopulatedFormData] = useState(false);
+  const {
+    usernameAvailable,
+    checkingUsername,
+    checkUsername
+  } = useProfileUsername();
   
-  // Fetch profile data
+  const { 
+    isSubmitting,
+    saveProfile: submitProfileChanges
+  } = useProfileFormSubmit();
+
+  // Load profile data if user has a profile
   useEffect(() => {
-    // Determine if the user has a profile based on fetch and submission results
-    const profileExists = fetchedHasProfile || submissionHasProfile;
-    setCombinedHasProfile(profileExists);
-    setCombinedProfileId(fetchedProfileId || submissionProfileId);
-
-    // Reset populated status when address changes
-    if (address !== previousAddress) {
-      setHasPopulatedFormData(false);
-      setPreviousAddress(address);
-    }
-
-    // Populate form data when profile is fetched, but only once
-    const fetchProfileData = async () => {
-      if (isConnected && address && supabaseReady && !isFetchingProfile && !hasPopulatedFormData) {
+    const loadProfile = async () => {
+      if (isConnected && address && hasProfile) {
         try {
-          console.log("[useProfileForm] Loading profile data for address:", address);
+          console.log("[useProfileForm] Loading existing profile for address:", address);
           const profile = await storageService.getProfile(address);
-          
           if (profile) {
             console.log("[useProfileForm] Loaded profile data:", profile);
-            setDisplayName(profile.displayName || "");
-            setUsername(profile.username || "");
-            setProfilePicUrl(profile.profilePicUrl || "");
-            setXLink(profile.xLink || "");
-            setWebsiteLink(profile.websiteLink || "");
+            setFormData({
+              displayName: profile.displayName || "",
+              username: profile.username || "",
+              profilePicUrl: profile.profilePicUrl || "",
+              xLink: profile.xLink || "",
+              websiteLink: profile.websiteLink || "",
+              bio: profile.bio || ""
+            });
             
-            // Need to create a synthetic event for the bio
-            const bioEvent = {
-              target: { value: profile.bio || "" }
-            } as React.ChangeEvent<HTMLTextAreaElement>;
-            
-            handleBioChange(bioEvent);
-            setHasPopulatedFormData(true);
+            if (profile.username) {
+              checkUsername(profile.username, address);
+            }
+          } else {
+            console.log("[useProfileForm] No profile found despite hasProfile being true");
           }
         } catch (error) {
-          console.error("[useProfileForm] Error fetching profile data:", error);
+          console.error("[useProfileForm] Error loading profile data:", error);
+          toast.error("Error loading profile data");
         }
       }
     };
 
-    fetchProfileData();
-  }, [
-    isConnected, 
-    address, 
-    supabaseReady, 
-    isFetchingProfile, 
-    fetchedHasProfile, 
-    submissionHasProfile, 
-    fetchedProfileId, 
-    submissionProfileId, 
-    setDisplayName, 
-    setUsername, 
-    setProfilePicUrl, 
-    setXLink, 
-    setWebsiteLink, 
-    handleBioChange,
-    hasPopulatedFormData,
-    previousAddress
-  ]);
+    loadProfile();
+  }, [isConnected, address, hasProfile]);
 
-  const saveProfile = async () => {
-    console.log("Saving profile with form data:", {
-      displayName: basicInfo.displayName,
-      username,
-      profilePicUrl,
-      xLink: socialLinks.xLink,
-      websiteLink: socialLinks.websiteLink,
-      bio: basicInfo.bio,
-      bioCharCount: basicInfo.bioCharCount,
-    });
+  // Update form handlers
+  const setDisplayName = (name: string) => {
+    console.log("[useProfileForm] Setting display name:", name);
+    setFormData(prev => ({ ...prev, displayName: name }));
+  };
+
+  const setUsername = (username: string) => {
+    const sanitizedUsername = username.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
+    console.log("[useProfileForm] Setting username:", sanitizedUsername);
+    setFormData(prev => ({ ...prev, username: sanitizedUsername }));
+    if (sanitizedUsername && checkUsername) {
+      checkUsername(sanitizedUsername, address);
+    }
+  };
+
+  const setProfilePicUrl = (url: string) => {
+    console.log("[useProfileForm] Setting profile pic URL:", url);
+    setFormData(prev => ({ ...prev, profilePicUrl: url }));
+  };
+
+  const setXLink = (link: string) => {
+    console.log("[useProfileForm] Setting X link:", link);
+    setFormData(prev => ({ ...prev, xLink: link }));
+    validateUrls(link, formData.websiteLink);
+  };
+
+  const setWebsiteLink = (link: string) => {
+    console.log("[useProfileForm] Setting website link:", link);
+    setFormData(prev => ({ ...prev, websiteLink: link }));
+    validateUrls(formData.xLink, link);
+  };
+
+  const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    console.log("[useProfileForm] Setting bio:", e.target.value);
+    setFormData(prev => ({ ...prev, bio: e.target.value }));
+  };
+
+  // URL validation
+  const validateUrls = (xLink: string, websiteLink: string) => {
+    const urlRegex = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/;
     
-    const formData = {
-      displayName: basicInfo.displayName,
-      username,
-      profilePicUrl,
-      xLink: socialLinks.xLink,
-      websiteLink: socialLinks.websiteLink,
-      bio: basicInfo.bio,
-      bioCharCount: basicInfo.bioCharCount,
-    };
+    if (xLink && !xLink.startsWith('https://twitter.com/') && !xLink.startsWith('https://x.com/')) {
+      if (xLink.includes('twitter.com') || xLink.includes('x.com')) {
+        setUrlValidation({
+          valid: false,
+          message: "X link should start with https://twitter.com/ or https://x.com/"
+        });
+        return;
+      }
+      
+      if (!urlRegex.test(xLink)) {
+        setUrlValidation({
+          valid: false,
+          message: "X link should be a valid URL"
+        });
+        return;
+      }
+    }
+    
+    if (websiteLink && !urlRegex.test(websiteLink)) {
+      setUrlValidation({
+        valid: false,
+        message: "Website link should be a valid URL"
+      });
+      return;
+    }
+    
+    setUrlValidation({
+      valid: true,
+      message: ""
+    });
+  };
 
-    const urlValidation = validateUrls();
-    return await submitProfile(formData, usernameAvailable, urlValidation);
+  // Save profile, utilizing the useProfileFormSubmit hook
+  const saveProfile = async () => {
+    if (!isConnected || !address) {
+      console.error("[useProfileForm] Cannot save profile: wallet not connected");
+      toast.error("Wallet not connected");
+      return false;
+    }
+    
+    console.log("[useProfileForm] Saving profile with data:", formData);
+    
+    try {
+      const result = await submitProfileChanges(formData, usernameAvailable, urlValidation);
+      console.log("[useProfileForm] Profile save result:", result);
+      return result;
+    } catch (error) {
+      console.error("[useProfileForm] Error in saveProfile:", error);
+      toast.error("Failed to save profile");
+      return false;
+    }
   };
 
   return {
-    formData: {
-      displayName: basicInfo.displayName,
-      username,
-      profilePicUrl,
-      xLink: socialLinks.xLink,
-      websiteLink: socialLinks.websiteLink,
-      bio: basicInfo.bio,
-      bioCharCount: basicInfo.bioCharCount,
-    },
+    formData,
     setDisplayName,
     setUsername,
     setProfilePicUrl,
@@ -137,14 +178,12 @@ export function useProfileForm() {
     setWebsiteLink,
     handleBioChange,
     isSubmitting,
-    hasProfile: combinedHasProfile,
+    hasProfile,
     saveProfile,
     address,
     isConnected,
-    profileId: combinedProfileId,
+    profileId,
     usernameAvailable,
-    checkingUsername,
-    isFetchingProfile,
-    supabaseReady,
+    checkingUsername
   };
 }

@@ -129,7 +129,7 @@ export const BookView = ({
   };
 
   return (
-    <div className="flex flex-col items-center py-8">
+    <div className="flex flex-col items-center py-8 pb-24">
       <div className="w-full max-w-4xl mx-auto relative">
         <BookContainer
           scammers={localScammers}

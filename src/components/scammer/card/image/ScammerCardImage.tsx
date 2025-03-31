@@ -1,9 +1,11 @@
 
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect, memo, useCallback, useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { ScammerImageLoader } from "./ScammerImageLoader";
 import { InteractionsBar } from "./InteractionsBar";
 import { ScammerCardBadge } from "./ScammerCardBadge";
 import { scammerService } from "@/services/storage/scammer/scammerService";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ScammerCardImageProps {
   name: string;
@@ -11,9 +13,11 @@ interface ScammerCardImageProps {
   likes: number;
   dislikes: number;
   views: number;
+  shares: number;
   comments?: number;
   scammerId?: string;
   rank?: number;
+  interactionsPosition?: "topRight" | "bottomRight";
 }
 
 const ScammerCardImageComponent = ({ 
@@ -22,22 +26,53 @@ const ScammerCardImageComponent = ({
   likes, 
   dislikes, 
   views,
+  shares,
   comments = 0,
   scammerId,
-  rank
+  rank,
+  interactionsPosition = "bottomRight" // Changed default from "topRight" to "bottomRight"
 }: ScammerCardImageProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [hasAttemptedViewIncrement, setHasAttemptedViewIncrement] = useState(false);
+  const mounted = useRef(true);
+  const instanceId = useRef(`scammer-card-${Date.now()}`);
+  const isMobile = useIsMobile();
+  const location = useLocation();
+  
+  // Always show interactions
+  const showInteractions = true;
 
-  const handleImageLoaded = (loaded: boolean, error: boolean) => {
+  // Reset component state on mount and updates
+  useEffect(() => {
+    mounted.current = true;
+    
+    // Reset state when photoUrl changes
+    setImageLoaded(false);
+    setImageError(false);
+    setHasAttemptedViewIncrement(false);
+    
+    return () => {
+      mounted.current = false;
+    };
+  }, [photoUrl]);
+
+  // Handle image loading state changes
+  const handleImageLoaded = useCallback((loaded: boolean, error: boolean) => {
+    if (!mounted.current) return;
+    
     setImageLoaded(loaded);
     setImageError(error);
-  };
+  }, []);
 
-  // Increment view count when component mounts, but only once
+  // Increment view count when image loads, but only once
   useEffect(() => {
-    if (scammerId) {
-      // Increment view count
+    if (!mounted.current) return;
+    
+    if (scammerId && imageLoaded && !hasAttemptedViewIncrement) {
+      setHasAttemptedViewIncrement(true);
+      
+      // Use a separate function to avoid blocking the UI
       const incrementViews = async () => {
         try {
           await scammerService.incrementScammerViews(scammerId);
@@ -48,39 +83,48 @@ const ScammerCardImageComponent = ({
       
       incrementViews();
     }
-  }, [scammerId]);
+  }, [scammerId, imageLoaded, hasAttemptedViewIncrement]);
 
-  // Only attempt to scroll if we're on a detail page
-  const scrollToComments = () => {
+  // Scroll to comments section if on detail page
+  const scrollToComments = useCallback(() => {
     if (scammerId) {
       const commentsSection = document.querySelector('.comments-section');
       if (commentsSection) {
         commentsSection.scrollIntoView({ behavior: 'smooth' });
       }
     }
-  };
+  }, [scammerId]);
   
   return (
-    <div className="relative aspect-[16/9] overflow-hidden bg-muted">
-      <ScammerImageLoader 
-        name={name} 
-        photoUrl={photoUrl} 
-        onImageLoaded={handleImageLoaded} 
-      />
-      
-      <InteractionsBar 
-        scammerId={scammerId}
-        likes={likes}
-        dislikes={dislikes}
-        views={views}
-        comments={comments}
-        onScrollToComments={scrollToComments}
-      />
-      
-      <ScammerCardBadge 
-        name={name} 
-        rank={rank} 
-      />
+    <div className="flex flex-col font-western">
+      <Link 
+        to={scammerId ? `/scammer/${scammerId}` : "#"} 
+        className="block relative aspect-square overflow-hidden bg-muted cursor-pointer w-full"
+      >
+        <ScammerImageLoader 
+          name={name} 
+          photoUrl={photoUrl} 
+          onImageLoaded={handleImageLoaded} 
+        />
+        
+        {/* Interactions bar with dynamic position */}
+        <InteractionsBar 
+          scammerId={scammerId}
+          likes={likes}
+          dislikes={dislikes}
+          views={views}
+          shares={shares}
+          comments={comments}
+          onScrollToComments={scrollToComments}
+          className=""
+          position={interactionsPosition}
+        />
+        
+        {/* Only show rank badge if rank is provided */}
+        {rank && (
+          <ScammerCardBadge rank={rank} />
+        )}
+      </Link>
     </div>
   );
 };

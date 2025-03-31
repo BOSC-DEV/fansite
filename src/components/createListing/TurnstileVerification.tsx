@@ -26,7 +26,7 @@ export function TurnstileVerification({ onVerify, token }: TurnstileVerification
       />
       
       {!token && (
-        <p className="text-sm text-western-accent mt-2">
+        <p className="text-sm text-western-accent mt-2 text-center">
           * Required to submit the form
         </p>
       )}

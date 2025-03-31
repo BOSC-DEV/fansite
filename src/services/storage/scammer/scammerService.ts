@@ -21,6 +21,11 @@ class ScammerService {
     return scammerDataService.getAllScammers();
   }
   
+  // Add the missing getScammersByUser method
+  async getScammersByUser(userWalletAddress: string): Promise<ScammerListing[]> {
+    return scammerDataService.getScammersByUser(userWalletAddress);
+  }
+  
   // Delete operations - delegated to the specialized delete service
   async deleteScammer(id: string): Promise<boolean> {
     return scammerDeleteService.deleteScammer(id);
@@ -45,6 +50,10 @@ class ScammerService {
   
   async incrementScammerViews(scammerId: string): Promise<boolean> {
     return scammerStatsService.incrementScammerViews(scammerId);
+  }
+  
+  async incrementScammerShares(scammerId: string): Promise<boolean> {
+    return scammerStatsService.incrementScammerShares(scammerId);
   }
 
   async likeScammer(scammerId: string): Promise<boolean> {

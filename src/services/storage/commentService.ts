@@ -11,6 +11,7 @@ export interface Comment {
   createdAt: string;
   likes: number;
   dislikes: number;
+  views: number; // Added view counter
 }
 
 export class CommentService extends BaseSupabaseService {
@@ -25,7 +26,8 @@ export class CommentService extends BaseSupabaseService {
       author_profile_pic: comment.authorProfilePic,
       created_at: comment.createdAt,
       likes: comment.likes || 0,
-      dislikes: comment.dislikes || 0
+      dislikes: comment.dislikes || 0,
+      views: comment.views || 0 // Added view counter
     };
     
     const result = await this.supabase
@@ -62,7 +64,8 @@ export class CommentService extends BaseSupabaseService {
       authorProfilePic: data.author_profile_pic || '',
       createdAt: data.created_at,
       likes: data.likes || 0,
-      dislikes: data.dislikes || 0
+      dislikes: data.dislikes || 0,
+      views: data.views || 0 // Added view counter
     };
   }
 
@@ -88,7 +91,35 @@ export class CommentService extends BaseSupabaseService {
       authorProfilePic: item.author_profile_pic || '',
       createdAt: item.created_at,
       likes: item.likes || 0,
-      dislikes: item.dislikes || 0
+      dislikes: item.dislikes || 0,
+      views: item.views || 0 // Added view counter
+    }));
+  }
+
+  async getCommentsByAuthor(author: string): Promise<Comment[]> {
+    const { data, error } = await this.supabase
+      .from('comments')
+      .select('*')
+      .eq('author', author)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching author comments:', error);
+      return [];
+    }
+
+    // Convert from database format to client format
+    return data.map(item => ({
+      id: item.id,
+      scammerId: item.scammer_id || '',
+      content: item.content,
+      author: item.author,
+      authorName: item.author_name,
+      authorProfilePic: item.author_profile_pic || '',
+      createdAt: item.created_at,
+      likes: item.likes || 0,
+      dislikes: item.dislikes || 0,
+      views: item.views || 0 // Added view counter
     }));
   }
 
@@ -119,6 +150,43 @@ export class CommentService extends BaseSupabaseService {
         .from('comments')
         .update({ dislikes: (comment.dislikes || 0) + 1 })
         .eq('id', commentId);
+    }
+  }
+
+  // Update this method to track views by IP for comments
+  async incrementCommentViews(commentId: string): Promise<void> {
+    try {
+      // Get an anonymized IP hash
+      const { data } = await this.supabase.functions.invoke('get-client-ip-hash');
+      const ipHash = data?.ipHash || 'unknown';
+      
+      // Check if this IP has already viewed this comment
+      // We'll use a local storage mechanism since we don't have a separate table for comment views
+      const localStorageKey = `comment-view-${commentId}-${ipHash}`;
+      
+      if (localStorage.getItem(localStorageKey)) {
+        // This IP has already viewed this comment
+        return;
+      }
+      
+      // Mark this IP as having viewed this comment
+      localStorage.setItem(localStorageKey, 'true');
+      
+      // Increment the view count
+      const { data: comment } = await this.supabase
+        .from('comments')
+        .select('views')
+        .eq('id', commentId)
+        .single();
+
+      if (comment) {
+        await this.supabase
+          .from('comments')
+          .update({ views: (comment.views || 0) + 1 })
+          .eq('id', commentId);
+      }
+    } catch (error) {
+      console.error("Error incrementing comment views:", error);
     }
   }
 }

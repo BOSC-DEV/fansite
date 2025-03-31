@@ -11,14 +11,18 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { formatCurrency, formatDate } from "@/utils/formatters";
 import { useSortableScammers } from "@/hooks/useSortableScammers";
 import { Button } from "@/components/ui/button";
-import { List, Grid } from "lucide-react";
+import { Grid, Scroll, RefreshCw } from "lucide-react";
+import { ScammerTableCompact } from "@/components/scammer/ScammerTableCompact";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { toast } from "sonner";
 
 const MostWanted = () => {
   const { 
     filteredScammers, 
     isLoading, 
     searchQuery,
-    handleSearch
+    handleSearch,
+    refreshScammers
   } = useScammers();
   
   const {
@@ -28,7 +32,7 @@ const MostWanted = () => {
     sortDirection
   } = useSortableScammers(filteredScammers);
   
-  const [viewType, setViewType] = useState<"grid" | "table">("table");
+  const [viewType, setViewType] = useState<"grid" | "table" | "compact">("grid");
   const isMobile = useIsMobile();
   
   const { 
@@ -45,38 +49,80 @@ const MostWanted = () => {
   const paginatedScammers = sortedScammers.slice(startIndex, endIndex);
 
   useEffect(() => {
-    if (isMobile && viewType === "table") {
+    refreshScammers();
+  }, [refreshScammers]);
+
+  useEffect(() => {
+    if (!isMobile && viewType === "compact") {
       setViewType("grid");
     }
   }, [isMobile, viewType]);
 
-  const handleViewChange = (view: "grid" | "table") => {
+  const handleViewChange = (view: "grid" | "table" | "compact") => {
     setViewType(view);
   };
 
+  const handleRefresh = () => {
+    refreshScammers();
+    toast.success("Refreshed scammer listings");
+  };
+
   return (
-    <div className="min-h-screen old-paper">
+    <div className="min-h-screen old-paper flex flex-col">
       <Header />
-      <main className="pt-20 md:pt-28 pb-16">
+      <main className="py-1 md:py-4 pb-20 flex-grow">
         <div className="container mx-auto max-w-6xl px-4">
           <MostWantedHeader />
           
           <div className="space-y-4 md:space-y-6">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div className="w-full md:w-1/2 lg:w-1/3">
-                <SearchBar onSearch={handleSearch} initialQuery={searchQuery} />
+            <div className="flex items-center gap-2">
+              <div className={isMobile ? "flex-1 max-w-[75%]" : "flex-1 max-w-[90%]"}>
+                <SearchBar 
+                  onSearch={handleSearch} 
+                  initialQuery={searchQuery} 
+                  placeholder="Search for scammer..." 
+                />
               </div>
               
-              {!isMobile && (
+              {isMobile ? (
                 <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-western-wood bg-western-parchment text-western-wood"
+                    onClick={handleRefresh}
+                    title="Refresh listings"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                  </Button>
+                  <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && handleViewChange(value as "grid" | "table" | "compact")}>
+                    <ToggleGroupItem value="compact" aria-label="List view">
+                      <Scroll className="h-4 w-4" />
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="grid" aria-label="Grid view">
+                      <Grid className="h-4 w-4" />
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-western-wood bg-western-parchment text-western-wood"
+                    onClick={handleRefresh}
+                    title="Refresh listings"
+                  >
+                    <RefreshCw className="h-4 w-4 mr-1" />
+                    Refresh
+                  </Button>
                   <Button
                     variant="outline"
                     size="sm"
                     className={`border-western-wood ${viewType === 'table' ? 'bg-western-wood text-western-parchment' : 'bg-western-parchment text-western-wood'}`}
                     onClick={() => handleViewChange('table')}
                   >
-                    <List className="h-4 w-4 mr-1" />
-                    Table
+                    <Scroll className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="outline"
@@ -84,21 +130,44 @@ const MostWanted = () => {
                     className={`border-western-wood ${viewType === 'grid' ? 'bg-western-wood text-western-parchment' : 'bg-western-parchment text-western-wood'}`}
                     onClick={() => handleViewChange('grid')}
                   >
-                    <Grid className="h-4 w-4 mr-1" />
-                    Grid
+                    <Grid className="h-4 w-4" />
                   </Button>
                 </div>
               )}
             </div>
 
             {isLoading ? (
-              <div className="flex justify-center items-center py-10 md:py-20">
-                <p className="text-western-wood">Loading scammers...</p>
-              </div>
+              <ScammerGrid
+                paginatedScammers={[]}
+                currentPage={1}
+                totalPages={1}
+                setCurrentPage={() => {}}
+                isLoading={true}
+              />
             ) : sortedScammers.length === 0 ? (
               <NoResults query={searchQuery} />
-            ) : viewType === "table" && !isMobile ? (
-              <div className="paper-texture border-2 border-western-wood rounded-sm">
+            ) : isMobile ? (
+              <div className="mt-4">
+                {viewType === "grid" ? (
+                  <ScammerGrid
+                    paginatedScammers={paginatedScammers}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    setCurrentPage={setCurrentPage}
+                  />
+                ) : (
+                  <ScammerTableCompact
+                    scammers={paginatedScammers}
+                    formatCurrency={formatCurrency}
+                    formatDate={formatDate}
+                    onSort={handleSort}
+                    sortField={sortField}
+                    sortDirection={sortDirection}
+                  />
+                )}
+              </div>
+            ) : viewType === "table" ? (
+              <div className="w-full">
                 <ScammerTable 
                   paginatedScammers={paginatedScammers}
                   currentPage={currentPage}
@@ -123,6 +192,7 @@ const MostWanted = () => {
           </div>
         </div>
       </main>
+      {/* SiteFooter is now rendered at the App level */}
     </div>
   );
 };

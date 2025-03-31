@@ -18,16 +18,19 @@ export interface ScammerListing {
   walletAddress: string;
   dateAdded: string; // ISO string
   addedBy: string;
-  comments?: string[]; // Array of comment IDs
+  comments: string[]; // Now required to match localStorage version
   likes: number;
   dislikes: number;
   views: number;
+  shares: number;
+  deletedAt: string | null; // This property is required to match the DB schema
 }
 
 export interface ScammerStats {
   likes?: number;
   dislikes?: number;
   views?: number;
+  shares?: number;
 }
 
 export interface ScammerDbRecord {
@@ -46,5 +49,7 @@ export interface ScammerDbRecord {
   likes: number | null;
   dislikes: number | null;
   views: number | null;
+  shares: number | null;
   comments: Json | null;
+  deleted_at: string | null;
 }

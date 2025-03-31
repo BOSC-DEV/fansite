@@ -1,17 +1,17 @@
 
-import { supabase } from '@/lib/supabase';
+import { BaseSupabaseService } from '../baseSupabaseService';
 import { ScammerDbRecord } from './scammerTypes';
 
 /**
  * Base service with core scammer operations
  */
-export class ScammerBaseService {
+export class ScammerBaseService extends BaseSupabaseService {
   /**
    * Get a scammer record from the database
    */
   protected async getScammerRecord(id: string): Promise<ScammerDbRecord | null> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await this.supabase
         .from('scammers')
         .select('*')
         .eq('id', id)
@@ -27,7 +27,11 @@ export class ScammerBaseService {
         return null;
       }
 
-      return data as ScammerDbRecord;
+      // Add the shares property if it doesn't exist
+      return {
+        ...data,
+        shares: data.shares || 0
+      } as ScammerDbRecord;
     } catch (error) {
       console.error("Error in getScammerRecord:", error);
       return null;
@@ -39,9 +43,22 @@ export class ScammerBaseService {
    */
   protected async updateScammerRecord(id: string, updateData: Partial<ScammerDbRecord>): Promise<boolean> {
     try {
-      const { error } = await supabase
+      // Convert JSON types to proper format for Supabase
+      const supabaseUpdateData: Record<string, any> = {};
+      
+      // Copy only the properties that exist in updateData
+      Object.keys(updateData).forEach(key => {
+        // Handle arrays specifically
+        if (['links', 'aliases', 'accomplices', 'comments'].includes(key) && updateData[key as keyof ScammerDbRecord]) {
+          supabaseUpdateData[key] = updateData[key as keyof ScammerDbRecord];
+        } else {
+          supabaseUpdateData[key] = updateData[key as keyof ScammerDbRecord];
+        }
+      });
+      
+      const { error } = await this.supabase
         .from('scammers')
-        .update(updateData)
+        .update(supabaseUpdateData)
         .eq('id', id);
 
       if (error) {
