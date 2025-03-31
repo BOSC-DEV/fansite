@@ -3,8 +3,6 @@ import { SearchBar } from "@/components/search/SearchBar";
 import { SortAndViewControls } from "@/components/sort/SortAndViewControls";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Grid, Scroll } from "lucide-react";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface SearchAndFilterControlsProps {
   searchQuery: string;
@@ -28,40 +26,18 @@ export const SearchAndFilterControls = ({
   return (
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-col gap-4">
-        {isMobile ? (
-          <div className="flex items-center gap-2 relative">
-            <div className="flex-1">
-              <SearchBar 
-                onSearch={handleSearch} 
-                initialQuery={searchQuery}
-                placeholder="Search..."
-                className="pr-16"
-              />
-            </div>
-            <div className="absolute right-0">
-              <ToggleGroup type="single" value={viewType} onValueChange={(value) => value && handleViewChange(value as "grid" | "table")}>
-                <ToggleGroupItem value="table" aria-label="List view">
-                  <Scroll className="h-4 w-4" />
-                </ToggleGroupItem>
-                <ToggleGroupItem value="grid" aria-label="Grid view">
-                  <Grid className="h-4 w-4" />
-                </ToggleGroupItem>
-              </ToggleGroup>
-            </div>
-          </div>
-        ) : (
-          <>
-            <SearchBar 
-              onSearch={handleSearch} 
-              initialQuery={searchQuery}
-            />
-            <SortAndViewControls
-              viewType={viewType}
-              sortBy={sortBy}
-              onViewChange={handleViewChange}
-              onSortChange={handleSortChange}
-            />
-          </>
+        <SearchBar 
+          onSearch={handleSearch} 
+          initialQuery={searchQuery}
+        />
+        
+        {!isMobile && (
+          <SortAndViewControls
+            viewType={viewType}
+            sortBy={sortBy}
+            onViewChange={handleViewChange}
+            onSortChange={handleSortChange}
+          />
         )}
         
         {isMobile && (

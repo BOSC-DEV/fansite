@@ -20,8 +20,6 @@ export function useScammerStats(scammer: Scammer) {
     
     const checkPreviousInteraction = async () => {
       try {
-        console.log("Checking previous interaction for", address, "with scammer", scammer.id);
-        
         // Check database first
         const { data, error } = await supabase
           .from('user_scammer_interactions')
@@ -57,40 +55,25 @@ export function useScammerStats(scammer: Scammer) {
     checkPreviousInteraction();
   }, [scammer.id, address]);
 
-  useEffect(() => {
-    // Update state when scammer prop changes
-    setLikes(scammer.likes || 0);
-    setDislikes(scammer.dislikes || 0);
-    setViews(scammer.views || 0);
-  }, [scammer]);
-
   const handleLike = async () => {
-    if (!address) {
-      toast.error("Please connect your wallet to interact");
-      return;
-    }
-    
-    const newLikedState = !isLiked;
-    
-    // Optimistically update UI state
     if (isLiked) {
       setIsLiked(false);
-      setLikes(prev => Math.max(0, prev - 1));
+      setLikes(likes - 1);
       toast.info("Agreement removed");
     } else {
       if (isDisliked) {
         setIsDisliked(false);
-        setDislikes(prev => Math.max(0, prev - 1));
+        setDislikes(dislikes - 1);
       }
       setIsLiked(true);
-      setLikes(prev => prev + 1);
+      setLikes(likes + 1);
       toast.success("Agreed");
     }
 
     try {
       // Save to local storage as backup
       localStorage.setItem(`scammer-interactions-${scammer.id}`, JSON.stringify({
-        liked: newLikedState,
+        liked: !isLiked,
         disliked: isDisliked ? false : isDisliked
       }));
       
@@ -109,38 +92,26 @@ export function useScammerStats(scammer: Scammer) {
             console.error("Error checking interaction record:", error);
           } else if (data) {
             // Update existing record
-            const { error: updateError } = await supabase
+            await supabase
               .from('user_scammer_interactions')
               .update({ 
-                liked: newLikedState, 
+                liked: !isLiked, 
                 disliked: isDisliked ? false : isDisliked,
                 last_updated: new Date().toISOString()
               })
               .eq('id', data.id);
-              
-            if (updateError) {
-              console.error("Error updating interaction:", updateError);
-            } else {
-              console.log("Successfully updated interaction");
-            }
           } else {
             // Insert new record
-            const { error: insertError } = await supabase
+            await supabase
               .from('user_scammer_interactions')
               .insert([
                 { 
                   user_id: address, 
                   scammer_id: scammer.id, 
-                  liked: newLikedState, 
+                  liked: !isLiked, 
                   disliked: isDisliked ? false : isDisliked 
                 }
               ]);
-              
-            if (insertError) {
-              console.error("Error inserting interaction:", insertError);
-            } else {
-              console.log("Successfully inserted new interaction");
-            }
           }
         } catch (dbError) {
           console.error("Error saving interaction to DB:", dbError);
@@ -155,37 +126,21 @@ export function useScammerStats(scammer: Scammer) {
     } catch (error) {
       console.error("Error updating likes:", error);
       toast.error("Failed to update agreement");
-      
-      // Revert UI state if error
-      setIsLiked(!newLikedState);
-      setLikes(newLikedState ? likes - 1 : likes + 1);
-      if (isDisliked && newLikedState) {
-        setIsDisliked(true);
-        setDislikes(dislikes + 1);
-      }
     }
   };
 
   const handleDislike = async () => {
-    if (!address) {
-      toast.error("Please connect your wallet to interact");
-      return;
-    }
-    
-    const newDislikedState = !isDisliked;
-    
-    // Optimistically update UI
     if (isDisliked) {
       setIsDisliked(false);
-      setDislikes(prev => Math.max(0, prev - 1));
+      setDislikes(dislikes - 1);
       toast.info("Disagreement removed");
     } else {
       if (isLiked) {
         setIsLiked(false);
-        setLikes(prev => Math.max(0, prev - 1));
+        setLikes(likes - 1);
       }
       setIsDisliked(true);
-      setDislikes(prev => prev + 1);
+      setDislikes(dislikes + 1);
       toast.success("Disagreed");
     }
 
@@ -193,7 +148,7 @@ export function useScammerStats(scammer: Scammer) {
       // Save to local storage as backup
       localStorage.setItem(`scammer-interactions-${scammer.id}`, JSON.stringify({
         liked: isLiked ? false : isLiked,
-        disliked: newDislikedState
+        disliked: !isDisliked
       }));
       
       // Save to database for persistence
@@ -211,38 +166,26 @@ export function useScammerStats(scammer: Scammer) {
             console.error("Error checking interaction record:", error);
           } else if (data) {
             // Update existing record
-            const { error: updateError } = await supabase
+            await supabase
               .from('user_scammer_interactions')
               .update({ 
                 liked: isLiked ? false : isLiked, 
-                disliked: newDislikedState,
+                disliked: !isDisliked,
                 last_updated: new Date().toISOString()
               })
               .eq('id', data.id);
-              
-            if (updateError) {
-              console.error("Error updating interaction:", updateError);
-            } else {
-              console.log("Successfully updated interaction");
-            }
           } else {
             // Insert new record
-            const { error: insertError } = await supabase
+            await supabase
               .from('user_scammer_interactions')
               .insert([
                 { 
                   user_id: address, 
                   scammer_id: scammer.id, 
                   liked: isLiked ? false : isLiked, 
-                  disliked: newDislikedState 
+                  disliked: !isDisliked 
                 }
               ]);
-              
-            if (insertError) {
-              console.error("Error inserting interaction:", insertError);
-            } else {
-              console.log("Successfully inserted new interaction");
-            }
           }
         } catch (dbError) {
           console.error("Error saving interaction to DB:", dbError);
@@ -257,14 +200,6 @@ export function useScammerStats(scammer: Scammer) {
     } catch (error) {
       console.error("Error updating dislikes:", error);
       toast.error("Failed to update disagreement");
-      
-      // Revert UI state if error
-      setIsDisliked(!newDislikedState);
-      setDislikes(newDislikedState ? dislikes - 1 : dislikes + 1);
-      if (isLiked && newDislikedState) {
-        setIsLiked(true);
-        setLikes(likes + 1);
-      }
     }
   };
 

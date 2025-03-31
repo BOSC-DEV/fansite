@@ -1,100 +1,61 @@
 
-import { useState, useMemo } from 'react';
-import type { LeaderboardUser } from '@/services/storage/leaderboardService';
+import { useState, useMemo } from "react";
+import type { LeaderboardUser } from "@/services/storage/leaderboardService";
 
-type SortField = 'rank' | 'name' | 'reports' | 'likes' | 'views' | 'comments' | 'bountyGenerated' | 'bountySpent' | 'joined' | 'points';
-type SortDirection = 'asc' | 'desc';
+export type SortField = 'totalReports' | 'totalLikes' | 'totalViews' | 'totalComments' | 'totalBounty' | 'joinedDuration';
+export type SortDirection = 'asc' | 'desc';
 
-interface UseSortableLeaderboardReturn {
-  sortedUsers: LeaderboardUser[];
-  handleSort: (field: SortField) => void;
-  sortField: SortField;
-  sortDirection: SortDirection;
-  // Add a map to track original ranks based on points
-  originalRanks: Map<string, number>;
-}
-
-export const useSortableLeaderboard = (users: LeaderboardUser[]): UseSortableLeaderboardReturn => {
-  // Default sort by points (descending)
-  const [sortField, setSortField] = useState<SortField>('points');
+export const useSortableLeaderboard = (users: LeaderboardUser[]) => {
+  const [sortField, setSortField] = useState<SortField | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
-      // Toggle direction if clicking the same field
+      // Toggle direction if same field clicked
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
-      // New field, set to descending by default (most common expectation)
+      // Set new field and default to descending
       setSortField(field);
       setSortDirection('desc');
     }
   };
 
-  // First create ranks based on points
-  const originalRanks = useMemo(() => {
-    const rankMap = new Map<string, number>();
-    
-    // First, sort users by points in descending order
-    const pointsSorted = [...users].sort((a, b) => b.points - a.points);
-    
-    // Assign ranks based on this initial points sorting
-    pointsSorted.forEach((user, index) => {
-      rankMap.set(user.id, index + 1);
-    });
-    
-    return rankMap;
-  }, [users]);
-
   const sortedUsers = useMemo(() => {
-    return [...users].sort((a, b) => {
-      let comparison = 0;
-
-      switch (sortField) {
-        case 'rank':
-          // Use the pre-calculated ranks based on points
-          comparison = originalRanks.get(a.id)! - originalRanks.get(b.id)!;
-          break;
-        case 'name':
-          comparison = a.displayName.localeCompare(b.displayName);
-          break;
-        case 'reports':
-          comparison = a.totalReports - b.totalReports;
-          break;
-        case 'likes':
-          comparison = a.totalLikes - b.totalLikes;
-          break;
-        case 'views':
-          comparison = a.totalViews - b.totalViews;
-          break;
-        case 'comments':
-          comparison = a.totalComments - b.totalComments;
-          break;
-        case 'bountyGenerated':
-          comparison = a.totalBountyGenerated - b.totalBountyGenerated;
-          break;
-        case 'bountySpent':
-          comparison = a.totalBountySpent - b.totalBountySpent;
-          break;
-        case 'joined':
-          comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-          break;
-        case 'points':
-          comparison = a.points - b.points;
-          break;
-        default:
-          comparison = 0;
-      }
-
-      // Flip the comparison result for descending order
-      return sortDirection === 'asc' ? comparison : -comparison;
-    });
-  }, [users, sortField, sortDirection, originalRanks]);
+    const usersCopy = [...users];
+    if (sortField) {
+      usersCopy.sort((a, b) => {
+        // Special case for joinedDuration sorting
+        if (sortField === 'joinedDuration') {
+          const dateA = new Date(a.createdAt);
+          const dateB = new Date(b.createdAt);
+          
+          // For ascending, older accounts first (smaller value = longer duration)
+          if (sortDirection === 'asc') {
+            return dateA.getTime() - dateB.getTime();
+          }
+          // For descending, newer accounts first (larger value = shorter duration)
+          return dateB.getTime() - dateA.getTime();
+        }
+        
+        // For all other fields
+        const valueA = a[sortField];
+        const valueB = b[sortField];
+        
+        // For ascending, smaller numbers first
+        if (sortDirection === 'asc') {
+          return (valueA as number) - (valueB as number);
+        }
+        // For descending, larger numbers first
+        return (valueB as number) - (valueA as number);
+      });
+    }
+    return usersCopy;
+  }, [users, sortField, sortDirection]);
 
   return {
     sortedUsers,
     handleSort,
     sortField,
-    sortDirection,
-    originalRanks
+    sortDirection
   };
 };

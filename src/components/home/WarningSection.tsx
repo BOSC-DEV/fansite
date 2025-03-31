@@ -4,22 +4,18 @@ import { Shield, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
 import { formatWalletAddress } from "@/utils/formatters";
-
 export const WarningSection = () => {
   const [copied, setCopied] = useState(false);
-  
   const copyToClipboard = () => {
     navigator.clipboard.writeText(DEVELOPER_WALLET_ADDRESS).then(() => {
       setCopied(true);
-      toast.success("Developer wallet address copied to clipboard");
+      toast.success("Address copied to clipboard");
       setTimeout(() => setCopied(false), 2000);
     }).catch(() => {
       toast.error("Failed to copy address");
     });
   };
-  
-  return (
-    <section className="py-12 md:py-16 bg-western-parchment/20 border-y-2 border-western-leather/30">
+  return <section className="py-12 md:py-16 bg-western-parchment/20 border-y-2 border-western-leather/30">
       <div className="container mx-auto max-w-6xl px-4">
         <div className="flex flex-col md:flex-row gap-6 items-start western-card bg-western-parchment/80 p-4 md:p-6 border-2 border-western-wood transform hover:-rotate-1 duration-300">
           <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-western-accent/10 flex items-center justify-center flex-shrink-0 border-2 border-dashed border-western-accent">
@@ -44,6 +40,5 @@ send tokens to:</span>
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };

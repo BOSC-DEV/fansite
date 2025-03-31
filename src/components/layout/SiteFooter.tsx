@@ -1,61 +1,87 @@
 
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Twitter, Mail, Github } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { Copy, Check, Twitter, Mail } from "lucide-react";
+import { DEVELOPER_WALLET_ADDRESS } from "@/contracts/contract-abis";
+import { formatWalletAddress } from "@/utils/formatters";
+import { toast } from "sonner";
 
 export const SiteFooter = () => {
-  const currentYear = new Date().getFullYear();
-  const isMobile = useIsMobile();
+  const [copied, setCopied] = useState(false);
 
-  // Don't render the footer at all on mobile devices
-  if (isMobile) {
-    return null;
-  }
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(DEVELOPER_WALLET_ADDRESS)
+      .then(() => {
+        setCopied(true);
+        toast.success("Wallet address copied to clipboard");
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch(() => {
+        toast.error("Failed to copy text");
+      });
+  };
 
   return (
-    <footer className="py-1 border-t border-western-wood wood-texture mt-auto">
-      <div className="container mx-auto max-w-6xl px-2">
-        <div className="flex flex-row gap-2 justify-between items-center">
-          <div className="flex items-center">
-            <img 
-              src="/lovable-uploads/8a55e27c-a460-46a6-9f26-dd32ef3512ff.png"
-              alt="Book of Scams Logo"
-              className="h-8 mr-1"
-              style={{ objectFit: "contain" }}
-            />
-            <span className="text-western-parchment font-western text-xs">
-              Book of Scams {currentYear} &copy;
-            </span>
+    <footer className="py-8 border-t border-western-wood wood-texture">
+      <div className="container mx-auto max-w-6xl px-4">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+          <div>
+            <span className="text-xl font-wanted text-zinc-950">Book of Scams</span>
           </div>
           
-          <div className="flex items-center gap-2">
-            <a 
-              href="https://github.com/BOSC-DEV/BOSC-APP" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 text-western-parchment hover:text-western-sand transition-colors"
-            >
-              <Github className="h-3.5 w-3.5" />
-              <span className="font-western text-xs">GitHub</span>
-            </a>
+          <div className="flex flex-col items-center gap-4">
+            <div className="flex space-x-6">
+              <Link to="/" className="text-sm text-western-parchment hover:text-western-sand font-western">
+                Saloon
+              </Link>
+              <Link to="/most-wanted" className="text-sm text-western-parchment hover:text-western-sand font-western">
+                Most Wanted
+              </Link>
+              <Link to="/create-listing" className="text-sm text-western-parchment hover:text-western-sand font-western">
+                Report Outlaw
+              </Link>
+            </div>
             
-            <a 
-              href="https://x.com/bookofscamslol" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 text-western-parchment hover:text-western-sand transition-colors"
-            >
-              <Twitter className="h-3.5 w-3.5" />
-              <span className="font-western text-xs">@bookofscamslol</span>
-            </a>
-            
-            <a 
-              href="mailto:dev@bookofscamslol" 
-              className="flex items-center gap-1 text-western-parchment hover:text-western-sand transition-colors"
-            >
-              <Mail className="h-3.5 w-3.5" />
-              <span className="font-western text-xs">dev@bookofscamslol</span>
-            </a>
+            {/* Social links moved under menu options */}
+            <div className="flex items-center gap-6">
+              <a 
+                href="https://x.com/bookofscamslol" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-western-parchment hover:text-western-sand transition-colors"
+              >
+                <Twitter className="h-4 w-4" />
+                <span className="font-western text-sm">@bookofscamslol</span>
+              </a>
+              
+              <a 
+                href="mailto:dev@bookofscamslol" 
+                className="flex items-center gap-2 text-western-parchment hover:text-western-sand transition-colors"
+              >
+                <Mail className="h-4 w-4" />
+                <span className="font-western text-sm">dev@bookofscamslol</span>
+              </a>
+            </div>
+          </div>
+          
+          <div className="text-sm text-western-parchment/70 font-western">
+            &copy; {new Date().getFullYear()} Book of Scams
+          </div>
+        </div>
+        
+        <div className="text-center">
+          <div className="text-sm text-western-parchment/80 max-w-2xl mx-auto">
+            <div className="flex items-center justify-center gap-2 text-western-parchment">
+              <span className="font-western">Ca:</span>
+              <span className="font-western cursor-pointer" onClick={copyToClipboard}>
+                {formatWalletAddress(DEVELOPER_WALLET_ADDRESS)}
+              </span>
+              {copied ? (
+                <Check className="h-4 w-4 ml-2 text-green-400" />
+              ) : (
+                <Copy className="h-4 w-4 ml-2 cursor-pointer" onClick={copyToClipboard} />
+              )}
+            </div>
           </div>
         </div>
       </div>

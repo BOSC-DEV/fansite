@@ -14,7 +14,6 @@ export function CommentsButton({ count, onScrollToComments }: CommentsButtonProp
       count={count} 
       onClick={onScrollToComments}
       title="View comments"
-      isViewOrComment={true} // Mark as comment button to prevent greying out
     />
   );
 }

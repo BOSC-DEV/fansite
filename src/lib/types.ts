@@ -14,7 +14,6 @@ export interface Scammer {
   likes?: number;
   dislikes?: number;
   views?: number;
-  shares?: number;
 }
 
 export interface ScammerInput {
@@ -45,8 +44,7 @@ export const MOCK_SCAMMERS: Scammer[] = [
     addedBy: '0xAbC123...',
     likes: 100,
     dislikes: 50,
-    views: 200,
-    shares: 35
+    views: 200
   },
   {
     id: '2',

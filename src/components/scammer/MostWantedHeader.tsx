@@ -16,7 +16,7 @@ export const MostWantedHeader = () => {
   return (
     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 md:mb-8 gap-4">
       <div>
-        <h1 className="text-3xl font-wanted text-western-wood mb-2">Most Wanted List</h1>
+        <h1 className="text-3xl font-wanted text-western-wood mb-2">Most Wanted Scammers</h1>
         <p className="text-western-wood/80 max-w-xl">Browse the list of reported scammers in the crypto space</p>
       </div>
       

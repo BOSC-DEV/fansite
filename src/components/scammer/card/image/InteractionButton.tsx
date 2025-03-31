@@ -2,7 +2,6 @@
 import React from "react";
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 interface InteractionButtonProps {
   icon: LucideIcon;
@@ -12,9 +11,6 @@ interface InteractionButtonProps {
   activeColor?: string;
   className?: string;
   title?: string;
-  iconSize?: number;
-  disabled?: boolean;
-  isViewOrComment?: boolean; // New prop to identify view or comment buttons
 }
 
 export function InteractionButton({ 
@@ -22,43 +18,25 @@ export function InteractionButton({
   count, 
   onClick, 
   active = false, 
-  activeColor = 'bg-western-wood',
+  activeColor = 'bg-black/60',
   className,
-  title,
-  iconSize,
-  disabled = false,
-  isViewOrComment = false
+  title
 }: InteractionButtonProps) {
-  const isMobile = useIsMobile();
-  const defaultIconSize = 3;
-  const actualIconSize = iconSize || defaultIconSize;
-  
-  // If it's a view or comment button, we don't want to grey it out
-  const isDisabled = disabled && !isViewOrComment;
-  
   const buttonClasses = cn(
     "flex items-center",
-    active ? activeColor : "bg-western-wood", // Removed opacity for solid background
-    "text-western-parchment py-1 px-2 rounded-full text-xs font-western",
-    onClick && !isDisabled ? "cursor-pointer hover:bg-western-wood/90 transition-colors" : "cursor-default",
-    isDisabled ? "opacity-70" : "",
-    isMobile ? "py-0.5 px-1.5" : "",
+    active ? activeColor : "bg-black/60",
+    "text-white py-1 px-2 rounded-full text-xs",
+    onClick ? "cursor-pointer hover:bg-black/80 transition-colors" : "",
     className
   );
-  
-  const handleClick = (e: React.MouseEvent) => {
-    if (onClick && !isDisabled) {
-      onClick(e);
-    }
-  };
   
   return (
     <div 
       className={buttonClasses}
-      onClick={handleClick} 
+      onClick={onClick} 
       title={title}
     >
-      <Icon className={`h-${actualIconSize} w-${actualIconSize} mr-1 ${isMobile ? 'h-3 w-3' : ''}`} />
+      <Icon className="h-3 w-3 mr-1" />
       <span>{count || 0}</span>
     </div>
   );

@@ -1,5 +1,6 @@
 
-import React from 'react';
+import React, { useState } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface ScammerAvatarProps {
   name: string;
@@ -7,21 +8,22 @@ interface ScammerAvatarProps {
 }
 
 export function ScammerAvatar({ name, photoUrl }: ScammerAvatarProps) {
+  const [imageError, setImageError] = useState(false);
+  
+  // Fallback URL when image fails to load
+  const fallbackImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&size=200`;
+  
   return (
-    <div className="w-full aspect-square relative overflow-hidden rounded-md border border-western-wood/30">
-      {photoUrl ? (
+    <div className="flex justify-center">
+      <div className="relative w-full aspect-square max-w-full rounded-md overflow-hidden border-2 border-western-wood shadow-md">
         <img
-          src={photoUrl}
-          alt={`${name}`}
-          className="object-cover w-full h-full"
+          src={imageError ? fallbackImageUrl : photoUrl}
+          alt={name}
+          className="w-full h-full object-cover"
+          onError={() => setImageError(true)}
+          loading="lazy"
         />
-      ) : (
-        <div className="bg-western-sand/30 w-full h-full flex items-center justify-center">
-          <span className="text-3xl font-bold text-western-wood/50">
-            {name.charAt(0).toUpperCase()}
-          </span>
-        </div>
-      )}
+      </div>
     </div>
   );
 }

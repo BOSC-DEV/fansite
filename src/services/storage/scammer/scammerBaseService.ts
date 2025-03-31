@@ -1,17 +1,17 @@
 
-import { BaseSupabaseService } from '../baseSupabaseService';
+import { supabase } from '@/lib/supabase';
 import { ScammerDbRecord } from './scammerTypes';
 
 /**
  * Base service with core scammer operations
  */
-export class ScammerBaseService extends BaseSupabaseService {
+export class ScammerBaseService {
   /**
    * Get a scammer record from the database
    */
   protected async getScammerRecord(id: string): Promise<ScammerDbRecord | null> {
     try {
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .from('scammers')
         .select('*')
         .eq('id', id)
@@ -27,11 +27,7 @@ export class ScammerBaseService extends BaseSupabaseService {
         return null;
       }
 
-      // Add the shares property if it doesn't exist
-      return {
-        ...data,
-        shares: data.shares || 0
-      } as ScammerDbRecord;
+      return data as ScammerDbRecord;
     } catch (error) {
       console.error("Error in getScammerRecord:", error);
       return null;
@@ -43,22 +39,9 @@ export class ScammerBaseService extends BaseSupabaseService {
    */
   protected async updateScammerRecord(id: string, updateData: Partial<ScammerDbRecord>): Promise<boolean> {
     try {
-      // Convert JSON types to proper format for Supabase
-      const supabaseUpdateData: Record<string, any> = {};
-      
-      // Copy only the properties that exist in updateData
-      Object.keys(updateData).forEach(key => {
-        // Handle arrays specifically
-        if (['links', 'aliases', 'accomplices', 'comments'].includes(key) && updateData[key as keyof ScammerDbRecord]) {
-          supabaseUpdateData[key] = updateData[key as keyof ScammerDbRecord];
-        } else {
-          supabaseUpdateData[key] = updateData[key as keyof ScammerDbRecord];
-        }
-      });
-      
-      const { error } = await this.supabase
+      const { error } = await supabase
         .from('scammers')
-        .update(supabaseUpdateData)
+        .update(updateData)
         .eq('id', id);
 
       if (error) {

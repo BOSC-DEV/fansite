@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -7,7 +8,6 @@ import { Scammer } from "@/lib/types";
 import { ScammerGrid } from "@/components/scammer/ScammerGrid";
 import { Button } from "@/components/ui/button";
 import { Coins, Plus } from "lucide-react";
-import { SiteFooter } from "@/components/layout/SiteFooter";
 
 export function MyBountiesPage() {
   const { isConnected, address } = useWallet();
@@ -60,9 +60,9 @@ export function MyBountiesPage() {
   const paginatedScammers = scammers.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   return (
-    <div className="min-h-screen old-paper flex flex-col">
+    <div className="min-h-screen old-paper">
       <Header />
-      <main className="container mx-auto px-4 py-4 flex-grow">
+      <main className="container mx-auto px-4 pt-28 pb-20">
         <div className="flex flex-col items-center mb-8">
           <div className="flex items-center justify-between w-full max-w-4xl">
             <h1 className="text-3xl font-bold font-wanted text-western-accent mb-2">
@@ -106,7 +106,6 @@ export function MyBountiesPage() {
           </div>
         )}
       </main>
-      <SiteFooter />
     </div>
   );
 }

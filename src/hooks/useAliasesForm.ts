@@ -13,6 +13,7 @@ export function useAliasesForm() {
     }
   };
 
+  // Update to accept a numeric index instead of a string
   const removeAlias = (index: number) => {
     const newAliases = [...aliases];
     newAliases.splice(index, 1);

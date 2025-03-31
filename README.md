@@ -1,90 +1,69 @@
+# Welcome to your Lovable project
 
-# Book of Scams
+## Project info
 
-Book of Scams is a decentralized criminal registry bringing accountability and justice to The Wild West of crypto.
+**URL**: https://lovable.dev/projects/2d269e29-e03a-4775-b8d7-6b3e393836e1
 
-## About
+## How can I edit this code?
 
-Book of Scams allows users to:
+There are several ways of editing your application.
 
-- Browse and search for known crypto scammers
-- Report new scammers with evidence
-- Contribute to bounties for bringing scammers to justice
-- Verify their identity using wallet-based authentication
-- Comment and interact with listings
-- Track the most wanted crypto criminals
+**Use Lovable**
 
-## Tech Stack
+Simply visit the [Lovable Project](https://lovable.dev/projects/2d269e29-e03a-4775-b8d7-6b3e393836e1) and start prompting.
 
-- **Frontend**: React, TypeScript, Tailwind CSS, Shadcn UI
-- **Backend**: Supabase (PostgreSQL, Authentication, Storage)
-- **Blockchain**: Solana (contracts and wallet integration)
-- **State Management**: React Context API
-- **Routing**: React Router
-- **Design**: Custom western-themed UI components
+Changes made via Lovable will be committed automatically to this repo.
 
-## Development
+**Use your preferred IDE**
 
-### Prerequisites
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-- Node.js (v16+)
-- NPM or Yarn
-- Supabase account
-- Phantom wallet (or compatible Solana wallet)
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-### Setup
+Follow these steps:
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/book-of-scams.git
-cd book-of-scams
-```
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
 
-2. Install dependencies:
-```bash
-npm install
-```
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
 
-3. Create a `.env` file with your Supabase credentials:
-```
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
+# Step 3: Install the necessary dependencies.
+npm i
 
-4. Start the development server:
-```bash
+# Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+**Edit a file directly in GitHub**
 
-### Smart Contracts
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-The project includes two main smart contracts:
+**Use GitHub Codespaces**
 
-- `BOSCToken.sol`: ERC-20 token for the platform
-- `BookOfScams.sol`: Main contract for scammer registry and bounties
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-To deploy the contracts:
+## What technologies are used for this project?
 
-```bash
-npx hardhat run scripts/deploy.ts --network <network_name>
-```
+This project is built with .
 
-## Documentation
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
 
-For more detailed information, see the [whitepaper](whitepaper.md).
+## How can I deploy this project?
 
-## License
+Simply open [Lovable](https://lovable.dev/projects/2d269e29-e03a-4775-b8d7-6b3e393836e1) and click on Share -> Publish.
 
-[MIT](LICENSE)
+## I want to use a custom domain - is that possible?
 
-## Contribution
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)

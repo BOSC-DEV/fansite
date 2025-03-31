@@ -1,16 +1,13 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
-import { Wallet, Twitter, Github, Mail } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Wallet, Home, Award, BookOpen, User, Trophy, FileText, Coins } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProfileButton } from "./profile/ProfileButton";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Logo } from "./header/Logo";
-import { DesktopNavigation } from "./header/DesktopNavigation";
-import { MobileNavigation } from "./header/MobileNavigation";
-import { WalletInfo } from "./header/WalletInfo";
-import { useHeaderMenuItems } from "@/hooks/useHeaderMenuItems";
+import { toast } from "sonner";
+import { storageService } from "@/services/storage";
 
 export const Header = () => {
   const {
@@ -19,10 +16,13 @@ export const Header = () => {
     balance,
     connectWallet,
     connecting,
+    disconnectWallet
   } = useWallet();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [username, setUsername] = useState<string | null>(null);
+  const location = useLocation();
   const isMobile = useIsMobile();
-  const menuItems = useHeaderMenuItems();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,82 +32,152 @@ export const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (isConnected && address) {
+        try {
+          const profile = await storageService.getProfile(address);
+          setUsername(profile?.username || null);
+        } catch (error) {
+          console.error("Error fetching profile for username:", error);
+          setUsername(null);
+        }
+      } else {
+        setUsername(null);
+      }
+    };
+
+    fetchProfile();
+  }, [isConnected, address]);
+
   const handleConnectClick = async () => {
     if (!isConnected) {
       await connectWallet();
     }
   };
 
-  // For mobile, return the navigation plus the social icons at top
-  if (isMobile) {
-    return (
-      <>
-        {/* Social Media Icons Header for Mobile */}
-        <div className="fixed top-0 left-0 right-0 z-50 wood-texture py-2 px-4 flex justify-between items-center">
-          <a 
-            href="https://github.com/BOSC-DEV/BOSC-APP" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-western-parchment hover:text-western-sand transition-colors"
-          >
-            <Github className="h-5 w-5" />
-          </a>
-          
-          <a 
-            href="https://x.com/bookofscamslol" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-western-parchment hover:text-western-sand transition-colors"
-          >
-            <Twitter className="h-5 w-5" />
-          </a>
-          
-          <a 
-            href="mailto:dev@bookofscamslol" 
-            className="text-western-parchment hover:text-western-sand transition-colors"
-          >
-            <Mail className="h-5 w-5" />
-          </a>
-        </div>
+  const formatAddress = (address: string) => {
+    return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+  };
 
-        {/* Bottom Navigation */}
-        <MobileNavigation menuItems={menuItems} connecting={connecting} />
-      </>
-    );
+  const menuItems = [{
+    path: "/",
+    label: "Home",
+    icon: <Home className="h-4 w-4" />
+  }, {
+    path: "/most-wanted",
+    label: "Most Wanted",
+    icon: <Award className="h-4 w-4" />
+  }, {
+    path: "/leaderboard",
+    label: "Leaderboard",
+    icon: <Trophy className="h-4 w-4" />
+  }, {
+    path: "/create-listing",
+    label: "Report",
+    icon: <BookOpen className="h-4 w-4" />
+  }];
+
+  if (isConnected) {
+    menuItems.push({
+      path: username ? `/${username}` : address ? `/user/${address}` : "/profile",
+      label: "Profile",
+      icon: <User className="h-4 w-4" />
+    });
   }
 
   return (
     <header className={cn("fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out wood-texture", 
       isScrolled ? "py-3 shadow-md" : "py-5")}>
       <div className="container mx-auto px-4 flex items-center">
-        <Logo />
+        <div className="flex-shrink-0 mr-8">
+          <Link to="/" className="flex items-center space-x-2 text-xl">
+            <span className="font-wanted text-western-parchment"></span>
+          </Link>
+        </div>
         
-        <DesktopNavigation menuItems={menuItems} />
+        <nav className="hidden md:flex flex-1 items-center">
+          <div className="flex space-x-10">
+            {menuItems.map(item => (
+              <Link 
+                key={item.path} 
+                to={item.path} 
+                className={cn(
+                  "flex items-center text-sm font-bold transition-colors hover:scale-110 transform duration-200 font-western", 
+                  location.pathname === item.path ? "text-western-parchment" : "text-western-sand hover:text-western-parchment"
+                )}
+              >
+                {item.icon}
+                <span className="ml-2">{item.label}</span>
+              </Link>
+            ))}
+          </div>
+        </nav>
 
         <div className="flex items-center ml-auto">
           {isConnected ? (
-            <div className="flex items-center space-x-4">
-              {address && <WalletInfo address={address} balance={balance} />}
+            <div className="hidden md:flex items-center space-x-4">
+              <div className="flex flex-col items-end">
+                <span className="text-xs text-western-parchment/70">
+                  {formatAddress(address || "")}
+                </span>
+                <span className="text-xs font-bold text-western-sand">
+                  {balance} BOSC
+                </span>
+              </div>
               <ProfileButton />
             </div>
           ) : (
-            <div className="flex flex-col items-center">
-              <Button 
-                variant="default" 
-                size="sm" 
-                onClick={handleConnectClick} 
-                disabled={connecting} 
-                className="h-10 animate-pulse-subtle bg-western-accent text-western-parchment hover:bg-western-accent/80 flex items-center"
-              >
-                <Wallet className="h-5 w-5" />
-              </Button>
-              <span className="text-western-sand font-western text-sm mt-1">Connect</span>
+            <Button 
+              variant="default" 
+              size="sm" 
+              onClick={handleConnectClick} 
+              disabled={connecting} 
+              className="hidden md:flex h-9 animate-pulse-subtle bg-western-accent text-western-parchment hover:bg-western-accent/80"
+            >
+              <Wallet className="h-4 w-4 mr-2" />
+              {connecting ? "Connecting..." : "Connect Wallet"}
+            </Button>
+          )}
+
+          {isMobile && (
+            <div className="md:hidden flex items-center">
+              <div className="fixed bottom-0 left-0 right-0 flex justify-around items-center bg-western-wood/90 backdrop-blur-sm shadow-lg py-3 px-2 z-50">
+                {menuItems.map(item => (
+                  <Link 
+                    key={item.path} 
+                    to={item.path} 
+                    className={cn(
+                      "flex flex-col items-center justify-center p-2 rounded-lg transition-colors", 
+                      location.pathname === item.path ? "text-western-parchment bg-western-accent/30" : "text-western-sand hover:text-western-parchment"
+                    )}
+                  >
+                    {item.icon}
+                    <span className="text-xs mt-1 font-western">{item.label}</span>
+                  </Link>
+                ))}
+                
+                {!isConnected && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={handleConnectClick} 
+                    disabled={connecting} 
+                    className="flex flex-col items-center justify-center p-2 h-auto text-western-sand hover:text-western-parchment"
+                  >
+                    <Wallet className="h-4 w-4" />
+                    <span className="text-xs mt-1 font-western">
+                      {connecting ? "..." : "Connect"}
+                    </span>
+                  </Button>
+                )}
+              </div>
             </div>
           )}
         </div>
       </div>
     </header>
   );
-};
+}
 
 export default Header;

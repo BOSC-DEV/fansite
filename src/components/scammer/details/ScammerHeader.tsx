@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CardTitle, CardDescription } from "@/components/ui/card";
+import { ScammerInteractionButtons } from './ScammerInteractionButtons';
 import { 
   AlertDialog,
   AlertDialogAction,
@@ -18,13 +19,20 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { storageService } from '@/services/storage';
 import { toast } from 'sonner';
-import { SolAmount } from '@/components/SolAmount';
 
 interface ScammerHeaderProps {
   name: string;
   accusedOf: string;
   isCreator: boolean;
   scammerId: string;
+  likes: number;
+  dislikes: number;
+  views: number;
+  comments?: number;
+  isLiked: boolean;
+  isDisliked: boolean;
+  onLike: () => void;
+  onDislike: () => void;
   bountyAmount?: number;
 }
 
@@ -33,6 +41,14 @@ export function ScammerHeader({
   accusedOf, 
   isCreator, 
   scammerId, 
+  likes, 
+  dislikes, 
+  views,
+  comments = 0,
+  isLiked,
+  isDisliked,
+  onLike,
+  onDislike,
   bountyAmount = 0
 }: ScammerHeaderProps) {
   const navigate = useNavigate();
@@ -58,67 +74,78 @@ export function ScammerHeader({
 
   return (
     <div className="flex justify-between items-start">
-      <div className="w-full">
-        <CardTitle className="text-2xl text-western-wood font-wanted">{name}</CardTitle>
-        <CardDescription className="text-western-wood/70 mt-1 w-full font-serif">
+      <div>
+        <CardTitle className="text-2xl text-western-wood">{name}</CardTitle>
+        <CardDescription className="text-western-wood/70 mt-1">
           Accused of: {accusedOf}
         </CardDescription>
         {bountyAmount > 0 && (
           <div className="mt-2 flex items-center">
-            <span className="text-sm text-western-accent font-medium font-western">
-              Total Bounty: <SolAmount amount={bountyAmount} className="font-bold" showIcon={true} />
+            <span className="text-sm text-western-accent font-medium">
+              Total Bounty: <span className="font-bold">{bountyAmount.toLocaleString()} $BOSC</span>
             </span>
           </div>
         )}
       </div>
-      
-      {isCreator && (
-        <div className="flex space-x-2 ml-2 shrink-0">
-          <Button 
-            variant="outline" 
-            size="icon"
-            asChild
-            className="bg-western-sand/30 border-western-sand/20 text-western-wood/80 hover:bg-western-wood hover:text-western-parchment transition-colors"
-            aria-label="Edit Listing"
-            title="Edit Listing"
-          >
-            <Link to={`/edit-listing/${scammerId}`}>
-              <Edit className="h-4 w-4" />
-            </Link>
-          </Button>
-          
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button 
-                variant="outline" 
-                size="icon"
-                className="bg-western-sand/30 border-western-sand/20 text-western-wood/80 hover:bg-red-500 hover:text-white hover:border-red-500/30 transition-colors"
-                aria-label="Archive Listing"
-                title="Archive Listing"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent className="bg-western-parchment border-western-wood/40">
-              <AlertDialogHeader>
-                <AlertDialogTitle className="text-western-accent font-wanted">Archive Listing</AlertDialogTitle>
-                <AlertDialogDescription className="text-western-wood/80 font-serif">
-                  Are you sure you want to archive this listing? The listing will be hidden but can be recovered by an administrator if needed.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel className="bg-western-sand/20 border-western-wood/20 text-western-wood hover:bg-western-sand/30 font-western">Cancel</AlertDialogCancel>
-                <AlertDialogAction 
-                  onClick={handleDeleteScammer}
-                  className="bg-red-500/80 text-white hover:bg-red-600 font-western"
+      <div className="flex flex-col items-end gap-2">
+        <ScammerInteractionButtons 
+          likes={likes}
+          dislikes={dislikes}
+          views={views}
+          comments={comments}
+          isLiked={isLiked}
+          isDisliked={isDisliked}
+          onLike={onLike}
+          onDislike={onDislike}
+          scammerId={scammerId}
+        />
+        
+        {isCreator && (
+          <div className="flex space-x-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              asChild
+              className="bg-western-sand/30 border-western-sand/20 text-western-wood/80 hover:bg-western-wood hover:text-western-parchment transition-colors"
+            >
+              <Link to={`/edit-listing/${scammerId}`}>
+                <Edit className="h-4 w-4 mr-1" />
+                Edit Listing
+              </Link>
+            </Button>
+            
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="bg-western-sand/30 border-western-sand/20 text-western-wood/80 hover:bg-red-500 hover:text-white hover:border-red-500/30 transition-colors"
                 >
+                  <Trash2 className="h-4 w-4 mr-1" />
                   Archive
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
-      )}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="bg-western-parchment border-western-wood/40">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-western-accent">Archive Listing</AlertDialogTitle>
+                  <AlertDialogDescription className="text-western-wood/80">
+                    Are you sure you want to archive this listing? The listing will be hidden but can be recovered by an administrator if needed.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="bg-western-sand/20 border-western-wood/20 text-western-wood hover:bg-western-sand/30">Cancel</AlertDialogCancel>
+                  <AlertDialogAction 
+                    onClick={handleDeleteScammer}
+                    className="bg-red-500/80 text-white hover:bg-red-600"
+                  >
+                    Archive
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

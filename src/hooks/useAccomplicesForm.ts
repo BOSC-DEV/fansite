@@ -13,6 +13,7 @@ export function useAccomplicesForm() {
     }
   };
 
+  // Update to accept a numeric index instead of a string
   const removeAccomplice = (index: number) => {
     const newAccomplices = [...accomplices];
     newAccomplices.splice(index, 1);

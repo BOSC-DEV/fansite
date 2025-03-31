@@ -23,14 +23,5 @@ export default defineConfig(({ mode }) => ({
   define: {
     // This provides a minimal polyfill for process.env
     'process.env': {},
-    // Add global Buffer for Solana web3.js
-    global: {},
-  },
-  optimizeDeps: {
-    esbuildOptions: {
-      define: {
-        global: 'globalThis',
-      },
-    },
   },
 }));

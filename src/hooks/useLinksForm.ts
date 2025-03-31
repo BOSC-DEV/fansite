@@ -13,6 +13,7 @@ export function useLinksForm() {
     }
   };
 
+  // Update to accept a numeric index instead of a string
   const removeLink = (index: number) => {
     const newLinks = [...links];
     newLinks.splice(index, 1);

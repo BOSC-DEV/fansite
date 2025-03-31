@@ -7,10 +7,9 @@ import { useWallet } from "@/context/WalletContext";
 
 interface EditProfileButtonProps {
   profileAddress?: string;
-  size?: "default" | "sm" | "lg" | "icon";
 }
 
-export function EditProfileButton({ profileAddress, size = "default" }: EditProfileButtonProps) {
+export function EditProfileButton({ profileAddress }: EditProfileButtonProps) {
   const { address } = useWallet();
   
   // Only show edit button if the profile belongs to the current user
@@ -21,7 +20,7 @@ export function EditProfileButton({ profileAddress, size = "default" }: EditProf
   return (
     <Button 
       variant="outline" 
-      size={size}
+      size="sm" 
       asChild
       className="bg-western-sand/40 border-western-sand/20 text-western-wood hover:bg-western-wood hover:text-western-parchment transition-colors"
     >

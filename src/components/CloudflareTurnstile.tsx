@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { toast } from "@/hooks/use-toast";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 interface CloudflareTurnstileProps {
   siteKey: string;
@@ -17,7 +17,6 @@ export const CloudflareTurnstile: React.FC<CloudflareTurnstileProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const turnstileRef = useRef<number | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isVerifying, setIsVerifying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notificationShown, setNotificationShown] = useState(false);
 
@@ -62,16 +61,12 @@ export const CloudflareTurnstile: React.FC<CloudflareTurnstileProps> = ({
       }
       
       try {
-        // Set verifying state to true initially
-        setIsVerifying(true);
-        
         // Render the widget
         turnstileRef.current = window.turnstile.render(containerRef.current, {
           sitekey: siteKey,
           callback: (token: string) => {
             console.log('Turnstile verification successful');
             setError(null);
-            setIsVerifying(false);
             
             // Show toast notification only once
             if (!notificationShown) {
@@ -90,7 +85,6 @@ export const CloudflareTurnstile: React.FC<CloudflareTurnstileProps> = ({
             console.log('Turnstile challenge expired, refreshing');
             setError('Verification expired, please try again');
             setNotificationShown(false);
-            setIsVerifying(false);
             if (turnstileRef.current !== null) {
               window.turnstile.reset(turnstileRef.current);
             }
@@ -99,13 +93,11 @@ export const CloudflareTurnstile: React.FC<CloudflareTurnstileProps> = ({
             console.error('Turnstile error:', errorCode);
             setError('Verification failed, please try again');
             setNotificationShown(false);
-            setIsVerifying(false);
           }
         });
       } catch (err) {
         console.error('Error rendering Turnstile:', err);
         setError('Error rendering verification challenge');
-        setIsVerifying(false);
       }
     };
 
@@ -126,7 +118,6 @@ export const CloudflareTurnstile: React.FC<CloudflareTurnstileProps> = ({
         clearInterval(checkTurnstile);
         if (!window.turnstile) {
           setError('Verification service not available');
-          setIsVerifying(false);
         }
       }, 5000);
       
@@ -150,23 +141,14 @@ export const CloudflareTurnstile: React.FC<CloudflareTurnstileProps> = ({
 
   return (
     <div className="flex flex-col items-center">
-      {isVerifying && (
-        <div className="flex items-center justify-center mb-4 mt-2 py-2 px-4 bg-western-sand/10 rounded-md border border-western-wood/10">
-          <Loader2 className="h-5 w-5 text-western-wood animate-spin mr-2" />
-          <p className="text-western-wood">Verifying, please wait...</p>
-        </div>
-      )}
-      
       <div 
         ref={containerRef} 
         className="mx-auto my-4 flex justify-center"
         aria-label="Cloudflare Turnstile challenge"
       />
-      
       {error && (
         <p className="text-sm text-red-500 mt-1 mb-2">{error}</p>
       )}
-      
       <p className="text-base text-western-wood/70 mt-2 text-center max-w-md">
         This site is protected by Cloudflare Turnstile to ensure you're not a robot.
       </p>

@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 import { BaseSupabaseService } from './baseSupabaseService';
 import { toast } from 'sonner';
@@ -155,16 +156,6 @@ export class StorageService extends BaseSupabaseService {
       return false;
     }
   }
-  
-  async incrementScammerShares(scammerId: string): Promise<boolean> {
-    try {
-      await scammerService.incrementScammerShares(scammerId);
-      return true;
-    } catch (error) {
-      console.error("Error incrementing scammer shares:", error);
-      return false;
-    }
-  }
 
   async likeScammer(scammerId: string): Promise<boolean> {
     try {
@@ -186,7 +177,7 @@ export class StorageService extends BaseSupabaseService {
     }
   }
 
-  async updateScammerStats(scammerId: string, stats: { likes?: number; dislikes?: number; views?: number; shares?: number }): Promise<boolean> {
+  async updateScammerStats(scammerId: string, stats: { likes?: number; dislikes?: number; views?: number }): Promise<boolean> {
     return scammerService.updateScammerStats(scammerId, stats);
   }
   

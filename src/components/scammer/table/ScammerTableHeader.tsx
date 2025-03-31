@@ -1,6 +1,6 @@
 
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowUpDown, Eye, ThumbsUp, User } from "lucide-react";
+import { ArrowUpDown, Award, Eye, MessageSquare, ThumbsUp, User } from "lucide-react";
 import { ScammerSortField, SortDirection } from "@/hooks/useSortableScammers";
 
 interface ScammerTableHeaderProps {
@@ -14,22 +14,20 @@ export const ScammerTableHeader = ({ onSort, sortField, sortDirection }: Scammer
     <TableHeader className="bg-western-sand/60 border-b border-western-wood/30">
       <TableRow>
         <TableHead className="w-[60px] text-center text-western-accent font-wanted">№</TableHead>
-        
         <TableHead className="text-western-accent font-wanted">Outlaw</TableHead>
+        <TableHead className="text-western-accent font-wanted">Links</TableHead>
+        <TableHead className="text-western-accent font-wanted">Accused Of</TableHead>
+        <TableHead className="text-center text-western-accent font-wanted">Aliases</TableHead>
         
         <TableHead 
           className="text-center text-western-accent font-wanted cursor-pointer"
           onClick={() => onSort('bountyAmount')}
         >
           <div className="flex items-center justify-center">
-            <span>Bounty</span>
+            <Award className="h-4 w-4" />
             <ArrowUpDown className={`ml-1 h-4 w-4 ${sortField === 'bountyAmount' ? 'opacity-100' : 'opacity-50'}`} />
           </div>
         </TableHead>
-        
-        <TableHead className="text-western-accent font-wanted">Links</TableHead>
-        <TableHead className="text-western-accent font-wanted">Accused Of</TableHead>
-        <TableHead className="text-center text-western-accent font-wanted">Aliases</TableHead>
         
         <TableHead 
           className="text-center text-western-accent font-wanted cursor-pointer"

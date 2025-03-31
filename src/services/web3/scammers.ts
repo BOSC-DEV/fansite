@@ -2,7 +2,6 @@
 import { PublicKey } from '@solana/web3.js';
 import { ContractService } from "./contracts";
 import { toast } from "sonner";
-import { storageService } from "@/services/storage/localStorageService";
 
 export class ScammerService extends ContractService {
   private walletPublicKey: PublicKey | null = null;
@@ -38,35 +37,30 @@ export class ScammerService extends ContractService {
   }
   
   async contributeToBounty(scammerId: string, amount: number): Promise<boolean> {
-    if (!window.phantom?.solana?.publicKey) {
-      toast.error("Wallet not connected");
-      return false;
-    }
+    if (!window.phantom?.solana?.publicKey) return false;
     
     try {
-      console.log(`Contributing ${amount} to bounty for ${scammerId}`);
-      
-      // First, check if the scammer exists
-      const scammer = await storageService.getScammer(scammerId);
-      if (!scammer) {
-        throw new Error("Scammer not found");
-      }
-      
-      // This would typically call a Solana program, but for now
-      // we're using direct transfers and updating our database
+      console.log(`Contributing ${amount} to bounty for ${scammerId} (placeholder)`);
+      // This is a placeholder until we have the Solana program implementation
       
       return true;
     } catch (error) {
       console.error("Error contributing to bounty:", error);
-      toast.error(`Failed to contribute to bounty: ${error instanceof Error ? error.message : "Unknown error"}`);
       return false;
     }
   }
   
   async getScammerDetails(scammerId: string): Promise<any | null> {
     try {
-      // Get the scammer from our database
-      return await storageService.getScammer(scammerId);
+      // This is a placeholder until we have the Solana program implementation
+      return {
+        name: "Example Scammer",
+        accusedOf: "Example accusation",
+        photoUrl: "https://example.com/photo.jpg",
+        bountyAmount: 0,
+        reporter: "Example reporter",
+        dateAdded: new Date()
+      };
     } catch (error) {
       console.error("Error getting scammer details:", error);
       return null;
@@ -75,8 +69,8 @@ export class ScammerService extends ContractService {
   
   async getAllScammers(): Promise<any[]> {
     try {
-      // Get all scammers from our database
-      return await storageService.getAllScammers();
+      // This is a placeholder until we have the Solana program implementation
+      return [];
     } catch (error) {
       console.error("Error getting all scammers:", error);
       return [];

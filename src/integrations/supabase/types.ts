@@ -9,6 +9,21 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      BOSC: {
+        Row: {
+          created_at: string
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+        }
+        Relationships: []
+      }
       comments: {
         Row: {
           author: string
@@ -20,7 +35,6 @@ export type Database = {
           id: string
           likes: number | null
           scammer_id: string | null
-          views: number | null
         }
         Insert: {
           author: string
@@ -32,7 +46,6 @@ export type Database = {
           id: string
           likes?: number | null
           scammer_id?: string | null
-          views?: number | null
         }
         Update: {
           author?: string
@@ -44,9 +57,15 @@ export type Database = {
           id?: string
           likes?: number | null
           scammer_id?: string | null
-          views?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "comments_scammer_id_fkey"
+            columns: ["scammer_id"]
+            isOneToOne: false
+            referencedRelation: "deleted_scammers"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "comments_scammer_id_fkey"
             columns: ["scammer_id"]
@@ -59,35 +78,43 @@ export type Database = {
       leaderboard_stats: {
         Row: {
           id: string
-          last_updated: string
           total_bounty: number | null
           total_comments: number | null
           total_likes: number | null
           total_reports: number | null
           total_views: number | null
+          updated_at: string | null
           wallet_address: string
         }
         Insert: {
           id?: string
-          last_updated?: string
           total_bounty?: number | null
           total_comments?: number | null
           total_likes?: number | null
           total_reports?: number | null
           total_views?: number | null
+          updated_at?: string | null
           wallet_address: string
         }
         Update: {
           id?: string
-          last_updated?: string
           total_bounty?: number | null
           total_comments?: number | null
           total_likes?: number | null
           total_reports?: number | null
           total_views?: number | null
+          updated_at?: string | null
           wallet_address?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "leaderboard_stats_wallet_address_fkey"
+            columns: ["wallet_address"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["wallet_address"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -95,7 +122,6 @@ export type Database = {
           created_at: string
           display_name: string
           id: string
-          points: number | null
           profile_pic_url: string | null
           username: string | null
           wallet_address: string
@@ -107,7 +133,6 @@ export type Database = {
           created_at?: string
           display_name: string
           id: string
-          points?: number | null
           profile_pic_url?: string | null
           username?: string | null
           wallet_address: string
@@ -119,7 +144,6 @@ export type Database = {
           created_at?: string
           display_name?: string
           id?: string
-          points?: number | null
           profile_pic_url?: string | null
           username?: string | null
           wallet_address?: string
@@ -130,185 +154,183 @@ export type Database = {
       }
       scammer_views: {
         Row: {
-          created_at: string
           id: string
           ip_hash: string
           scammer_id: string
+          viewed_at: string | null
         }
         Insert: {
-          created_at?: string
           id?: string
           ip_hash: string
           scammer_id: string
+          viewed_at?: string | null
         }
         Update: {
-          created_at?: string
           id?: string
           ip_hash?: string
           scammer_id?: string
+          viewed_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "scammer_views_scammer_id_fkey"
-            columns: ["scammer_id"]
-            isOneToOne: false
-            referencedRelation: "scammers"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       scammers: {
         Row: {
-          accomplices: string[] | null
+          accomplices: Json | null
           accused_of: string | null
           added_by: string | null
-          aliases: string[] | null
+          aliases: Json | null
           bounty_amount: number | null
-          comments: string[] | null
+          comments: Json | null
           date_added: string
           deleted_at: string | null
           dislikes: number | null
           id: string
           likes: number | null
-          links: string[] | null
+          links: Json | null
           name: string
           official_response: string | null
           photo_url: string | null
-          shares: number | null
           views: number | null
           wallet_address: string | null
+          x_link: string | null
         }
         Insert: {
-          accomplices?: string[] | null
+          accomplices?: Json | null
           accused_of?: string | null
           added_by?: string | null
-          aliases?: string[] | null
+          aliases?: Json | null
           bounty_amount?: number | null
-          comments?: string[] | null
+          comments?: Json | null
           date_added?: string
           deleted_at?: string | null
           dislikes?: number | null
           id: string
           likes?: number | null
-          links?: string[] | null
+          links?: Json | null
           name: string
           official_response?: string | null
           photo_url?: string | null
-          shares?: number | null
           views?: number | null
           wallet_address?: string | null
+          x_link?: string | null
         }
         Update: {
-          accomplices?: string[] | null
+          accomplices?: Json | null
           accused_of?: string | null
           added_by?: string | null
-          aliases?: string[] | null
+          aliases?: Json | null
           bounty_amount?: number | null
-          comments?: string[] | null
+          comments?: Json | null
           date_added?: string
           deleted_at?: string | null
           dislikes?: number | null
           id?: string
           likes?: number | null
-          links?: string[] | null
+          links?: Json | null
           name?: string
           official_response?: string | null
           photo_url?: string | null
-          shares?: number | null
           views?: number | null
           wallet_address?: string | null
+          x_link?: string | null
         }
         Relationships: []
       }
-      user_comment_interactions: {
-        Row: {
-          comment_id: string
-          disliked: boolean
-          id: string
-          last_updated: string
-          liked: boolean
-          user_id: string
-        }
-        Insert: {
-          comment_id: string
-          disliked?: boolean
-          id?: string
-          last_updated?: string
-          liked?: boolean
-          user_id: string
-        }
-        Update: {
-          comment_id?: string
-          disliked?: boolean
-          id?: string
-          last_updated?: string
-          liked?: boolean
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_comment_interactions_comment_id_fkey"
-            columns: ["comment_id"]
-            isOneToOne: false
-            referencedRelation: "comments"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       user_scammer_interactions: {
         Row: {
-          disliked: boolean
+          disliked: boolean | null
           id: string
-          last_updated: string
-          liked: boolean
+          last_updated: string | null
+          liked: boolean | null
           scammer_id: string
           user_id: string
         }
         Insert: {
-          disliked?: boolean
+          disliked?: boolean | null
           id?: string
-          last_updated?: string
-          liked?: boolean
+          last_updated?: string | null
+          liked?: boolean | null
           scammer_id: string
           user_id: string
         }
         Update: {
-          disliked?: boolean
+          disliked?: boolean | null
           id?: string
-          last_updated?: string
-          liked?: boolean
+          last_updated?: string | null
+          liked?: boolean | null
           scammer_id?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "user_scammer_interactions_scammer_id_fkey"
-            columns: ["scammer_id"]
-            isOneToOne: false
-            referencedRelation: "scammers"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {
-      [_ in never]: never
+      deleted_scammers: {
+        Row: {
+          accomplices: Json | null
+          accused_of: string | null
+          added_by: string | null
+          aliases: Json | null
+          bounty_amount: number | null
+          comments: Json | null
+          date_added: string | null
+          deleted_at: string | null
+          dislikes: number | null
+          id: string | null
+          likes: number | null
+          links: Json | null
+          name: string | null
+          official_response: string | null
+          photo_url: string | null
+          views: number | null
+          wallet_address: string | null
+          x_link: string | null
+        }
+        Insert: {
+          accomplices?: Json | null
+          accused_of?: string | null
+          added_by?: string | null
+          aliases?: Json | null
+          bounty_amount?: number | null
+          comments?: Json | null
+          date_added?: string | null
+          deleted_at?: string | null
+          dislikes?: number | null
+          id?: string | null
+          likes?: number | null
+          links?: Json | null
+          name?: string | null
+          official_response?: string | null
+          photo_url?: string | null
+          views?: number | null
+          wallet_address?: string | null
+          x_link?: string | null
+        }
+        Update: {
+          accomplices?: Json | null
+          accused_of?: string | null
+          added_by?: string | null
+          aliases?: Json | null
+          bounty_amount?: number | null
+          comments?: Json | null
+          date_added?: string | null
+          deleted_at?: string | null
+          dislikes?: number | null
+          id?: string | null
+          likes?: number | null
+          links?: Json | null
+          name?: string | null
+          official_response?: string | null
+          photo_url?: string | null
+          views?: number | null
+          wallet_address?: string | null
+          x_link?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      upsert_profile: {
-        Args: {
-          profile_id: string
-          profile_display_name: string
-          profile_username: string
-          profile_pic_url: string
-          profile_wallet_address: string
-          profile_created_at: string
-          profile_x_link: string
-          profile_website_link: string
-          profile_bio: string
-        }
-        Returns: undefined
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never

@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { BookOpen, Grid, Scroll, SortDesc } from "lucide-react";
+import { BookOpen, List, SortDesc } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SortAndViewControlsProps {
@@ -47,13 +47,13 @@ export const SortAndViewControls = ({
       </Button>
       
       <div className="flex items-center space-x-2">
-        <Scroll className={`h-4 w-4 ${viewType === 'table' ? 'text-primary' : 'text-muted-foreground'}`} />
+        <List className={`h-4 w-4 ${viewType === 'table' ? 'text-primary' : 'text-muted-foreground'}`} />
         <Switch 
           checked={viewType === 'grid'} 
           onCheckedChange={toggleViewMode} 
           aria-label="Toggle view mode"
         />
-        <Grid className={`h-4 w-4 ${viewType === 'grid' ? 'text-primary' : 'text-muted-foreground'}`} />
+        <BookOpen className={`h-4 w-4 ${viewType === 'grid' ? 'text-primary' : 'text-muted-foreground'}`} />
       </div>
     </div>
   );

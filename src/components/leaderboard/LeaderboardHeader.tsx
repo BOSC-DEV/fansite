@@ -1,80 +1,73 @@
 
 import React from "react";
-import { TableHeader, TableRow, TableHead } from "@/components/ui/table";
-import { ChevronDown, ChevronUp, Award } from "lucide-react";
+import { TableHeader, TableHead, TableRow } from "@/components/ui/table";
+import { ArrowUpDown, ThumbsUp, Eye, MessageSquare, Clock } from "lucide-react";
 
-type SortField = 'rank' | 'name' | 'reports' | 'likes' | 'views' | 'comments' | 'bountyGenerated' | 'bountySpent' | 'joined' | 'points';
+type SortField = 'totalReports' | 'totalLikes' | 'totalViews' | 'totalComments' | 'totalBounty' | 'joinedDuration';
 
 interface LeaderboardHeaderProps {
   onSort: (field: SortField) => void;
-  sortField: SortField;
-  sortDirection: 'asc' | 'desc';
 }
 
-export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({ 
-  onSort, 
-  sortField, 
-  sortDirection
-}) => {
-  const renderSortIndicator = (field: SortField) => {
-    if (sortField !== field) return null;
-    
-    return sortDirection === 'asc' 
-      ? <ChevronUp className="h-4 w-4 ml-1 inline" /> 
-      : <ChevronDown className="h-4 w-4 ml-1 inline" />;
-  };
-  
-  const sortableHeader = (field: SortField, label: string) => (
-    <button 
-      onClick={() => onSort(field)} 
-      className="flex items-center font-bold cursor-pointer hover:text-western-accent"
-    >
-      {label}
-      {renderSortIndicator(field)}
-    </button>
-  );
-
+export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({ onSort }) => {
   return (
-    <TableHeader className="bg-western-light-wood/30 sticky top-0 z-10">
-      <TableRow>
-        <TableHead className="text-center">
+    <TableHeader>
+      <TableRow className="border-b border-western-accent/30">
+        <TableHead className="w-12 text-center text-western-accent font-wanted">Rank</TableHead>
+        <TableHead className="text-left text-western-accent font-wanted">Hunter</TableHead>
+        <TableHead className="text-center text-western-accent font-wanted">Links</TableHead>
+        <TableHead 
+          className="text-center hidden md:table-cell text-western-accent font-wanted cursor-pointer"
+          onClick={() => onSort('totalReports')}
+        >
           <div className="flex items-center justify-center">
-            <Award className="h-4 w-4 mr-1 text-yellow-500" />
-            {sortableHeader('points', 'Rank')}
+            Reports
+            <ArrowUpDown className="ml-1 h-4 w-4" />
           </div>
         </TableHead>
-        <TableHead>
-          <div className="flex items-center">
-            {sortableHeader('name', 'User')}
+        <TableHead 
+          className="text-center hidden md:table-cell text-western-accent font-wanted cursor-pointer"
+          onClick={() => onSort('totalLikes')}
+        >
+          <div className="flex items-center justify-center">
+            <ThumbsUp className="h-4 w-4" />
+            <ArrowUpDown className="ml-1 h-4 w-4" />
           </div>
         </TableHead>
-        <TableHead className="text-center">Links</TableHead>
-        <TableHead className="text-center hidden md:table-cell">
-          {sortableHeader('reports', 'Reports')}
+        <TableHead 
+          className="text-center hidden md:table-cell text-western-accent font-wanted cursor-pointer"
+          onClick={() => onSort('totalViews')}
+        >
+          <div className="flex items-center justify-center">
+            <Eye className="h-4 w-4" />
+            <ArrowUpDown className="ml-1 h-4 w-4" />
+          </div>
         </TableHead>
-        <TableHead className="text-center hidden md:table-cell">
-          {sortableHeader('likes', 'Likes')}
+        <TableHead 
+          className="text-center hidden md:table-cell text-western-accent font-wanted cursor-pointer"
+          onClick={() => onSort('totalComments')}
+        >
+          <div className="flex items-center justify-center">
+            <MessageSquare className="h-4 w-4" />
+            <ArrowUpDown className="ml-1 h-4 w-4" />
+          </div>
         </TableHead>
-        <TableHead className="text-center hidden md:table-cell">
-          {sortableHeader('views', 'Views')}
+        <TableHead 
+          className="text-center text-western-accent font-wanted cursor-pointer"
+          onClick={() => onSort('totalBounty')}
+        >
+          <div className="flex items-center justify-center">
+            Total Bounty
+            <ArrowUpDown className="ml-1 h-4 w-4" />
+          </div>
         </TableHead>
-        <TableHead className="text-center hidden md:table-cell">
-          {sortableHeader('comments', 'Comments')}
-        </TableHead>
-        <TableHead className="text-center">
-          {sortableHeader('bountyGenerated', 'Generated')}
-        </TableHead>
-        <TableHead className="text-center">
-          {sortableHeader('bountySpent', 'Spent')}
-        </TableHead>
-        <TableHead className="text-center">
-          {sortableHeader('joined', 'Joined')}
-        </TableHead>
-      </TableRow>
-      <TableRow className="md:hidden">
-        <TableHead className="py-1 px-2" colSpan={7}>
-          <div className="text-xs text-western-wood/80 italic text-center">
-            Swipe to see more details — Tap column headers to sort
+        <TableHead 
+          className="text-center text-western-accent font-wanted cursor-pointer"
+          onClick={() => onSort('joinedDuration')}
+        >
+          <div className="flex items-center justify-center">
+            <Clock className="h-4 w-4" />
+            <ArrowUpDown className="ml-1 h-4 w-4" />
           </div>
         </TableHead>
       </TableRow>

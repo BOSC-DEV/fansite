@@ -4,11 +4,11 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Scammer } from "@/lib/types";
 import { ScammerSidebar } from './details/ScammerSidebar';
 import { ScammerContent } from './details/ScammerContent';
-import { useWallet } from "@/context/wallet";
+import { useWallet } from "@/context/WalletContext";
 import { useScammerProfile } from '@/hooks/useScammerProfile';
 import { useScammerStats } from '@/hooks/useScammerStats';
 import { ScammerHeader } from './details/ScammerHeader';
-import { commentService } from '@/services/storage/localStorageService';
+import { storageService } from '@/services/storage/localStorageService';
 
 interface ScammerDetailsCardProps {
   scammer: Scammer;
@@ -20,7 +20,6 @@ interface ScammerDetailsCardProps {
     likes: number;
     dislikes: number;
     views: number;
-    shares?: number;
   };
   onLikeScammer?: () => void;
   onDislikeScammer?: () => void;
@@ -31,7 +30,6 @@ export function ScammerDetailsCard({
   imageLoaded, 
   setImageLoaded, 
   formatDate = (date) => new Date(date).toLocaleDateString(),
-  scammerStats,
   onLikeScammer,
   onDislikeScammer 
 }: ScammerDetailsCardProps) {
@@ -43,12 +41,17 @@ export function ScammerDetailsCard({
   const { 
     isLiked, 
     isDisliked, 
+    likes, 
+    dislikes, 
+    views,
+    handleLike,
+    handleDislike 
   } = useScammerStats(scammer);
 
   // Fetch comment count
   useEffect(() => {
     if (scammer.id) {
-      const comments = commentService.getCommentsForScammer(scammer.id);
+      const comments = storageService.getCommentsForScammer(scammer.id);
       setCommentCount(comments.length);
     }
   }, [scammer.id]);
@@ -61,14 +64,20 @@ export function ScammerDetailsCard({
           accusedOf={scammer.accusedOf}
           isCreator={isCreator}
           scammerId={scammer.id}
+          likes={likes}
+          dislikes={dislikes}
+          views={views}
+          comments={commentCount}
+          isLiked={isLiked}
+          isDisliked={isDisliked}
+          onLike={handleLike}
+          onDislike={handleDislike}
           bountyAmount={scammer.bountyAmount}
         />
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* All content in a vertical stack */}
-        <div className="flex flex-col space-y-6 w-full">
-          {/* Image and interaction buttons */}
-          <ScammerSidebar 
+        <div className="flex flex-col gap-6">
+          <ScammerSidebar
             name={scammer.name}
             photoUrl={scammer.photoUrl}
             dateAdded={scammer.dateAdded.toString()}
@@ -78,26 +87,9 @@ export function ScammerDetailsCard({
             isProfileLoading={isProfileLoading}
             profileId={profileId}
             formatDate={formatDate}
-            scammerStats={scammerStats ? {
-              ...scammerStats,
-              comments: commentCount,
-              shares: scammerStats.shares || 0,
-            } : undefined}
-            isLiked={isLiked}
-            isDisliked={isDisliked}
-            onLike={onLikeScammer}
-            onDislike={onDislikeScammer}
-            scammerId={scammer.id}
           />
           
-          {/* Details section - changing the heading from "Details" to "Accused of" */}
-          <div className="w-full rounded-lg border bg-western-parchment p-4">
-            <h3 className="font-semibold text-western-wood mb-3">Accused of</h3>
-            <p className="text-sm text-western-wood">{scammer.accusedOf}</p>
-          </div>
-          
-          {/* Tabs for scammer content below the details */}
-          <div className="w-full rounded-lg border bg-western-parchment p-4">
+          <div className="w-full">
             <ScammerContent 
               aliases={scammer.aliases}
               links={scammer.links}

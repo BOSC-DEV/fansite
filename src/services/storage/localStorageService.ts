@@ -1,127 +1,194 @@
+import { Scammer } from "@/lib/types";
 
-// This is a stub file that should be modified to add the missing methods.
-// For now, we'll export a basic object that other services can use.
+// Types for our localStorage data structures
+export interface UserProfile {
+  displayName: string;
+  profilePicUrl: string;
+  walletAddress: string;
+  createdAt: string;
+  xLink?: string;
+  websiteLink?: string;
+  bio?: string;
+  username?: string;
+}
 
-import { profileService } from './localStorage/profileService';
-import { scammerService } from './localStorage/scammerService';
-import { commentService } from './localStorage/commentService';
+export interface Comment {
+  id: string;
+  scammerId: string;
+  content: string;
+  author: string; // wallet address
+  authorName: string;
+  authorProfilePic: string;
+  createdAt: string;
+  likes: number;
+  dislikes: number;
+}
 
-// Expand the profile service with the missing methods
-const extendedProfileService = {
-  ...profileService,
-  // Add the missing methods
-  isUsernameAvailable: async (username: string): Promise<boolean> => {
-    try {
-      // Check if any profile with this username exists
-      const profiles = await extendedProfileService.getAllProfiles();
-      return !profiles.some(profile => 
-        profile.username && profile.username.toLowerCase() === username.toLowerCase()
-      );
-    } catch (error) {
-      console.error("Error checking username availability:", error);
-      return false;
-    }
-  },
-  
-  getAllProfiles: async () => {
-    try {
-      // Retrieve all profiles from localStorage
-      const allProfiles: any[] = [];
-      // Iterate through localStorage keys
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith('profile_')) {
-          const profileData = localStorage.getItem(key);
-          if (profileData) {
-            try {
-              allProfiles.push(JSON.parse(profileData));
-            } catch (e) {
-              console.error(`Error parsing profile data for key ${key}:`, e);
-            }
-          }
-        }
-      }
-      return allProfiles;
-    } catch (error) {
-      console.error("Error getting all profiles:", error);
-      return [];
-    }
-  },
+export interface ScammerListing extends Omit<Scammer, 'dateAdded'> {
+  dateAdded: string; // ISO string
+  comments: string[]; // Array of comment IDs
+  likes: number;
+  dislikes: number;
+  views: number;
+}
 
-  // Expose the original methods
-  saveProfile: profileService.saveProfile,
-  getProfile: profileService.getProfile,
-  hasProfile: profileService.hasProfile
+// Prefix for our localStorage keys
+const STORAGE_KEYS = {
+  PROFILES: 'profile-',
+  SCAMMERS: 'scammer-',
+  COMMENTS: 'comment-',
+  SCAMMER_LIST: 'scammer-list',
 };
 
-// Extend the comment service
-const extendedCommentService = {
-  ...commentService,
-  // Add the missing getComments method
-  getComments: (scammerId: string) => commentService.getCommentsForScammer(scammerId)
-};
-
-// Extend the scammer service
-const extendedScammerService = {
-  ...scammerService,
-  // Ensure these methods exist
-  deleteScammer: (id: string) => {
-    const scammer = scammerService.getScammer(id);
-    if (scammer) {
-      // Implementation would depend on your needs
-      console.log(`Deleting scammer ${id}`);
-      // For now, just return true
-      return true;
-    }
-    return false;
-  },
-  incrementScammerViews: (scammerId: string) => {
-    scammerService.incrementScammerViews(scammerId);
-    return true;
-  },
-  likeScammer: (scammerId: string) => {
-    scammerService.likeScammer(scammerId);
-    return true;
-  },
-  dislikeScammer: (scammerId: string) => {
-    scammerService.dislikeScammer(scammerId);
-    return true;
-  },
-  updateScammerStats: (scammerId: string, stats: { likes?: number; dislikes?: number; views?: number; shares?: number }) => {
-    scammerService.updateScammerStats(scammerId, stats);
-    return true;
+class LocalStorageService {
+  // Profile methods
+  getProfile(walletAddress: string): UserProfile | null {
+    const profile = localStorage.getItem(`${STORAGE_KEYS.PROFILES}${walletAddress}`);
+    return profile ? JSON.parse(profile) : null;
   }
-};
 
-// Export the services
-export const storageService = {
-  profile: extendedProfileService,
-  scammer: extendedScammerService,
-  comment: extendedCommentService,
-  
-  // Convenience methods that delegate to the specific services
-  saveProfile: (profile: any) => extendedProfileService.saveProfile(profile),
-  getProfile: (walletAddress: string) => extendedProfileService.getProfile(walletAddress),
-  hasProfile: (walletAddress: string) => extendedProfileService.hasProfile(walletAddress),
-  
-  getScammer: (id: string) => extendedScammerService.getScammer(id),
-  getAllScammers: () => extendedScammerService.getAllScammers(),
-  saveScammer: (scammer: any) => extendedScammerService.saveScammer(scammer),
-  deleteScammer: (id: string) => extendedScammerService.deleteScammer(id),
-  
-  saveComment: (comment: any) => extendedCommentService.saveComment(comment),
-  getComments: (scammerId: string) => extendedCommentService.getComments(scammerId),
-  
-  // Add the missing methods
-  isUsernameAvailable: (username: string) => extendedProfileService.isUsernameAvailable(username),
-  getAllProfiles: () => extendedProfileService.getAllProfiles(),
-  
-  // Add methods for incrementing scammer views and stats
-  incrementScammerViews: (scammerId: string) => extendedScammerService.incrementScammerViews(scammerId),
-  likeScammer: (scammerId: string) => extendedScammerService.likeScammer(scammerId),
-  dislikeScammer: (scammerId: string) => extendedScammerService.dislikeScammer(scammerId),
-  updateScammerStats: (scammerId: string, stats: { likes?: number; dislikes?: number; views?: number; shares?: number }) => 
-    extendedScammerService.updateScammerStats(scammerId, stats)
-};
+  saveProfile(profile: UserProfile): void {
+    localStorage.setItem(
+      `${STORAGE_KEYS.PROFILES}${profile.walletAddress}`,
+      JSON.stringify(profile)
+    );
+  }
 
-export { profileService, scammerService, commentService };
+  hasProfile(walletAddress: string): boolean {
+    return localStorage.getItem(`${STORAGE_KEYS.PROFILES}${walletAddress}`) !== null;
+  }
+
+  // Scammer listing methods
+  getScammerList(): string[] {
+    const list = localStorage.getItem(STORAGE_KEYS.SCAMMER_LIST);
+    return list ? JSON.parse(list) : [];
+  }
+
+  addScammerToList(scammerId: string): void {
+    const list = this.getScammerList();
+    if (!list.includes(scammerId)) {
+      list.push(scammerId);
+      localStorage.setItem(STORAGE_KEYS.SCAMMER_LIST, JSON.stringify(list));
+    }
+  }
+
+  saveScammer(scammer: ScammerListing): void {
+    localStorage.setItem(`${STORAGE_KEYS.SCAMMERS}${scammer.id}`, JSON.stringify(scammer));
+    this.addScammerToList(scammer.id);
+  }
+
+  getScammer(scammerId: string): ScammerListing | null {
+    const scammer = localStorage.getItem(`${STORAGE_KEYS.SCAMMERS}${scammerId}`);
+    return scammer ? JSON.parse(scammer) : null;
+  }
+
+  getAllScammers(): ScammerListing[] {
+    const scammerIds = this.getScammerList();
+    return scammerIds
+      .map(id => this.getScammer(id))
+      .filter((scammer): scammer is ScammerListing => scammer !== null)
+      .sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime());
+  }
+
+  incrementScammerViews(scammerId: string): void {
+    const scammer = this.getScammer(scammerId);
+    if (scammer) {
+      scammer.views += 1;
+      this.saveScammer(scammer);
+    }
+  }
+
+  // Comment methods
+  saveComment(comment: Comment): void {
+    localStorage.setItem(`${STORAGE_KEYS.COMMENTS}${comment.id}`, JSON.stringify(comment));
+    
+    // Add comment ID to scammer's comments array
+    const scammer = this.getScammer(comment.scammerId);
+    if (scammer) {
+      if (!scammer.comments) {
+        scammer.comments = [];
+      }
+      scammer.comments.push(comment.id);
+      this.saveScammer(scammer);
+    }
+  }
+
+  getComment(commentId: string): Comment | null {
+    const comment = localStorage.getItem(`${STORAGE_KEYS.COMMENTS}${commentId}`);
+    return comment ? JSON.parse(comment) : null;
+  }
+
+  getCommentsForScammer(scammerId: string): Comment[] {
+    const scammer = this.getScammer(scammerId);
+    if (!scammer || !scammer.comments) return [];
+    
+    return scammer.comments
+      .map(id => this.getComment(id))
+      .filter((comment): comment is Comment => comment !== null)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  // Likes and dislikes methods
+  likeScammer(scammerId: string): void {
+    const scammer = this.getScammer(scammerId);
+    if (scammer) {
+      scammer.likes = (scammer.likes || 0) + 1;
+      this.saveScammer(scammer);
+    }
+  }
+
+  dislikeScammer(scammerId: string): void {
+    const scammer = this.getScammer(scammerId);
+    if (scammer) {
+      scammer.dislikes = (scammer.dislikes || 0) + 1;
+      this.saveScammer(scammer);
+    }
+  }
+
+  updateScammerStats(scammerId: string, stats: { likes?: number; dislikes?: number; views?: number }): void {
+    const scammer = this.getScammer(scammerId);
+    if (scammer) {
+      if (stats.likes !== undefined) {
+        scammer.likes = stats.likes;
+      }
+      if (stats.dislikes !== undefined) {
+        scammer.dislikes = stats.dislikes;
+      }
+      if (stats.views !== undefined) {
+        scammer.views = stats.views;
+      }
+      this.saveScammer(scammer);
+    }
+  }
+
+  likeComment(commentId: string): void {
+    const comment = this.getComment(commentId);
+    if (comment) {
+      comment.likes = (comment.likes || 0) + 1;
+      localStorage.setItem(`${STORAGE_KEYS.COMMENTS}${commentId}`, JSON.stringify(comment));
+    }
+  }
+
+  dislikeComment(commentId: string): void {
+    const comment = this.getComment(commentId);
+    if (comment) {
+      comment.dislikes = (comment.dislikes || 0) + 1;
+      localStorage.setItem(`${STORAGE_KEYS.COMMENTS}${commentId}`, JSON.stringify(comment));
+    }
+  }
+
+  // IP tracking utility for view counting
+  hashIpAddress(ip: string): string {
+    let hash = 0;
+    for (let i = 0; i < ip.length; i++) {
+      const char = ip.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash.toString(16);
+  }
+}
+
+// Create a singleton instance
+export const storageService = new LocalStorageService();
+export default storageService;
