@@ -116,7 +116,7 @@ export class Web3Provider {
         return solBalance;
       } catch (fallbackError) {
         console.error("Fallback getBalance also failed:", fallbackError);
-        return 0.05; // Return 0.05 for testing
+        return 0.05; // Return 0.05 SOL for testing purposes when RPC fails
       }
     }
   }

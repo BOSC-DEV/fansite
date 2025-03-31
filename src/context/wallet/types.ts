@@ -1,15 +1,11 @@
 
-/**
- * Type definitions for Wallet Context
- */
-
 export interface WalletContextType {
   connected: boolean;
   connecting: boolean;
   address: string | null;
   balance: number | null;
   connectWallet: () => Promise<boolean>;
-  disconnectWallet: () => void;
+  disconnectWallet: () => Promise<void>;
   isConnected: boolean;
   smartWalletAddress: string | null;
   smartWalletLoading: boolean;
