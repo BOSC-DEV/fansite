@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -9,11 +9,11 @@ interface ScammerImageLoaderProps {
   onImageLoaded: (loaded: boolean, error: boolean) => void;
 }
 
-export function ScammerImageLoader({ name, photoUrl, onImageLoaded }: ScammerImageLoaderProps) {
+const ScammerImageLoaderComponent = ({ name, photoUrl, onImageLoaded }: ScammerImageLoaderProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   
-  // Reset image states when image changes
+  // Reset image states when image URL changes
   useEffect(() => {
     setImageLoaded(false);
     setImageError(false);
@@ -73,4 +73,7 @@ export function ScammerImageLoader({ name, photoUrl, onImageLoaded }: ScammerIma
       />
     </>
   );
-}
+};
+
+// Memoize the component to prevent unnecessary re-renders
+export const ScammerImageLoader = memo(ScammerImageLoaderComponent);

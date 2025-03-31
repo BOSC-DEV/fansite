@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { ScammerImageLoader } from "./ScammerImageLoader";
 import { InteractionsBar } from "./InteractionsBar";
 import { ScammerCardBadge } from "./ScammerCardBadge";
@@ -16,7 +16,7 @@ interface ScammerCardImageProps {
   rank?: number;
 }
 
-export function ScammerCardImage({ 
+const ScammerCardImageComponent = ({ 
   name, 
   photoUrl, 
   likes, 
@@ -25,7 +25,7 @@ export function ScammerCardImage({
   comments = 0,
   scammerId,
   rank
-}: ScammerCardImageProps) {
+}: ScammerCardImageProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -38,7 +38,15 @@ export function ScammerCardImage({
   useEffect(() => {
     if (scammerId) {
       // Increment view count
-      scammerService.incrementScammerViews(scammerId);
+      const incrementViews = async () => {
+        try {
+          await scammerService.incrementScammerViews(scammerId);
+        } catch (error) {
+          console.error("Failed to increment views:", error);
+        }
+      };
+      
+      incrementViews();
     }
   }, [scammerId]);
 
@@ -75,4 +83,7 @@ export function ScammerCardImage({
       />
     </div>
   );
-}
+};
+
+// Memoize the component to prevent unnecessary re-renders
+export const ScammerCardImage = memo(ScammerCardImageComponent);
