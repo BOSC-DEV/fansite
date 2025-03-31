@@ -1,43 +1,56 @@
 
-import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { crypto } from "https://deno.land/std@0.177.0/crypto/mod.ts";
 
-// Handle request to get a hash of the client's IP address
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
 serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === "OPTIONS") {
+    return new Response(null, {
+      headers: corsHeaders,
+      status: 204,
+    });
+  }
+
   try {
-    // Get the client IP from the request headers
-    const clientIp = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown'
+    // Get client IP from request headers
+    const clientIp = req.headers.get("x-forwarded-for") || "unknown";
     
-    // Create a simple hash of the IP to protect privacy
-    // We'll use SHA-256 algorithm from the Deno standard library
+    // Hash the IP for privacy
     const encoder = new TextEncoder();
     const data = encoder.encode(clientIp);
-    
-    // Calculate hash - using crypto.subtle instead of createHash
     const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-    
-    // Convert the hash buffer to a hex string
     const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const ipHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
     
     // Return the hashed IP
     return new Response(
-      JSON.stringify({
-        ipHash,
-      }),
-      { headers: { 'Content-Type': 'application/json' } }
-    )
+      JSON.stringify({ ipHash: hashHex }),
+      {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+        },
+        status: 200,
+      }
+    );
   } catch (error) {
-    console.error('Error processing get-client-ip-hash request:', error)
+    console.error("Error processing request:", error);
     
     return new Response(
-      JSON.stringify({
-        error: 'Failed to process request',
-        message: error.message,
-      }),
-      { 
-        headers: { 'Content-Type': 'application/json' },
+      JSON.stringify({ error: "Failed to process request" }),
+      {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+        },
         status: 500,
       }
-    )
+    );
   }
-})
+});

@@ -1,6 +1,5 @@
 
 import { toast } from "sonner";
-import { isSupabaseConfigured } from "@/lib/supabase";
 
 interface ProfileFormData {
   displayName: string;
@@ -18,35 +17,34 @@ interface FormValidation {
 
 export function useProfileValidation() {
   const validateForm = (
-    formData: ProfileFormData, 
+    formData: ProfileFormData,
     usernameAvailable: boolean,
     urlValidation: FormValidation
   ): boolean => {
-    if (!isSupabaseConfigured()) {
-      toast.error("Supabase is not configured properly. Please check your environment variables.");
-      return false;
-    }
-
+    // Validate display name
     if (!formData.displayName.trim()) {
-      toast.error("Please enter a display name");
+      toast.error("Display name is required");
       return false;
     }
-
+    
+    // Validate username
     if (!formData.username.trim()) {
-      toast.error("Please enter a username");
+      toast.error("Username is required");
       return false;
     }
-
+    
     if (!usernameAvailable) {
       toast.error("Username is not available or invalid");
       return false;
     }
-
+    
+    // Validate URLs
     if (!urlValidation.valid) {
-      toast.error(urlValidation.message);
+      toast.error(urlValidation.message || "Invalid URL format");
       return false;
     }
-
+    
+    // All validations passed
     return true;
   };
 

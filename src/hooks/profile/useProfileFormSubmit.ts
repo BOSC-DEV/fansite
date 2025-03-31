@@ -7,6 +7,7 @@ import { storageService } from "@/services/storage";
 import { v4 as uuidv4 } from 'uuid';
 import { useProfileValidation } from "./useProfileValidation";
 import { profileDataProcessor, ProfileData } from "@/services/profile/profileDataProcessor";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ProfileFormData {
   displayName: string;
@@ -94,11 +95,41 @@ export function useProfileFormSubmit() {
       
       console.log("[useProfileFormSubmit] Prepared profile data:", profileData);
       
-      const success = await profileDataProcessor.saveProfileWithFallback(
-        profileData, 
-        hasProfile, 
-        profileId
-      );
+      // Direct Supabase operation to ensure data is saved
+      let success = false;
+      
+      try {
+        // Try direct upsert first
+        const { error } = await supabase.from('profiles').upsert({
+          id: currentProfileId,
+          display_name: formData.displayName,
+          username: formData.username,
+          profile_pic_url: formData.profilePicUrl || '',
+          wallet_address: address,
+          created_at: hasProfile ? undefined : new Date().toISOString(),
+          x_link: formData.xLink || '',
+          website_link: formData.websiteLink || '',
+          bio: formData.bio || ''
+        }, {
+          onConflict: 'id'
+        });
+        
+        if (error) {
+          console.error("[useProfileFormSubmit] Direct Supabase upsert failed:", error);
+          throw error;
+        }
+        
+        success = true;
+      } catch (directError) {
+        console.warn("[useProfileFormSubmit] Direct Supabase approach failed, falling back to processor:", directError);
+        
+        // Fall back to profile data processor
+        success = await profileDataProcessor.saveProfileWithFallback(
+          profileData, 
+          hasProfile, 
+          profileId
+        );
+      }
       
       if (success) {
         console.log("[useProfileFormSubmit] Profile saved successfully");
