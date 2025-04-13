@@ -21,8 +21,8 @@ const Index = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-white text-center p-4">
       <Helmet>
-        <title>Coming Soon - Book of Scams</title>
-        <meta name="description" content="Our site is coming soon!" />
+        <title>Coming Soon</title>
+        <meta name="description" content="Coming soon!" />
       </Helmet>
       
       <h1 
