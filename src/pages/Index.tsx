@@ -19,7 +19,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white text-center p-4">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#F9F5EC] to-[#F3EFE5] text-center p-4">
       <Helmet>
         <title>Coming Soon</title>
         <meta name="description" content="Coming soon!" />
@@ -30,7 +30,7 @@ const Index = () => {
         style={{
           backgroundImage: `radial-gradient(
             circle at ${mousePosition.x}px ${mousePosition.y}px, 
-            #FEC6A1, #FEF7CD, #E5DEFF, #D3E4FD, #FFDEE2
+            #E5905F, #E7CA7B, #B4A7E4, #94B5E5, #E5A0A8
           )`,
           backgroundSize: '200% 200%',
           backgroundClip: 'text',
