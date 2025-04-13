@@ -30,7 +30,7 @@ const Index = () => {
         style={{
           backgroundImage: `radial-gradient(
             circle at ${mousePosition.x}px ${mousePosition.y}px, 
-            #FEC6A1, #FEF7CD, #E5DEFF, #D3E4FD, #FFDEE2
+            #E5A97C, #EBCD88, #C5B5E3, #A4C1E8, #E89BA9
           )`,
           backgroundSize: '200% 200%',
           backgroundClip: 'text',
