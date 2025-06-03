@@ -203,39 +203,169 @@ const Docs = () => {
             </div>
 
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">Token Distribution</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <div className="space-y-4">
-                <div className="flex justify-between items-center p-4 bg-[#D4A574]/10 rounded-lg">
-                  <span className="font-medium">Community & Creators</span>
-                  <span className="font-bold text-[#D4A574]">40% (4M)</span>
-                </div>
-                <div className="flex justify-between items-center p-4 bg-[#D889A5]/10 rounded-lg">
-                  <span className="font-medium">Development Team</span>
-                  <span className="font-bold text-[#D889A5]">20% (2M)</span>
-                </div>
-                <div className="flex justify-between items-center p-4 bg-[#B8A5D9]/10 rounded-lg">
-                  <span className="font-medium">Platform Treasury</span>
-                  <span className="font-bold text-[#B8A5D9]">15% (1.5M)</span>
-                </div>
-                <div className="flex justify-between items-center p-4 bg-[#8FB1E0]/10 rounded-lg">
-                  <span className="font-medium">Early Supporters</span>
-                  <span className="font-bold text-[#8FB1E0]">15% (1.5M)</span>
-                </div>
-                <div className="flex justify-between items-center p-4 bg-gray-100 rounded-lg">
-                  <span className="font-medium">Ecosystem Partners</span>
-                  <span className="font-bold text-gray-700">10% (1M)</span>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900">Vesting Schedule</h3>
-                <ul className="text-gray-700 space-y-2">
-                  <li>• Community: Distributed over 24 months</li>
-                  <li>• Team: 12-month cliff, 36-month vesting</li>
-                  <li>• Treasury: Released based on milestones</li>
-                  <li>• Early Supporters: 6-month cliff, 18-month vesting</li>
-                  <li>• Partners: Immediate with performance bonuses</li>
-                </ul>
-              </div>
+            <div className="overflow-x-auto mb-8">
+              <table className="w-full border-collapse border border-gray-300 rounded-lg">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">Distribution</th>
+                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">% of Allocation</th>
+                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">Number of Tokens</th>
+                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">Vesting Schedule</th>
+                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">TGE Release %</th>
+                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">TGE Supply</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="hover:bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-3 font-medium">Treasury Reserve</td>
+                    <td className="border border-gray-300 px-4 py-3">17.50%</td>
+                    <td className="border border-gray-300 px-4 py-3">1,750,000</td>
+                    <td className="border border-gray-300 px-4 py-3 text-sm">3 month cliff, daily linear 48 months</td>
+                    <td className="border border-gray-300 px-4 py-3">0.00%</td>
+                    <td className="border border-gray-300 px-4 py-3">0</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-3 font-medium">Advisory</td>
+                    <td className="border border-gray-300 px-4 py-3">3.00%</td>
+                    <td className="border border-gray-300 px-4 py-3">300,000</td>
+                    <td className="border border-gray-300 px-4 py-3 text-sm">6 month cliff, daily linear 24 months</td>
+                    <td className="border border-gray-300 px-4 py-3">0.00%</td>
+                    <td className="border border-gray-300 px-4 py-3">0</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-3 font-medium">Team & Recruitment</td>
+                    <td className="border border-gray-300 px-4 py-3">12.00%</td>
+                    <td className="border border-gray-300 px-4 py-3">1,200,000</td>
+                    <td className="border border-gray-300 px-4 py-3 text-sm">6 month cliff, daily linear 24 months</td>
+                    <td className="border border-gray-300 px-4 py-3">0.00%</td>
+                    <td className="border border-gray-300 px-4 py-3">0</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-3 font-medium">Marketing & Partnerships</td>
+                    <td className="border border-gray-300 px-4 py-3">15.00%</td>
+                    <td className="border border-gray-300 px-4 py-3">1,500,000</td>
+                    <td className="border border-gray-300 px-4 py-3 text-sm">1 month cliff, daily linear for 48 months</td>
+                    <td className="border border-gray-300 px-4 py-3">0.00%</td>
+                    <td className="border border-gray-300 px-4 py-3">0</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-3 font-medium">Staking Incentives</td>
+                    <td className="border border-gray-300 px-4 py-3">10.00%</td>
+                    <td className="border border-gray-300 px-4 py-3">1,000,000</td>
+                    <td className="border border-gray-300 px-4 py-3 text-sm">1 month cliff, daily linear for 48 months</td>
+                    <td className="border border-gray-300 px-4 py-3">0.00%</td>
+                    <td className="border border-gray-300 px-4 py-3">0</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-3 font-medium">Ecosystem Rewards</td>
+                    <td className="border border-gray-300 px-4 py-3">15.00%</td>
+                    <td className="border border-gray-300 px-4 py-3">1,500,000</td>
+                    <td className="border border-gray-300 px-4 py-3 text-sm">3 month cliff, daily linear for 48 months</td>
+                    <td className="border border-gray-300 px-4 py-3">0.00%</td>
+                    <td className="border border-gray-300 px-4 py-3">0</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-3 font-medium">Liquidity</td>
+                    <td className="border border-gray-300 px-4 py-3">13.00%</td>
+                    <td className="border border-gray-300 px-4 py-3">1,300,000</td>
+                    <td className="border border-gray-300 px-4 py-3 text-sm">50% at TGE, daily linear for 2 months</td>
+                    <td className="border border-gray-300 px-4 py-3 text-green-600 font-semibold">50.00%</td>
+                    <td className="border border-gray-300 px-4 py-3 text-green-600 font-semibold">650,000</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-3 font-medium">Private Round</td>
+                    <td className="border border-gray-300 px-4 py-3">7.00%</td>
+                    <td className="border border-gray-300 px-4 py-3">700,000</td>
+                    <td className="border border-gray-300 px-4 py-3 text-sm">20% at TGE, daily linear for 6 months</td>
+                    <td className="border border-gray-300 px-4 py-3 text-blue-600 font-semibold">20.00%</td>
+                    <td className="border border-gray-300 px-4 py-3 text-blue-600 font-semibold">140,000</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-3 font-medium">Strategic Round</td>
+                    <td className="border border-gray-300 px-4 py-3">3.50%</td>
+                    <td className="border border-gray-300 px-4 py-3">350,000</td>
+                    <td className="border border-gray-300 px-4 py-3 text-sm">25% TGE, daily linear for 4 months</td>
+                    <td className="border border-gray-300 px-4 py-3 text-purple-600 font-semibold">25.00%</td>
+                    <td className="border border-gray-300 px-4 py-3 text-purple-600 font-semibold">87,500</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 bg-yellow-50">
+                    <td className="border border-gray-300 px-4 py-3 font-medium">Public Round</td>
+                    <td className="border border-gray-300 px-4 py-3">4.00%</td>
+                    <td className="border border-gray-300 px-4 py-3">400,000</td>
+                    <td className="border border-gray-300 px-4 py-3 text-sm">25% TGE, daily linear for 4 months</td>
+                    <td className="border border-gray-300 px-4 py-3 text-orange-600 font-semibold">25.00%</td>
+                    <td className="border border-gray-300 px-4 py-3 text-orange-600 font-semibold">100,000</td>
+                  </tr>
+                  <tr className="bg-gray-100 font-bold">
+                    <td className="border border-gray-300 px-4 py-3">Total</td>
+                    <td className="border border-gray-300 px-4 py-3">100.00%</td>
+                    <td className="border border-gray-300 px-4 py-3">10,000,000</td>
+                    <td className="border border-gray-300 px-4 py-3">-</td>
+                    <td className="border border-gray-300 px-4 py-3">-</td>
+                    <td className="border border-gray-300 px-4 py-3">977,500</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">IDOs & Sales</h2>
+            <div className="overflow-x-auto mb-8">
+              <table className="w-full border-collapse border border-gray-300 rounded-lg">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">Round</th>
+                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">Token Price</th>
+                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">% of Distribution</th>
+                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">Tokens for Sale</th>
+                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">Total Raised</th>
+                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">FDV</th>
+                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">TGE Release %</th>
+                    <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">TGE Supply</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="hover:bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-3 font-medium">Private</td>
+                    <td className="border border-gray-300 px-4 py-3 font-semibold text-blue-600">$0.5500</td>
+                    <td className="border border-gray-300 px-4 py-3">7.00%</td>
+                    <td className="border border-gray-300 px-4 py-3">700,000</td>
+                    <td className="border border-gray-300 px-4 py-3 font-semibold">$385,000</td>
+                    <td className="border border-gray-300 px-4 py-3">$5,500,000</td>
+                    <td className="border border-gray-300 px-4 py-3">20%</td>
+                    <td className="border border-gray-300 px-4 py-3">140,000</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-3 font-medium">Strategic</td>
+                    <td className="border border-gray-300 px-4 py-3 font-semibold text-purple-600">$0.600</td>
+                    <td className="border border-gray-300 px-4 py-3">3.50%</td>
+                    <td className="border border-gray-300 px-4 py-3">350,000</td>
+                    <td className="border border-gray-300 px-4 py-3 font-semibold">$210,000</td>
+                    <td className="border border-gray-300 px-4 py-3">$6,000,000</td>
+                    <td className="border border-gray-300 px-4 py-3">25%</td>
+                    <td className="border border-gray-300 px-4 py-3">87,500</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 bg-yellow-50">
+                    <td className="border border-gray-300 px-4 py-3 font-medium">Public</td>
+                    <td className="border border-gray-300 px-4 py-3 font-semibold text-orange-600">$0.600</td>
+                    <td className="border border-gray-300 px-4 py-3">4.00%</td>
+                    <td className="border border-gray-300 px-4 py-3">400,000</td>
+                    <td className="border border-gray-300 px-4 py-3 font-semibold">$240,000</td>
+                    <td className="border border-gray-300 px-4 py-3">$6,000,000</td>
+                    <td className="border border-gray-300 px-4 py-3">25%</td>
+                    <td className="border border-gray-300 px-4 py-3">100,000</td>
+                  </tr>
+                  <tr className="bg-gray-100 font-bold">
+                    <td className="border border-gray-300 px-4 py-3">Total</td>
+                    <td className="border border-gray-300 px-4 py-3">-</td>
+                    <td className="border border-gray-300 px-4 py-3">14.50%</td>
+                    <td className="border border-gray-300 px-4 py-3">1,450,000</td>
+                    <td className="border border-gray-300 px-4 py-3">$835,000</td>
+                    <td className="border border-gray-300 px-4 py-3">-</td>
+                    <td className="border border-gray-300 px-4 py-3">-</td>
+                    <td className="border border-gray-300 px-4 py-3">327,500</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
 
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">Token Utility</h2>
