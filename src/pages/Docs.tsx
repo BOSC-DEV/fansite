@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home, FileText, BarChart3, Map, Settings, Users } from 'lucide-react';
@@ -644,11 +645,20 @@ const Docs = () => {
                   </p>
                 </div>
 
-                <div className="bg-gray-50 p-6 rounded-lg">
-                  <h4 className="font-semibold text-gray-800 mb-3 text-lg">Bailey Young - Business Development</h4>
-                  <p className="text-gray-700 leading-relaxed">
-                    Highly experienced business professional with a strong commercial background and leadership roles at multi-million pound UK businesses. Bailey achieved a 7-figure exit at Flamengo Resourcing, demonstrating his ability to scale businesses and execute successful strategies in competitive markets.
-                  </p>
+                <div className="bg-gray-50 p-6 rounded-lg flex flex-col md:flex-row gap-6">
+                  <div className="flex-shrink-0">
+                    <img 
+                      src="/lovable-uploads/4f3983f4-6b1d-418f-8aa7-75903179a831.png" 
+                      alt="Bailey Young" 
+                      className="w-32 h-32 rounded-lg object-cover"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-800 mb-3 text-lg">Bailey Young - Business Development</h4>
+                    <p className="text-gray-700 leading-relaxed">
+                      Highly experienced business professional with a strong commercial background and leadership roles at multi-million pound UK businesses. Bailey achieved a 7-figure exit at Flamengo Resourcing, demonstrating his ability to scale businesses and execute successful strategies in competitive markets.
+                    </p>
+                  </div>
                 </div>
 
                 <div className="bg-gray-50 p-6 rounded-lg flex flex-col md:flex-row gap-6">
