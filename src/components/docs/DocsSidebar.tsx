@@ -50,21 +50,21 @@ export function DocsSidebar() {
   };
 
   return (
-    <Sidebar>
-      <SidebarHeader className="border-b border-gray-200 p-4">
-        <h2 className="text-lg font-semibold text-gray-900">Documentation</h2>
+    <Sidebar className="bg-gray-50 border-r border-gray-100">
+      <SidebarHeader className="border-b border-gray-100 p-4 bg-white">
+        <h2 className="text-lg font-semibold text-gray-800">Documentation</h2>
       </SidebarHeader>
       
-      <SidebarContent>
+      <SidebarContent className="bg-gray-50">
         <SidebarGroup>
-          <SidebarGroupLabel>Contents</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-gray-600">Contents</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
                     onClick={() => handleNavClick(item.href)}
-                    className="cursor-pointer"
+                    className="cursor-pointer text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                   >
                     <item.icon className="h-4 w-4" />
                     <span>{item.title}</span>
