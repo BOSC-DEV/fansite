@@ -2,6 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from './pages/Index';
+import Docs from './pages/Docs';
 import { Toaster } from "@/components/ui/sonner";
 import { HelmetProvider } from 'react-helmet-async';
 
@@ -11,6 +12,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/docs" element={<Docs />} />
         </Routes>
         
         <Toaster 

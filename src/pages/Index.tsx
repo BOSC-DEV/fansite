@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Instagram, Twitter, BookOpen } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Index = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -51,18 +53,49 @@ const Index = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white text-center p-4">
+    <div className="flex items-center justify-center min-h-screen bg-white text-center p-4 relative">
       <Helmet>
         <title>Coming Soon</title>
         <meta name="description" content="Coming soon!" />
       </Helmet>
+      
+      {/* Social buttons positioned at top right */}
+      <div className="absolute top-8 right-8 flex gap-4">
+        <a 
+          href="https://instagram.com/fandotsite" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white hover:scale-110 transition-transform duration-200 shadow-lg"
+          aria-label="Follow us on Instagram"
+        >
+          <Instagram className="h-6 w-6" />
+        </a>
+        
+        <a 
+          href="https://x.com/fandotsite" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex items-center justify-center w-12 h-12 rounded-full bg-black text-white hover:scale-110 transition-transform duration-200 shadow-lg"
+          aria-label="Follow us on X (Twitter)"
+        >
+          <Twitter className="h-6 w-6" />
+        </a>
+        
+        <Link 
+          to="/docs"
+          className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white hover:scale-110 transition-transform duration-200 shadow-lg"
+          aria-label="View Documentation"
+        >
+          <BookOpen className="h-6 w-6" />
+        </Link>
+      </div>
       
       <h1 
         className={`text-4xl md:text-6xl lg:text-8xl font-bold tracking-wider relative p-2 ${isTapped ? 'scale-110 transition-transform duration-300' : 'transition-transform duration-300'}`}
         style={{
           backgroundImage: `radial-gradient(
             circle at ${mousePosition.x}px ${mousePosition.y}px, 
-            #E5A97C, #EBCD88, #C5B5E3, #A4C1E8, #E89BA9
+            #D4A574, #E0B878, #B8A5D9, #8FB1E0, #D889A5
           )`,
           backgroundSize: '200% 200%',
           backgroundClip: 'text',
