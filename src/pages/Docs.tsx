@@ -561,7 +561,7 @@ Response:
                   <div className="bg-gray-50 p-4 rounded">
                     <div className="flex items-center mb-2">
                       <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-mono mr-2">GET</span>
-                      <span className="font-mono text-sm">/creators/{address}</span>
+                      <span className="font-mono text-sm">/creators/{`{wallet_address}`}</span>
                     </div>
                     <p className="text-gray-600 text-sm">Get creator profile and statistics</p>
                   </div>
@@ -575,7 +575,7 @@ Response:
                   <div className="bg-gray-50 p-4 rounded">
                     <div className="flex items-center mb-2">
                       <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-mono mr-2">GET</span>
-                      <span className="font-mono text-sm">/creators/{address}/content</span>
+                      <span className="font-mono text-sm">/creators/{`{wallet_address}`}/content</span>
                     </div>
                     <p className="text-gray-600 text-sm">List creator's published content</p>
                   </div>
@@ -595,7 +595,7 @@ Response:
                   <div className="bg-gray-50 p-4 rounded">
                     <div className="flex items-center mb-2">
                       <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-mono mr-2">GET</span>
-                      <span className="font-mono text-sm">/content/{hash}</span>
+                      <span className="font-mono text-sm">/content/{`{content_hash}`}</span>
                     </div>
                     <p className="text-gray-600 text-sm">Get content metadata and access URL</p>
                   </div>
