@@ -85,7 +85,7 @@ const Index = () => {
             href="https://instagram.com/fandotsite" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white hover:scale-110 transition-transform duration-200 shadow-lg"
+            className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-[#D889A5] to-[#B8A5D9] text-white hover:scale-110 transition-transform duration-200 shadow-lg"
             aria-label="Follow us on Instagram"
           >
             <Instagram className="h-6 w-6" />
@@ -95,7 +95,7 @@ const Index = () => {
             href="https://x.com/fandotsite" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="flex items-center justify-center w-12 h-12 rounded-full bg-black text-white hover:scale-110 transition-transform duration-200 shadow-lg"
+            className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-[#8FB1E0] to-[#B8A5D9] text-white hover:scale-110 transition-transform duration-200 shadow-lg"
             aria-label="Follow us on X (Twitter)"
           >
             <Twitter className="h-6 w-6" />
@@ -103,7 +103,7 @@ const Index = () => {
           
           <Link 
             to="/docs"
-            className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white hover:scale-110 transition-transform duration-200 shadow-lg"
+            className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-[#D4A574] to-[#E0B878] text-white hover:scale-110 transition-transform duration-200 shadow-lg"
             aria-label="View Documentation"
           >
             <BookOpen className="h-6 w-6" />
