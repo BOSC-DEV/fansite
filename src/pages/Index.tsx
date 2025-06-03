@@ -53,42 +53,11 @@ const Index = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white text-center p-4 relative">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white text-center p-4 relative">
       <Helmet>
         <title>Coming Soon</title>
         <meta name="description" content="Coming soon!" />
       </Helmet>
-      
-      {/* Social buttons positioned at top right */}
-      <div className="absolute top-8 right-8 flex gap-4">
-        <a 
-          href="https://instagram.com/fandotsite" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white hover:scale-110 transition-transform duration-200 shadow-lg"
-          aria-label="Follow us on Instagram"
-        >
-          <Instagram className="h-6 w-6" />
-        </a>
-        
-        <a 
-          href="https://x.com/fandotsite" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="flex items-center justify-center w-12 h-12 rounded-full bg-black text-white hover:scale-110 transition-transform duration-200 shadow-lg"
-          aria-label="Follow us on X (Twitter)"
-        >
-          <Twitter className="h-6 w-6" />
-        </a>
-        
-        <Link 
-          to="/docs"
-          className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white hover:scale-110 transition-transform duration-200 shadow-lg"
-          aria-label="View Documentation"
-        >
-          <BookOpen className="h-6 w-6" />
-        </Link>
-      </div>
       
       <h1 
         className={`text-4xl md:text-6xl lg:text-8xl font-bold tracking-wider relative p-2 ${isTapped ? 'scale-110 transition-transform duration-300' : 'transition-transform duration-300'}`}
@@ -108,6 +77,39 @@ const Index = () => {
       >
         COMING SOON
       </h1>
+      
+      {/* Social buttons centered at bottom third */}
+      <div className="absolute bottom-1/3 left-1/2 transform -translate-x-1/2">
+        <div className="flex gap-4">
+          <a 
+            href="https://instagram.com/fandotsite" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white hover:scale-110 transition-transform duration-200 shadow-lg"
+            aria-label="Follow us on Instagram"
+          >
+            <Instagram className="h-6 w-6" />
+          </a>
+          
+          <a 
+            href="https://x.com/fandotsite" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center justify-center w-12 h-12 rounded-full bg-black text-white hover:scale-110 transition-transform duration-200 shadow-lg"
+            aria-label="Follow us on X (Twitter)"
+          >
+            <Twitter className="h-6 w-6" />
+          </a>
+          
+          <Link 
+            to="/docs"
+            className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white hover:scale-110 transition-transform duration-200 shadow-lg"
+            aria-label="View Documentation"
+          >
+            <BookOpen className="h-6 w-6" />
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };
