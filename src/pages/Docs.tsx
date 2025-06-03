@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home, FileText, BarChart3, Map, Settings, Users } from 'lucide-react';
@@ -25,7 +26,7 @@ const Docs = () => {
               
               {/* Main Title */}
               <h1 className="text-4xl font-bold text-gray-900 mb-8 pb-4 border-b border-gray-200">
-                FAN Protocol Documentation
+                $FAN Protocol Documentation
               </h1>
               
               {/* Mission Statement */}
@@ -55,15 +56,15 @@ const Docs = () => {
               <h2 id="executive-summary" className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Executive Summary</h2>
               
               <p className="text-gray-700 leading-relaxed mb-4">
-                FAN Protocol represents a paradigm shift in how digital content platforms operate, moving away from centralized, extractive models toward a truly decentralized ecosystem that empowers both creators and consumers. Our platform leverages cutting-edge blockchain technology, artificial intelligence, and decentralized infrastructure to create a sustainable, scalable solution for the digital content economy.
+                $FAN Protocol represents a paradigm shift in how digital content platforms operate, moving away from centralized, extractive models toward a truly decentralized ecosystem that empowers both creators and consumers. Our platform leverages cutting-edge blockchain technology, artificial intelligence, and decentralized infrastructure to create a sustainable, scalable solution for the digital content economy.
               </p>
 
               <p className="text-gray-700 leading-relaxed mb-4">
-                The digital content industry faces numerous challenges including high platform fees, censorship, privacy concerns, limited monetization options, and inadequate creator tools. Traditional platforms extract significant value from creators while providing limited transparency and control. FAN Protocol addresses these issues through innovative tokenomics, decentralized governance, and creator-first economics.
+                The digital content industry faces numerous challenges including high platform fees, censorship, privacy concerns, limited monetization options, and inadequate creator tools. Traditional platforms extract significant value from creators while providing limited transparency and control. $FAN Protocol addresses these issues through innovative tokenomics, decentralized governance, and creator-first economics.
               </p>
 
               <p className="text-gray-700 leading-relaxed mb-6">
-                Our solution combines decentralized storage, AI-powered content discovery, privacy-preserving payments, and community governance to create a platform that truly serves its users. The FAN token serves as the native currency for all platform interactions, governance decisions, and reward distribution.
+                Our solution combines decentralized storage, AI-powered content discovery, privacy-preserving payments, and community governance to create a platform that truly serves its users. The $FAN token serves as the native currency for all platform interactions, governance decisions, and reward distribution.
               </p>
 
               {/* Market Analysis */}
@@ -118,7 +119,7 @@ const Docs = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Token Overview</h3>
               
               <p className="text-gray-700 leading-relaxed mb-4">
-                The FAN token is an ERC-20 compatible utility token that serves as the native currency of the FAN Protocol ecosystem. It facilitates all platform interactions, governance decisions, and value transfer while providing holders with various benefits and utilities.
+                The $FAN token is an ERC-20 compatible utility token that serves as the native currency of the $FAN Protocol ecosystem. It facilitates all platform interactions, governance decisions, and value transfer while providing holders with various benefits and utilities.
               </p>
 
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Token Utility</h3>
@@ -239,10 +240,10 @@ const Docs = () => {
               </table>
 
               {/* Token Release Schedule */}
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">FAN 4 Year Release Schedule</h3>
+              <h3 className="text-xl font-semibold text-gray-800 mb-3">$FAN 4 Year Release Schedule</h3>
               
               <p className="text-gray-700 mb-4">
-                This chart shows the circulating supply of FAN tokens over a 4-year period, with different vesting schedules for each allocation category designed to ensure long-term sustainability and prevent market manipulation.
+                This chart shows the circulating supply of $FAN tokens over a 4-year period, with different vesting schedules for each allocation category designed to ensure long-term sustainability and prevent market manipulation.
               </p>
               
               <TokenReleaseChart />
@@ -362,11 +363,11 @@ const Docs = () => {
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="font-semibold text-gray-700">Total Supply:</span>
-                      <span className="text-gray-900">10,000,000 FAN</span>
+                      <span className="text-gray-900">10,000,000 $FAN</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="font-semibold text-gray-700">Initial Circulating Supply:</span>
-                      <span className="text-gray-900">977,500 FAN</span>
+                      <span className="text-gray-900">977,500 $FAN</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="font-semibold text-gray-700">Amount to be Raised:</span>
@@ -374,7 +375,7 @@ const Docs = () => {
                     </div>
                     <div className="flex justify-between">
                       <span className="font-semibold text-gray-700">Tokens for Sale:</span>
-                      <span className="text-gray-900">1,450,000 FAN</span>
+                      <span className="text-gray-900">1,450,000 $FAN</span>
                     </div>
                   </div>
                   <div className="space-y-3">
@@ -402,7 +403,7 @@ const Docs = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Revenue Model</h3>
               
               <p className="text-gray-700 mb-4">
-                FAN Protocol generates revenue through multiple streams designed to create sustainable value for all stakeholders:
+                $FAN Protocol generates revenue through multiple streams designed to create sustainable value for all stakeholders:
               </p>
 
               <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-700">
@@ -419,7 +420,7 @@ const Docs = () => {
               <h2 id="technology-stack" className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Technology Stack</h2>
               
               <p className="text-gray-700 leading-relaxed mb-6">
-                FAN Protocol is built on a cutting-edge technology stack designed for scalability, security, and user experience. Our architecture combines the best of Web3 innovations with proven Web2 technologies to deliver a seamless platform experience.
+                $FAN Protocol is built on a cutting-edge technology stack designed for scalability, security, and user experience. Our architecture combines the best of Web3 innovations with proven Web2 technologies to deliver a seamless platform experience.
               </p>
 
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Blockchain Infrastructure</h3>
@@ -467,7 +468,7 @@ const Docs = () => {
               
               <h4 className="text-lg font-medium text-gray-800 mb-2">🔒 Privacy-Preserving Payments</h4>
               <p className="text-gray-700 mb-4">
-                Utilizing zero-knowledge proof technology, FAN Protocol enables completely private transactions while maintaining regulatory compliance. Users can purchase content and support creators without revealing their identity or transaction history to third parties.
+                Utilizing zero-knowledge proof technology, $FAN Protocol enables completely private transactions while maintaining regulatory compliance. Users can purchase content and support creators without revealing their identity or transaction history to third parties.
               </p>
               
               <h4 className="text-lg font-medium text-gray-800 mb-2">👥 Decentralized Governance</h4>
@@ -489,7 +490,7 @@ const Docs = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-3">AI & Machine Learning</h3>
               
               <p className="text-gray-700 mb-4">
-                FAN Protocol leverages advanced AI and machine learning technologies to enhance user experience, improve content discovery, and ensure platform safety:
+                $FAN Protocol leverages advanced AI and machine learning technologies to enhance user experience, improve content discovery, and ensure platform safety:
               </p>
 
               <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-700">
@@ -507,13 +508,13 @@ const Docs = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Decentralized Autonomous Organization (DAO)</h3>
               
               <p className="text-gray-700 leading-relaxed mb-4">
-                FAN Protocol operates as a Decentralized Autonomous Organization (DAO), ensuring that all major decisions are made collectively by the community of token holders. This governance model promotes transparency, accountability, and democratic participation in the platform's evolution.
+                $FAN Protocol operates as a Decentralized Autonomous Organization (DAO), ensuring that all major decisions are made collectively by the community of token holders. This governance model promotes transparency, accountability, and democratic participation in the platform's evolution.
               </p>
 
               <h4 className="text-lg font-medium text-gray-800 mb-2">Governance Structure</h4>
               
               <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-700">
-                <li><strong>Token-Weighted Voting:</strong> Voting power proportional to FAN token holdings</li>
+                <li><strong>Token-Weighted Voting:</strong> Voting power proportional to $FAN token holdings</li>
                 <li><strong>Proposal System:</strong> Community members can submit improvement proposals</li>
                 <li><strong>Voting Periods:</strong> Structured timeframes for proposal discussion and voting</li>
                 <li><strong>Execution Framework:</strong> Automatic execution of approved proposals through smart contracts</li>
@@ -537,7 +538,7 @@ const Docs = () => {
               <h2 id="roadmap" className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Development Roadmap</h2>
               
               <p className="text-gray-700 leading-relaxed mb-6">
-                Our comprehensive roadmap outlines the strategic development phases for FAN Protocol, from initial launch through global scale adoption. Each phase builds upon previous achievements while introducing new capabilities and expanding our ecosystem.
+                Our comprehensive roadmap outlines the strategic development phases for $FAN Protocol, from initial launch through global scale adoption. Each phase builds upon previous achievements while introducing new capabilities and expanding our ecosystem.
               </p>
 
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Phase 1: Foundation (Q1-Q2 2024)</h3>
@@ -554,7 +555,7 @@ const Docs = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Phase 2: Platform Launch (Q3-Q4 2024)</h3>
               <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-700">
                 <li><strong>Public Beta Launch:</strong> Open beta testing with creator onboarding program</li>
-                <li><strong>Token Generation Event:</strong> FAN token launch and initial distribution</li>
+                <li><strong>Token Generation Event:</strong> $FAN token launch and initial distribution</li>
                 <li><strong>Core Features:</strong> Content upload, payment processing, and basic analytics</li>
                 <li><strong>Community Building:</strong> Social features, commenting, and creator tools</li>
                 <li><strong>Mobile Application:</strong> iOS and Android app development and release</li>
@@ -629,7 +630,7 @@ const Docs = () => {
               <h2 id="risk-analysis" className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Risk Analysis</h2>
               
               <p className="text-gray-700 leading-relaxed mb-4">
-                While FAN Protocol presents significant opportunities, we acknowledge various risks that could impact the project's success. Our team has developed comprehensive risk mitigation strategies to address these challenges.
+                While $FAN Protocol presents significant opportunities, we acknowledge various risks that could impact the project's success. Our team has developed comprehensive risk mitigation strategies to address these challenges.
               </p>
 
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Technical Risks</h3>
@@ -660,12 +661,12 @@ const Docs = () => {
               <h2 id="legal-compliance" className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Legal & Compliance</h2>
               
               <p className="text-gray-700 leading-relaxed mb-4">
-                FAN Protocol is committed to operating within all applicable legal frameworks while maintaining the decentralized and permissionless nature of the platform. We work closely with legal experts to ensure compliance across multiple jurisdictions.
+                $FAN Protocol is committed to operating within all applicable legal frameworks while maintaining the decentralized and permissionless nature of the platform. We work closely with legal experts to ensure compliance across multiple jurisdictions.
               </p>
 
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Regulatory Compliance</h3>
               <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-700">
-                <li><strong>Securities Compliance:</strong> FAN token structure designed to comply with applicable securities laws</li>
+                <li><strong>Securities Compliance:</strong> $FAN token structure designed to comply with applicable securities laws</li>
                 <li><strong>Anti-Money Laundering:</strong> KYC/AML procedures for large transactions and institutional users</li>
                 <li><strong>Data Protection:</strong> GDPR, CCPA, and other privacy regulation compliance</li>
                 <li><strong>Content Regulation:</strong> Age verification and content classification systems</li>
@@ -687,15 +688,15 @@ const Docs = () => {
               <h2 id="conclusion" className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Conclusion</h2>
               
               <p className="text-gray-700 leading-relaxed mb-4">
-                FAN Protocol represents a fundamental shift toward a more equitable, transparent, and creator-centric digital content ecosystem. By combining cutting-edge blockchain technology with user-focused design, we are building a platform that truly serves its community while creating sustainable value for all stakeholders.
+                $FAN Protocol represents a fundamental shift toward a more equitable, transparent, and creator-centric digital content ecosystem. By combining cutting-edge blockchain technology with user-focused design, we are building a platform that truly serves its community while creating sustainable value for all stakeholders.
               </p>
 
               <p className="text-gray-700 leading-relaxed mb-4">
-                Our comprehensive approach addresses the core challenges facing today's content creators: high platform fees, limited monetization options, censorship concerns, and inadequate analytics. Through decentralized governance, innovative tokenomics, and advanced technology infrastructure, FAN Protocol creates a sustainable ecosystem where creators can thrive.
+                Our comprehensive approach addresses the core challenges facing today's content creators: high platform fees, limited monetization options, censorship concerns, and inadequate analytics. Through decentralized governance, innovative tokenomics, and advanced technology infrastructure, $FAN Protocol creates a sustainable ecosystem where creators can thrive.
               </p>
 
               <p className="text-gray-700 leading-relaxed mb-4">
-                The significant market opportunity, combined with our experienced team and robust technology stack, positions FAN Protocol for long-term success. As we execute our roadmap and grow our community, we remain committed to our core mission of empowering creators and revolutionizing the digital content industry.
+                The significant market opportunity, combined with our experienced team and robust technology stack, positions $FAN Protocol for long-term success. As we execute our roadmap and grow our community, we remain committed to our core mission of empowering creators and revolutionizing the digital content industry.
               </p>
 
               <p className="text-gray-700 leading-relaxed mb-8">
