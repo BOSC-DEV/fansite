@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home, FileText, BarChart3, Map, Settings, Users } from 'lucide-react';
@@ -6,9 +5,14 @@ import TokenReleaseChart from "@/components/ui/token-release-chart";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { MobileNavigation } from "@/components/header/MobileNavigation";
+import { useHeaderMenuItems } from "@/hooks/useHeaderMenuItems";
+import { useWallet } from "@/context/WalletContext";
 
 const Docs = () => {
   const isMobile = useIsMobile();
+  const menuItems = useHeaderMenuItems();
+  const { connecting } = useWallet();
   
   return (
     <SidebarProvider>
@@ -230,6 +234,9 @@ const Docs = () => {
             </div>
           </div>
         </main>
+        
+        {/* Add mobile navigation */}
+        {isMobile && <MobileNavigation menuItems={menuItems} connecting={connecting} />}
       </div>
     </SidebarProvider>
   );
