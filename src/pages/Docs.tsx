@@ -1,14 +1,11 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home, FileText, BarChart3, Map, Settings, Users } from 'lucide-react';
 import TokenReleaseChart from "@/components/ui/token-release-chart";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
-
 const Docs = () => {
-  return (
-    <SidebarProvider>
+  return <SidebarProvider>
       <div className="min-h-screen flex w-full bg-white">
         <DocsSidebar />
         
@@ -17,10 +14,7 @@ const Docs = () => {
           <div className="border-b border-gray-200 bg-white sticky top-0 z-10 w-full h-[73px]">
             <div className="w-full px-4 py-4 flex items-center h-full">
               <SidebarTrigger className="mr-4" />
-              <Link 
-                to="/" 
-                className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors"
-              >
+              <Link to="/" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
                 <Home className="h-4 w-4" />
               </Link>
             </div>
@@ -37,9 +31,7 @@ const Docs = () => {
               {/* Mission Statement */}
               <h2 id="mission-statement" className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Mission Statement</h2>
               
-              <p className="text-gray-700 leading-relaxed mb-4">
-                To provide a decentralized, permissionless, and censorship-resistant protocol for digital content creators and consumers that requires no KYC or traditional banking, while offering private payments, advanced data analytics, creator rewards, and other cutting-edge innovations through the full utilization of rapidly advancing blockchain and AI technologies.
-              </p>
+              <p className="text-gray-700 leading-relaxed mb-4">To provide a decentralized, permissionless, and censorship-resistant protocol for fan monetisation services that requires no KYC or traditional banking, while offering private payments, advanced data analytics, creator rewards, and other cutting-edge innovations through the full utilization of rapidly advancing blockchain and AI technologies.</p>
               
               <p className="text-gray-700 leading-relaxed mb-4">
                 To sustainably scale and actually have the resources to disrupt a giant market without a billion-dollar bankroll. We utilize our decentralized physical infrastructure network (DePIN) of shared computing power to host, transcode, and deliver content or data while rewarding miners and network participants.
@@ -712,8 +704,6 @@ const Docs = () => {
           </div>
         </main>
       </div>
-    </SidebarProvider>
-  );
+    </SidebarProvider>;
 };
-
 export default Docs;
