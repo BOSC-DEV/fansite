@@ -601,27 +601,84 @@ const Docs = () => {
               
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Core Team</h3>
               
-              <p className="text-gray-700 leading-relaxed mb-4">
-                Our team brings together decades of experience in blockchain technology, content platforms, fintech, and digital marketing. With backgrounds from leading technology companies and successful startups, we have the expertise to execute our ambitious vision.
+              <p className="text-gray-700 leading-relaxed mb-6">
+                Our leadership team brings together decades of experience in content platforms, blockchain technology, business development, and talent management. With proven track records from successful ventures and industry-leading companies, we have the expertise to execute our ambitious vision for $FAN Protocol.
               </p>
 
+              <div className="grid grid-cols-1 gap-6 mb-8">
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h4 className="font-semibold text-gray-800 mb-3 text-lg">Mike Hales - Co-Founder</h4>
+                  <p className="text-gray-700 leading-relaxed">
+                    Founder of First Class, the UK's largest TikTok partner agency with millions in turnover and close to 1,000 streamers signed exclusively. Under Mike's leadership, First Class has partnered with some of the largest social media accounts and top-earning content creators, demonstrating his deep understanding of the creator economy and talent management at scale.
+                  </p>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h4 className="font-semibold text-gray-800 mb-3 text-lg">Indi Jay Cammish - Co-Founder</h4>
+                  <p className="text-gray-700 leading-relaxed">
+                    Co-founder of First Class alongside Mike and co-founder of DeHub. Indi brings a unique perspective as a renowned professional dancer who has performed for A-list celebrities and even royalty, while starring in Channel 4's "The Masked Dancer". Her entertainment industry experience and business acumen provide valuable insights into creator needs and audience engagement.
+                  </p>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h4 className="font-semibold text-gray-800 mb-3 text-lg">Crypto Columbus - Blockchain Advisor</h4>
+                  <p className="text-gray-700 leading-relaxed">
+                    Original founder with extensive experience in cryptocurrency and blockchain project development. His deep understanding of tokenomics, community building, and decentralized protocol development brings crucial expertise to $FAN Protocol's technical and strategic direction.
+                  </p>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h4 className="font-semibold text-gray-800 mb-3 text-lg">Bailey Young - Business Development</h4>
+                  <p className="text-gray-700 leading-relaxed">
+                    Highly experienced business professional with a strong commercial background and leadership roles at multi-million pound UK businesses. Bailey achieved a 7-figure exit at Flamengo Resourcing, demonstrating his ability to scale businesses and execute successful strategies in competitive markets.
+                  </p>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h4 className="font-semibold text-gray-800 mb-3 text-lg">Malik Jan - Strategic Advisor</h4>
+                  <p className="text-gray-700 leading-relaxed">
+                    Founder of DeHub, which achieved an ROI of 1000x and $10M in liquidity at peak performance. Previously served as the top billing agent at Blue Arrow, the UK's largest agency with 65 offices nationwide and 600 staff, and formerly at Randstad, the world's largest staffing agency. His expertise in scaling operations and strategic partnerships is invaluable to $FAN Protocol's growth.
+                  </p>
+                </div>
+              </div>
+
+              <h3 className="text-xl font-semibold text-gray-800 mb-3">Team Expertise Summary</h3>
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <h4 className="font-semibold text-gray-800 mb-2">Leadership Team</h4>
+                  <h4 className="font-semibold text-gray-800 mb-2">Content & Creator Economy</h4>
                   <ul className="space-y-1 text-sm text-gray-700">
-                    <li>• Former executives from major tech companies</li>
-                    <li>• Blockchain and DeFi development experience</li>
-                    <li>• Content platform and creator economy expertise</li>
-                    <li>• Digital marketing and growth specialists</li>
+                    <li>• TikTok partner agency with 1,000+ creators</li>
+                    <li>• Multi-million turnover content business</li>
+                    <li>• Entertainment industry performance experience</li>
+                    <li>• Creator monetization and talent management</li>
                   </ul>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <h4 className="font-semibold text-gray-800 mb-2">Advisory Board</h4>
+                  <h4 className="font-semibold text-gray-800 mb-2">Blockchain & Technology</h4>
                   <ul className="space-y-1 text-sm text-gray-700">
-                    <li>• Industry veterans and thought leaders</li>
-                    <li>• Legal and regulatory compliance experts</li>
-                    <li>• Marketing and business development advisors</li>
-                    <li>• Technical architecture and security consultants</li>
+                    <li>• Cryptocurrency project founding experience</li>
+                    <li>• DeFi protocol development expertise</li>
+                    <li>• 1000x ROI project execution</li>
+                    <li>• Tokenomics and community building</li>
+                  </ul>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-800 mb-2">Business Development</h4>
+                  <ul className="space-y-1 text-sm text-gray-700">
+                    <li>• 7-figure business exit experience</li>
+                    <li>• Multi-million pound business leadership</li>
+                    <li>• Strategic partnership development</li>
+                    <li>• Commercial strategy and execution</li>
+                  </ul>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-800 mb-2">Operations & Scale</h4>
+                  <ul className="space-y-1 text-sm text-gray-700">
+                    <li>• Global staffing agency experience</li>
+                    <li>• 65-office network management</li>
+                    <li>• 600+ staff operational oversight</li>
+                    <li>• International business development</li>
                   </ul>
                 </div>
               </div>
