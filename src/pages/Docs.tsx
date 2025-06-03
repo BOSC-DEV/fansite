@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Home, FileText, BarChart3, Map, Settings, Users } from 'lucide-react';
+import { Home, FileText, BarChart3, Map, Settings, Users, Menu } from 'lucide-react';
 import TokenReleaseChart from "@/components/ui/token-release-chart";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
@@ -24,6 +24,11 @@ const Docs = () => {
           <div className="border-b border-gray-200 bg-white sticky top-0 z-10 w-full h-[60px] md:h-[73px]">
             <div className="w-full px-3 md:px-4 py-3 md:py-4 flex items-center h-full">
               {!isMobile && <SidebarTrigger className="mr-4" />}
+              {isMobile && (
+                <button className="mr-4 p-2 hover:bg-gray-100 rounded-md">
+                  <Menu className="h-4 w-4 text-gray-600" />
+                </button>
+              )}
               <Link to="/" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
                 <Home className="h-4 w-4" />
               </Link>
