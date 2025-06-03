@@ -24,22 +24,13 @@ export default defineConfig(({ mode }) => ({
     // This provides a minimal polyfill for process.env
     'process.env': {},
     // Add global Buffer for Solana web3.js
-    global: 'globalThis',
+    global: {},
   },
   optimizeDeps: {
-    include: ['@solana/web3.js'],
     esbuildOptions: {
       define: {
         global: 'globalThis',
       },
-    },
-  },
-  build: {
-    rollupOptions: {
-      external: [
-        'rpc-websockets/dist/lib/client',
-        'rpc-websockets/dist/lib/client/websocket.browser'
-      ],
     },
   },
 }));
