@@ -2,7 +2,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, BookOpen, FileText, Users, Settings } from 'lucide-react';
+import { ArrowLeft, BookOpen, FileText, Users, Settings, Instagram, Twitter } from 'lucide-react';
 
 const Docs = () => {
   return (
@@ -108,35 +108,40 @@ const Docs = () => {
                   </div>
                 </section>
 
-                <section id="community" className="mb-8">
+                <section id="community" className="mb-16">
                   <h2 className="text-2xl font-semibold text-gray-900 mb-4">Stay Connected</h2>
                   <p className="text-gray-600 mb-4">
-                    While we're preparing our documentation, stay updated with our progress:
+                    While we're preparing our documentation, stay updated with our progress through our social channels.
                   </p>
-                  <div className="flex gap-4">
-                    <a 
-                      href="https://instagram.com/fandotsite" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-colors"
-                    >
-                      <Instagram className="h-4 w-4 mr-2" />
-                      Follow on Instagram
-                    </a>
-                    <a 
-                      href="https://x.com/fandotsite" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
-                    >
-                      <Twitter className="h-4 w-4 mr-2" />
-                      Follow on X
-                    </a>
-                  </div>
                 </section>
               </div>
             </div>
           </main>
+        </div>
+        
+        {/* Social buttons centered at bottom third */}
+        <div className="flex justify-center mt-16 pt-8">
+          <div className="flex gap-4">
+            <a 
+              href="https://instagram.com/fandotsite" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white hover:scale-110 transition-transform duration-200 shadow-lg"
+              aria-label="Follow us on Instagram"
+            >
+              <Instagram className="h-6 w-6" />
+            </a>
+            
+            <a 
+              href="https://x.com/fandotsite" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center justify-center w-12 h-12 rounded-full bg-black text-white hover:scale-110 transition-transform duration-200 shadow-lg"
+              aria-label="Follow us on X (Twitter)"
+            >
+              <Twitter className="h-6 w-6" />
+            </a>
+          </div>
         </div>
       </div>
     </div>
