@@ -1,3 +1,4 @@
+
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import * as dotenv from "dotenv";
@@ -7,7 +8,7 @@ dotenv.config();
 // Get private key from environment or use a default one for development
 const PRIVATE_KEY = process.env.PRIVATE_KEY || "";
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "";
-const POLYGONSCAN_API_KEY = process.env.POLYGONSCAN_API_KEY || "";
+const ARBISCAN_API_KEY = process.env.ARBISCAN_API_KEY || "";
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY || "";
 
 // Safety check for production deployments
@@ -40,9 +41,14 @@ const config: HardhatUserConfig = {
       accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
       gasPrice: 'auto'
     },
-    // Other networks
-    polygon: {
-      url: `https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
+    // Arbitrum networks
+    arbitrumOne: {
+      url: `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
+      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
+      gasPrice: 'auto'
+    },
+    arbitrumSepolia: {
+      url: `https://arb-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
       accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
       gasPrice: 'auto'
     },
@@ -51,7 +57,8 @@ const config: HardhatUserConfig = {
     apiKey: {
       mainnet: ETHERSCAN_API_KEY,
       sepolia: ETHERSCAN_API_KEY,
-      polygon: POLYGONSCAN_API_KEY,
+      arbitrumOne: ARBISCAN_API_KEY,
+      arbitrumSepolia: ARBISCAN_API_KEY,
     },
   },
   paths: {

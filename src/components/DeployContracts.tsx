@@ -18,17 +18,17 @@ const NETWORKS: Record<number, NetworkMapItem> = {
     name: "Ethereum Mainnet",
     contractAddresses: CONTRACT_ADDRESSES[1]
   },
-  5: {
-    name: "Goerli Testnet",
-    contractAddresses: CONTRACT_ADDRESSES[5]
-  },
   11155111: {
     name: "Sepolia Testnet",
     contractAddresses: CONTRACT_ADDRESSES[11155111]
   },
-  137: {
-    name: "Polygon",
-    contractAddresses: CONTRACT_ADDRESSES[137]
+  42161: {
+    name: "Arbitrum One",
+    contractAddresses: CONTRACT_ADDRESSES[42161]
+  },
+  421614: {
+    name: "Arbitrum Sepolia",
+    contractAddresses: CONTRACT_ADDRESSES[421614]
   }
 };
 

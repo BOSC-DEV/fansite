@@ -37,10 +37,15 @@ export const CONTRACT_ADDRESSES = {
     boscToken: "", // Testnet contract address
     bookOfScams: "" // Testnet contract address
   },
-  // Polygon
-  137: {
+  // Arbitrum One
+  42161: {
     boscToken: "", // Production contract address
     bookOfScams: "" // Production contract address
+  },
+  // Arbitrum Sepolia
+  421614: {
+    boscToken: "", // Testnet contract address
+    bookOfScams: "" // Testnet contract address
   }
 };
 

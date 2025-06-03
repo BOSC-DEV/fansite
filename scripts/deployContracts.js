@@ -36,9 +36,9 @@ async function main() {
   // Map chain IDs to names for our configuration
   const chainIdToName = {
     1: "1", // Ethereum Mainnet
-    5: "5", // Goerli Testnet
     11155111: "11155111", // Sepolia Testnet
-    137: "137", // Polygon Mainnet
+    42161: "42161", // Arbitrum One
+    421614: "421614", // Arbitrum Sepolia
   };
   
   console.log(`Updating contract addresses for network ID: ${networkId} (${chainIdToName[Number(networkId)] || "unknown"})`);
@@ -68,7 +68,7 @@ async function main() {
   console.log("\nDeployment summary:");
   console.log(`- BOSC Token: ${boscTokenAddress}`);
   console.log(`- Book of Scams: ${bookOfScamsAddress}`);
-  console.log("\nDon't forget to verify your contracts on Etherscan/Polygonscan with:");
+  console.log("\nDon't forget to verify your contracts on Etherscan/Arbiscan with:");
   console.log(`npx hardhat verify --network ${network || "networkName"} ${boscTokenAddress}`);
   console.log(`npx hardhat verify --network ${network || "networkName"} ${bookOfScamsAddress} ${boscTokenAddress}`);
 }
