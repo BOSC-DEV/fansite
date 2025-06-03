@@ -76,6 +76,23 @@ const Docs = () => {
                   <strong>Protection & Safety:</strong> To solve the rise of illicit online content and protecting children, victims of crime or the generally vulnerable via a more efficient decentralised moderation system to compete with the <a href="https://www.bbc.com/news/uk-63249018" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">failing incumbent</a>.
                 </p>
               </div>
+              
+              <div className="mt-6 pt-6 border-t border-blue-200">
+                <h3 className="text-xl font-semibold text-blue-900 mb-4">Some Stats That Hit Home</h3>
+                <div className="space-y-3 text-blue-800 text-sm">
+                  <p className="leading-relaxed">
+                    The US Sentencing Commission's October 2021 report, which studied child sexual abuse image producers, found that OSEAC (online sexual exploitation and abuse of children) has increased by <strong>422%</strong> over the last fifteen years (Federal Sentencing of Child Pornography Production Offenses, 2021).
+                  </p>
+                  
+                  <p className="leading-relaxed">
+                    In 2021, NCMEC received more than <strong>29.3 million</strong> (up 35% over 2020) CyberTipline reports containing over <strong>84.9 million</strong> images, videos, and other content related to suspected child sexual exploitation (up 29.8% over 2020). Over the past fifteen years, the number of reports of suspected child sexual abuse materials (CSAM) made to the CyberTipline has increased by <strong>15,000%</strong> (CyberTipline 2021 Report, National Center for Missing and Exploited Children).
+                  </p>
+                  
+                  <p className="leading-relaxed">
+                    Transparency reports of seven of the biggest social networks were reviewed to find out how prevalent child abuse is on their platforms. Transparency reports typically include content removals, which are broken down into various categories. This report those related to child nudity, abuse, and sexual exploitation.
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
