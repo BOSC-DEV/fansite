@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
@@ -6,7 +5,7 @@ const TokenReleaseChart = () => {
   // Generate monthly data points for 4 years (48 months)
   const generateReleaseData = () => {
     const data = [];
-    const startDate = new Date(2023, 2, 1); // March 2023
+    const startDate = new Date(2023, 2, 7); // March 7th, 2023
     
     for (let i = 0; i <= 48; i++) {
       const date = new Date(startDate);
