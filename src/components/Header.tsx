@@ -9,6 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Logo } from "./header/Logo";
 import { DesktopNavigation } from "./header/DesktopNavigation";
 import { MobileNavigation } from "./header/MobileNavigation";
+import { MobileDrawer } from "./header/MobileDrawer";
 import { WalletInfo } from "./header/WalletInfo";
 import { useHeaderMenuItems } from "@/hooks/useHeaderMenuItems";
 
@@ -42,32 +43,36 @@ export const Header = () => {
   if (isMobile) {
     return (
       <>
-        {/* Social Media Icons Header for Mobile */}
+        {/* Top Header for Mobile with Social Icons and Burger Menu */}
         <div className="fixed top-0 left-0 right-0 z-50 wood-texture py-2 px-4 flex justify-between items-center">
-          <a 
-            href="https://github.com/BOSC-DEV/BOSC-APP" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-western-parchment hover:text-western-sand transition-colors"
-          >
-            <Github className="h-5 w-5" />
-          </a>
-          
-          <a 
-            href="https://x.com/bookofscamslol" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-western-parchment hover:text-western-sand transition-colors"
-          >
-            <Twitter className="h-5 w-5" />
-          </a>
-          
-          <a 
-            href="mailto:dev@bookofscamslol" 
-            className="text-western-parchment hover:text-western-sand transition-colors"
-          >
-            <Mail className="h-5 w-5" />
-          </a>
+          <div className="flex space-x-4">
+            <a 
+              href="https://github.com/BOSC-DEV/BOSC-APP" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-western-parchment hover:text-western-sand transition-colors"
+            >
+              <Github className="h-5 w-5" />
+            </a>
+            
+            <a 
+              href="https://x.com/bookofscamslol" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-western-parchment hover:text-western-sand transition-colors"
+            >
+              <Twitter className="h-5 w-5" />
+            </a>
+            
+            <a 
+              href="mailto:dev@bookofscamslol" 
+              className="text-western-parchment hover:text-western-sand transition-colors"
+            >
+              <Mail className="h-5 w-5" />
+            </a>
+          </div>
+
+          <MobileDrawer menuItems={menuItems} />
         </div>
 
         {/* Bottom Navigation */}
