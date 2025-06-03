@@ -50,9 +50,9 @@ export function DocsSidebar() {
   };
 
   return (
-    <Sidebar className="bg-gray-50 border-r border-gray-100">
-      <SidebarHeader className="border-b border-gray-100 p-4 bg-white">
-        <h2 className="text-lg font-semibold text-gray-800">Documentation</h2>
+    <Sidebar className="bg-gray-50 border-r border-gray-200">
+      <SidebarHeader className="border-b border-gray-200 p-4 bg-white">
+        <h2 className="text-base font-semibold text-gray-800">Documentation</h2>
       </SidebarHeader>
       
       <SidebarContent className="bg-gray-50">
