@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home, FileText, BarChart3, Map, Settings, Users } from 'lucide-react';
@@ -20,8 +21,7 @@ const Docs = () => {
                 to="/" 
                 className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors"
               >
-                <Home className="h-4 w-4 mr-2" />
-                Back to Home
+                <Home className="h-4 w-4" />
               </Link>
             </div>
           </div>
