@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home, FileText, BarChart3, Map, Settings, Users } from 'lucide-react';
@@ -35,7 +34,7 @@ const Docs = () => {
               </h1>
               
               {/* Mission Statement */}
-              <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Mission Statement</h2>
+              <h2 id="mission-statement" className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Mission Statement</h2>
               
               <p className="text-gray-700 leading-relaxed mb-4">
                 To provide a decentralised, permissionless & censorship resistant protocol for mature content creators and consumers that requires no KYC or bank, while offering private payments, data analytics, wank2earn & other cutting edge innovations through the full utilisation of rapidly advancing blockchain & AI technologies.
@@ -58,7 +57,7 @@ const Docs = () => {
               </p>
               
               {/* Stats Section */}
-              <h3 className="text-xl font-semibold text-red-700 mb-3">Some stats that hit home</h3>
+              <h3 id="some-stats-that-hit-home" className="text-xl font-semibold text-red-700 mb-3">Some stats that hit home</h3>
               
               <ul className="list-disc pl-6 mb-8 space-y-3 text-gray-700">
                 <li>
@@ -73,7 +72,7 @@ const Docs = () => {
               </ul>
 
               {/* Tokenomics */}
-              <h2 className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Tokenomics</h2>
+              <h2 id="tokenomics" className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Tokenomics</h2>
               
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Token Distribution</h3>
               
@@ -346,7 +345,7 @@ const Docs = () => {
               </ul>
 
               {/* Technology Stack */}
-              <h2 className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Technology Stack</h2>
+              <h2 id="technology-stack" className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Technology Stack</h2>
               
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Blockchain Layer</h3>
               <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-700">
@@ -391,7 +390,7 @@ const Docs = () => {
               <p className="text-gray-700 mb-6">Data-driven insights for creators to optimize content and earnings</p>
 
               {/* Roadmap */}
-              <h2 className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Roadmap</h2>
+              <h2 id="roadmap" className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Roadmap</h2>
               
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Q1 2023: Foundation</h3>
               <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-700">

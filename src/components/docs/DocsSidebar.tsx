@@ -10,19 +10,18 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarHeader,
 } from "@/components/ui/sidebar";
 
 const navigationItems = [
   {
-    title: "Overview",
+    title: "Mission Statement",
     icon: FileText,
     href: "#mission-statement",
   },
   {
-    title: "Statistics",
+    title: "Some stats that hit home",
     icon: BarChart3,
-    href: "#stats",
+    href: "#some-stats-that-hit-home",
   },
   {
     title: "Tokenomics",
@@ -30,7 +29,7 @@ const navigationItems = [
     href: "#tokenomics",
   },
   {
-    title: "Technology",
+    title: "Technology Stack",
     icon: Code,
     href: "#technology-stack",
   },
@@ -43,7 +42,8 @@ const navigationItems = [
 
 export function DocsSidebar() {
   const handleNavClick = (href: string) => {
-    const element = document.querySelector(href.replace('#', '').replace('-', ' ').toLowerCase());
+    const targetId = href.replace('#', '');
+    const element = document.getElementById(targetId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
@@ -51,11 +51,7 @@ export function DocsSidebar() {
 
   return (
     <Sidebar className="bg-gray-50 border-r border-gray-200">
-      <SidebarHeader className="border-b border-gray-200 px-4 py-4 bg-white h-[73px] flex items-center">
-        <h2 className="text-base font-semibold text-gray-800">Documentation</h2>
-      </SidebarHeader>
-      
-      <SidebarContent className="bg-gray-50">
+      <SidebarContent className="bg-gray-50 pt-4">
         <SidebarGroup>
           <SidebarGroupLabel className="text-gray-600">Contents</SidebarGroupLabel>
           <SidebarGroupContent>
