@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home, FileText, BarChart3, Map, Settings, Users } from 'lucide-react';
@@ -26,7 +25,7 @@ const Docs = () => {
               
               {/* Main Title */}
               <h1 className="text-4xl font-bold text-gray-900 mb-8 pb-4 border-b border-gray-200">
-                $FAN Protocol Documentation
+                fan.site Documentation
               </h1>
               
               {/* Mission Statement */}
@@ -56,11 +55,11 @@ const Docs = () => {
               <h2 id="executive-summary" className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Executive Summary</h2>
               
               <p className="text-gray-700 leading-relaxed mb-4">
-                $FAN Protocol represents a paradigm shift in how digital content platforms operate, moving away from centralized, extractive models toward a truly decentralized ecosystem that empowers both creators and consumers. Our platform leverages cutting-edge blockchain technology, artificial intelligence, and decentralized infrastructure to create a sustainable, scalable solution for the digital content economy.
+                fan.site represents a paradigm shift in how digital content platforms operate, moving away from centralized, extractive models toward a truly decentralized ecosystem that empowers both creators and consumers. Our platform leverages cutting-edge blockchain technology, artificial intelligence, and decentralized infrastructure to create a sustainable, scalable solution for the digital content economy.
               </p>
 
               <p className="text-gray-700 leading-relaxed mb-4">
-                The digital content industry faces numerous challenges including high platform fees, censorship, privacy concerns, limited monetization options, and inadequate creator tools. Traditional platforms extract significant value from creators while providing limited transparency and control. $FAN Protocol addresses these issues through innovative tokenomics, decentralized governance, and creator-first economics.
+                The digital content industry faces numerous challenges including high platform fees, censorship, privacy concerns, limited monetization options, and inadequate creator tools. Traditional platforms extract significant value from creators while providing limited transparency and control. fan.site addresses these issues through innovative tokenomics, decentralized governance, and creator-first economics.
               </p>
 
               <p className="text-gray-700 leading-relaxed mb-6">
@@ -119,7 +118,7 @@ const Docs = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Token Overview</h3>
               
               <p className="text-gray-700 leading-relaxed mb-4">
-                The $FAN token is an ERC-20 compatible utility token that serves as the native currency of the $FAN Protocol ecosystem. It facilitates all platform interactions, governance decisions, and value transfer while providing holders with various benefits and utilities.
+                The $FAN token is an ERC-20 compatible utility token that serves as the native currency of the fan.site ecosystem. It facilitates all platform interactions, governance decisions, and value transfer while providing holders with various benefits and utilities.
               </p>
 
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Token Utility</h3>
@@ -420,7 +419,7 @@ const Docs = () => {
               <h2 id="technology-stack" className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Technology Stack</h2>
               
               <p className="text-gray-700 leading-relaxed mb-6">
-                $FAN Protocol is built on a cutting-edge technology stack designed for scalability, security, and user experience. Our architecture combines the best of Web3 innovations with proven Web2 technologies to deliver a seamless platform experience.
+                fan.site is built on a cutting-edge technology stack designed for scalability, security, and user experience. Our architecture combines the best of Web3 innovations with proven Web2 technologies to deliver a seamless platform experience.
               </p>
 
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Blockchain Infrastructure</h3>
@@ -468,7 +467,7 @@ const Docs = () => {
               
               <h4 className="text-lg font-medium text-gray-800 mb-2">🔒 Privacy-Preserving Payments</h4>
               <p className="text-gray-700 mb-4">
-                Utilizing zero-knowledge proof technology, $FAN Protocol enables completely private transactions while maintaining regulatory compliance. Users can purchase content and support creators without revealing their identity or transaction history to third parties.
+                Utilizing zero-knowledge proof technology, fan.site enables completely private transactions while maintaining regulatory compliance. Users can purchase content and support creators without revealing their identity or transaction history to third parties.
               </p>
               
               <h4 className="text-lg font-medium text-gray-800 mb-2">👥 Decentralized Governance</h4>
@@ -490,7 +489,7 @@ const Docs = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-3">AI & Machine Learning</h3>
               
               <p className="text-gray-700 mb-4">
-                $FAN Protocol leverages advanced AI and machine learning technologies to enhance user experience, improve content discovery, and ensure platform safety:
+                fan.site leverages advanced AI and machine learning technologies to enhance user experience, improve content discovery, and ensure platform safety:
               </p>
 
               <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-700">
@@ -508,7 +507,7 @@ const Docs = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Decentralized Autonomous Organization (DAO)</h3>
               
               <p className="text-gray-700 leading-relaxed mb-4">
-                $FAN Protocol operates as a Decentralized Autonomous Organization (DAO), ensuring that all major decisions are made collectively by the community of token holders. This governance model promotes transparency, accountability, and democratic participation in the platform's evolution.
+                fan.site operates as a Decentralized Autonomous Organization (DAO), ensuring that all major decisions are made collectively by the community of token holders. This governance model promotes transparency, accountability, and democratic participation in the platform's evolution.
               </p>
 
               <h4 className="text-lg font-medium text-gray-800 mb-2">Governance Structure</h4>
@@ -538,7 +537,7 @@ const Docs = () => {
               <h2 id="roadmap" className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Development Roadmap</h2>
               
               <p className="text-gray-700 leading-relaxed mb-6">
-                Our comprehensive roadmap outlines the strategic development phases for $FAN Protocol, from initial launch through global scale adoption. Each phase builds upon previous achievements while introducing new capabilities and expanding our ecosystem.
+                Our comprehensive roadmap outlines the strategic development phases for fan.site, from initial launch through global scale adoption. Each phase builds upon previous achievements while introducing new capabilities and expanding our ecosystem.
               </p>
 
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Phase 1: Foundation (Q1-Q2 2024)</h3>
@@ -602,7 +601,7 @@ const Docs = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Core Team</h3>
               
               <p className="text-gray-700 leading-relaxed mb-6">
-                Our leadership team brings together decades of experience in content platforms, blockchain technology, business development, and talent management. With proven track records from successful ventures and industry-leading companies, we have the expertise to execute our ambitious vision for $FAN Protocol.
+                Our leadership team brings together decades of experience in content platforms, blockchain technology, business development, and talent management. With proven track records from successful ventures and industry-leading companies, we have the expertise to execute our ambitious vision for fan.site.
               </p>
 
               <div className="grid grid-cols-1 gap-8 mb-8">
@@ -641,7 +640,7 @@ const Docs = () => {
                 <div className="bg-gray-50 p-6 rounded-lg">
                   <h4 className="font-semibold text-gray-800 mb-3 text-lg">Crypto Columbus - Blockchain Advisor</h4>
                   <p className="text-gray-700 leading-relaxed">
-                    Original founder with extensive experience in cryptocurrency and blockchain project development. His deep understanding of tokenomics, community building, and decentralized protocol development brings crucial expertise to $FAN Protocol's technical and strategic direction.
+                    Original founder with extensive experience in cryptocurrency and blockchain project development. His deep understanding of tokenomics, community building, and decentralized protocol development brings crucial expertise to fan.site's technical and strategic direction.
                   </p>
                 </div>
 
@@ -672,7 +671,7 @@ const Docs = () => {
                   <div className="flex-1">
                     <h4 className="font-semibold text-gray-800 mb-3 text-lg">Malik Jan - Strategic Advisor</h4>
                     <p className="text-gray-700 leading-relaxed">
-                      Founder of DeHub, which achieved an ROI of 1000x and $10M in liquidity at peak performance. Previously served as the top billing agent at Blue Arrow, the UK's largest agency with 65 offices nationwide and 600 staff, and formerly at Randstad, the world's largest staffing agency. His expertise in scaling operations and strategic partnerships is invaluable to $FAN Protocol's growth.
+                      Founder of DeHub, which achieved an ROI of 1000x and $10M in liquidity at peak performance. Previously served as the top billing agent at Blue Arrow, the UK's largest agency with 65 offices nationwide and 600 staff, and formerly at Randstad, the world's largest staffing agency. His expertise in scaling operations and strategic partnerships is invaluable to fan.site's growth.
                     </p>
                   </div>
                 </div>
@@ -723,7 +722,7 @@ const Docs = () => {
               <h2 id="risk-analysis" className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Risk Analysis</h2>
               
               <p className="text-gray-700 leading-relaxed mb-4">
-                While $FAN Protocol presents significant opportunities, we acknowledge various risks that could impact the project's success. Our team has developed comprehensive risk mitigation strategies to address these challenges.
+                While fan.site presents significant opportunities, we acknowledge various risks that could impact the project's success. Our team has developed comprehensive risk mitigation strategies to address these challenges.
               </p>
 
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Technical Risks</h3>
@@ -754,7 +753,7 @@ const Docs = () => {
               <h2 id="legal-compliance" className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Legal & Compliance</h2>
               
               <p className="text-gray-700 leading-relaxed mb-4">
-                $FAN Protocol is committed to operating within all applicable legal frameworks while maintaining the decentralized and permissionless nature of the platform. We work closely with legal experts to ensure compliance across multiple jurisdictions.
+                fan.site is committed to operating within all applicable legal frameworks while maintaining the decentralized and permissionless nature of the platform. We work closely with legal experts to ensure compliance across multiple jurisdictions.
               </p>
 
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Regulatory Compliance</h3>
@@ -781,15 +780,15 @@ const Docs = () => {
               <h2 id="conclusion" className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Conclusion</h2>
               
               <p className="text-gray-700 leading-relaxed mb-4">
-                $FAN Protocol represents a fundamental shift toward a more equitable, transparent, and creator-centric digital content ecosystem. By combining cutting-edge blockchain technology with user-focused design, we are building a platform that truly serves its community while creating sustainable value for all stakeholders.
+                fan.site represents a fundamental shift toward a more equitable, transparent, and creator-centric digital content ecosystem. By combining cutting-edge blockchain technology with user-focused design, we are building a platform that truly serves its community while creating sustainable value for all stakeholders.
               </p>
 
               <p className="text-gray-700 leading-relaxed mb-4">
-                Our comprehensive approach addresses the core challenges facing today's content creators: high platform fees, limited monetization options, censorship concerns, and inadequate analytics. Through decentralized governance, innovative tokenomics, and advanced technology infrastructure, $FAN Protocol creates a sustainable ecosystem where creators can thrive.
+                Our comprehensive approach addresses the core challenges facing today's content creators: high platform fees, limited monetization options, censorship concerns, and inadequate analytics. Through decentralized governance, innovative tokenomics, and advanced technology infrastructure, fan.site creates a sustainable ecosystem where creators can thrive.
               </p>
 
               <p className="text-gray-700 leading-relaxed mb-4">
-                The significant market opportunity, combined with our experienced team and robust technology stack, positions $FAN Protocol for long-term success. As we execute our roadmap and grow our community, we remain committed to our core mission of empowering creators and revolutionizing the digital content industry.
+                The significant market opportunity, combined with our experienced team and robust technology stack, positions fan.site for long-term success. As we execute our roadmap and grow our community, we remain committed to our core mission of empowering creators and revolutionizing the digital content industry.
               </p>
 
               <p className="text-gray-700 leading-relaxed mb-8">
