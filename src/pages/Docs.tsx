@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home, FileText, BarChart3, Map, Settings, Users } from 'lucide-react';
@@ -605,19 +604,37 @@ const Docs = () => {
                 Our leadership team brings together decades of experience in content platforms, blockchain technology, business development, and talent management. With proven track records from successful ventures and industry-leading companies, we have the expertise to execute our ambitious vision for $FAN Protocol.
               </p>
 
-              <div className="grid grid-cols-1 gap-6 mb-8">
-                <div className="bg-gray-50 p-6 rounded-lg">
-                  <h4 className="font-semibold text-gray-800 mb-3 text-lg">Mike Hales - Co-Founder</h4>
-                  <p className="text-gray-700 leading-relaxed">
-                    Founder of First Class, the UK's largest TikTok partner agency with millions in turnover and close to 1,000 streamers signed exclusively. Under Mike's leadership, First Class has partnered with some of the largest social media accounts and top-earning content creators, demonstrating his deep understanding of the creator economy and talent management at scale.
-                  </p>
+              <div className="grid grid-cols-1 gap-8 mb-8">
+                <div className="bg-gray-50 p-6 rounded-lg flex flex-col md:flex-row gap-6">
+                  <div className="flex-shrink-0">
+                    <img 
+                      src="/lovable-uploads/1e74480a-7089-4d87-83d1-2261736a44db.png" 
+                      alt="Mike Hales" 
+                      className="w-32 h-32 rounded-lg object-cover"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-800 mb-3 text-lg">Mike Hales - Co-Founder</h4>
+                    <p className="text-gray-700 leading-relaxed">
+                      Founder of First Class, the UK's largest TikTok partner agency with millions in turnover and close to 1,000 streamers signed exclusively. Under Mike's leadership, First Class has partnered with some of the largest social media accounts and top-earning content creators, demonstrating his deep understanding of the creator economy and talent management at scale.
+                    </p>
+                  </div>
                 </div>
 
-                <div className="bg-gray-50 p-6 rounded-lg">
-                  <h4 className="font-semibold text-gray-800 mb-3 text-lg">Indi Jay Cammish - Co-Founder</h4>
-                  <p className="text-gray-700 leading-relaxed">
-                    Co-founder of First Class alongside Mike and co-founder of DeHub. Indi brings a unique perspective as a renowned professional dancer who has performed for A-list celebrities and even royalty, while starring in Channel 4's "The Masked Dancer". Her entertainment industry experience and business acumen provide valuable insights into creator needs and audience engagement.
-                  </p>
+                <div className="bg-gray-50 p-6 rounded-lg flex flex-col md:flex-row gap-6">
+                  <div className="flex-shrink-0">
+                    <img 
+                      src="/lovable-uploads/2d361a2e-492b-42f2-b860-9d609003de77.png" 
+                      alt="Indi Jay Cammish" 
+                      className="w-32 h-32 rounded-lg object-cover"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-800 mb-3 text-lg">Indi Jay Cammish - Co-Founder</h4>
+                    <p className="text-gray-700 leading-relaxed">
+                      Co-founder of First Class alongside Mike and co-founder of DeHub. Indi brings a unique perspective as a renowned professional dancer who has performed for A-list celebrities and even royalty, while starring in Channel 4's "The Masked Dancer". Her entertainment industry experience and business acumen provide valuable insights into creator needs and audience engagement.
+                    </p>
+                  </div>
                 </div>
 
                 <div className="bg-gray-50 p-6 rounded-lg">
@@ -634,11 +651,20 @@ const Docs = () => {
                   </p>
                 </div>
 
-                <div className="bg-gray-50 p-6 rounded-lg">
-                  <h4 className="font-semibold text-gray-800 mb-3 text-lg">Malik Jan - Strategic Advisor</h4>
-                  <p className="text-gray-700 leading-relaxed">
-                    Founder of DeHub, which achieved an ROI of 1000x and $10M in liquidity at peak performance. Previously served as the top billing agent at Blue Arrow, the UK's largest agency with 65 offices nationwide and 600 staff, and formerly at Randstad, the world's largest staffing agency. His expertise in scaling operations and strategic partnerships is invaluable to $FAN Protocol's growth.
-                  </p>
+                <div className="bg-gray-50 p-6 rounded-lg flex flex-col md:flex-row gap-6">
+                  <div className="flex-shrink-0">
+                    <img 
+                      src="/lovable-uploads/0d533e72-e0d4-4a75-ace1-d8b0006d2ad0.png" 
+                      alt="Malik Jan" 
+                      className="w-32 h-32 rounded-lg object-cover"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-800 mb-3 text-lg">Malik Jan - Strategic Advisor</h4>
+                    <p className="text-gray-700 leading-relaxed">
+                      Founder of DeHub, which achieved an ROI of 1000x and $10M in liquidity at peak performance. Previously served as the top billing agent at Blue Arrow, the UK's largest agency with 65 offices nationwide and 600 staff, and formerly at Randstad, the world's largest staffing agency. His expertise in scaling operations and strategic partnerships is invaluable to $FAN Protocol's growth.
+                    </p>
+                  </div>
                 </div>
               </div>
 
