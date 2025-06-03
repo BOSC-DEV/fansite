@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
@@ -52,6 +51,31 @@ const Docs = () => {
                 technology with privacy-first principles, we eliminate intermediaries and reduce fees to 
                 near-zero levels.
               </p>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+              <h2 className="text-2xl font-semibold text-blue-900 mb-4">Our Mission</h2>
+              <div className="space-y-4 text-blue-800">
+                <p className="leading-relaxed">
+                  <strong>Decentralized Freedom:</strong> To provide a decentralised, permissionless & censorship resistant protocol for mature content creators and consumers that requires no KYC or bank, while offering private payments, data analytics, wank2earn & other cutting edge innovations through the full utilisation of rapidly advancing blockchain & AI technologies.
+                </p>
+                
+                <p className="leading-relaxed">
+                  <strong>Sustainable Infrastructure:</strong> To sustainably scale and actually have the resources to disrupt a giant market without a billion dollar bankroll. We utilise our decentralised physical infrastructure network (DeePin) of shared computing power to host, transcode and deliver content or data while rewarding miners.
+                </p>
+                
+                <p className="leading-relaxed">
+                  <strong>User Empowerment:</strong> To create a user centric ecosystem that self moderates and removes the middle-man while tokenising ownership to empower & minimise the fees incurred by creators as well as consumers.
+                </p>
+                
+                <p className="leading-relaxed">
+                  <strong>Advanced Analytics:</strong> To build a complete suite of data analytics toolkits that help creators find the biggest spenders, users find their ideal creators and businesses increase ROI by choosing the right partners.
+                </p>
+                
+                <p className="leading-relaxed">
+                  <strong>Protection & Safety:</strong> To solve the rise of illicit online content and protecting children, victims of crime or the generally vulnerable via a more efficient decentralised moderation system to compete with the <a href="https://www.bbc.com/news/uk-63249018" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">failing incumbent</a>.
+                </p>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
