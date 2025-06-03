@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home, FileText, BarChart3, Map, Settings, Users } from 'lucide-react';
@@ -13,8 +14,8 @@ const Docs = () => {
         
         <main className="flex-1">
           {/* Header with home link and sidebar trigger */}
-          <div className="border-b border-gray-200 bg-white sticky top-0 z-10 w-full">
-            <div className="w-full px-4 py-4 flex items-center">
+          <div className="border-b border-gray-200 bg-white sticky top-0 z-10 w-full h-[73px]">
+            <div className="w-full px-4 py-4 flex items-center h-full">
               <SidebarTrigger className="mr-4" />
               <Link 
                 to="/" 

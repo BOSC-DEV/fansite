@@ -51,7 +51,7 @@ export function DocsSidebar() {
 
   return (
     <Sidebar className="bg-gray-50 border-r border-gray-200">
-      <SidebarHeader className="border-b border-gray-200 p-4 bg-white">
+      <SidebarHeader className="border-b border-gray-200 px-4 py-4 bg-white h-[73px] flex items-center">
         <h2 className="text-base font-semibold text-gray-800">Documentation</h2>
       </SidebarHeader>
       
