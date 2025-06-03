@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FileText, BarChart3, Map, Settings, Users, Target, Rocket, Code } from 'lucide-react';
+import { FileText, BarChart3, Map, Settings, Users, Target, Rocket, Code, Shield, Scale, Gavel } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -19,9 +19,14 @@ const navigationItems = [
     href: "#mission-statement",
   },
   {
-    title: "Some stats that hit home",
+    title: "Executive Summary",
+    icon: Target,
+    href: "#executive-summary",
+  },
+  {
+    title: "Market Analysis",
     icon: BarChart3,
-    href: "#some-stats-that-hit-home",
+    href: "#market-analysis",
   },
   {
     title: "Tokenomics",
@@ -34,9 +39,34 @@ const navigationItems = [
     href: "#technology-stack",
   },
   {
+    title: "Governance",
+    icon: Users,
+    href: "#governance",
+  },
+  {
     title: "Roadmap",
     icon: Map,
     href: "#roadmap",
+  },
+  {
+    title: "Team",
+    icon: Users,
+    href: "#team",
+  },
+  {
+    title: "Risk Analysis",
+    icon: Shield,
+    href: "#risk-analysis",
+  },
+  {
+    title: "Legal & Compliance",
+    icon: Gavel,
+    href: "#legal-compliance",
+  },
+  {
+    title: "Conclusion",
+    icon: Rocket,
+    href: "#conclusion",
   },
 ];
 
