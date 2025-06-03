@@ -605,6 +605,18 @@ const Docs = () => {
               <div className="grid grid-cols-1 gap-8 mb-8">
                 <div className="bg-gray-50 p-6 rounded-lg flex flex-col md:flex-row gap-6">
                   <div className="flex-shrink-0">
+                    <img src="/lovable-uploads/1e74480a-7089-4d87-83d1-2261736a44db.png" alt="Mike Hales" className="w-32 h-32 rounded-lg object-cover" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-800 mb-3 text-lg">Mike Hales - Co-Founder</h4>
+                    <p className="text-gray-700 leading-relaxed">
+                      Founder of First Class, the UK's largest TikTok partner agency with millions in turnover and close to 1,000 streamers signed exclusively. Under Mike's leadership, First Class has partnered with some of the largest social media accounts and top-earning content creators, demonstrating his deep understanding of the creator economy and talent management at scale.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg flex flex-col md:flex-row gap-6">
+                  <div className="flex-shrink-0">
                     <img src="/lovable-uploads/2d361a2e-492b-42f2-b860-9d609003de77.png" alt="Indi Jay Cammish" className="w-32 h-32 rounded-lg object-cover" />
                   </div>
                   <div className="flex-1">
@@ -615,16 +627,11 @@ const Docs = () => {
                   </div>
                 </div>
 
-                <div className="bg-gray-50 p-6 rounded-lg flex flex-col md:flex-row gap-6">
-                  <div className="flex-shrink-0">
-                    <img src="/lovable-uploads/1e74480a-7089-4d87-83d1-2261736a44db.png" alt="Mike Hales" className="w-32 h-32 rounded-lg object-cover" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-800 mb-3 text-lg">Mike Hales - Co-Founder</h4>
-                    <p className="text-gray-700 leading-relaxed">
-                      Founder of First Class, the UK's largest TikTok partner agency with millions in turnover and close to 1,000 streamers signed exclusively. Under Mike's leadership, First Class has partnered with some of the largest social media accounts and top-earning content creators, demonstrating his deep understanding of the creator economy and talent management at scale.
-                    </p>
-                  </div>
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h4 className="font-semibold text-gray-800 mb-3 text-lg">Crypto Columbus - Blockchain Advisor</h4>
+                  <p className="text-gray-700 leading-relaxed">
+                    Original founder with extensive experience in cryptocurrency and blockchain project development. His deep understanding of tokenomics, community building, and decentralized protocol development brings crucial expertise to fan.site's technical and strategic direction.
+                  </p>
                 </div>
 
                 <div className="bg-gray-50 p-6 rounded-lg flex flex-col md:flex-row gap-6">
@@ -727,9 +734,7 @@ const Docs = () => {
               {/* Legal & Compliance */}
               <h2 id="legal-compliance" className="text-2xl font-semibold text-gray-900 mt-12 mb-4">Legal & Compliance</h2>
               
-              <p className="text-gray-700 leading-relaxed mb-4">
-                fan.site is committed to operating within all applicable legal frameworks while maintaining the decentralized and permissionless nature of the platform. We work closely with legal experts to ensure compliance across multiple jurisdictions.
-              </p>
+              
 
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Regulatory Compliance</h3>
               <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-700">
