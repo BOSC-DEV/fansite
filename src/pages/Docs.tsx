@@ -24,9 +24,7 @@ const Docs = () => {
             <div className="prose prose-lg max-w-none">
               
               {/* Main Title */}
-              <h1 className="text-4xl font-bold text-gray-900 mb-8 pb-4 border-b border-gray-200">
-                fan.site Documentation
-              </h1>
+              <h1 className="text-4xl font-bold text-gray-900 mb-8 pb-4 border-b border-gray-200">fan.site</h1>
               
               {/* Mission Statement */}
               <h2 id="mission-statement" className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Mission Statement</h2>
@@ -607,11 +605,7 @@ const Docs = () => {
               <div className="grid grid-cols-1 gap-8 mb-8">
                 <div className="bg-gray-50 p-6 rounded-lg flex flex-col md:flex-row gap-6">
                   <div className="flex-shrink-0">
-                    <img 
-                      src="/lovable-uploads/1e74480a-7089-4d87-83d1-2261736a44db.png" 
-                      alt="Mike Hales" 
-                      className="w-32 h-32 rounded-lg object-cover"
-                    />
+                    <img src="/lovable-uploads/1e74480a-7089-4d87-83d1-2261736a44db.png" alt="Mike Hales" className="w-32 h-32 rounded-lg object-cover" />
                   </div>
                   <div className="flex-1">
                     <h4 className="font-semibold text-gray-800 mb-3 text-lg">Mike Hales - Co-Founder</h4>
@@ -623,11 +617,7 @@ const Docs = () => {
 
                 <div className="bg-gray-50 p-6 rounded-lg flex flex-col md:flex-row gap-6">
                   <div className="flex-shrink-0">
-                    <img 
-                      src="/lovable-uploads/2d361a2e-492b-42f2-b860-9d609003de77.png" 
-                      alt="Indi Jay Cammish" 
-                      className="w-32 h-32 rounded-lg object-cover"
-                    />
+                    <img src="/lovable-uploads/2d361a2e-492b-42f2-b860-9d609003de77.png" alt="Indi Jay Cammish" className="w-32 h-32 rounded-lg object-cover" />
                   </div>
                   <div className="flex-1">
                     <h4 className="font-semibold text-gray-800 mb-3 text-lg">Indi Jay Cammish - Co-Founder</h4>
@@ -646,11 +636,7 @@ const Docs = () => {
 
                 <div className="bg-gray-50 p-6 rounded-lg flex flex-col md:flex-row gap-6">
                   <div className="flex-shrink-0">
-                    <img 
-                      src="/lovable-uploads/4f3983f4-6b1d-418f-8aa7-75903179a831.png" 
-                      alt="Bailey Young" 
-                      className="w-32 h-32 rounded-lg object-cover"
-                    />
+                    <img src="/lovable-uploads/4f3983f4-6b1d-418f-8aa7-75903179a831.png" alt="Bailey Young" className="w-32 h-32 rounded-lg object-cover" />
                   </div>
                   <div className="flex-1">
                     <h4 className="font-semibold text-gray-800 mb-3 text-lg">Bailey Young - Business Development</h4>
@@ -662,11 +648,7 @@ const Docs = () => {
 
                 <div className="bg-gray-50 p-6 rounded-lg flex flex-col md:flex-row gap-6">
                   <div className="flex-shrink-0">
-                    <img 
-                      src="/lovable-uploads/0d533e72-e0d4-4a75-ace1-d8b0006d2ad0.png" 
-                      alt="Malik Jan" 
-                      className="w-32 h-32 rounded-lg object-cover"
-                    />
+                    <img src="/lovable-uploads/0d533e72-e0d4-4a75-ace1-d8b0006d2ad0.png" alt="Malik Jan" className="w-32 h-32 rounded-lg object-cover" />
                   </div>
                   <div className="flex-1">
                     <h4 className="font-semibold text-gray-800 mb-3 text-lg">Malik Jan - Strategic Advisor</h4>
