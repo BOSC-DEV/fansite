@@ -6,7 +6,7 @@ const TokenReleaseChart = () => {
   // Generate monthly data points for 4 years (48 months)
   const generateReleaseData = () => {
     const data = [];
-    const startDate = new Date(2024, 0, 1); // January 2024
+    const startDate = new Date(2023, 2, 1); // March 2023
     
     for (let i = 0; i <= 48; i++) {
       const date = new Date(startDate);
