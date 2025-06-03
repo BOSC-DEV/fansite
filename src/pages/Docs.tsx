@@ -627,12 +627,7 @@ const Docs = () => {
                   </div>
                 </div>
 
-                <div className="bg-gray-50 p-6 rounded-lg">
-                  <h4 className="font-semibold text-gray-800 mb-3 text-lg">Crypto Columbus - Blockchain Advisor</h4>
-                  <p className="text-gray-700 leading-relaxed">
-                    Original founder with extensive experience in cryptocurrency and blockchain project development. His deep understanding of tokenomics, community building, and decentralized protocol development brings crucial expertise to fan.site's technical and strategic direction.
-                  </p>
-                </div>
+                
 
                 <div className="bg-gray-50 p-6 rounded-lg flex flex-col md:flex-row gap-6">
                   <div className="flex-shrink-0">
