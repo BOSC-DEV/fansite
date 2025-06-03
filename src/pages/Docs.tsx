@@ -71,43 +71,114 @@ const Docs = () => {
           
           <h3 className="text-xl font-semibold text-gray-800 mb-3">Token Distribution</h3>
           
-          <table className="w-full border-collapse border border-gray-300 mb-6">
+          <table className="w-full border-collapse border border-gray-300 mb-6 text-sm">
             <thead>
               <tr className="bg-gray-50">
-                <th className="border border-gray-300 px-4 py-2 text-left">Allocation</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Percentage</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Tokens</th>
+                <th className="border border-gray-300 px-3 py-2 text-left">Allocation</th>
+                <th className="border border-gray-300 px-3 py-2 text-left">% of allocation</th>
+                <th className="border border-gray-300 px-3 py-2 text-left">Number of Tokens</th>
+                <th className="border border-gray-300 px-3 py-2 text-left">Dilution</th>
+                <th className="border border-gray-300 px-3 py-2 text-left">TGE Release %</th>
+                <th className="border border-gray-300 px-3 py-2 text-left">TGE Supply</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-gray-300 px-4 py-2">Community & Ecosystem</td>
-                <td className="border border-gray-300 px-4 py-2">40%</td>
-                <td className="border border-gray-300 px-4 py-2">400,000,000 UNI</td>
+                <td className="border border-gray-300 px-3 py-2">Treasury Reserve</td>
+                <td className="border border-gray-300 px-3 py-2">17.50%</td>
+                <td className="border border-gray-300 px-3 py-2">1,750,000</td>
+                <td className="border border-gray-300 px-3 py-2">3 month cliff, daily linear 48 months</td>
+                <td className="border border-gray-300 px-3 py-2">0.00%</td>
+                <td className="border border-gray-300 px-3 py-2">0</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-4 py-2">Team & Advisors</td>
-                <td className="border border-gray-300 px-4 py-2">30%</td>
-                <td className="border border-gray-300 px-4 py-2">300,000,000 UNI</td>
+                <td className="border border-gray-300 px-3 py-2">Advisory</td>
+                <td className="border border-gray-300 px-3 py-2">3.00%</td>
+                <td className="border border-gray-300 px-3 py-2">300,000</td>
+                <td className="border border-gray-300 px-3 py-2">6 month cliff, daily linear 24 months</td>
+                <td className="border border-gray-300 px-3 py-2">0.00%</td>
+                <td className="border border-gray-300 px-3 py-2">0</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-4 py-2">Investors</td>
-                <td className="border border-gray-300 px-4 py-2">20%</td>
-                <td className="border border-gray-300 px-4 py-2">200,000,000 UNI</td>
+                <td className="border border-gray-300 px-3 py-2">Team & Recruitment</td>
+                <td className="border border-gray-300 px-3 py-2">12.00%</td>
+                <td className="border border-gray-300 px-3 py-2">1,200,000</td>
+                <td className="border border-gray-300 px-3 py-2">6 month cliff, daily linear 24 months</td>
+                <td className="border border-gray-300 px-3 py-2">0.00%</td>
+                <td className="border border-gray-300 px-3 py-2">0</td>
               </tr>
               <tr>
-                <td className="border border-gray-300 px-4 py-2">Treasury</td>
-                <td className="border border-gray-300 px-4 py-2">10%</td>
-                <td className="border border-gray-300 px-4 py-2">100,000,000 UNI</td>
+                <td className="border border-gray-300 px-3 py-2">Marketing & Partnerships</td>
+                <td className="border border-gray-300 px-3 py-2">15.00%</td>
+                <td className="border border-gray-300 px-3 py-2">1,500,000</td>
+                <td className="border border-gray-300 px-3 py-2">1 month cliff, daily linear for 48 months</td>
+                <td className="border border-gray-300 px-3 py-2">0.00%</td>
+                <td className="border border-gray-300 px-3 py-2">0</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-300 px-3 py-2">Staking Incentives</td>
+                <td className="border border-gray-300 px-3 py-2">10.00%</td>
+                <td className="border border-gray-300 px-3 py-2">1,000,000</td>
+                <td className="border border-gray-300 px-3 py-2">1 month cliff, daily linear for 48 months</td>
+                <td className="border border-gray-300 px-3 py-2">0.00%</td>
+                <td className="border border-gray-300 px-3 py-2">0</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-300 px-3 py-2">Ecosystem Rewards</td>
+                <td className="border border-gray-300 px-3 py-2">15.00%</td>
+                <td className="border border-gray-300 px-3 py-2">1,500,000</td>
+                <td className="border border-gray-300 px-3 py-2">3 month cliff, daily linear for 48 months</td>
+                <td className="border border-gray-300 px-3 py-2">0.00%</td>
+                <td className="border border-gray-300 px-3 py-2">0</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-300 px-3 py-2">Liquidity</td>
+                <td className="border border-gray-300 px-3 py-2">13.00%</td>
+                <td className="border border-gray-300 px-3 py-2">1,300,000</td>
+                <td className="border border-gray-300 px-3 py-2">50% at TGE, daily linear for 2 months</td>
+                <td className="border border-gray-300 px-3 py-2">50.00%</td>
+                <td className="border border-gray-300 px-3 py-2">650,000</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-300 px-3 py-2">Private Round</td>
+                <td className="border border-gray-300 px-3 py-2">7.00%</td>
+                <td className="border border-gray-300 px-3 py-2">700,000</td>
+                <td className="border border-gray-300 px-3 py-2">20% at TGE, daily linear for 6 months</td>
+                <td className="border border-gray-300 px-3 py-2">20.00%</td>
+                <td className="border border-gray-300 px-3 py-2">140,000</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-300 px-3 py-2">Strategic Round</td>
+                <td className="border border-gray-300 px-3 py-2">3.50%</td>
+                <td className="border border-gray-300 px-3 py-2">350,000</td>
+                <td className="border border-gray-300 px-3 py-2">25% TGE, daily linear for 4 months</td>
+                <td className="border border-gray-300 px-3 py-2">25.00%</td>
+                <td className="border border-gray-300 px-3 py-2">87,500</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-300 px-3 py-2">Public Round</td>
+                <td className="border border-gray-300 px-3 py-2">4.00%</td>
+                <td className="border border-gray-300 px-3 py-2">400,000</td>
+                <td className="border border-gray-300 px-3 py-2">25% TGE, daily linear for 4 months</td>
+                <td className="border border-gray-300 px-3 py-2">25.00%</td>
+                <td className="border border-gray-300 px-3 py-2">100,000</td>
+              </tr>
+              <tr className="bg-gray-50 font-semibold">
+                <td className="border border-gray-300 px-3 py-2">Total</td>
+                <td className="border border-gray-300 px-3 py-2">100.00%</td>
+                <td className="border border-gray-300 px-3 py-2">10,000,000</td>
+                <td className="border border-gray-300 px-3 py-2">-</td>
+                <td className="border border-gray-300 px-3 py-2">-</td>
+                <td className="border border-gray-300 px-3 py-2">977,500</td>
               </tr>
             </tbody>
           </table>
 
           {/* Token Release Schedule */}
-          <h3 className="text-xl font-semibold text-gray-800 mb-3">UNI 4 Year Release Schedule</h3>
+          <h3 className="text-xl font-semibold text-gray-800 mb-3">FAN 4 Year Release Schedule</h3>
           
           <p className="text-gray-700 mb-4">
-            This chart shows the circulating supply of UNI tokens over a 4-year period, with different vesting schedules for each allocation category.
+            This chart shows the circulating supply of FAN tokens over a 4-year period, with different vesting schedules for each allocation category.
           </p>
           
           <TokenReleaseChart />
@@ -115,22 +186,129 @@ const Docs = () => {
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
             <div className="space-y-2">
               <div className="flex items-center">
-                <div className="w-4 h-4 bg-[#ffb3d9] rounded mr-2"></div>
-                <span><strong>Community (40%):</strong> Linear release over 48 months</span>
+                <div className="w-4 h-4 bg-[#f0d9ff] rounded mr-2"></div>
+                <span><strong>Treasury (17.5%):</strong> 3-month cliff, then linear over 45 months</span>
               </div>
               <div className="flex items-center">
-                <div className="w-4 h-4 bg-[#87ceeb] rounded mr-2"></div>
-                <span><strong>Team (20%):</strong> 12-month cliff, then linear over 36 months</span>
+                <div className="w-4 h-4 bg-[#ffc9c9] rounded mr-2"></div>
+                <span><strong>Advisory (3%):</strong> 6-month cliff, then linear over 24 months</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-4 h-4 bg-[#b8e6ff] rounded mr-2"></div>
+                <span><strong>Team (12%):</strong> 6-month cliff, then linear over 24 months</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-4 h-4 bg-[#c3ffc3] rounded mr-2"></div>
+                <span><strong>Marketing (15%):</strong> 1-month cliff, then linear over 47 months</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-4 h-4 bg-[#fff380] rounded mr-2"></div>
+                <span><strong>Staking (10%):</strong> 1-month cliff, then linear over 47 months</span>
               </div>
             </div>
             <div className="space-y-2">
               <div className="flex items-center">
-                <div className="w-4 h-4 bg-[#b0f0e6] rounded mr-2"></div>
-                <span><strong>Investors (30%):</strong> 6-month cliff, then linear over 42 months</span>
+                <div className="w-4 h-4 bg-[#ffcc80] rounded mr-2"></div>
+                <span><strong>Ecosystem (15%):</strong> 3-month cliff, then linear over 45 months</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-4 h-4 bg-[#7fffd4] rounded mr-2"></div>
+                <span><strong>Liquidity (13%):</strong> 50% at TGE, then linear over 2 months</span>
               </div>
               <div className="flex items-center">
                 <div className="w-4 h-4 bg-[#dda0dd] rounded mr-2"></div>
-                <span><strong>Advisors (10%):</strong> 18-month cliff, then linear over 30 months</span>
+                <span><strong>Private (7%):</strong> 20% at TGE, then linear over 6 months</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-4 h-4 bg-[#ffb3d9] rounded mr-2"></div>
+                <span><strong>Strategic (3.5%):</strong> 25% at TGE, then linear over 4 months</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-4 h-4 bg-[#87ceeb] rounded mr-2"></div>
+                <span><strong>Public (4%):</strong> 25% at TGE, then linear over 4 months</span>
+              </div>
+            </div>
+          </div>
+
+          {/* IDOs & Sales */}
+          <h3 className="text-xl font-semibold text-gray-800 mt-8 mb-3">IDOs & Sales</h3>
+          
+          <table className="w-full border-collapse border border-gray-300 mb-6 text-sm">
+            <thead>
+              <tr className="bg-gray-50">
+                <th className="border border-gray-300 px-3 py-2 text-left">Round</th>
+                <th className="border border-gray-300 px-3 py-2 text-left">Token Price</th>
+                <th className="border border-gray-300 px-3 py-2 text-left">% of Distribution</th>
+                <th className="border border-gray-300 px-3 py-2 text-left">Tokens for Sale</th>
+                <th className="border border-gray-300 px-3 py-2 text-left">Total</th>
+                <th className="border border-gray-300 px-3 py-2 text-left">FDV</th>
+                <th className="border border-gray-300 px-3 py-2 text-left">TGE Release %</th>
+                <th className="border border-gray-300 px-3 py-2 text-left">TGE Supply</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border border-gray-300 px-3 py-2">Private</td>
+                <td className="border border-gray-300 px-3 py-2">$0.5500</td>
+                <td className="border border-gray-300 px-3 py-2">7.00%</td>
+                <td className="border border-gray-300 px-3 py-2">700,000</td>
+                <td className="border border-gray-300 px-3 py-2">$385,000</td>
+                <td className="border border-gray-300 px-3 py-2">$5,500,000</td>
+                <td className="border border-gray-300 px-3 py-2">20%</td>
+                <td className="border border-gray-300 px-3 py-2">140,000</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-300 px-3 py-2">Strategic</td>
+                <td className="border border-gray-300 px-3 py-2">$0.600</td>
+                <td className="border border-gray-300 px-3 py-2">3.50%</td>
+                <td className="border border-gray-300 px-3 py-2">350,000</td>
+                <td className="border border-gray-300 px-3 py-2">$210,000</td>
+                <td className="border border-gray-300 px-3 py-2">$6,000,000</td>
+                <td className="border border-gray-300 px-3 py-2">25%</td>
+                <td className="border border-gray-300 px-3 py-2">87,500</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-300 px-3 py-2">Public</td>
+                <td className="border border-gray-300 px-3 py-2">$0.600</td>
+                <td className="border border-gray-300 px-3 py-2">4.00%</td>
+                <td className="border border-gray-300 px-3 py-2">400,000</td>
+                <td className="border border-gray-300 px-3 py-2">$240,000</td>
+                <td className="border border-gray-300 px-3 py-2">$6,000,000</td>
+                <td className="border border-gray-300 px-3 py-2">25%</td>
+                <td className="border border-gray-300 px-3 py-2">100,000</td>
+              </tr>
+              <tr className="bg-gray-50 font-semibold">
+                <td className="border border-gray-300 px-3 py-2">Total</td>
+                <td className="border border-gray-300 px-3 py-2">-</td>
+                <td className="border border-gray-300 px-3 py-2">14.50%</td>
+                <td className="border border-gray-300 px-3 py-2">1,450,000</td>
+                <td className="border border-gray-300 px-3 py-2">$835,000</td>
+                <td className="border border-gray-300 px-3 py-2">-</td>
+                <td className="border border-gray-300 px-3 py-2">-</td>
+                <td className="border border-gray-300 px-3 py-2">327,500</td>
+              </tr>
+            </tbody>
+          </table>
+
+          {/* Summary */}
+          <h3 className="text-xl font-semibold text-gray-800 mb-3">Summary</h3>
+          
+          <div className="bg-gray-50 p-4 rounded-lg mb-8">
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="font-semibold">Amount to be raised:</span> $835,000
+              </div>
+              <div>
+                <span className="font-semibold">Tokens to be sold:</span> 1,450,000.00
+              </div>
+              <div>
+                <span className="font-semibold">% Supply:</span> 14.50%
+              </div>
+              <div>
+                <span className="font-semibold">Initial Market Cap:</span> $586,500
+              </div>
+              <div>
+                <span className="font-semibold">Fully Diluted Market Cap:</span> $6,000,000
               </div>
             </div>
           </div>
@@ -151,8 +329,8 @@ const Docs = () => {
           <h3 className="text-xl font-semibold text-gray-800 mb-3">Token Economics</h3>
           
           <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-700">
-            <li><strong>Total Supply:</strong> 1,000,000,000 UNI</li>
-            <li><strong>Initial Circulating Supply:</strong> 150,000,000 UNI</li>
+            <li><strong>Total Supply:</strong> 10,000,000 FAN</li>
+            <li><strong>Initial Circulating Supply:</strong> 977,500 FAN</li>
             <li><strong>Emission Schedule:</strong> 4 years</li>
             <li><strong>Platform fees:</strong> 3% of transactions</li>
             <li><strong>Premium subscription revenue</strong></li>

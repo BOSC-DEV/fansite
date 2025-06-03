@@ -15,36 +15,96 @@ const TokenReleaseChart = () => {
       const month = date.toLocaleDateString('en-US', { month: 'short' });
       const year = date.getFullYear().toString().slice(-2);
       
-      // Token release schedule calculations
-      let community = 0;
+      // Token release schedule calculations for $FAN
+      let treasury = 0;
+      let advisory = 0;
       let team = 0;
-      let investors = 0;
-      let advisors = 0;
+      let marketing = 0;
+      let staking = 0;
+      let ecosystem = 0;
+      let liquidity = 0;
+      let privateRound = 0;
+      let strategicRound = 0;
+      let publicRound = 0;
       
-      // Community (40% - 400M tokens) - Linear release over 48 months
-      community = Math.min(400000000, (400000000 / 48) * i);
-      
-      // Team (20% - 200M tokens) - 12 month cliff, then linear over 36 months
-      if (i >= 12) {
-        team = Math.min(200000000, (200000000 / 36) * (i - 12));
+      // Treasury Reserve (17.5% - 1,750,000 tokens) - 3 month cliff, daily linear 48 months
+      if (i >= 3) {
+        treasury = Math.min(1750000, (1750000 / 45) * (i - 3));
       }
       
-      // Investors (30% - 300M tokens) - 6 month cliff, then linear over 42 months
+      // Advisory (3% - 300,000 tokens) - 6 month cliff, daily linear 24 months
       if (i >= 6) {
-        investors = Math.min(300000000, (300000000 / 42) * (i - 6));
+        advisory = Math.min(300000, (300000 / 24) * (i - 6));
       }
       
-      // Advisors (10% - 100M tokens) - 18 month cliff, then linear over 30 months
-      if (i >= 18) {
-        advisors = Math.min(100000000, (100000000 / 30) * (i - 18));
+      // Team & Recruitment (12% - 1,200,000 tokens) - 6 month cliff, daily linear 24 months
+      if (i >= 6) {
+        team = Math.min(1200000, (1200000 / 24) * (i - 6));
+      }
+      
+      // Marketing & Partnerships (15% - 1,500,000 tokens) - 1 month cliff, daily linear 48 months
+      if (i >= 1) {
+        marketing = Math.min(1500000, (1500000 / 47) * (i - 1));
+      }
+      
+      // Staking Incentives (10% - 1,000,000 tokens) - 1 month cliff, daily linear 48 months
+      if (i >= 1) {
+        staking = Math.min(1000000, (1000000 / 47) * (i - 1));
+      }
+      
+      // Ecosystem Rewards (15% - 1,500,000 tokens) - 3 month cliff, daily linear 48 months
+      if (i >= 3) {
+        ecosystem = Math.min(1500000, (1500000 / 45) * (i - 3));
+      }
+      
+      // Liquidity (13% - 1,300,000 tokens) - 50% at TGE, daily linear for 2 months
+      if (i === 0) {
+        liquidity = 650000; // 50% at TGE
+      } else if (i <= 2) {
+        liquidity = 650000 + ((650000 / 2) * i);
+      } else {
+        liquidity = 1300000;
+      }
+      
+      // Private Round (7% - 700,000 tokens) - 20% at TGE, daily linear for 6 months
+      if (i === 0) {
+        privateRound = 140000; // 20% at TGE
+      } else if (i <= 6) {
+        privateRound = 140000 + ((560000 / 6) * i);
+      } else {
+        privateRound = 700000;
+      }
+      
+      // Strategic Round (3.5% - 350,000 tokens) - 25% TGE, daily linear for 4 months
+      if (i === 0) {
+        strategicRound = 87500; // 25% at TGE
+      } else if (i <= 4) {
+        strategicRound = 87500 + ((262500 / 4) * i);
+      } else {
+        strategicRound = 350000;
+      }
+      
+      // Public Round (4% - 400,000 tokens) - 25% TGE, daily linear for 4 months
+      if (i === 0) {
+        publicRound = 100000; // 25% at TGE
+      } else if (i <= 4) {
+        publicRound = 100000 + ((300000 / 4) * i);
+      } else {
+        publicRound = 400000;
       }
       
       data.push({
         date: `${month}-${year}`,
-        Community: Math.round(community),
+        Treasury: Math.round(treasury),
+        Advisory: Math.round(advisory),
         Team: Math.round(team),
-        Investors: Math.round(investors),
-        Advisors: Math.round(advisors),
+        Marketing: Math.round(marketing),
+        Staking: Math.round(staking),
+        Ecosystem: Math.round(ecosystem),
+        Liquidity: Math.round(liquidity),
+        Private: Math.round(privateRound),
+        Strategic: Math.round(strategicRound),
+        Public: Math.round(publicRound),
       });
     }
     
@@ -111,7 +171,7 @@ const TokenReleaseChart = () => {
           />
           <YAxis 
             tick={{ fontSize: 12 }}
-            tickFormatter={(value) => `${(value / 1000000).toFixed(0)}M`}
+            tickFormatter={(value) => `${(value / 1000000).toFixed(1)}M`}
           />
           <Tooltip content={<CustomTooltip />} />
           <Legend 
@@ -122,7 +182,71 @@ const TokenReleaseChart = () => {
           {/* Areas stacked from bottom to top */}
           <Area
             type="monotone"
-            dataKey="Community"
+            dataKey="Treasury"
+            stackId="1"
+            stroke="#e6b3ff"
+            fill="#f0d9ff"
+            fillOpacity={0.8}
+          />
+          <Area
+            type="monotone"
+            dataKey="Advisory"
+            stackId="1"
+            stroke="#ffa8a8"
+            fill="#ffc9c9"
+            fillOpacity={0.8}
+          />
+          <Area
+            type="monotone"
+            dataKey="Team"
+            stackId="1"
+            stroke="#87ceeb"
+            fill="#b8e6ff"
+            fillOpacity={0.8}
+          />
+          <Area
+            type="monotone"
+            dataKey="Marketing"
+            stackId="1"
+            stroke="#98fb98"
+            fill="#c3ffc3"
+            fillOpacity={0.8}
+          />
+          <Area
+            type="monotone"
+            dataKey="Staking"
+            stackId="1"
+            stroke="#ffd700"
+            fill="#fff380"
+            fillOpacity={0.8}
+          />
+          <Area
+            type="monotone"
+            dataKey="Ecosystem"
+            stackId="1"
+            stroke="#ffa500"
+            fill="#ffcc80"
+            fillOpacity={0.8}
+          />
+          <Area
+            type="monotone"
+            dataKey="Liquidity"
+            stackId="1"
+            stroke="#20b2aa"
+            fill="#7fffd4"
+            fillOpacity={0.8}
+          />
+          <Area
+            type="monotone"
+            dataKey="Private"
+            stackId="1"
+            stroke="#9370db"
+            fill="#dda0dd"
+            fillOpacity={0.8}
+          />
+          <Area
+            type="monotone"
+            dataKey="Strategic"
             stackId="1"
             stroke="#ff69b4"
             fill="#ffb3d9"
@@ -130,26 +254,10 @@ const TokenReleaseChart = () => {
           />
           <Area
             type="monotone"
-            dataKey="Team"
+            dataKey="Public"
             stackId="1"
             stroke="#4169e1"
             fill="#87ceeb"
-            fillOpacity={0.8}
-          />
-          <Area
-            type="monotone"
-            dataKey="Investors"
-            stackId="1"
-            stroke="#40e0d0"
-            fill="#b0f0e6"
-            fillOpacity={0.8}
-          />
-          <Area
-            type="monotone"
-            dataKey="Advisors"
-            stackId="1"
-            stroke="#9370db"
-            fill="#dda0dd"
             fillOpacity={0.8}
           />
         </AreaChart>
