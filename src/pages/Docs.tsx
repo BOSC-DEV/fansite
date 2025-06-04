@@ -36,31 +36,24 @@ const Docs = () => {
           {/* Header with navigation - ALWAYS show burger menu on mobile */}
           <div className="border-b border-gray-200 bg-white sticky top-0 z-50 w-full h-[60px] md:h-[73px]">
             <div className="w-full px-3 md:px-4 py-3 md:py-4 flex items-center justify-between h-full">
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 md:space-x-4 flex-1">
                 {!isMobile && <SidebarTrigger className="mr-2" />}
-                <Link to="/" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+                <Link to="/" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors flex-shrink-0">
                   <Home className="h-4 w-4" />
                   <span className="ml-2 text-sm">Home</span>
                 </Link>
                 
-                {/* Search component */}
-                <div className="hidden md:block">
+                {/* Search component - same line on mobile, desktop stays the same */}
+                <div className={isMobile ? "flex-1 max-w-[200px]" : "hidden md:block"}>
                   <DocsSearch onSearchResultClick={handleSearchResultClick} />
                 </div>
               </div>
               
               {/* MOBILE BURGER MENU - Make it very visible */}
-              <div className="md:hidden">
+              <div className="md:hidden flex-shrink-0">
                 <DocsMobileDrawer />
               </div>
             </div>
-            
-            {/* Mobile search - below header on mobile */}
-            {isMobile && (
-              <div className="px-3 pb-3 border-t border-gray-100">
-                <DocsSearch onSearchResultClick={handleSearchResultClick} />
-              </div>
-            )}
           </div>
 
           <div className="w-full px-3 md:px-6 lg:px-8 py-3 md:py-8 max-w-full overflow-hidden">
