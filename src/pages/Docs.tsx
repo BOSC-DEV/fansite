@@ -114,6 +114,66 @@ const Docs = () => {
                   <li className="break-words hyphens-auto">Revenue share for stakeholders.</li>
                 </ul>
 
+                {/* Ranking Badges */}
+                <h2 id="ranking-badges" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Ranking Badges</h2>
+                
+                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">How to yank it all the way to the top</h3>
+                
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
+                  You will also notice a badge system on our app, this is the next generation of permissionless verifications that are much harder to exploit for scammers while being easier to avoid for victims. The badge system also doubles as a loyalty system where higher ranks unlock lower fees, enhanced app features, early bird access and more revenue share.
+                </p>
+                
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
+                  They also offer endless benefit potential to verified users, as everyone starts as a little butt plug and the more $BJ they hold, the higher they rank, thus the more enhanced features they gain.
+                </p>
+                
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
+                  Earn or buy $BJ directly in app to use or hoard. The more you have, the higher your ranking badge. The higher your badge, the better features and enhancents you unlock such as trending superpowers to get on the timeline or revenue share.
+                </p>
+                
+                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Ranking Badges</h3>
+                
+                <ul className="list-decimal list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
+                  <li className="break-words">Big Black Demon Dildo - 50,000 BJ</li>
+                  <li className="break-words">Double Sided Diamond Dildo - 25,000 BJ</li>
+                  <li className="break-words">Golden Boobs - 10,000 BJ</li>
+                  <li className="break-words">Magic Wand - 4,000 BJ</li>
+                  <li className="break-words">Silver Bullet - 3,000 BJ</li>
+                  <li className="break-words">Fuzzy Cuffs - 2,000 BJ</li>
+                  <li className="break-words">G String - 1,000 BJ</li>
+                  <li className="break-words">Anal Beads - 400 BJ</li>
+                  <li className="break-words">Cock Ring - 200 BJ</li>
+                  <li className="break-words">Ball Gag - 100 BJ</li>
+                  <li className="break-words">Mutant Tentacle - 50 BJ</li>
+                  <li className="break-words">Pearl Necklace - 10 BJ</li>
+                  <li className="break-words">Butt Plug - 1 BJ</li>
+                </ul>
+                
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
+                  Badges are interchangeable once unlocked and are always owned by users. Holding requirements per ranking change depending on weekly average price however once you unlock a badge, it's yours forever to use at your own will.
+                </p>
+                
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
+                  As the network grows, it will naturally become harder to unlock top medals, so collect them all before the world snaps them up!
+                </p>
+                
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
+                  You'll also notice the leaderboards on the home page that track:
+                </p>
+                
+                <ul className="list-disc list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
+                  <li className="break-words">$BJ Holdings</li>
+                  <li className="break-words">Followers</li>
+                  <li className="break-words">Earnings</li>
+                  <li className="break-words">Views</li>
+                  <li className="break-words">Likes</li>
+                  <li className="break-words">Tips</li>
+                </ul>
+                
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
+                  These can be filtered to track daily, weekly, monthly and yearly so you never miss a beat!
+                </p>
+
                 {/* Technology Stack */}
                 <h2 id="technology-stack" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Technology Stack</h2>
                 
