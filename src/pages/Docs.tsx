@@ -39,7 +39,7 @@ const Docs = () => {
               <div className="prose prose-sm md:prose-lg max-w-none break-words">
                 
                 {/* Main Title */}
-                <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4 md:mb-8 pb-2 md:pb-4 border-b border-gray-200 break-words">fan.site</h1>
+                <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4 md:mb-8 pb-2 md:pb-4 border-b border-gray-200 break-words">Fan Site</h1>
                 
                 {/* Overview */}
                 <h2 id="overview" className="text-lg md:text-2xl font-semibold text-gray-900 mt-4 md:mt-8 mb-2 md:mb-4 break-words">Overview</h2>
@@ -72,7 +72,7 @@ const Docs = () => {
                 <h2 id="tokenomics" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Tokenomics</h2>
                 
                 <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
-                  The fan.site ecosystem is powered by a native utility token, $FAN, which serves as the primary medium of exchange within the platform. $FAN tokens are used for various purposes, including rewarding content creators, incentivizing community participation, and facilitating governance decisions.
+                  The Fan Site ecosystem is powered by a native utility token, $FAN, which serves as the primary medium of exchange within the platform. $FAN tokens are used for various purposes, including rewarding content creators, incentivizing community participation, and facilitating governance decisions.
                 </p>
                 
                 <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Economics Summary</h3>
