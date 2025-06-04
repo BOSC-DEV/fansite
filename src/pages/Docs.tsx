@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home } from 'lucide-react';
@@ -104,13 +105,13 @@ const Docs = () => {
                 <ul className="list-disc list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
                   <li className="break-words hyphens-auto">In app currency for tipping or purchasing content, usernames, profiles & products.</li>
                   <li className="break-words hyphens-auto">Unlock enhanced app features, verification badges & climb up leaderboards.</li>
-                  <li className="break-words hyphens-auto">Vote in fair BJIPs, BJ Improvement Proposals, to enhance the BJ network.</li>
-                  <li className="break-words hyphens-auto">Rewards from wank2bank uploads and other unique campaigns.</li>
+                  <li className="break-words hyphens-auto">Vote in fair FIPs, Fan Improvement Proposals, to enhance the Fan network.</li>
+                  <li className="break-words hyphens-auto">Rewards from uploads and other unique campaigns.</li>
                   <li className="break-words hyphens-auto">Access instant, direct and 24/7 customer support.</li>
-                  <li className="break-words hyphens-auto">Access orgies, gang-bangs & exclusive clubs.</li>
+                  <li className="break-words hyphens-auto">Access exclusive content & premium features.</li>
                   <li className="break-words hyphens-auto">Moderate content and earn from bounties.</li>
-                  <li className="break-words hyphens-auto">Free airdrops & mints of the BJ Network.</li>
-                  <li className="break-words hyphens-auto">Access to the Jerky Island & beyond.</li>
+                  <li className="break-words hyphens-auto">Free airdrops & mints of the Fan Network.</li>
+                  <li className="break-words hyphens-auto">Access to premium platform features & beyond.</li>
                   <li className="break-words hyphens-auto">Revenue share for stakeholders.</li>
                 </ul>
 
@@ -124,29 +125,29 @@ const Docs = () => {
                 </p>
                 
                 <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
-                  They also offer endless benefit potential to verified users, as everyone starts as a little butt plug and the more $BJ they hold, the higher they rank, thus the more enhanced features they gain.
+                  They also offer endless benefit potential to verified users, as everyone starts as a little butt plug and the more $FAN they hold, the higher they rank, thus the more enhanced features they gain.
                 </p>
                 
                 <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
-                  Earn or buy $BJ directly in app to use or hoard. The more you have, the higher your ranking badge. The higher your badge, the better features and enhancents you unlock such as trending superpowers to get on the timeline or revenue share.
+                  Earn or buy $FAN directly in app to use or hoard. The more you have, the higher your ranking badge. The higher your badge, the better features and enhancents you unlock such as trending superpowers to get on the timeline or revenue share.
                 </p>
                 
                 <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Ranking Badges</h3>
                 
                 <ul className="list-decimal list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
-                  <li className="break-words">Big Black Demon Dildo - 50,000 BJ</li>
-                  <li className="break-words">Double Sided Diamond Dildo - 25,000 BJ</li>
-                  <li className="break-words">Golden Boobs - 10,000 BJ</li>
-                  <li className="break-words">Magic Wand - 4,000 BJ</li>
-                  <li className="break-words">Silver Bullet - 3,000 BJ</li>
-                  <li className="break-words">Fuzzy Cuffs - 2,000 BJ</li>
-                  <li className="break-words">G String - 1,000 BJ</li>
-                  <li className="break-words">Anal Beads - 400 BJ</li>
-                  <li className="break-words">Cock Ring - 200 BJ</li>
-                  <li className="break-words">Ball Gag - 100 BJ</li>
-                  <li className="break-words">Mutant Tentacle - 50 BJ</li>
-                  <li className="break-words">Pearl Necklace - 10 BJ</li>
-                  <li className="break-words">Butt Plug - 1 BJ</li>
+                  <li className="break-words">Big Black Demon Dildo - 50,000 $FAN</li>
+                  <li className="break-words">Double Sided Diamond Dildo - 25,000 $FAN</li>
+                  <li className="break-words">Golden Boobs - 10,000 $FAN</li>
+                  <li className="break-words">Magic Wand - 4,000 $FAN</li>
+                  <li className="break-words">Silver Bullet - 3,000 $FAN</li>
+                  <li className="break-words">Fuzzy Cuffs - 2,000 $FAN</li>
+                  <li className="break-words">G String - 1,000 $FAN</li>
+                  <li className="break-words">Anal Beads - 400 $FAN</li>
+                  <li className="break-words">Cock Ring - 200 $FAN</li>
+                  <li className="break-words">Ball Gag - 100 $FAN</li>
+                  <li className="break-words">Mutant Tentacle - 50 $FAN</li>
+                  <li className="break-words">Pearl Necklace - 10 $FAN</li>
+                  <li className="break-words">Butt Plug - 1 $FAN</li>
                 </ul>
                 
                 <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
@@ -162,7 +163,7 @@ const Docs = () => {
                 </p>
                 
                 <ul className="list-disc list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
-                  <li className="break-words">$BJ Holdings</li>
+                  <li className="break-words">$FAN Holdings</li>
                   <li className="break-words">Followers</li>
                   <li className="break-words">Earnings</li>
                   <li className="break-words">Views</li>
@@ -235,7 +236,7 @@ const Docs = () => {
                 
                 <ul className="list-disc list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
                   <li className="break-words hyphens-auto"><strong>In-App Revenue</strong>: A percentage of subscription fees, ad revenue, and in-app purchases.</li>
-                  <li className="break-words hyphens-auto"><strong>Token Transaction Fees</strong>: A share of transaction fees from the $BJ token.</li>
+                  <li className="break-words hyphens-auto"><strong>Token Transaction Fees</strong>: A share of transaction fees from the $FAN token.</li>
                 </ul>
                 
                 <h4 className="text-sm md:text-lg font-semibold text-gray-800 mb-2 break-words">Distribution Mechanism</h4>
@@ -264,19 +265,19 @@ const Docs = () => {
                         <td className="border border-gray-300 px-2 md:px-4 py-2">Mobile Phones</td>
                         <td className="border border-gray-300 px-2 md:px-4 py-2">Quad-core CPU, 4GB RAM</td>
                         <td className="border border-gray-300 px-2 md:px-4 py-2">Hosting</td>
-                        <td className="border border-gray-300 px-2 md:px-4 py-2">420 $BJ</td>
+                        <td className="border border-gray-300 px-2 md:px-4 py-2">420 $FAN</td>
                       </tr>
                       <tr>
                         <td className="border border-gray-300 px-2 md:px-4 py-2">PCs/Laptops</td>
                         <td className="border border-gray-300 px-2 md:px-4 py-2">4-core CPU, 8GB RAM, GPU</td>
                         <td className="border border-gray-300 px-2 md:px-4 py-2">Transcoding, Hosting, Delivery</td>
-                        <td className="border border-gray-300 px-2 md:px-4 py-2">6900 $BJ</td>
+                        <td className="border border-gray-300 px-2 md:px-4 py-2">6900 $FAN</td>
                       </tr>
                       <tr>
                         <td className="border border-gray-300 px-2 md:px-4 py-2">Dedicated Servers</td>
                         <td className="border border-gray-300 px-2 md:px-4 py-2">8-core CPU, 16GB RAM, SSD</td>
                         <td className="border border-gray-300 px-2 md:px-4 py-2">High-volume Hosting, Delivery</td>
-                        <td className="border border-gray-300 px-2 md:px-4 py-2">18,000 $BJ</td>
+                        <td className="border border-gray-300 px-2 md:px-4 py-2">18,000 $FAN</td>
                       </tr>
                     </tbody>
                   </table>
@@ -493,7 +494,7 @@ if __name__ == '__main__':
 if __name__ == "__main__":
     calculator = RewardCalculator(task_weight=1.5, cpu_cores=4, bandwidth_mbps=20, ram_gb=8, revenue_pool=10000)
     reward = calculator.calculate_reward()
-    print(f"Estimated Reward: {reward:.2f} BJ Tokens")`}</code></pre>
+    print(f"Estimated Reward: {reward:.2f} Fan Tokens")`}</code></pre>
                 </div>
                 
                 <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
