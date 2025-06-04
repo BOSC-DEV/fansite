@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home } from 'lucide-react';
@@ -152,12 +151,6 @@ const Docs = () => {
                 <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
                   Earn or buy $FAN directly in app to use or hoard. The more you have, the higher your ranking badge. The higher your badge, the better features and enhancents you unlock such as trending superpowers to get on the timeline or revenue share.
                 </p>
-                
-                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Ranking Badges Chart</h3>
-                
-                <div className="w-full overflow-hidden mb-4 md:mb-6">
-                  <RankingBadgesChart />
-                </div>
                 
                 <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Badge Requirements</h3>
                 
