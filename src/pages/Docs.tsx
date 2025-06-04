@@ -44,7 +44,7 @@ const Docs = () => {
                 {/* Overview */}
                 <h2 id="overview" className="text-lg md:text-2xl font-semibold text-gray-900 mt-4 md:mt-8 mb-2 md:mb-4 break-words">Overview</h2>
                 
-                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">Introducing Fan Site, the ultimate fan platform where creators thrive! With low fees, a decentralized, user-owned structure, and unmatched censorship resistance, you control your content and earnings with instant settlements. Enjoy private, secure interactions with full data ownership meaning no one can access your content but you and your fans.</p>
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">Introducing Fan Site, the ultimate fan platform where creators thrive! With low fees, a decentralized, user-owned structure, and unmatched censorship resistance, you control your content and earnings with instant settlements. Enjoy private, secure interactions with full data ownership meaning no one can access your content but you and your fans. Fan Site is for everyone, naughty or nice, so join today and free yourself from the stigma of having an OnlyFans.</p>
                 
                 {/* Executive Summary */}
                 <h2 id="executive-summary" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Executive Summary</h2>
