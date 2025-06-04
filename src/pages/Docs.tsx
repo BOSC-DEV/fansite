@@ -55,7 +55,7 @@ const Docs = () => {
                 
                 <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Industry Statistics</h3>
                 
-                <ul className="list-disc list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1 break-words">
+                <ul className="list-disc list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
                   <li className="break-words hyphens-auto">The creator economy includes over 50 million individuals worldwide.</li>
                   <li className="break-words hyphens-auto">Content creators earn an estimated $6,000 per month on average.</li>
                   <li className="break-words hyphens-auto">The market size of the creator economy is projected to reach $104.2 billion in 2022.</li>
@@ -86,6 +86,33 @@ const Docs = () => {
                 <div className="w-full overflow-hidden mb-4 md:mb-6">
                   <TokenReleaseChart />
                 </div>
+
+                {/* Utility */}
+                <h2 id="utility" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Utility</h2>
+                
+                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Why do these wankers actually need a token?</h3>
+                
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
+                  Every user owned and decentralised app requires a token for true network ownership & governance. 
+                  You can't rely on the native chain token as each protocol has its own incentives, user base and 
+                  direction. Every digital business and arguably brick & mortar ones alike will need a token one day, to 
+                  reward, engage or monetise their consumer base as we hurtle into the new digital frontier.
+                </p>
+                
+                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Utility of $FAN includes but is not limited to;</h3>
+                
+                <ul className="list-disc list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
+                  <li className="break-words hyphens-auto">In app currency for tipping or purchasing content, usernames, profiles & products.</li>
+                  <li className="break-words hyphens-auto">Unlock enhanced app features, verification badges & climb up leaderboards.</li>
+                  <li className="break-words hyphens-auto">Vote in fair BJIPs, BJ Improvement Proposals, to enhance the BJ network.</li>
+                  <li className="break-words hyphens-auto">Rewards from wank2bank uploads and other unique campaigns.</li>
+                  <li className="break-words hyphens-auto">Access instant, direct and 24/7 customer support.</li>
+                  <li className="break-words hyphens-auto">Access orgies, gang-bangs & exclusive clubs.</li>
+                  <li className="break-words hyphens-auto">Moderate content and earn from bounties.</li>
+                  <li className="break-words hyphens-auto">Free airdrops & mints of the BJ Network.</li>
+                  <li className="break-words hyphens-auto">Access to the Jerky Island & beyond.</li>
+                  <li className="break-words hyphens-auto">Revenue share for stakeholders.</li>
+                </ul>
 
                 {/* Technology Stack */}
                 <h2 id="technology-stack" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Technology Stack</h2>
