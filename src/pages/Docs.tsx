@@ -6,9 +6,12 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
 import { DocsMobileDrawer } from "@/components/docs/DocsMobileDrawer";
 import { useIsMobile } from "@/hooks/use-mobile";
+
 const Docs = () => {
   const isMobile = useIsMobile();
-  return <SidebarProvider>
+  
+  return (
+    <SidebarProvider>
       <div className="min-h-screen flex w-full bg-white">
         {!isMobile && <DocsSidebar />}
         
@@ -41,20 +44,20 @@ const Docs = () => {
                 {/* Mission Statement */}
                 <h2 id="mission-statement" className="text-lg md:text-2xl font-semibold text-gray-900 mt-4 md:mt-8 mb-2 md:mb-4 break-words">Mission Statement</h2>
                 
-                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">Introducing fan.site, the ultimate fan platform where creators thrive! With low fees, a decentralized, user-owned structure, and unmatched censorship resistance, you control your content and earnings. Enjoy private, secure interactions with full data ownership—no one accesses your content but you. Join fan.site today and connect with fans on your terms!</p>
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">Introducing Fan Site, the ultimate fan platform where creators thrive! With low fees, a decentralized, user-owned structure, and unmatched censorship resistance, you control your content and earnings with instant settlements. Enjoy private, secure interactions with full data ownership meaning no one can access your content but you and your fans.</p>
                 
                 {/* Executive Summary */}
                 <h2 id="executive-summary" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Executive Summary</h2>
                 
                 <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
-                  fan.site is a decentralized platform designed to transform the relationship between content creators and their fans. By leveraging blockchain technology, fan.site offers a suite of tools that enable direct engagement, fair monetization, and community-driven governance. This platform addresses the key challenges faced by creators today, including unfair revenue splits, lack of control over content, and limited interaction with their audience.
+                  Fan Site is a decentralized platform designed to transform the relationship between content creators and their fans. By leveraging blockchain technology, Fan Site offers a suite of tools that enable direct engagement, fair monetization, and community-driven governance. This platform addresses the key challenges faced by creators today, including unfair revenue splits, lack of control over content, and limited interaction with their audience.
                 </p>
 
                 {/* Market Analysis */}
                 <h2 id="market-analysis" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Market Analysis</h2>
                 
                 <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
-                  The creator economy is experiencing exponential growth, with a projected market size of over $104.2 billion in 2022. However, current platforms often exploit creators by taking a significant portion of their earnings and limiting their ability to connect with fans. fan.site aims to disrupt this model by providing a decentralized alternative that empowers creators and fosters a more equitable ecosystem.
+                  The creator economy is experiencing exponential growth, with a projected market size of over $104.2 billion in 2022. However, current platforms often exploit creators by taking a significant portion of their earnings and limiting their ability to connect with fans. Fan Site aims to disrupt this model by providing a decentralized alternative that empowers creators and fosters a more equitable ecosystem.
                 </p>
                 
                 <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Industry Statistics</h3>
@@ -95,7 +98,7 @@ const Docs = () => {
                 <h2 id="technology-stack" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Technology Stack</h2>
                 
                 <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
-                  fan.site is built on a robust and scalable technology stack that leverages the power of blockchain technology, decentralized storage solutions, and cutting-edge development frameworks. Our platform is designed to be secure, transparent, and user-friendly, ensuring a seamless experience for both creators and fans.
+                  Fan Site is built on a robust and scalable technology stack that leverages the power of blockchain technology, decentralized storage solutions, and cutting-edge development frameworks. Our platform is designed to be secure, transparent, and user-friendly, ensuring a seamless experience for both creators and fans.
                 </p>
                 
                 <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Key Components</h3>
@@ -116,7 +119,7 @@ const Docs = () => {
                 <h2 id="governance" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Governance Model</h2>
                 
                 <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
-                  fan.site is committed to building a community-driven platform where users have a voice in shaping the future of the ecosystem. Our governance model is designed to be transparent, inclusive, and democratic, ensuring that all stakeholders have the opportunity to participate in decision-making processes.
+                  Fan Site is committed to building a community-driven platform where users have a voice in shaping the future of the ecosystem. Our governance model is designed to be transparent, inclusive, and democratic, ensuring that all stakeholders have the opportunity to participate in decision-making processes.
                 </p>
                 
                 <ul className="list-disc list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
@@ -139,21 +142,21 @@ const Docs = () => {
                 <h2 id="risk-analysis" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Risk Analysis</h2>
                 
                 <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
-                  As with any innovative project, fan.site faces certain risks and challenges. These include market adoption, regulatory uncertainty, and technological hurdles. We are committed to mitigating these risks through careful planning, proactive communication, and continuous innovation.
+                  As with any innovative project, Fan Site faces certain risks and challenges. These include market adoption, regulatory uncertainty, and technological hurdles. We are committed to mitigating these risks through careful planning, proactive communication, and continuous innovation.
                 </p>
 
                 {/* Legal & Compliance */}
                 <h2 id="legal-compliance" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Legal & Compliance</h2>
                 
                 <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
-                  fan.site is committed to operating in full compliance with all applicable laws and regulations. We are working closely with legal experts to ensure that our platform meets the highest standards of transparency, security, and accountability.
+                  Fan Site is committed to operating in full compliance with all applicable laws and regulations. We are working closely with legal experts to ensure that our platform meets the highest standards of transparency, security, and accountability.
                 </p>
 
                 {/* Conclusion */}
                 <h2 id="conclusion" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Conclusion</h2>
                 
                 <p className="text-gray-700 leading-relaxed mb-6 md:mb-8 text-sm md:text-base break-words hyphens-auto">
-                  fan.site represents a bold vision for the future of the creator economy. By leveraging blockchain technology and community-driven governance, we are building a platform that empowers content creators, fosters direct engagement with fans, and promotes a more equitable ecosystem for all stakeholders. We invite you to join us on this exciting journey as we revolutionize the way content is created, shared, and monetized.
+                  Fan Site represents a bold vision for the future of the creator economy. By leveraging blockchain technology and community-driven governance, we are building a platform that empowers content creators, fosters direct engagement with fans, and promotes a more equitable ecosystem for all stakeholders. We invite you to join us on this exciting journey as we revolutionize the way content is created, shared, and monetized.
                 </p>
 
               </div>
@@ -161,6 +164,8 @@ const Docs = () => {
           </div>
         </main>
       </div>
-    </SidebarProvider>;
+    </SidebarProvider>
+  );
 };
+
 export default Docs;
