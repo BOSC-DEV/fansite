@@ -46,13 +46,6 @@ const Docs = () => {
                 
                 <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">Introducing Fan Site, the ultimate fan platform where creators thrive! With low fees, a decentralized, user-owned structure, and unmatched censorship resistance, you control your content and earnings with instant settlements. Enjoy private, secure interactions with full data ownership meaning no one can access your content but you and your fans. Fan Site is for everyone, naughty or nice, so join today and free yourself from the stigma of having an OnlyFans.</p>
                 
-                {/* Executive Summary */}
-                <h2 id="executive-summary" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Executive Summary</h2>
-                
-                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
-                  Fan Site is a decentralized platform designed to transform the relationship between content creators and their fans. By leveraging blockchain technology, Fan Site offers a suite of tools that enable direct engagement, fair monetization, and community-driven governance. This platform addresses the key challenges faced by creators today, including unfair revenue splits, lack of control over content, and limited interaction with their audience.
-                </p>
-
                 {/* Market Analysis */}
                 <h2 id="market-analysis" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Market Analysis</h2>
                 
