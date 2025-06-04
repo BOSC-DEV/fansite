@@ -6,10 +6,26 @@ import RankingBadgesChart from "@/components/ui/ranking-badges-chart";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
 import { DocsMobileDrawer } from "@/components/docs/DocsMobileDrawer";
+import { DocsSearch } from "@/components/docs/DocsSearch";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const Docs = () => {
   const isMobile = useIsMobile();
+  
+  const handleSearchResultClick = (elementId: string) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+      // Add a highlight effect
+      element.classList.add('bg-yellow-100');
+      setTimeout(() => {
+        element.classList.remove('bg-yellow-100');
+      }, 2000);
+    }
+  };
   
   return (
     <SidebarProvider>
@@ -20,12 +36,17 @@ const Docs = () => {
           {/* Header with navigation - ALWAYS show burger menu on mobile */}
           <div className="border-b border-gray-200 bg-white sticky top-0 z-50 w-full h-[60px] md:h-[73px]">
             <div className="w-full px-3 md:px-4 py-3 md:py-4 flex items-center justify-between h-full">
-              <div className="flex items-center">
-                {!isMobile && <SidebarTrigger className="mr-4" />}
+              <div className="flex items-center space-x-4">
+                {!isMobile && <SidebarTrigger className="mr-2" />}
                 <Link to="/" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
                   <Home className="h-4 w-4" />
                   <span className="ml-2 text-sm">Home</span>
                 </Link>
+                
+                {/* Search component */}
+                <div className="hidden md:block">
+                  <DocsSearch onSearchResultClick={handleSearchResultClick} />
+                </div>
               </div>
               
               {/* MOBILE BURGER MENU - Make it very visible */}
@@ -33,6 +54,13 @@ const Docs = () => {
                 <DocsMobileDrawer />
               </div>
             </div>
+            
+            {/* Mobile search - below header on mobile */}
+            {isMobile && (
+              <div className="px-3 pb-3 border-t border-gray-100">
+                <DocsSearch onSearchResultClick={handleSearchResultClick} />
+              </div>
+            )}
           </div>
 
           <div className="w-full px-3 md:px-6 lg:px-8 py-3 md:py-8 max-w-full overflow-hidden">
@@ -43,7 +71,7 @@ const Docs = () => {
                 <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4 md:mb-8 pb-2 md:pb-4 border-b border-gray-200 break-words">Fan Site</h1>
                 
                 {/* Overview */}
-                <h2 id="overview" className="text-lg md:text-2xl font-semibold text-gray-900 mt-4 md:mt-8 mb-2 md:mb-4 break-words">Overview</h2>
+                <h2 id="overview" className="text-lg md:text-2xl font-semibold text-gray-900 mt-4 md:mt-8 mb-2 md:mb-4 break-words transition-colors duration-500">Overview</h2>
                 
                 <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">Introducing Fan Site, the ultimate fan platform where creators thrive! With low fees, a decentralized, user-owned structure, and unmatched censorship resistance, you control your content and earnings with instant settlements. Enjoy private, secure interactions with full data ownership meaning no one can access your content but you and your fans. Fan Site is for everyone, naughty or nice, so join today and free yourself from the stigma of having an OnlyFans.</p>
                 
