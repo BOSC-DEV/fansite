@@ -1,8 +1,8 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home } from 'lucide-react';
 import TokenReleaseChart from "@/components/ui/token-release-chart";
+import RankingBadgesChart from "@/components/ui/ranking-badges-chart";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
 import { DocsMobileDrawer } from "@/components/docs/DocsMobileDrawer";
@@ -125,29 +125,35 @@ const Docs = () => {
                 </p>
                 
                 <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
-                  They also offer endless benefit potential to verified users, as everyone starts as a little butt plug and the more $FAN they hold, the higher they rank, thus the more enhanced features they gain.
+                  They also offer endless benefit potential to verified users, as everyone starts as a little badge holder and the more $FAN they hold, the higher they rank, thus the more enhanced features they gain.
                 </p>
                 
                 <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
                   Earn or buy $FAN directly in app to use or hoard. The more you have, the higher your ranking badge. The higher your badge, the better features and enhancents you unlock such as trending superpowers to get on the timeline or revenue share.
                 </p>
                 
-                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Ranking Badges</h3>
+                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Ranking Badges Chart</h3>
+                
+                <div className="w-full overflow-hidden mb-4 md:mb-6">
+                  <RankingBadgesChart />
+                </div>
+                
+                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Badge Requirements</h3>
                 
                 <ul className="list-decimal list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
-                  <li className="break-words">Big Black Demon Dildo - 50,000 $FAN</li>
-                  <li className="break-words">Double Sided Diamond Dildo - 25,000 $FAN</li>
-                  <li className="break-words">Golden Boobs - 10,000 $FAN</li>
-                  <li className="break-words">Magic Wand - 4,000 $FAN</li>
-                  <li className="break-words">Silver Bullet - 3,000 $FAN</li>
-                  <li className="break-words">Fuzzy Cuffs - 2,000 $FAN</li>
-                  <li className="break-words">G String - 1,000 $FAN</li>
-                  <li className="break-words">Anal Beads - 400 $FAN</li>
-                  <li className="break-words">Cock Ring - 200 $FAN</li>
-                  <li className="break-words">Ball Gag - 100 $FAN</li>
-                  <li className="break-words">Mutant Tentacle - 50 $FAN</li>
-                  <li className="break-words">Pearl Necklace - 10 $FAN</li>
-                  <li className="break-words">Butt Plug - 1 $FAN</li>
+                  <li className="break-words">Badge TBC - 50,000 $FAN</li>
+                  <li className="break-words">Badge TBC - 25,000 $FAN</li>
+                  <li className="break-words">Badge TBC - 10,000 $FAN</li>
+                  <li className="break-words">Badge TBC - 4,000 $FAN</li>
+                  <li className="break-words">Badge TBC - 3,000 $FAN</li>
+                  <li className="break-words">Badge TBC - 2,000 $FAN</li>
+                  <li className="break-words">Badge TBC - 1,000 $FAN</li>
+                  <li className="break-words">Badge TBC - 400 $FAN</li>
+                  <li className="break-words">Badge TBC - 200 $FAN</li>
+                  <li className="break-words">Badge TBC - 100 $FAN</li>
+                  <li className="break-words">Badge TBC - 50 $FAN</li>
+                  <li className="break-words">Badge TBC - 10 $FAN</li>
+                  <li className="break-words">Badge TBC - 1 $FAN</li>
                 </ul>
                 
                 <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
