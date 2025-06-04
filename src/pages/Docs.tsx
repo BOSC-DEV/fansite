@@ -174,6 +174,342 @@ const Docs = () => {
                   These can be filtered to track daily, weekly, monthly and yearly so you never miss a beat!
                 </p>
 
+                {/* DePIN */}
+                <h2 id="depin" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">🍆 DePIN</h2>
+                
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
+                  The only way we can sustainably scale to disrupt this gigantic industry is via a network of shared computing power to host, transcode & deliver content. Mine globally from as little as a mobile phone.
+                </p>
+                
+                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Abstract</h3>
+                
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
+                  This whitepaper introduces a Decentralised Physical Infrastructure Network (DePIN) designed to scale and sustain Blocjerk. The system leverages shared computing power from a network of miners who contribute resources for data hosting, transcoding, and delivery. Miners are rewarded directly from application revenue and token transaction fees, ensuring a sustainable, inflation-free model. This paper outlines the technical framework, economic incentives, and implementation strategies for deploying this DePIN, enabling contributions from as little as a mobile device.
+                </p>
+                
+                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">System Architecture</h3>
+                
+                <h4 className="text-sm md:text-lg font-semibold text-gray-800 mb-2 break-words">Challenges in Streaming and Gaming Platforms</h4>
+                
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
+                  Centralised infrastructure for streaming and gaming platforms faces challenges such as high operational costs, scalability limits, and susceptibility to censorship or outages. These challenges hinder the ability of platforms like Blocjerk to achieve its purpose of being a decentralised, permissionless and user owned protocol that lives forever on-chain while maintaining cost efficiency.
+                </p>
+                
+                <h4 className="text-sm md:text-lg font-semibold text-gray-800 mb-2 break-words">Solution: Shared Computing DePIN</h4>
+                
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
+                  By decentralising the infrastructure, Blocjerk can tap into a distributed network of computing power to address these challenges. A DePIN allows users to share their computing resources, ensuring:
+                </p>
+                
+                <ul className="list-disc list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
+                  <li className="break-words hyphens-auto"><strong>Cost Efficiency</strong>: Lower hosting and delivery costs by using shared resources.</li>
+                  <li className="break-words hyphens-auto"><strong>Scalability</strong>: Dynamically grow the network as demand increases.</li>
+                  <li className="break-words hyphens-auto"><strong>Sustainability</strong>: Reward contributors directly from app revenues without token inflation.</li>
+                </ul>
+                
+                <h4 className="text-sm md:text-lg font-semibold text-gray-800 mb-2 break-words">Core Components</h4>
+                
+                <ul className="list-disc list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
+                  <li className="break-words hyphens-auto"><strong>Contributors (Miners)</strong>: Individuals providing computing resources via devices such as mobile phones, PCs, or dedicated servers.</li>
+                  <li className="break-words hyphens-auto"><strong>DePIN Coordinator</strong>: A data encryption, decryption and smart contract system managing miner rewards, resource allocation, and task distribution.</li>
+                  <li className="break-words hyphens-auto"><strong>Blocjerk Application</strong>: The streaming and gaming app interfacing with the DePIN to request and deliver data.</li>
+                  <li className="break-words hyphens-auto"><strong>Clients (End Users)</strong>: Users consuming content via Blocjerk.</li>
+                </ul>
+                
+                <h4 className="text-sm md:text-lg font-semibold text-gray-800 mb-2 break-words">Workflow</h4>
+                
+                <ol className="list-decimal list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
+                  <li className="break-words hyphens-auto"><strong>Resource Sharing</strong>: Contributors register and allocate resources.</li>
+                  <li className="break-words hyphens-auto"><strong>Task Assignment</strong>: The DePIN Coordinator assigns tasks such as hosting, transcoding, or delivery based on contributor capacity.</li>
+                  <li className="break-words hyphens-auto"><strong>Revenue Sharing</strong>: Miners are compensated from a revenue pool funded by in-app revenue and token transaction fees.</li>
+                  <li className="break-words hyphens-auto"><strong>Verification</strong>: Proof-of-computation mechanisms validate miners' contributions.</li>
+                </ol>
+                
+                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Incentive Model</h3>
+                
+                <h4 className="text-sm md:text-lg font-semibold text-gray-800 mb-2 break-words">Revenue Pool</h4>
+                
+                <p className="text-gray-700 leading-relaxed mb-2 text-sm md:text-base break-words hyphens-auto">
+                  The reward pool is composed of:
+                </p>
+                
+                <ul className="list-disc list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
+                  <li className="break-words hyphens-auto"><strong>In-App Revenue</strong>: A percentage of subscription fees, ad revenue, and in-app purchases.</li>
+                  <li className="break-words hyphens-auto"><strong>Token Transaction Fees</strong>: A share of transaction fees from the $BJ token.</li>
+                </ul>
+                
+                <h4 className="text-sm md:text-lg font-semibold text-gray-800 mb-2 break-words">Distribution Mechanism</h4>
+                
+                <ul className="list-disc list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
+                  <li className="break-words hyphens-auto">Rewards are distributed based on the volume and quality of contributions.</li>
+                  <li className="break-words hyphens-auto">Miners earn proportionally higher rewards for tasks requiring more resources or bandwidth.</li>
+                </ul>
+                
+                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Participation Requirements</h3>
+                
+                <h4 className="text-sm md:text-lg font-semibold text-gray-800 mb-2 break-words">Minimum Hardware Requirements</h4>
+                
+                <div className="overflow-x-auto mb-4 md:mb-6">
+                  <table className="min-w-full border border-gray-300 text-sm">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="border border-gray-300 px-2 md:px-4 py-2 text-left font-semibold">Device Type</th>
+                        <th className="border border-gray-300 px-2 md:px-4 py-2 text-left font-semibold">Minimum Specs</th>
+                        <th className="border border-gray-300 px-2 md:px-4 py-2 text-left font-semibold">Supported Tasks</th>
+                        <th className="border border-gray-300 px-2 md:px-4 py-2 text-left font-semibold">Staking Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="border border-gray-300 px-2 md:px-4 py-2">Mobile Phones</td>
+                        <td className="border border-gray-300 px-2 md:px-4 py-2">Quad-core CPU, 4GB RAM</td>
+                        <td className="border border-gray-300 px-2 md:px-4 py-2">Hosting</td>
+                        <td className="border border-gray-300 px-2 md:px-4 py-2">420 $BJ</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-gray-300 px-2 md:px-4 py-2">PCs/Laptops</td>
+                        <td className="border border-gray-300 px-2 md:px-4 py-2">4-core CPU, 8GB RAM, GPU</td>
+                        <td className="border border-gray-300 px-2 md:px-4 py-2">Transcoding, Hosting, Delivery</td>
+                        <td className="border border-gray-300 px-2 md:px-4 py-2">6900 $BJ</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-gray-300 px-2 md:px-4 py-2">Dedicated Servers</td>
+                        <td className="border border-gray-300 px-2 md:px-4 py-2">8-core CPU, 16GB RAM, SSD</td>
+                        <td className="border border-gray-300 px-2 md:px-4 py-2">High-volume Hosting, Delivery</td>
+                        <td className="border border-gray-300 px-2 md:px-4 py-2">18,000 $BJ</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                
+                <h4 className="text-sm md:text-lg font-semibold text-gray-800 mb-2 break-words">Software Setup</h4>
+                
+                <p className="text-gray-700 leading-relaxed mb-2 text-sm md:text-base break-words hyphens-auto">
+                  Miners install a lightweight client application that:
+                </p>
+                
+                <ul className="list-disc list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
+                  <li className="break-words hyphens-auto">Connects to the DePIN network.</li>
+                  <li className="break-words hyphens-auto">Reports available resources.</li>
+                  <li className="break-words hyphens-auto">Executes assigned tasks.</li>
+                </ul>
+                
+                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Full System Code Implementation</h3>
+                
+                <h4 className="text-sm md:text-lg font-semibold text-gray-800 mb-2 break-words">Miner Client Code</h4>
+                
+                <div className="bg-gray-900 text-gray-100 p-3 md:p-4 rounded-lg overflow-x-auto mb-4 md:mb-6">
+                  <pre className="text-xs md:text-sm"><code>{`import requests
+import time
+import hashlib
+
+API_BASE = "https://depin-coordinator.blocjerk.com"
+
+class MinerClient:
+    def __init__(self, device_id, cpu_cores, ram_gb, bandwidth_mbps):
+        self.device_id = device_id
+        self.cpu_cores = cpu_cores
+        self.ram_gb = ram_gb
+        self.bandwidth_mbps = bandwidth_mbps
+        self.session_token = None
+
+    def register_device(self):
+        payload = {
+            "device_id": self.device_id,
+            "cpu_cores": self.cpu_cores,
+            "ram_gb": self.ram_gb,
+            "bandwidth_mbps": self.bandwidth_mbps
+        }
+        response = requests.post(f"{API_BASE}/register", json=payload)
+        if response.status_code == 200:
+            self.session_token = response.json().get("session_token")
+            print("Registered successfully.")
+        else:
+            print("Registration failed:", response.text)
+
+    def fetch_task(self):
+        headers = {"Authorization": f"Bearer {self.session_token}"}
+        response = requests.get(f"{API_BASE}/tasks", headers=headers)
+        if response.status_code == 200:
+            return response.json()
+        return None
+
+    def submit_result(self, task_id, result):
+        headers = {"Authorization": f"Bearer {self.session_token}"}
+        payload = {"task_id": task_id, "result": result}
+        response = requests.post(f"{API_BASE}/submit", json=payload, headers=headers)
+        if response.status_code == 200:
+            print("Result submitted successfully.")
+        else:
+            print("Failed to submit result:", response.text)
+
+    def run(self):
+        while True:
+            task = self.fetch_task()
+            if task:
+                print(f"Received task: {task['type']}")
+                task_result = self.execute_task(task)
+                self.submit_result(task['task_id'], task_result)
+            time.sleep(10)
+
+    def execute_task(self, task):
+        # Simulate task execution
+        task_data = task.get("data")
+        result_hash = hashlib.sha256(task_data.encode()).hexdigest()
+        time.sleep(task.get("duration", 5))  # Simulate processing time
+        return result_hash
+
+if __name__ == "__main__":
+    miner = MinerClient(device_id="unique_device_123", cpu_cores=4, ram_gb=8, bandwidth_mbps=20)
+    miner.register_device()
+    miner.run()`}</code></pre>
+                </div>
+                
+                <h4 className="text-sm md:text-lg font-semibold text-gray-800 mb-2 break-words">DePIN Coordinator (Server-Side Logic)</h4>
+                
+                <div className="bg-gray-900 text-gray-100 p-3 md:p-4 rounded-lg overflow-x-auto mb-4 md:mb-6">
+                  <pre className="text-xs md:text-sm"><code>{`from flask import Flask, request, jsonify
+import uuid
+
+app = Flask(__name__)
+
+# Mock databases
+devices = {}
+tasks = []
+completed_tasks = {}
+
+@app.route('/register', methods=['POST'])
+def register_device():
+    data = request.json
+    device_id = data.get('device_id')
+    if not device_id or device_id in devices:
+        return jsonify({"error": "Invalid or duplicate device ID."}), 400
+
+    devices[device_id] = {
+        "cpu_cores": data.get("cpu_cores"),
+        "ram_gb": data.get("ram_gb"),
+        "bandwidth_mbps": data.get("bandwidth_mbps"),
+        "session_token": str(uuid.uuid4())
+    }
+    return jsonify({"session_token": devices[device_id]["session_token"]}), 200
+
+@app.route('/tasks', methods=['GET'])
+def get_task():
+    session_token = request.headers.get("Authorization").split(" ")[1]
+    device = next((d for d in devices.values() if d["session_token"] == session_token), None)
+    if not device:
+        return jsonify({"error": "Unauthorized"}), 403
+
+    # Generate a mock task
+    task = {
+        "task_id": str(uuid.uuid4()),
+        "type": "hash_computation",
+        "data": "sample_data",
+        "duration": 5
+    }
+    tasks.append(task)
+    return jsonify(task), 200
+
+@app.route('/submit', methods=['POST'])
+def submit_task():
+    data = request.json
+    task_id = data.get("task_id")
+    result = data.get("result")
+    if not task_id or not result:
+        return jsonify({"error": "Invalid submission."}), 400
+
+    completed_tasks[task_id] = result
+    return jsonify({"message": "Task completed successfully."}), 200
+
+if __name__ == '__main__':
+    app.run(debug=True)`}</code></pre>
+                </div>
+                
+                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Scalability and Security</h3>
+                
+                <h4 className="text-sm md:text-lg font-semibold text-gray-800 mb-2 break-words">Dynamic Task Allocation</h4>
+                
+                <p className="text-gray-700 leading-relaxed mb-2 text-sm md:text-base break-words hyphens-auto">
+                  Tasks are distributed based on:
+                </p>
+                
+                <ul className="list-disc list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
+                  <li className="break-words hyphens-auto">Current demand.</li>
+                  <li className="break-words hyphens-auto">Contributor capacity.</li>
+                  <li className="break-words hyphens-auto">Proximity to end users.</li>
+                </ul>
+                
+                <h4 className="text-sm md:text-lg font-semibold text-gray-800 mb-2 break-words">Proof-of-Computation</h4>
+                
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
+                  A lightweight proof-of-computation mechanism ensures tasks are completed reliably. Rewards are only issued upon verification.
+                </p>
+                
+                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Reward Calculator</h3>
+                
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
+                  The DePIN includes a reward calculator that estimates miners' earnings based on their contributions.
+                </p>
+                
+                <h4 className="text-sm md:text-lg font-semibold text-gray-800 mb-2 break-words">Reward Formula</h4>
+                
+                <p className="text-gray-700 leading-relaxed mb-2 text-sm md:text-base break-words hyphens-auto">
+                  The rewards are calculated using the following formula:
+                </p>
+                
+                <div className="bg-gray-100 p-3 md:p-4 rounded-lg mb-4 md:mb-6">
+                  <code className="text-sm md:text-base">Reward = (Task Weight x Resource Score x Revenue Pool Share)</code>
+                </div>
+                
+                <p className="text-gray-700 leading-relaxed mb-2 text-sm md:text-base break-words hyphens-auto">
+                  Where:
+                </p>
+                
+                <ul className="list-disc list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
+                  <li className="break-words hyphens-auto"><strong>Task Weight</strong>: A predefined multiplier based on the type of task (e.g., hosting = 1.5, transcoding = 2.0, data delivery = 1.0).</li>
+                  <li className="break-words hyphens-auto"><strong>Resource Score</strong>: A score calculated from the miner's resources, such as CPU cores, bandwidth, and RAM.</li>
+                  <li className="break-words hyphens-auto"><strong>Revenue Pool Share</strong>: The miner's proportional share of the revenue pool.</li>
+                </ul>
+                
+                <h4 className="text-sm md:text-lg font-semibold text-gray-800 mb-2 break-words">Example Code for Reward Calculation</h4>
+                
+                <div className="bg-gray-900 text-gray-100 p-3 md:p-4 rounded-lg overflow-x-auto mb-4 md:mb-6">
+                  <pre className="text-xs md:text-sm"><code>{`class RewardCalculator:
+    def __init__(self, task_weight, cpu_cores, bandwidth_mbps, ram_gb, revenue_pool):
+        self.task_weight = task_weight
+        self.cpu_cores = cpu_cores
+        self.bandwidth_mbps = bandwidth_mbps
+        self.ram_gb = ram_gb
+        self.revenue_pool = revenue_pool
+
+    def calculate_resource_score(self):
+        return (self.cpu_cores * 0.4) + (self.bandwidth_mbps * 0.3) + (self.ram_gb * 0.3)
+
+    def calculate_reward(self):
+        resource_score = self.calculate_resource_score()
+        return self.task_weight * resource_score * self.revenue_pool
+
+# Example usage
+if __name__ == "__main__":
+    calculator = RewardCalculator(task_weight=1.5, cpu_cores=4, bandwidth_mbps=20, ram_gb=8, revenue_pool=10000)
+    reward = calculator.calculate_reward()
+    print(f"Estimated Reward: {reward:.2f} BJ Tokens")`}</code></pre>
+                </div>
+                
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
+                  This reward calculator can be integrated into the miner client for real-time reward estimation.
+                </p>
+                
+                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Conclusion</h3>
+                
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
+                  The proposed DePIN enables truly decentralised, censorship resistant, limitlessly scalable, and cost-efficient infrastructure for Blocjerk. By leveraging shared computing power and rewarding miners directly from revenue, the system avoids inflation and ensures long-term sustainability. This model empowers anyone with spare computing resources, from mobile phones to servers, to participate in and benefit from Blocjerk's growth. In order to disrupt this behemoth of an industry, one requires billionaire backing or true innovation, just like this DePIN.
+                </p>
+                
+                <p className="text-gray-700 leading-relaxed mb-6 md:mb-8 text-sm md:text-base break-words hyphens-auto font-italic">
+                  *The full code will be open sourced upon completion.
+                </p>
+
                 {/* Technology Stack */}
                 <h2 id="technology-stack" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Technology Stack</h2>
                 
