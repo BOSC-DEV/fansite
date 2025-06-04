@@ -1,6 +1,8 @@
+
 import React from 'react';
-import { FileText, BarChart3, Map, Settings, Users, Target, Rocket, Code, Shield, Scale, Gavel } from 'lucide-react';
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import { FileText, BarChart3, Map, Target, Code, Shield, Gavel, Rocket } from 'lucide-react';
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+
 const navigationItems = [{
   title: "Mission Statement",
   icon: FileText,
@@ -23,16 +25,12 @@ const navigationItems = [{
   href: "#technology-stack"
 }, {
   title: "Governance",
-  icon: Users,
+  icon: Target,
   href: "#governance"
 }, {
   title: "Roadmap",
   icon: Map,
   href: "#roadmap"
-}, {
-  title: "Team",
-  icon: Users,
-  href: "#team"
 }, {
   title: "Risk Analysis",
   icon: Shield,
@@ -46,6 +44,7 @@ const navigationItems = [{
   icon: Rocket,
   href: "#conclusion"
 }];
+
 export function DocsSidebar() {
   const handleNavClick = (href: string) => {
     const targetId = href.replace('#', '');
@@ -59,7 +58,6 @@ export function DocsSidebar() {
   return <Sidebar className="bg-gray-50 border-r border-gray-200">
       <SidebarContent className="bg-gray-50 pt-4">
         <SidebarGroup>
-          
           <SidebarGroupContent>
             <SidebarMenu>
               {navigationItems.map(item => <SidebarMenuItem key={item.title}>

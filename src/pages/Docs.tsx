@@ -1,10 +1,11 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Home, FileText, BarChart3, Map, Settings, Users } from 'lucide-react';
+import { Home } from 'lucide-react';
 import TokenReleaseChart from "@/components/ui/token-release-chart";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
+import { DocsMobileDrawer } from "@/components/docs/DocsMobileDrawer";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const Docs = () => {
@@ -16,13 +17,21 @@ const Docs = () => {
         {!isMobile && <DocsSidebar />}
         
         <main className="flex-1 w-full min-w-0 overflow-hidden">
-          {/* Header with home link and sidebar trigger */}
-          <div className="border-b border-gray-200 bg-white sticky top-0 z-10 w-full h-[60px] md:h-[73px]">
-            <div className="w-full px-3 md:px-4 py-3 md:py-4 flex items-center h-full">
-              {!isMobile && <SidebarTrigger className="mr-4" />}
-              <Link to="/" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
-                <Home className="h-4 w-4" />
-              </Link>
+          {/* Header with navigation - ALWAYS show burger menu on mobile */}
+          <div className="border-b border-gray-200 bg-white sticky top-0 z-50 w-full h-[60px] md:h-[73px]">
+            <div className="w-full px-3 md:px-4 py-3 md:py-4 flex items-center justify-between h-full">
+              <div className="flex items-center">
+                {!isMobile && <SidebarTrigger className="mr-4" />}
+                <Link to="/" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+                  <Home className="h-4 w-4" />
+                  <span className="ml-2 text-sm">Home</span>
+                </Link>
+              </div>
+              
+              {/* MOBILE BURGER MENU - Make it very visible */}
+              <div className="md:hidden">
+                <DocsMobileDrawer />
+              </div>
             </div>
           </div>
 
@@ -131,79 +140,6 @@ const Docs = () => {
                   <li className="break-words">Q3 2024: Mainnet Launch and Token Distribution</li>
                   <li className="break-words">Q4 2024: Feature Expansion and Partnership Development</li>
                 </ul>
-
-                {/* Team & Advisors */}
-                <h2 id="team" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Team & Advisors</h2>
-                
-                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Core Team</h3>
-                
-                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
-                  Our leadership team brings together decades of experience in content platforms, blockchain technology, business development, and talent management. With proven track records from successful ventures and industry-leading companies, we have the expertise to execute our ambitious vision for fan.site.
-                </p>
-
-                <div className="grid grid-cols-1 gap-3 md:gap-8 mb-4 md:mb-8">
-                  <div className="bg-gray-50 p-3 md:p-6 rounded-lg">
-                    <div className="flex flex-col items-center text-center md:flex-row md:text-left gap-3 md:gap-6">
-                      <div className="flex-shrink-0">
-                        <img src="/lovable-uploads/2d361a2e-492b-42f2-b860-9d609003de77.png" alt="Indi Jay Cammish" className="w-20 h-20 md:w-32 md:h-32 rounded-lg object-cover" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-gray-800 mb-2 text-sm md:text-lg break-words">Indi Jay Cammish - Co-Founder</h4>
-                        <p className="text-gray-700 leading-relaxed text-xs md:text-base break-words hyphens-auto">
-                          Co-founder of First Class alongside Mike and co-founder of DeHub. Indi brings a unique perspective as a renowned professional dancer who has performed for A-list celebrities and even royalty, while starring in Channel 4's "The Masked Dancer". Her entertainment industry experience and business acumen provide valuable insights into creator needs and audience engagement.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-gray-50 p-3 md:p-6 rounded-lg">
-                    <div className="flex flex-col items-center text-center md:flex-row md:text-left gap-3 md:gap-6">
-                      <div className="flex-shrink-0">
-                        <img src="/lovable-uploads/1e74480a-7089-4d87-83d1-2261736a44db.png" alt="Mike Hales" className="w-20 h-20 md:w-32 md:h-32 rounded-lg object-cover" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-gray-800 mb-2 text-sm md:text-lg break-words">Mike Hales - Co-Founder</h4>
-                        <p className="text-gray-700 leading-relaxed text-xs md:text-base break-words hyphens-auto">
-                          Founder of First Class, the UK's largest TikTok partner agency with millions in turnover and close to 1,000 streamers signed exclusively. Under Mike's leadership, First Class has partnered with some of the largest social media accounts and top-earning content creators, demonstrating his deep understanding of the creator economy and talent management at scale.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-gray-50 p-3 md:p-6 rounded-lg">
-                    <div className="flex flex-col items-center text-center md:flex-row md:text-left gap-3 md:gap-6">
-                      <div className="flex-shrink-0">
-                        <img src="/lovable-uploads/4f3983f4-6b1d-418f-8aa7-75903179a831.png" alt="Bailey Young" className="w-20 h-20 md:w-32 md:h-32 rounded-lg object-cover" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-gray-800 mb-2 text-sm md:text-lg break-words">Bailey Young - Business Development</h4>
-                        <p className="text-gray-700 leading-relaxed text-xs md:text-base break-words hyphens-auto">
-                          Highly experienced business professional with a strong commercial background and leadership roles at multi-million pound UK businesses. Bailey achieved a 7-figure exit at Flamengo Resourcing, demonstrating his ability to scale businesses and execute successful strategies in competitive markets.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-gray-50 p-3 md:p-6 rounded-lg">
-                    <div className="flex flex-col items-center text-center md:flex-row md:text-left gap-3 md:gap-6">
-                      <div className="flex-shrink-0">
-                        <img src="/lovable-uploads/0d533e72-e0d4-4a75-ace1-d8b0006d2ad0.png" alt="Malik Jan" className="w-20 h-20 md:w-32 md:h-32 rounded-lg object-cover" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-gray-800 mb-2 text-sm md:text-lg break-words">Malik Jan - Strategic Advisor</h4>
-                        <p className="text-gray-700 leading-relaxed text-xs md:text-base break-words hyphens-auto">
-                          Founder of DeHub, which achieved an ROI of 1000x and $10M in liquidity at peak performance. Previously served as the top billing agent at Blue Arrow, the UK's largest agency with 65 offices nationwide and 600 staff, and formerly at Randstad, the world's largest staffing agency. His expertise in scaling operations and strategic partnerships is invaluable to fan.site's growth.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Expertise Summary</h3>
-                
-                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
-                  Our team's combined expertise spans the entire spectrum of the creator economy, from content creation and talent management to blockchain technology and business development. We are passionate about building a platform that empowers creators and fosters a more equitable ecosystem for all stakeholders.
-                </p>
 
                 {/* Risk Analysis */}
                 <h2 id="risk-analysis" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Risk Analysis</h2>
