@@ -1,8 +1,8 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home } from 'lucide-react';
 import TokenReleaseChart from "@/components/ui/token-release-chart";
-import RankingBadgesChart from "@/components/ui/ranking-badges-chart";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
 import { DocsMobileDrawer } from "@/components/docs/DocsMobileDrawer";

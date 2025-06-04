@@ -36,18 +36,18 @@ export const SearchBar = ({
 
   return (
     <div className={`relative w-full ${className}`}>
-      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
       <Input
         value={searchQuery}
         onChange={(e) => handleSearch(e.target.value)}
         placeholder={searchPlaceholder}
-        className="pl-10 w-full h-10 text-sm"
+        className="pl-10 w-full h-10 text-sm bg-white border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-gray-300 focus:ring-gray-200"
       />
       {searchQuery && (
         <Button
           variant="ghost"
           size="icon"
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 h-7 w-7"
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 h-7 w-7 text-gray-400 hover:text-gray-600 hover:bg-gray-50"
           onClick={clearSearch}
         >
           <FilterX className="h-4 w-4" />
