@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home } from 'lucide-react';
@@ -7,12 +6,9 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
 import { DocsMobileDrawer } from "@/components/docs/DocsMobileDrawer";
 import { useIsMobile } from "@/hooks/use-mobile";
-
 const Docs = () => {
   const isMobile = useIsMobile();
-  
-  return (
-    <SidebarProvider>
+  return <SidebarProvider>
       <div className="min-h-screen flex w-full bg-white">
         {!isMobile && <DocsSidebar />}
         
@@ -45,9 +41,7 @@ const Docs = () => {
                 {/* Mission Statement */}
                 <h2 id="mission-statement" className="text-lg md:text-2xl font-semibold text-gray-900 mt-4 md:mt-8 mb-2 md:mb-4 break-words">Mission Statement</h2>
                 
-                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">
-                  To empower content creators and their fans through a decentralized platform that fosters direct engagement, fair monetization, and community governance. We aim to revolutionize the creator economy by providing innovative tools and transparent systems that prioritize the interests of both creators and their audiences.
-                </p>
+                <p className="text-gray-700 leading-relaxed mb-3 md:mb-6 text-sm md:text-base break-words hyphens-auto">Introducing fan.site, the ultimate fan platform where creators thrive! With low fees, a decentralized, user-owned structure, and unmatched censorship resistance, you control your content and earnings. Enjoy private, secure interactions with full data ownership—no one accesses your content but you. Join fan.site today and connect with fans on your terms!</p>
                 
                 {/* Executive Summary */}
                 <h2 id="executive-summary" className="text-lg md:text-2xl font-semibold text-gray-900 mt-6 md:mt-12 mb-2 md:mb-4 break-words">Executive Summary</h2>
@@ -167,8 +161,6 @@ const Docs = () => {
           </div>
         </main>
       </div>
-    </SidebarProvider>
-  );
+    </SidebarProvider>;
 };
-
 export default Docs;
