@@ -14,7 +14,7 @@ interface InteractionButtonProps {
   title?: string;
   iconSize?: number;
   disabled?: boolean;
-  isViewOrComment?: boolean; // New prop to identify view or comment buttons
+  isViewOrComment?: boolean;
 }
 
 export function InteractionButton({ 
@@ -38,9 +38,9 @@ export function InteractionButton({
   
   const buttonClasses = cn(
     "flex items-center",
-    active ? activeColor : "bg-western-wood", // Removed opacity for solid background
+    active ? activeColor : "bg-western-wood",
     "text-western-parchment py-1 px-2 rounded-full text-xs font-western",
-    onClick && !isDisabled ? "cursor-pointer hover:bg-western-wood/90 transition-colors" : "cursor-default",
+    onClick && !isDisabled ? "cursor-pointer hover:bg-western-wood/90 hover:scale-105 hover:shadow-md transition-all duration-200" : "cursor-default",
     isDisabled ? "opacity-70" : "",
     isMobile ? "py-0.5 px-1.5" : "",
     className

@@ -35,10 +35,10 @@ export function InteractionButton({
       title={title}
       aria-label={ariaLabel}
       className={cn(
-        "flex items-center space-x-1 px-3 py-1 rounded-full border text-sm",
+        "flex items-center space-x-1 px-3 py-1 rounded-full border text-sm transition-all duration-200 hover:scale-105 hover:shadow-md",
         isActive
           ? activeClassName
-          : "bg-western-parchment border-western-wood/40 text-western-wood hover:bg-western-parchment/80 transition-colors"
+          : "bg-western-parchment border-western-wood/40 text-western-wood hover:bg-western-parchment/80 hover:border-western-wood/60"
       )}
     >
       <Icon className="h-4 w-4" />
