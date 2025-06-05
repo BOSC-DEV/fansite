@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Instagram, Twitter, BookOpen } from 'lucide-react';
+import { Instagram, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Index = () => {
@@ -98,7 +98,11 @@ const Index = () => {
             className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-[#8FB1E0] to-[#B8A5D9] text-white hover:scale-110 transition-transform duration-200 shadow-lg"
             aria-label="Follow us on X (Twitter)"
           >
-            <Twitter className="h-6 w-6" />
+            <img 
+              src="/lovable-uploads/b26a0095-6dd4-4425-9294-0b6ee067135a.png" 
+              alt="X (Twitter)" 
+              className="h-6 w-6" 
+            />
           </a>
           
           <Link 

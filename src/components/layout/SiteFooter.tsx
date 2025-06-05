@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { Twitter, Mail, Github } from "lucide-react";
+import { Mail, Github } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export const SiteFooter = () => {
@@ -45,7 +45,11 @@ export const SiteFooter = () => {
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-western-parchment hover:text-western-sand transition-colors"
             >
-              <Twitter className="h-3.5 w-3.5" />
+              <img 
+                src="/lovable-uploads/b26a0095-6dd4-4425-9294-0b6ee067135a.png" 
+                alt="X (Twitter)" 
+                className="h-3.5 w-3.5" 
+              />
               <span className="font-western text-xs">@bookofscamslol</span>
             </a>
             

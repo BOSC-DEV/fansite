@@ -2,7 +2,7 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { UserProfile } from "@/services/storage";
-import { Twitter, Globe, Copy, Award, HelpCircle } from "lucide-react";
+import { Globe, Copy, Award, HelpCircle } from "lucide-react";
 import { toast } from "sonner";
 import { 
   Tooltip,
@@ -109,7 +109,11 @@ export function InfoTab({ profile }: InfoTabProps) {
                 {profile.xLink && (
                   <a href={profile.xLink} target="_blank" rel="noopener noreferrer" 
                      className="text-western-wood hover:text-western-accent transition-colors flex items-center gap-2">
-                    <Twitter size={16} />
+                    <img 
+                      src="/lovable-uploads/b26a0095-6dd4-4425-9294-0b6ee067135a.png" 
+                      alt="X (Twitter)" 
+                      className="h-4 w-4" 
+                    />
                     <span>X / Twitter</span>
                   </a>
                 )}

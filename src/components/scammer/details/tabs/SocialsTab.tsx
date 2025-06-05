@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Globe, LinkIcon, Twitter } from "lucide-react";
+import { Globe, LinkIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface SocialsTabProps {
@@ -28,7 +28,11 @@ export function SocialsTab({ links }: SocialsTabProps) {
                 className="inline-flex items-center gap-2 px-3 py-1.5 bg-western-sand/20 text-western-wood hover:bg-western-sand/40 transition-colors rounded-md text-sm"
               >
                 {isTwitterLink(link) ? (
-                  <Twitter className="h-3.5 w-3.5" />
+                  <img 
+                    src="/lovable-uploads/b26a0095-6dd4-4425-9294-0b6ee067135a.png" 
+                    alt="X (Twitter)" 
+                    className="h-3.5 w-3.5" 
+                  />
                 ) : (
                   <LinkIcon className="h-3.5 w-3.5" />
                 )}
@@ -44,7 +48,11 @@ export function SocialsTab({ links }: SocialsTabProps) {
             {links.map((link, index) => (
               <li key={index} className="flex items-center gap-2">
                 {isTwitterLink(link) ? (
-                  <Twitter className="h-4 w-4 text-muted-foreground" />
+                  <img 
+                    src="/lovable-uploads/b26a0095-6dd4-4425-9294-0b6ee067135a.png" 
+                    alt="X (Twitter)" 
+                    className="h-4 w-4" 
+                  />
                 ) : (
                   <LinkIcon className="h-4 w-4 text-muted-foreground" />
                 )}

@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Twitter, Globe, Copy } from "lucide-react";
+import { Globe, Copy } from "lucide-react";
 import { toast } from "sonner";
 
 interface ProfileLinksProps {
@@ -34,7 +34,11 @@ export function ProfileLinks({
         <h3 className="text-sm font-medium">Social Links</h3>
         <div className="grid grid-cols-1 gap-4">
           <div className="flex items-center gap-2">
-            <Twitter size={18} className="text-western-wood" />
+            <img 
+              src="/lovable-uploads/b26a0095-6dd4-4425-9294-0b6ee067135a.png" 
+              alt="X (Twitter)" 
+              className="h-4 w-4" 
+            />
             <input
               type="text"
               placeholder="X (Twitter) URL"
@@ -68,7 +72,11 @@ export function ProfileLinks({
           className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-western-sand/20 text-western-wood hover:bg-western-sand/40 hover:text-western-accent transition-colors"
           title="X / Twitter"
         >
-          <Twitter size={16} />
+          <img 
+            src="/lovable-uploads/b26a0095-6dd4-4425-9294-0b6ee067135a.png" 
+            alt="X (Twitter)" 
+            className="h-4 w-4" 
+          />
         </a>
       )}
       

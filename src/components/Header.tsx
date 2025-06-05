@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/context/WalletContext";
-import { Wallet, Twitter, Github, Mail } from "lucide-react";
+import { Wallet, Github, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProfileButton } from "./profile/ProfileButton";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -59,7 +59,11 @@ export const Header = () => {
             rel="noopener noreferrer"
             className="text-western-parchment hover:text-western-sand transition-colors"
           >
-            <Twitter className="h-5 w-5" />
+            <img 
+              src="/lovable-uploads/b26a0095-6dd4-4425-9294-0b6ee067135a.png" 
+              alt="X (Twitter)" 
+              className="h-5 w-5" 
+            />
           </a>
           
           <a 
