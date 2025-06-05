@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -146,6 +147,11 @@ export default {
 				'tumbleweed': {
 					'0%': { transform: 'translateX(0) rotate(0deg)' },
 					'100%': { transform: 'translateX(100vw) rotate(360deg)' }
+				},
+				'gradient-flow': {
+					'0%': { backgroundPosition: '0% 50%' },
+					'50%': { backgroundPosition: '100% 50%' },
+					'100%': { backgroundPosition: '0% 50%' }
 				}
 			},
 			animation: {
@@ -158,7 +164,8 @@ export default {
 				'wiggle': 'wiggle 1s ease-in-out infinite',
 				'spin-slow': 'spin-slow 3s linear infinite',
 				'bounce-slight': 'bounce-slight 2s infinite',
-				'tumbleweed': 'tumbleweed 15s linear infinite'
+				'tumbleweed': 'tumbleweed 15s linear infinite',
+				'gradient-flow': 'gradient-flow 3s ease infinite'
 			},
 			backdropFilter: {
 				'none': 'none',

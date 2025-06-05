@@ -42,6 +42,8 @@ export function InteractionButton({
     onClick && !isDisabled ? "cursor-pointer hover:scale-105 hover:shadow-md transition-all duration-200" : "cursor-default",
     isDisabled ? "opacity-70" : "",
     isMobile ? "py-0.5 px-1.5" : "",
+    // Add gradient animation for non-active buttons
+    !active && "bg-gradient-to-r from-[#D4A574] via-[#E0B878] via-[#B8A5D9] via-[#8FB1E0] to-[#D889A5] bg-[length:300%_300%] animate-[gradient-flow_3s_ease_infinite]",
     className
   );
   
@@ -56,24 +58,10 @@ export function InteractionButton({
       className={buttonClasses}
       onClick={handleClick} 
       title={title}
-      style={{
-        background: active && activeColor 
-          ? activeColor 
-          : `linear-gradient(45deg, #D4A574, #E0B878, #B8A5D9, #8FB1E0, #D889A5)`,
-        backgroundSize: '300% 300%',
-        animation: 'gradient-flow 3s ease infinite'
-      }}
+      style={active && activeColor ? { background: activeColor } : undefined}
     >
       <Icon className={`h-${actualIconSize} w-${actualIconSize} mr-1 relative z-10 ${isMobile ? 'h-3 w-3' : ''}`} />
       <span className="relative z-10">{count || 0}</span>
-      
-      <style jsx>{`
-        @keyframes gradient-flow {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-      `}</style>
     </div>
   );
 }
