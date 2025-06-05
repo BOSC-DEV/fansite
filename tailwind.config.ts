@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -152,6 +151,11 @@ export default {
 					'0%': { backgroundPosition: '0% 50%' },
 					'50%': { backgroundPosition: '100% 50%' },
 					'100%': { backgroundPosition: '0% 50%' }
+				},
+				'gradient-flow-hover': {
+					'0%': { backgroundPosition: '0% 50%' },
+					'50%': { backgroundPosition: '100% 50%' },
+					'100%': { backgroundPosition: '0% 50%' }
 				}
 			},
 			animation: {
@@ -165,7 +169,8 @@ export default {
 				'spin-slow': 'spin-slow 3s linear infinite',
 				'bounce-slight': 'bounce-slight 2s infinite',
 				'tumbleweed': 'tumbleweed 15s linear infinite',
-				'gradient-flow': 'gradient-flow 3s ease infinite'
+				'gradient-flow': 'gradient-flow 3s ease infinite',
+				'gradient-flow-hover': 'gradient-flow-hover 1.5s ease infinite'
 			},
 			backdropFilter: {
 				'none': 'none',
