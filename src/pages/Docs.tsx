@@ -96,11 +96,16 @@ const Docs = () => {
                   <li className="break-words">Total Supply: 10,000,000 $FAN</li>
                   <li className="break-words">Distribution:
                     <ul className="list-decimal list-inside ml-4 mt-1 space-y-1">
-                      <li className="break-words">50% - Creator Rewards</li>
-                      <li className="break-words">20% - Community Incentives</li>
-                      <li className="break-words">15% - Team & Advisors</li>
-                      <li className="break-words">10% - Ecosystem Development</li>
-                      <li className="break-words">5% - Marketing & Partnerships</li>
+                      <li className="break-words">17.5% - Treasury Reserve</li>
+                      <li className="break-words">15% - Marketing & Partnerships</li>
+                      <li className="break-words">15% - Ecosystem Rewards</li>
+                      <li className="break-words">13% - Liquidity</li>
+                      <li className="break-words">12% - Team & Recruitment</li>
+                      <li className="break-words">10% - Staking Incentives</li>
+                      <li className="break-words">7% - Private Round</li>
+                      <li className="break-words">4% - Public Round</li>
+                      <li className="break-words">3.5% - Strategic Round</li>
+                      <li className="break-words">3% - Advisory</li>
                     </ul>
                   </li>
                 </ul>

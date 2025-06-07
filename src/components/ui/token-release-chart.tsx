@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
@@ -14,7 +15,7 @@ const TokenReleaseChart = () => {
       const month = date.toLocaleDateString('en-US', { month: 'short' });
       const year = date.getFullYear().toString().slice(-2);
       
-      // Token release schedule calculations for $FAN
+      // Token release schedule calculations for $FAN based on real distribution
       let treasury = 0;
       let advisory = 0;
       let team = 0;
@@ -28,32 +29,32 @@ const TokenReleaseChart = () => {
       
       // Treasury Reserve (17.5% - 1,750,000 tokens) - 3 month cliff, daily linear 48 months
       if (i >= 3) {
-        treasury = Math.min(1750000, (1750000 / 45) * (i - 3));
+        treasury = Math.min(1750000, (1750000 / 45) * (i - 2));
       }
       
       // Advisory (3% - 300,000 tokens) - 6 month cliff, daily linear 24 months
       if (i >= 6) {
-        advisory = Math.min(300000, (300000 / 24) * (i - 6));
+        advisory = Math.min(300000, (300000 / 24) * (i - 5));
       }
       
       // Team & Recruitment (12% - 1,200,000 tokens) - 6 month cliff, daily linear 24 months
       if (i >= 6) {
-        team = Math.min(1200000, (1200000 / 24) * (i - 6));
+        team = Math.min(1200000, (1200000 / 24) * (i - 5));
       }
       
       // Marketing & Partnerships (15% - 1,500,000 tokens) - 1 month cliff, daily linear 48 months
       if (i >= 1) {
-        marketing = Math.min(1500000, (1500000 / 47) * (i - 1));
+        marketing = Math.min(1500000, (1500000 / 48) * i);
       }
       
       // Staking Incentives (10% - 1,000,000 tokens) - 1 month cliff, daily linear 48 months
       if (i >= 1) {
-        staking = Math.min(1000000, (1000000 / 47) * (i - 1));
+        staking = Math.min(1000000, (1000000 / 48) * i);
       }
       
       // Ecosystem Rewards (15% - 1,500,000 tokens) - 3 month cliff, daily linear 48 months
       if (i >= 3) {
-        ecosystem = Math.min(1500000, (1500000 / 45) * (i - 3));
+        ecosystem = Math.min(1500000, (1500000 / 45) * (i - 2));
       }
       
       // Liquidity (13% - 1,300,000 tokens) - 50% at TGE, daily linear for 2 months
