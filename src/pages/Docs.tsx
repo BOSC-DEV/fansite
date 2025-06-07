@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home } from 'lucide-react';
@@ -92,7 +93,7 @@ const Docs = () => {
                 <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-2 md:mb-3 break-words">Economics Summary</h3>
                 
                 <ul className="list-disc list-inside text-gray-700 mb-3 md:mb-6 text-sm md:text-base space-y-1">
-                  <li className="break-words">Total Supply: 1,000,000,000 $FAN</li>
+                  <li className="break-words">Total Supply: 10,000,000 $FAN</li>
                   <li className="break-words">Distribution:
                     <ul className="list-decimal list-inside ml-4 mt-1 space-y-1">
                       <li className="break-words">50% - Creator Rewards</li>
