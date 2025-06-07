@@ -111,6 +111,8 @@ const Docs = () => {
                   </li>
                 </ul>
                 
+                <h3 className="text-base md:text-xl font-semibold text-gray-800 mb-3 md:mb-4 break-words">Dilution Schedule</h3>
+                
                 <div className="w-full overflow-hidden mb-4 md:mb-6">
                   <TokenReleaseChart />
                 </div>
@@ -721,4 +723,3 @@ if __name__ == "__main__":
 };
 
 export default Docs;
-
